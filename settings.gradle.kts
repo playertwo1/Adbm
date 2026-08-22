@@ -22,6 +22,6 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "CoreFlow"
+rootProject.name = "Core Ativo"
 
 include(":app")

@@ -145,21 +145,12 @@ class AndroidBridge(
 
     @JavascriptInterface
     fun vibrate(durationMs: Long) {
-        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
-            vibratorManager?.defaultVibrator
+        val vibrator = getVibrator(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(durationMs, VibrationEffect.DEFAULT_AMPLITUDE))
         } else {
             @Suppress("DEPRECATION")
-            context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
-        }
-
-        vibrator?.let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                it.vibrate(VibrationEffect.createOneShot(durationMs, VibrationEffect.DEFAULT_AMPLITUDE))
-            } else {
-                @Suppress("DEPRECATION")
-                it.vibrate(durationMs)
-            }
+            vibrator.vibrate(durationMs)
         }
     }
 
@@ -171,27 +162,52 @@ class AndroidBridge(
             longArrayOf(100)
         }
 
-        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
-            vibratorManager?.defaultVibrator
+        val vibrator = getVibrator(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val waveform = if (timings.size % 2 == 1) {
+                longArrayOf(0L) + timings
+            } else {
+                timings
+            }
+            vibrator.vibrate(VibrationEffect.createWaveform(waveform, -1))
         } else {
             @Suppress("DEPRECATION")
-            context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+            vibrator.vibrate(timings, -1)
         }
+    }
 
-        vibrator?.let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // If odd length, prepend 0 delay to match Android waveform convention [delay, vibrate, pause, vibrate...]
-                val waveform = if (timings.size % 2 == 1) {
-                    longArrayOf(0L) + timings
-                } else {
-                    timings
-                }
-                it.vibrate(VibrationEffect.createWaveform(waveform, -1))
-            } else {
-                @Suppress("DEPRECATION")
-                it.vibrate(timings, -1)
-            }
+    @JavascriptInterface
+    fun playLightTick() {
+        AdvancedHapticsManager.playLightTick(context)
+    }
+
+    @JavascriptInterface
+    fun playHeavyPulse() {
+        AdvancedHapticsManager.playHeavyPulse(context)
+    }
+
+    @JavascriptInterface
+    fun playRelaxationSignal() {
+        AdvancedHapticsManager.playRelaxationSignal(context)
+    }
+
+    @JavascriptInterface
+    fun playBreathingWave() {
+        AdvancedHapticsManager.playBreathingWave(context)
+    }
+
+    @JavascriptInterface
+    fun playSuccessPattern() {
+        AdvancedHapticsManager.playSuccessPattern(context)
+    }
+
+    private fun getVibrator(context: Context): Vibrator {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
+            vibratorManager?.defaultVibrator ?: (context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator)
+        } else {
+            @Suppress("DEPRECATION")
+            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         }
     }
 
@@ -220,6 +236,110 @@ class AndroidBridge(
                 "Lembretes e notificações locais ativados com sucesso no CoreFlow!",
                 Toast.LENGTH_LONG
             ).show()
+        }
+    }
+}
+
+object AdvancedHapticsManager {
+
+    private fun getVibrator(context: Context): Vibrator {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
+            vibratorManager?.defaultVibrator ?: (context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator)
+        } else {
+            @Suppress("DEPRECATION")
+            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+    }
+
+    /**
+     * Pulso Leve e Rápido (Tick)
+     * Ideal para: Kegel de Velocidade (Metrônomo) e toques em botões.
+     */
+    fun playLightTick(context: Context) {
+        val vibrator = getVibrator(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_TICK))
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(30L)
+        }
+    }
+
+    /**
+     * Pulso Pesado e Marcante (Heavy Click)
+     * Ideal para: Início da contração (Bracing e Kegel de Resistência).
+     */
+    fun playHeavyPulse(context: Context) {
+        val vibrator = getVibrator(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(150L, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(150L)
+        }
+    }
+
+    /**
+     * Vibração Dupla Suave (Double Click)
+     * Ideal para: Sinalizar a fase de RELAXAMENTO.
+     */
+    fun playRelaxationSignal(context: Context) {
+        val vibrator = getVibrator(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK))
+        } else {
+            val timings = longArrayOf(0, 50, 100, 50)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createWaveform(timings, -1))
+            } else {
+                @Suppress("DEPRECATION")
+                vibrator.vibrate(timings, -1)
+            }
+        }
+    }
+
+    /**
+     * Onda de Expansão (Inspiração / Vácuo)
+     * Cria uma vibração que começa fraca e vai aumentando a força.
+     * Ideal para: Guiar a inspiração de 4s no Player de Vácuo sem olhar para a tela.
+     */
+    fun playBreathingWave(context: Context) {
+        val vibrator = getVibrator(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val timings = longArrayOf(0, 500, 500, 500, 500, 500, 500)
+            val amplitudes = intArrayOf(0, 20, 50, 100, 150, 200, 255)
+            
+            if (vibrator.hasAmplitudeControl()) {
+                val effect = VibrationEffect.createWaveform(timings, amplitudes, -1)
+                vibrator.vibrate(effect)
+            } else {
+                vibrator.vibrate(VibrationEffect.createOneShot(3000L, VibrationEffect.DEFAULT_AMPLITUDE))
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(3000L)
+        }
+    }
+
+    /**
+     * Vibração de Sucesso (Completar Série / Bater Meta)
+     */
+    fun playSuccessPattern(context: Context) {
+        val vibrator = getVibrator(context)
+        val timings = longArrayOf(0, 100, 100, 100, 100, 300)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val amplitudes = intArrayOf(0, 100, 0, 150, 0, 255)
+            if (vibrator.hasAmplitudeControl()) {
+                vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
+            } else {
+                vibrator.vibrate(VibrationEffect.createWaveform(timings, -1))
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(timings, -1)
         }
     }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>CoreFlow - Vácuo, Bracing & Postura</title>
+    <title>Core Ativo - Vácuo, Bracing & Postura</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -402,7 +402,7 @@
             </div>
 
             <!-- SUB-VIEW 1: KEGEL DE RESISTÊNCIA (10s Contrai / 10s Relaxa x 10 séries) -->
-            <div id="desk-view-resistencia" class="space-y-4">
+            <div id="desk-view-resistencia" class="space-y-4 transition-all duration-300 transform opacity-100 translate-y-0">
                 <div class="bg-slate-800/90 rounded-3xl p-6 border border-slate-700 text-center relative overflow-hidden shadow-xl">
                     <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
                         <span class="font-bold uppercase tracking-wider text-emerald-400">Assoalho Pélvico Masculino</span>
@@ -442,7 +442,7 @@
             </div>
 
             <!-- SUB-VIEW 2: KEGEL DE VELOCIDADE (Metrônomo Rápido 15 contrações) -->
-            <div id="desk-view-velocidade" class="hidden space-y-4">
+            <div id="desk-view-velocidade" class="hidden space-y-4 transition-all duration-300 transform opacity-0 translate-y-4">
                 <div class="bg-slate-800/90 rounded-3xl p-6 border border-slate-700 text-center relative shadow-xl">
                     <div class="flex items-center justify-between text-xs text-slate-400 mb-4">
                         <span class="font-bold uppercase tracking-wider text-cyan-400">Contração Rápida (Fibras Rápidas)</span>
@@ -477,7 +477,7 @@
             </div>
 
             <!-- SUB-VIEW 3: MEDIDOR DE BRACING ABDOMINAL (20% a 30%) -->
-            <div id="desk-view-bracing" class="hidden space-y-4">
+            <div id="desk-view-bracing" class="hidden space-y-4 transition-all duration-300 transform opacity-0 translate-y-4">
                 <div class="bg-slate-800/90 rounded-3xl p-6 border border-slate-700 text-center relative shadow-xl">
                     <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
                         <span class="font-bold uppercase tracking-wider text-emerald-400">Estabilidade Lombar Contínua</span>
@@ -1195,7 +1195,7 @@
             }
         }
 
-        // Trigger vibration
+        // Trigger vibration using Advanced Haptics Bridge
         function triggerHaptic(pattern = [60]) {
             if (!AppState.hapticsEnabled) return;
 
@@ -1214,6 +1214,52 @@
                 try {
                     navigator.vibrate(pattern);
                 } catch(e) {}
+            }
+        }
+
+        // Advanced Haptics Semantic Triggers
+        function playLightTick() {
+            if (!AppState.hapticsEnabled) return;
+            if (window.AndroidBridge && window.AndroidBridge.playLightTick) {
+                window.AndroidBridge.playLightTick();
+            } else {
+                triggerHaptic([30]);
+            }
+        }
+
+        function playHeavyPulse() {
+            if (!AppState.hapticsEnabled) return;
+            if (window.AndroidBridge && window.AndroidBridge.playHeavyPulse) {
+                window.AndroidBridge.playHeavyPulse();
+            } else {
+                triggerHaptic([150]);
+            }
+        }
+
+        function playRelaxationSignal() {
+            if (!AppState.hapticsEnabled) return;
+            if (window.AndroidBridge && window.AndroidBridge.playRelaxationSignal) {
+                window.AndroidBridge.playRelaxationSignal();
+            } else {
+                triggerHaptic([50, 100, 50]);
+            }
+        }
+
+        function playBreathingWave() {
+            if (!AppState.hapticsEnabled) return;
+            if (window.AndroidBridge && window.AndroidBridge.playBreathingWave) {
+                window.AndroidBridge.playBreathingWave();
+            } else {
+                triggerHaptic([500, 50, 500, 50, 500]);
+            }
+        }
+
+        function playSuccessPattern() {
+            if (!AppState.hapticsEnabled) return;
+            if (window.AndroidBridge && window.AndroidBridge.playSuccessPattern) {
+                window.AndroidBridge.playSuccessPattern();
+            } else {
+                triggerHaptic([100, 100, 100, 100, 300]);
             }
         }
 
@@ -1424,7 +1470,7 @@
                 glow.className = 'absolute w-48 h-48 rounded-full bg-sky-500/20 blur-3xl pointer-events-none transition-all duration-700';
 
                 speakVoice('Inspire pelo nariz');
-                triggerHaptic([80, 50, 80]);
+                playBreathingWave(); // Onda de expansão crescente
                 updateCoreAnimation('inspira');
 
             } else if (phase === 'expira') {
@@ -1437,7 +1483,7 @@
                 glow.className = 'absolute w-48 h-48 rounded-full bg-sky-500/20 blur-3xl pointer-events-none transition-all duration-700';
 
                 speakVoice('Solte todo o ar');
-                triggerHaptic([120]);
+                playHeavyPulse(); // Pulso marcante
                 updateCoreAnimation('expira');
 
             } else if (phase === 'vacuo') {
@@ -1450,7 +1496,7 @@
                 glow.className = 'absolute w-64 h-64 rounded-full bg-emerald-500/35 blur-3xl pointer-events-none transition-all duration-700 animate-pulse';
 
                 speakVoice('Sugue o abdômen!');
-                triggerHaptic([200, 100, 200]);
+                playSuccessPattern(); // Hora de sugar!
                 updateCoreAnimation('vacuo');
 
             } else if (phase === 'descanso') {
@@ -1463,7 +1509,7 @@
                 glow.className = 'absolute w-48 h-48 rounded-full bg-slate-500/10 blur-3xl pointer-events-none transition-all duration-700';
 
                 speakVoice('Descanse');
-                triggerHaptic([100]);
+                playRelaxationSignal(); // Relaxe
                 updateCoreAnimation('descanso');
             }
 
@@ -1590,18 +1636,40 @@
                 activeSub.className = 'desk-sub-btn flex-1 py-2 rounded-xl text-xs font-bold transition text-emerald-400 bg-slate-900 shadow';
             }
 
-            // Update sub-views
-            document.getElementById('desk-view-resistencia').classList.add('hidden');
-            document.getElementById('desk-view-velocidade').classList.add('hidden');
-            document.getElementById('desk-view-bracing').classList.add('hidden');
+            // Animações de saída (fade out & slide down)
+            const views = ['desk-view-resistencia', 'desk-view-velocidade', 'desk-view-bracing'];
+            
+            views.forEach(viewId => {
+                const el = document.getElementById(viewId);
+                if (!el.classList.contains('hidden')) {
+                    el.classList.remove('opacity-100', 'translate-y-0');
+                    el.classList.add('opacity-0', 'translate-y-4');
+                }
+            });
 
-            if (mode === 'kegel-resistencia') {
-                document.getElementById('desk-view-resistencia').classList.remove('hidden');
-            } else if (mode === 'kegel-velocidade') {
-                document.getElementById('desk-view-velocidade').classList.remove('hidden');
-            } else if (mode === 'bracing') {
-                document.getElementById('desk-view-bracing').classList.remove('hidden');
-            }
+            // Aguarda a transição de saída antes de esconder e mostrar a nova aba
+            setTimeout(() => {
+                views.forEach(viewId => {
+                    document.getElementById(viewId).classList.add('hidden');
+                });
+
+                let targetId = '';
+                if (mode === 'kegel-resistencia') targetId = 'desk-view-resistencia';
+                else if (mode === 'kegel-velocidade') targetId = 'desk-view-velocidade';
+                else if (mode === 'bracing') targetId = 'desk-view-bracing';
+
+                if (targetId) {
+                    const targetEl = document.getElementById(targetId);
+                    targetEl.classList.remove('hidden');
+                    
+                    // Força um reflow para garantir que a classe hidden foi processada
+                    void targetEl.offsetWidth;
+
+                    // Animação de entrada (fade in & slide up)
+                    targetEl.classList.remove('opacity-0', 'translate-y-4');
+                    targetEl.classList.add('opacity-100', 'translate-y-0');
+                }
+            }, 300);
 
             triggerHaptic([30]);
         }
@@ -1663,7 +1731,7 @@
                         // Switch to Relax
                         AppState.desk.res.isContract = false;
                         AppState.desk.res.timer = 10;
-                        triggerHaptic([100]); // single short pulse for relax
+                        playRelaxationSignal(); // Dois toques suaves indicando RELAXAMENTO
                         if (!AppState.desk.silentMode) speakVoice('Relaxe');
                     } else {
                         // Complete 1 round
@@ -1672,12 +1740,12 @@
                             AppState.desk.res.isContract = true;
                             AppState.desk.res.timer = 10;
                             document.getElementById('kegelResSeriesLabel').innerText = `Série ${AppState.desk.res.series} / 10`;
-                            triggerHaptic([200, 100, 200]); // double strong pulse for contraction
+                            playHeavyPulse(); // Pulso pesado/marcante indicando CONTRAÇÃO
                             if (!AppState.desk.silentMode) speakVoice('Contraia');
                         } else {
                             // Completed 10 sets
                             pauseKegelRes();
-                            triggerHaptic([300, 150, 300]);
+                            playSuccessPattern(); // Vibração de fim de série
                             playTibetanChime();
                             document.getElementById('kegelResStateText').innerText = 'Concluído! 🏆';
                             document.getElementById('kegelResSub').innerText = '10 séries finalizadas';
@@ -1772,7 +1840,7 @@
                     state.className = 'text-sm font-extrabold text-emerald-300';
                     orb.classList.add('beat-active');
 
-                    triggerHaptic([60]);
+                    playLightTick(); // Pulso leve e rápido (Tick)
                     playBeep(800, 0.08, 'triangle');
                 } else {
                     state.innerText = 'Solta';
@@ -1782,7 +1850,7 @@
 
                 if (AppState.desk.fast.count >= AppState.desk.fast.maxCount && !AppState.desk.fast.isContract) {
                     pauseKegelFast();
-                    triggerHaptic([200, 100, 200]);
+                    playSuccessPattern(); // Vibração de sucesso
                     playTibetanChime();
                     state.innerText = 'Excelente! ⚡';
                     document.getElementById('kegelFastText').innerText = 'Repetir';
@@ -1830,6 +1898,8 @@
             document.getElementById('bracingIcon').className = 'fa-solid fa-pause';
             document.getElementById('bracingText').innerText = 'Pausar Bracing';
 
+            playHeavyPulse(); // Início da contração (Bracing)
+
             AppState.desk.bracing.intervalId = setInterval(() => {
                 if (!AppState.desk.bracing.isRunning) return;
 
@@ -1838,14 +1908,14 @@
                 const secs = String(AppState.desk.bracing.remainingSec % 60).padStart(2, '0');
                 document.getElementById('bracingTimerDisplay').innerText = `${mins}:${secs}`;
 
-                // Haptic posture reminder every 30s
+                // Haptic posture reminder every 30s (Tick suave)
                 if (AppState.desk.bracing.remainingSec % 30 === 0 && AppState.desk.bracing.remainingSec > 0) {
-                    triggerHaptic([80, 40, 80]);
+                    playLightTick();
                 }
 
                 if (AppState.desk.bracing.remainingSec <= 0) {
                     pauseBracingTimer();
-                    triggerHaptic([300, 150, 300]);
+                    playSuccessPattern();
                     playTibetanChime();
                     document.getElementById('bracingTimerDisplay').innerText = '✓ 2 min';
                     markScheduleDone(4, true);
