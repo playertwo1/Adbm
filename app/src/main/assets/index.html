@@ -1,0 +1,2264 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CoreFlow - Vácuo, Bracing & Postura</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#131f37',
+                            900: '#0f172a',
+                            950: '#080d1a',
+                        },
+                        emerald: {
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                        },
+                        cyan: {
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'ping-slow': 'ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 15px rgba(16, 185, 129, 0.3)' },
+                            '100%': { boxShadow: '0 0 30px rgba(56, 189, 248, 0.6)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FontAwesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            user-select: none;
+        }
+        h1, h2, h3, .font-heading {
+            font-family: 'Outfit', sans-serif;
+        }
+        /* Custom smooth scroll and transitions */
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Breathing ring animations */
+        .ring-circle {
+            transition: stroke-dashoffset 0.1s linear, stroke 0.4s ease;
+        }
+        .breathe-expand {
+            transform: scale(1.0);
+            transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .breathe-contract {
+            transform: scale(0.35);
+            transition: transform 6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .breathe-vacuum {
+            transform: scale(0.3);
+            filter: drop-shadow(0 0 28px rgba(16, 185, 129, 0.85));
+            transition: transform 0.6s ease-in-out;
+        }
+        .breathe-rest {
+            transform: scale(0.6);
+            transition: transform 1.2s ease-out;
+        }
+        /* Metronome beat pulse */
+        .beat-active {
+            transform: scale(1.25);
+            background-color: #10b981 !important;
+            box-shadow: 0 0 25px #10b981;
+        }
+        /* Bottom navigation bounce & scale animation */
+        @keyframes navBounce {
+            0% {
+                transform: scale(1);
+            }
+            30% {
+                transform: scale(1.28) translateY(-3px);
+            }
+            55% {
+                transform: scale(0.92) translateY(1px);
+            }
+            75% {
+                transform: scale(1.08) translateY(-1px);
+            }
+            100% {
+                transform: scale(1) translateY(0);
+            }
+        }
+        .nav-bounce {
+            animation: navBounce 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .nav-item {
+            transition: color 0.2s ease, transform 0.15s ease;
+        }
+        .nav-item:active {
+            transform: scale(0.92);
+        }
+        /* Hide scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Print styles for PDF export */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .card-print {
+                background: white !important;
+                border: 1px solid #cbd5e1 !important;
+                color: black !important;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-24 overflow-x-hidden antialiased selection:bg-emerald-500 selection:text-white">
+
+    <!-- Top Status Bar & App Header -->
+    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3.5 flex items-center justify-between no-print">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-emerald-900/30">
+                <i class="fa-solid fa-lungs text-white text-lg"></i>
+            </div>
+            <div>
+                <h1 class="font-heading font-extrabold text-lg tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">CoreFlow</h1>
+                <p class="text-xs text-slate-400 flex items-center gap-1 font-medium">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                    Saúde, Vácuo & Postura
+                </p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <!-- Streak badge -->
+            <button onclick="switchTab('dashboard')" class="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/70 rounded-full text-xs font-bold text-amber-400 transition shadow-sm">
+                <i class="fa-solid fa-fire text-amber-500 text-sm"></i>
+                <span id="headerStreakCount">5</span> <span class="text-slate-400 font-normal">dias</span>
+            </button>
+            <!-- Audio voice toggle -->
+            <button id="voiceToggleBtn" onclick="toggleVoice()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
+                <i id="voiceIcon" class="fa-solid fa-volume-high text-emerald-400"></i>
+            </button>
+            <!-- Haptic Vibration toggle -->
+            <button id="hapticToggleBtn" onclick="toggleHaptics()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
+                <i id="hapticIcon" class="fa-solid fa-mobile-screen-button text-cyan-400"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-md mx-auto px-4 pt-3 pb-6 space-y-4">
+
+        <!-- Top Greeting Header with Quick Action Chips -->
+        <div class="bg-gradient-to-br from-slate-850 to-slate-900 border border-slate-800/90 rounded-3xl p-4 shadow-lg no-print">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                        Olá, Rafael <span class="text-emerald-400 text-lg">👋</span>
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Pronto para fortalecer o core hoje?</p>
+                </div>
+                <div class="w-10 h-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-base shadow-inner">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+            </div>
+
+            <!-- Quick Actions Horizontal Scroll -->
+            <div class="mt-3.5 pt-3 border-t border-slate-800/80">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Ações Rápidas Imediatas:</p>
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+                    <button onclick="triggerQuickAction('bracing_2min')" class="flex-shrink-0 px-3 py-2 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 hover:border-emerald-500/50 rounded-xl text-xs font-semibold text-slate-200 hover:text-emerald-300 transition shadow-sm flex items-center gap-1.5">
+                        <span class="text-emerald-400 font-bold">⚡</span> Bracing 2min
+                    </button>
+                    <button onclick="triggerQuickAction('vacuo_rapido')" class="flex-shrink-0 px-3 py-2 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 hover:border-emerald-500/50 rounded-xl text-xs font-semibold text-slate-200 hover:text-emerald-300 transition shadow-sm flex items-center gap-1.5">
+                        <span class="text-cyan-400 font-bold">🫁</span> Vácuo Rápido
+                    </button>
+                    <button onclick="triggerQuickAction('kegel_velocidade')" class="flex-shrink-0 px-3 py-2 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 hover:border-emerald-500/50 rounded-xl text-xs font-semibold text-slate-200 hover:text-emerald-300 transition shadow-sm flex items-center gap-1.5">
+                        <span class="text-amber-400 font-bold">🎯</span> Kegel Velocidade
+                    </button>
+                    <button onclick="triggerQuickAction('pausa')" class="flex-shrink-0 px-3 py-2 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 hover:border-emerald-500/50 rounded-xl text-xs font-semibold text-slate-200 hover:text-emerald-300 transition shadow-sm flex items-center gap-1.5">
+                        <span class="text-teal-400 font-bold">🧘</span> Pausa 4min
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- ABA 1: PLAYER DE VÁCUO ABDOMINAL (RESPIRAÇÃO & LPF) -->
+        <!-- ============================================================ -->
+        <section id="tab-vacuo" class="tab-content active space-y-5">
+            
+            <!-- Posture & Setting Header -->
+            <div class="bg-slate-800/80 rounded-2xl p-3.5 border border-slate-700/60 shadow-lg">
+                <div class="flex items-center justify-between mb-2.5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-person text-emerald-400"></i> Seletor de Postura
+                    </span>
+                    <span id="currentLevelBadge" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Iniciante</span>
+                </div>
+                <!-- Posture selector buttons (Chips) -->
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="setPosture('deitado', 15)" id="posture-deitado" class="posture-btn active py-2.5 px-1.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 bg-emerald-500/15 border-emerald-500 text-emerald-400 shadow-sm">
+                        <i class="fa-solid fa-bed text-sm"></i>
+                        <span class="text-xs font-bold leading-tight">Deitado</span>
+                        <span class="text-[10px] text-slate-400 font-mono">(Iniciante)</span>
+                    </button>
+                    <button onclick="setPosture('4apoios', 20)" id="posture-4apoios" class="posture-btn py-2.5 px-1.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 bg-slate-900/60 border-slate-700 text-slate-300 hover:border-slate-600">
+                        <i class="fa-solid fa-dog text-sm"></i>
+                        <span class="text-xs font-bold leading-tight">4 Apoios</span>
+                        <span class="text-[10px] text-slate-400 font-mono">(Intermediário)</span>
+                    </button>
+                    <button onclick="setPosture('empe', 30)" id="posture-empe" class="posture-btn py-2.5 px-1.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 bg-slate-900/60 border-slate-700 text-slate-300 hover:border-slate-600">
+                        <i class="fa-solid fa-person-walking text-sm"></i>
+                        <span class="text-xs font-bold leading-tight">Em Pé</span>
+                        <span class="text-[10px] text-slate-400 font-mono">(Avançado)</span>
+                    </button>
+                </div>
+                
+                <!-- Quick Duration override pills -->
+                <div class="mt-3 pt-3 border-t border-slate-700/50 flex items-center justify-between">
+                    <span class="text-[11px] text-slate-400 font-medium">Tempo do Vácuo / Apneia:</span>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="setVacuumDuration(10)" class="vac-dur-btn px-2 py-0.5 text-xs rounded-lg font-mono font-semibold bg-slate-900 border border-slate-700 text-slate-400" data-dur="10">10s</button>
+                        <button onclick="setVacuumDuration(15)" class="vac-dur-btn px-2 py-0.5 text-xs rounded-lg font-mono font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" data-dur="15">15s</button>
+                        <button onclick="setVacuumDuration(20)" class="vac-dur-btn px-2 py-0.5 text-xs rounded-lg font-mono font-semibold bg-slate-900 border border-slate-700 text-slate-400" data-dur="20">20s</button>
+                        <button onclick="setVacuumDuration(30)" class="vac-dur-btn px-2 py-0.5 text-xs rounded-lg font-mono font-semibold bg-slate-900 border border-slate-700 text-slate-400" data-dur="30">30s</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Central Animated Vacuum Ring & Breathing Player -->
+            <div class="bg-gradient-to-b from-slate-800 to-slate-850 rounded-3xl p-6 border border-slate-700/70 shadow-2xl relative overflow-hidden flex flex-col items-center justify-center min-h-[360px]">
+                
+                <!-- Background decorative glow -->
+                <div id="ringGlowBg" class="absolute w-48 h-48 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none transition-all duration-700"></div>
+                
+                <!-- Series Counter Top Header -->
+                <div class="w-full flex items-center justify-between mb-4 z-10">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Série:</span>
+                        <span id="vacCurrentSeries" class="text-sm font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">1 de 5</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-xs text-slate-400">
+                        <i class="fa-solid fa-clock text-slate-500"></i>
+                        <span id="vacTotalTime" class="font-mono">00:00</span>
+                    </div>
+                </div>
+
+                <!-- Animated SVG Ring Container -->
+                <div class="relative w-64 h-64 flex items-center justify-center my-1 z-10">
+                    <!-- SVG Progress Circle -->
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 240 240">
+                        <!-- Background static track -->
+                        <circle cx="120" cy="120" r="96" class="text-slate-800" stroke-width="12" stroke="currentColor" fill="none" />
+                        <!-- Pulsing ambient aura ring -->
+                        <circle id="pulseAuraCircle" cx="120" cy="120" r="108" class="text-emerald-500/20 opacity-40 transition-all duration-500" stroke-width="2" stroke="currentColor" fill="none" />
+                        <!-- Animated Progress Ring -->
+                        <circle id="vacProgressRing" cx="120" cy="120" r="96" stroke-linecap="round" class="ring-circle text-emerald-500 transition-all" stroke-width="12" stroke="currentColor" fill="none" stroke-dasharray="603" stroke-dashoffset="0" />
+                    </svg>
+
+                    <!-- Center Animated Pulsing Core Display -->
+                    <div id="breatheCoreNode" class="absolute inset-0 flex flex-col items-center justify-center text-center p-4 rounded-full transition-transform duration-700 breathe-rest">
+                        <div id="phaseIconContainer" class="w-12 h-12 rounded-full bg-slate-800/90 border border-slate-700 flex items-center justify-center text-emerald-400 mb-1 shadow-inner">
+                            <i id="phaseIcon" class="fa-solid fa-lungs text-xl"></i>
+                        </div>
+                        <div class="flex items-baseline gap-0.5 my-0.5">
+                            <span id="vacTimerMain" class="text-5xl font-extrabold font-mono text-emerald-400 tracking-tight">▶</span>
+                            <span id="vacTimerUnit" class="text-xs text-slate-400 font-mono hidden">s</span>
+                        </div>
+                        <span id="vacPhaseTitle" class="text-sm font-heading font-extrabold tracking-tight text-slate-300 transition-colors duration-300">Pronto para iniciar</span>
+                    </div>
+                </div>
+
+                <!-- Phase Indicators Row -->
+                <div class="w-full grid grid-cols-4 gap-1 mt-4 z-10 pt-2 border-t border-slate-700/50 text-center">
+                    <div id="phase-card-inspira" class="py-1.5 px-1 rounded-lg bg-slate-800/60 border border-slate-700/40 transition">
+                        <p class="text-[10px] text-slate-400 font-medium">1. Inspira</p>
+                        <p class="text-xs font-bold text-sky-400 font-mono">4s</p>
+                    </div>
+                    <div id="phase-card-expira" class="py-1.5 px-1 rounded-lg bg-slate-800/60 border border-slate-700/40 transition">
+                        <p class="text-[10px] text-slate-400 font-medium">2. Expira</p>
+                        <p class="text-xs font-bold text-sky-400 font-mono">6s</p>
+                    </div>
+                    <div id="phase-card-vacuo" class="py-1.5 px-1 rounded-lg bg-slate-800/60 border border-slate-700/40 transition">
+                        <p class="text-[10px] text-slate-400 font-medium">3. Vácuo</p>
+                        <p id="indicatorVacSec" class="text-xs font-bold text-emerald-400 font-mono">15s</p>
+                    </div>
+                    <div id="phase-card-descanso" class="py-1.5 px-1 rounded-lg bg-slate-800/60 border border-slate-700/40 transition">
+                        <p class="text-[10px] text-slate-400 font-medium">4. Descanso</p>
+                        <p class="text-xs font-bold text-slate-400 font-mono">60s</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player Controls -->
+            <div class="grid grid-cols-3 gap-3">
+                <button onclick="resetVacuo()" class="py-3.5 px-4 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 rounded-2xl text-slate-300 font-bold flex items-center justify-center gap-2 transition shadow-md">
+                    <i class="fa-solid fa-arrows-rotate text-slate-400"></i>
+                    <span>Reset</span>
+                </button>
+                <button id="btnPlayVacuo" onclick="togglePlayVacuo()" class="py-3.5 px-4 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-extrabold rounded-full flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition">
+                    <i id="vacPlayIcon" class="fa-solid fa-play"></i>
+                    <span id="vacPlayText">Iniciar</span>
+                </button>
+                <button onclick="skipVacuoPhase()" class="py-3.5 px-4 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 rounded-2xl text-slate-300 font-bold flex items-center justify-center gap-2 transition shadow-md">
+                    <span>Pular</span>
+                    <i class="fa-solid fa-forward-step text-slate-400"></i>
+                </button>
+            </div>
+
+            <!-- Guia de Postura & Execução Rápida -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-4 space-y-3">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-cyan-400"></i> Instruções da Postura Atual
+                </h4>
+                <div id="postureGuideText" class="text-xs text-slate-300 leading-relaxed bg-slate-900/70 p-3 rounded-xl border border-slate-800">
+                    <strong class="text-emerald-400 block mb-1">Deitado com Joelhos Flexionados:</strong>
+                    1. Mantenha os pés no chão e coluna neutra.<br>
+                    2. Inspire pelo nariz expandindo as costelas por 4 segundos.<br>
+                    3. Solte todo o ar pela boca suavemente em 6 segundos.<br>
+                    4. Em apneia, abra as costelas e sugue o umbigo para cima e para dentro.
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- ABA 2: MODO DISCRETO (ESCRITÓRIO & BANCO) -->
+        <!-- ============================================================ -->
+        <section id="tab-discreto" class="tab-content space-y-5">
+            
+            <!-- Silent / Desk Mode Banner & Toggle -->
+            <div class="bg-gradient-to-r from-slate-800 via-slate-850 to-slate-800 rounded-2xl p-4 border border-slate-700/80 shadow-lg flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-cyan-400">
+                        <i class="fa-solid fa-briefcase text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-100">Modo Ultra-Silencioso</h3>
+                        <p class="text-xs text-slate-400">Treine discretamente na cadeira do trabalho</p>
+                    </div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="deskSilentModeToggle" onchange="toggleDeskSilentMode()" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                </label>
+            </div>
+
+            <!-- Sub-selector for Desk Modalities -->
+            <div class="flex bg-slate-800 p-1 rounded-2xl border border-slate-700">
+                <button onclick="setDeskMode('kegel-resistencia')" id="btn-sub-resistencia" class="desk-sub-btn flex-1 py-2 rounded-xl text-xs font-bold transition text-emerald-400 bg-slate-900 shadow">
+                    <i class="fa-solid fa-shield-halved mr-1"></i> Kegel Resistência
+                </button>
+                <button onclick="setDeskMode('kegel-velocidade')" id="btn-sub-velocidade" class="desk-sub-btn flex-1 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-bolt mr-1"></i> Kegel Velocidade
+                </button>
+                <button onclick="setDeskMode('bracing')" id="btn-sub-bracing" class="desk-sub-btn flex-1 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-circle-notch mr-1"></i> Bracing 30%
+                </button>
+            </div>
+
+            <!-- SUB-VIEW 1: KEGEL DE RESISTÊNCIA (10s Contrai / 10s Relaxa x 10 séries) -->
+            <div id="desk-view-resistencia" class="space-y-4">
+                <div class="bg-slate-800/90 rounded-3xl p-6 border border-slate-700 text-center relative overflow-hidden shadow-xl">
+                    <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+                        <span class="font-bold uppercase tracking-wider text-emerald-400">Assoalho Pélvico Masculino</span>
+                        <span id="kegelResSeriesLabel" class="bg-slate-900 px-2.5 py-1 rounded-full border border-slate-700 font-mono font-bold text-white">Série 1 / 10</span>
+                    </div>
+
+                    <!-- Circular Progress Display -->
+                    <div class="relative w-48 h-48 mx-auto my-3 flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
+                            <circle cx="100" cy="100" r="80" class="text-slate-900" stroke-width="10" stroke="currentColor" fill="none" />
+                            <circle id="kegelResRing" cx="100" cy="100" r="80" stroke-linecap="round" class="ring-circle text-emerald-400" stroke-width="10" stroke="currentColor" fill="none" stroke-dasharray="502" stroke-dashoffset="0" />
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span id="kegelResStateText" class="text-lg font-heading font-extrabold text-white">Pronto</span>
+                            <span id="kegelResTimer" class="text-4xl font-extrabold font-mono text-emerald-400">10</span>
+                            <span id="kegelResSub" class="text-[11px] text-slate-400 mt-0.5 font-medium">Contração Sustentada</span>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="flex items-center justify-center gap-3 mt-4">
+                        <button onclick="resetKegelRes()" class="p-3 bg-slate-900 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-300 text-sm">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button id="btnKegelResPlay" onclick="toggleKegelRes()" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-extrabold rounded-xl flex items-center gap-2 shadow-lg shadow-emerald-500/20 text-sm">
+                            <i id="kegelResIcon" class="fa-solid fa-play"></i>
+                            <span id="kegelResText">Iniciar Treino</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Explanation tip -->
+                <div class="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-3.5 text-xs text-slate-300 leading-relaxed">
+                    <p class="font-bold text-emerald-400 mb-1"><i class="fa-solid fa-lightbulb mr-1"></i> Como contrair no escritório:</p>
+                    Puxe a musculatura perineal para dentro e para cima (como se estivesse segurando a micção e gases). Ninguém ao seu redor irá notar. Mantenha a respiração livre.
+                </div>
+            </div>
+
+            <!-- SUB-VIEW 2: KEGEL DE VELOCIDADE (Metrônomo Rápido 15 contrações) -->
+            <div id="desk-view-velocidade" class="hidden space-y-4">
+                <div class="bg-slate-800/90 rounded-3xl p-6 border border-slate-700 text-center relative shadow-xl">
+                    <div class="flex items-center justify-between text-xs text-slate-400 mb-4">
+                        <span class="font-bold uppercase tracking-wider text-cyan-400">Contração Rápida (Fibras Rápidas)</span>
+                        <span id="kegelFastProgress" class="bg-slate-900 px-2.5 py-1 rounded-full border border-slate-700 font-mono font-bold text-white">0 / 15</span>
+                    </div>
+
+                    <!-- Metronome Dynamic Visual Orb -->
+                    <div class="relative w-44 h-44 mx-auto my-2 flex items-center justify-center">
+                        <div id="fastMetronomeOrb" class="w-32 h-32 rounded-full bg-slate-900 border-4 border-cyan-500/40 flex flex-col items-center justify-center transition-all duration-150 shadow-inner">
+                            <i id="fastMetronomeIcon" class="fa-solid fa-bolt text-2xl text-cyan-400 mb-1"></i>
+                            <span id="fastMetronomeState" class="text-sm font-extrabold text-white">Pressione</span>
+                            <span id="fastMetronomeCounter" class="text-2xl font-mono font-black text-cyan-400">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Speed controller -->
+                    <div class="flex items-center justify-center gap-2 mt-4">
+                        <button onclick="resetKegelFast()" class="p-3 bg-slate-900 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-300 text-sm">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button id="btnKegelFastPlay" onclick="toggleKegelFast()" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-extrabold rounded-xl flex items-center gap-2 shadow-lg shadow-cyan-500/20 text-sm">
+                            <i id="kegelFastIcon" class="fa-solid fa-play"></i>
+                            <span id="kegelFastText">Iniciar 15 Pulsos</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-3.5 text-xs text-slate-300 leading-relaxed">
+                    <strong class="text-cyan-400 block mb-1"><i class="fa-solid fa-gauge-high mr-1"></i> Objetivo dos Pulsos Rápidos:</strong>
+                    Contração potente de 1 segundo seguida de relaxamento imediato. Fortalece o reflexo do esfíncter e a continência durante esforço ou tosse.
+                </div>
+            </div>
+
+            <!-- SUB-VIEW 3: MEDIDOR DE BRACING ABDOMINAL (20% a 30%) -->
+            <div id="desk-view-bracing" class="hidden space-y-4">
+                <div class="bg-slate-800/90 rounded-3xl p-6 border border-slate-700 text-center relative shadow-xl">
+                    <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+                        <span class="font-bold uppercase tracking-wider text-emerald-400">Estabilidade Lombar Contínua</span>
+                        <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-mono text-[11px]">20% - 30% Ideal</span>
+                    </div>
+
+                    <!-- Bracing Activation Gauge Gauge -->
+                    <div class="relative w-48 h-48 mx-auto my-2 flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
+                            <!-- Background track -->
+                            <circle cx="100" cy="100" r="75" class="text-slate-900" stroke-width="14" stroke="currentColor" fill="none" />
+                            <!-- Target sweet spot marker (20%-30%) -->
+                            <circle cx="100" cy="100" r="75" class="text-emerald-500/30" stroke-width="14" stroke="currentColor" fill="none" stroke-dasharray="471" stroke-dashoffset="350" />
+                            <!-- Dynamic load ring -->
+                            <circle id="bracingLoadRing" cx="100" cy="100" r="75" stroke-linecap="round" class="ring-circle text-emerald-400" stroke-width="14" stroke="currentColor" fill="none" stroke-dasharray="471" stroke-dashoffset="350" />
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-xs font-semibold text-slate-400">Ativação</span>
+                            <span id="bracingPercentDisplay" class="text-3xl font-extrabold font-mono text-emerald-400">25%</span>
+                            <span id="bracingTimerDisplay" class="text-xs font-mono text-cyan-300 mt-0.5">02:00</span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Slider to adjust Bracing feeling -->
+                    <div class="mt-2 px-2">
+                        <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+                            <span>0% (Relaxado)</span>
+                            <span class="text-emerald-400 font-bold">25% (Ideal Postura)</span>
+                            <span>100% (Manobra Pesada)</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="25" id="bracingRangeSlider" oninput="updateBracingLoad(this.value)" class="w-full h-2 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                    </div>
+
+                    <div class="flex items-center justify-center gap-3 mt-4">
+                        <button onclick="resetBracingTimer()" class="p-3 bg-slate-900 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-300 text-sm">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button id="btnBracingPlay" onclick="toggleBracingTimer()" class="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-95 text-slate-950 font-extrabold rounded-xl flex items-center gap-2 shadow-lg shadow-emerald-500/20 text-sm">
+                            <i id="bracingIcon" class="fa-solid fa-play"></i>
+                            <span id="bracingText">Manter Postura 2min</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Posture checklist -->
+                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-4 space-y-2.5">
+                    <h4 class="text-xs font-bold text-slate-200 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-emerald-400"></i> Checklist de Postura no Banco / Escritório:
+                    </h4>
+                    <div class="space-y-1.5 text-xs text-slate-300">
+                        <label class="flex items-center gap-2.5 cursor-pointer">
+                            <input type="checkbox" checked class="rounded border-slate-700 text-emerald-500 focus:ring-0 bg-slate-900">
+                            <span>Pés 100% apoiados e paralelos no chão</span>
+                        </label>
+                        <label class="flex items-center gap-2.5 cursor-pointer">
+                            <input type="checkbox" checked class="rounded border-slate-700 text-emerald-500 focus:ring-0 bg-slate-900">
+                            <span>Peso distribuído sobre os ísquios (ossos do bumbum)</span>
+                        </label>
+                        <label class="flex items-center gap-2.5 cursor-pointer">
+                            <input type="checkbox" checked class="rounded border-slate-700 text-emerald-500 focus:ring-0 bg-slate-900">
+                            <span>Abdômen firme como uma cinta natural (sem prender a respiração)</span>
+                        </label>
+                        <label class="flex items-center gap-2.5 cursor-pointer">
+                            <input type="checkbox" checked class="rounded border-slate-700 text-emerald-500 focus:ring-0 bg-slate-900">
+                            <span>Ombros destravados para trás e para baixo</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- ABA 3: PAUSAS ATIVAS & ALONGAMENTOS (1 MINUTO CADA) -->
+        <!-- ============================================================ -->
+        <section id="tab-pausas" class="tab-content space-y-4">
+            
+            <div class="flex items-center justify-between bg-slate-800/60 p-3 rounded-2xl border border-slate-700/60">
+                <div>
+                    <h3 class="text-sm font-bold text-white">Alongamentos Rápidos na Cadeira</h3>
+                    <p class="text-xs text-slate-400">Pausas ativas de 1 minuto para destravar o corpo</p>
+                </div>
+                <span class="text-xs bg-emerald-500/10 text-emerald-400 font-bold px-2.5 py-1 rounded-full border border-emerald-500/20 font-mono">1 min/cada</span>
+            </div>
+
+            <!-- Exercise Cards with Direct Tap Timer -->
+            <div class="space-y-3">
+                <!-- Card 1: Posição do 4 -->
+                <div id="stretch-card-1" class="bg-slate-800/90 hover:bg-slate-800 border border-slate-700/70 rounded-2xl p-4 transition shadow-md relative overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xl flex-shrink-0">
+                                <i class="fa-solid fa-chair"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Posição do 4 na Cadeira</h4>
+                                <p class="text-xs text-slate-400 mt-0.5">Alongamento do Piriforme, Glúteo e Ciático</p>
+                            </div>
+                        </div>
+                        <button onclick="toggleStretchTimer(1)" id="stretch-btn-1" class="px-3.5 py-2 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 shadow transition">
+                            <i id="stretch-icon-1" class="fa-solid fa-play"></i>
+                            <span id="stretch-label-1">1:00</span>
+                        </button>
+                    </div>
+                    <!-- Instruction details -->
+                    <div class="mt-3 pt-2.5 border-t border-slate-700/50 flex items-center justify-between text-[11px] text-slate-400">
+                        <span>Cruze o tornozelo sobre o joelho oposto e incline o tronco à frente.</span>
+                        <span id="stretch-timer-display-1" class="font-mono font-bold text-emerald-400 text-xs hidden">60s</span>
+                    </div>
+                    <!-- Mini progress bar -->
+                    <div class="w-full bg-slate-900 h-1.5 rounded-full mt-2 overflow-hidden">
+                        <div id="stretch-bar-1" class="bg-emerald-500 h-full w-0 transition-all duration-1000"></div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Torção de Coluna -->
+                <div id="stretch-card-2" class="bg-slate-800/90 hover:bg-slate-800 border border-slate-700/70 rounded-2xl p-4 transition shadow-md relative overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xl flex-shrink-0">
+                                <i class="fa-solid fa-arrows-spin"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Torção de Coluna na Cadeira</h4>
+                                <p class="text-xs text-slate-400 mt-0.5">Mobilidade Torácica & Descompressão Lombar</p>
+                            </div>
+                        </div>
+                        <button onclick="toggleStretchTimer(2)" id="stretch-btn-2" class="px-3.5 py-2 bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 shadow transition">
+                            <i id="stretch-icon-2" class="fa-solid fa-play"></i>
+                            <span id="stretch-label-2">1:00</span>
+                        </button>
+                    </div>
+                    <div class="mt-3 pt-2.5 border-t border-slate-700/50 flex items-center justify-between text-[11px] text-slate-400">
+                        <span>Gire o tronco segurando o encosto da cadeira (30s cada lado).</span>
+                        <span id="stretch-timer-display-2" class="font-mono font-bold text-cyan-400 text-xs hidden">60s</span>
+                    </div>
+                    <div class="w-full bg-slate-900 h-1.5 rounded-full mt-2 overflow-hidden">
+                        <div id="stretch-bar-2" class="bg-cyan-500 h-full w-0 transition-all duration-1000"></div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Abertura de Peitoral -->
+                <div id="stretch-card-3" class="bg-slate-800/90 hover:bg-slate-800 border border-slate-700/70 rounded-2xl p-4 transition shadow-md relative overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-teal-400 text-xl flex-shrink-0">
+                                <i class="fa-solid fa-shield-heart"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Abertura de Peitoral & Ombros</h4>
+                                <p class="text-xs text-slate-400 mt-0.5">Correção de Cifose e Ombros Caídos</p>
+                            </div>
+                        </div>
+                        <button onclick="toggleStretchTimer(3)" id="stretch-btn-3" class="px-3.5 py-2 bg-teal-500 hover:bg-teal-400 active:scale-95 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 shadow transition">
+                            <i id="stretch-icon-3" class="fa-solid fa-play"></i>
+                            <span id="stretch-label-3">1:00</span>
+                        </button>
+                    </div>
+                    <div class="mt-3 pt-2.5 border-t border-slate-700/50 flex items-center justify-between text-[11px] text-slate-400">
+                        <span>Entrelace as mãos atrás das costas, abra o peito e olhe à frente.</span>
+                        <span id="stretch-timer-display-3" class="font-mono font-bold text-teal-400 text-xs hidden">60s</span>
+                    </div>
+                    <div class="w-full bg-slate-900 h-1.5 rounded-full mt-2 overflow-hidden">
+                        <div id="stretch-bar-3" class="bg-teal-500 h-full w-0 transition-all duration-1000"></div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Descompressão Cervical e Trapézio -->
+                <div id="stretch-card-4" class="bg-slate-800/90 hover:bg-slate-800 border border-slate-700/70 rounded-2xl p-4 transition shadow-md relative overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-xl flex-shrink-0">
+                                <i class="fa-solid fa-head-side-virus"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Alívio Cervical & Trapézio</h4>
+                                <p class="text-xs text-slate-400 mt-0.5">Tensão de Tela e Digitação Prolongada</p>
+                            </div>
+                        </div>
+                        <button onclick="toggleStretchTimer(4)" id="stretch-btn-4" class="px-3.5 py-2 bg-indigo-500 hover:bg-indigo-400 active:scale-95 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow transition">
+                            <i id="stretch-icon-4" class="fa-solid fa-play"></i>
+                            <span id="stretch-label-4">1:00</span>
+                        </button>
+                    </div>
+                    <div class="mt-3 pt-2.5 border-t border-slate-700/50 flex items-center justify-between text-[11px] text-slate-400">
+                        <span>Incline a cabeça lateralmente com ajuda suave da mão (30s cada).</span>
+                        <span id="stretch-timer-display-4" class="font-mono font-bold text-indigo-400 text-xs hidden">60s</span>
+                    </div>
+                    <div class="w-full bg-slate-900 h-1.5 rounded-full mt-2 overflow-hidden">
+                        <div id="stretch-bar-4" class="bg-indigo-500 h-full w-0 transition-all duration-1000"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complete sequence button -->
+            <button onclick="startFullStretchCircuit()" class="w-full py-3.5 px-4 bg-slate-800 hover:bg-slate-750 border border-emerald-500/40 rounded-2xl text-emerald-400 font-bold flex items-center justify-center gap-2 shadow-lg transition">
+                <i class="fa-solid fa-circle-play text-base"></i>
+                <span>Executar Circuito Completo de 4 Minutos</span>
+            </button>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- ABA 4: CRONOGRAMA & DASHBOARD -->
+        <!-- ============================================================ -->
+        <section id="tab-dashboard" class="tab-content space-y-5">
+            
+            <!-- Card da Dica de Saúde do Dia -->
+            <div class="bg-gradient-to-br from-slate-800 to-slate-850 border border-slate-700/80 rounded-3xl p-4 shadow-xl relative overflow-hidden">
+                <div class="flex items-center justify-between pb-2.5 border-b border-slate-700/60">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 text-sm">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-white uppercase tracking-wider">Dica de Saúde do Dia</h3>
+                            <p class="text-[10px] text-slate-400">Ergonomia & Banco</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="speakDailyTip()" class="w-8 h-8 rounded-xl bg-slate-900/60 border border-slate-700/70 text-slate-400 hover:text-sky-300 flex items-center justify-center transition text-xs" title="Ouvir Dica">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                        <button onclick="nextHealthTip()" id="refreshTipBtn" class="w-8 h-8 rounded-xl bg-slate-900/60 border border-slate-700/70 text-emerald-400 hover:text-emerald-300 flex items-center justify-center transition text-xs active:scale-90" title="Nova Dica">
+                            <i id="refreshTipIcon" class="fa-solid fa-arrows-rotate text-xs transition-transform duration-500"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="pt-3">
+                    <p id="dailyHealthTipText" class="text-sm font-medium text-slate-200 leading-relaxed transition-opacity duration-300">
+                        Ao analisar propostas de crédito, alinhe os ombros e ative 20% do bracing.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Quick Stats Row -->
+            <div class="grid grid-cols-3 gap-2.5">
+                <div class="bg-slate-800/80 border border-slate-700/70 p-3.5 rounded-2xl text-center">
+                    <i class="fa-solid fa-fire text-amber-500 text-lg mb-1"></i>
+                    <p class="text-[11px] text-slate-400 font-medium">Ofensiva</p>
+                    <p id="dashStreakValue" class="text-xl font-bold font-mono text-white">5 dias</p>
+                </div>
+                <div class="bg-slate-800/80 border border-slate-700/70 p-3.5 rounded-2xl text-center">
+                    <i class="fa-solid fa-circle-check text-emerald-400 text-lg mb-1"></i>
+                    <p class="text-[11px] text-slate-400 font-medium">Concluídos</p>
+                    <p id="dashCompletedValue" class="text-xl font-bold font-mono text-white">4 / 5</p>
+                </div>
+                <div class="bg-slate-800/80 border border-slate-700/70 p-3.5 rounded-2xl text-center">
+                    <i class="fa-solid fa-stopwatch text-cyan-400 text-lg mb-1"></i>
+                    <p class="text-[11px] text-slate-400 font-medium">Tempo Hoje</p>
+                    <p id="dashTotalTimeValue" class="text-xl font-bold font-mono text-white">18 min</p>
+                </div>
+            </div>
+
+            <!-- Editable Schedule Table -->
+            <div class="bg-slate-800/90 rounded-3xl p-4 border border-slate-700/80 shadow-xl space-y-3">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-700/60">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-day text-emerald-400 text-sm"></i>
+                        <h3 class="text-sm font-bold text-white">Cronograma Diário do Banco</h3>
+                    </div>
+                    <button onclick="openAddScheduleModal()" class="text-xs font-bold text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20 flex items-center gap-1 transition">
+                        <i class="fa-solid fa-plus text-[10px]"></i> Adicionar
+                    </button>
+                </div>
+
+                <!-- Schedule List -->
+                <div id="scheduleListContainer" class="space-y-2">
+                    <!-- Dynamic Items rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Monthly Visual Progress Chart -->
+            <div class="bg-slate-800/90 rounded-3xl p-4 border border-slate-700/80 shadow-xl space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-chart-column text-cyan-400 text-sm"></i>
+                        <h3 class="text-sm font-bold text-white">Consistência Mensal</h3>
+                    </div>
+                    <span class="text-[11px] text-slate-400 font-mono font-medium">Agosto / 2026</span>
+                </div>
+
+                <!-- SVG / Canvas Bar Chart representation -->
+                <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+                    <div class="flex items-end justify-between h-28 gap-1.5 px-1 pt-2 pb-1" id="monthlyBarsContainer">
+                        <!-- Bars dynamically populated by JS -->
+                    </div>
+                    <div class="flex justify-between text-[10px] text-slate-500 font-mono px-1 mt-1 border-t border-slate-800 pt-1">
+                        <span>Sem 1</span>
+                        <span>Sem 2</span>
+                        <span>Sem 3</span>
+                        <span>Sem 4 (Hoje)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PDF Report Export & Push Notifications Row -->
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="exportPerformancePDF()" class="py-3.5 px-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-95 text-white font-bold rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 transition">
+                    <i class="fa-solid fa-file-pdf text-sm"></i>
+                    <span>Exportar PDF</span>
+                </button>
+                
+                <button onclick="requestPushNotifications()" class="py-3.5 px-3 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 text-slate-200 font-bold rounded-2xl text-xs flex items-center justify-center gap-2 shadow transition">
+                    <i class="fa-solid fa-bell text-amber-400 text-sm"></i>
+                    <span id="pushNotifBtnText">Lembretes Push</span>
+                </button>
+            </div>
+
+            <!-- In-App Notification Reminder Card -->
+            <div id="notificationBanner" class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-xs text-amber-200 flex items-start gap-2.5">
+                <i class="fa-solid fa-bell text-amber-400 text-sm mt-0.5"></i>
+                <div class="flex-1">
+                    <p class="font-bold">Notificações Ativas</p>
+                    <p class="text-slate-400 text-[11px] mt-0.5">Você receberá vibração e lembrete 5 minutos antes de cada bloco de treino.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal for Adding / Editing Schedule Item -->
+    <div id="scheduleModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-slate-850 border border-slate-700 rounded-3xl p-5 w-full max-w-xs space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                    <i class="fa-solid fa-clock text-emerald-400"></i> Horário de Treino
+                </h3>
+                <button onclick="closeScheduleModal()" class="text-slate-400 hover:text-white text-sm p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-slate-400 font-medium mb-1">Horário (24h):</label>
+                    <input type="time" id="modalScheduleTime" value="07:00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono focus:border-emerald-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-medium mb-1">Exercício / Bloco:</label>
+                    <input type="text" id="modalScheduleTitle" placeholder="Ex: Vácuo Matinal" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:border-emerald-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-medium mb-1">Duração Estimada:</label>
+                    <input type="text" id="modalScheduleSub" placeholder="Ex: 5 séries (5 min)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:border-emerald-500 focus:outline-none">
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                <button onclick="closeScheduleModal()" class="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white">Cancelar</button>
+                <button onclick="saveScheduleModal()" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold rounded-xl shadow">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding / Editing Note on Completed Exercise -->
+    <div id="noteModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-slate-850 border border-slate-700 rounded-3xl p-5 w-full max-w-sm space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                    <i class="fa-solid fa-comment-dots text-emerald-400"></i> Como se sentiu no treino?
+                </h3>
+                <button onclick="closeNoteModal()" class="text-slate-400 hover:text-white text-sm p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div>
+                <p id="modalNoteExerciseTitle" class="text-xs font-bold text-emerald-400 mb-1.5">Vácuo Matinal</p>
+                <p class="text-[11px] text-slate-400 mb-2.5">Adicione uma nota sobre as sensações, ativação muscular ou alívio na coluna:</p>
+                
+                <!-- Quick feeling tags -->
+                <div class="flex flex-wrap gap-1.5 mb-3">
+                    <button type="button" onclick="appendNoteTag('⚡ Mais energia')" class="text-[10px] bg-slate-900 hover:bg-slate-750 text-slate-300 border border-slate-700 px-2 py-1 rounded-lg transition active:scale-95">⚡ Mais energia</button>
+                    <button type="button" onclick="appendNoteTag('🧘 Lombar relaxada')" class="text-[10px] bg-slate-900 hover:bg-slate-750 text-slate-300 border border-slate-700 px-2 py-1 rounded-lg transition active:scale-95">🧘 Lombar relaxada</button>
+                    <button type="button" onclick="appendNoteTag('💪 Boa sucção')" class="text-[10px] bg-slate-900 hover:bg-slate-750 text-slate-300 border border-slate-700 px-2 py-1 rounded-lg transition active:scale-95">💪 Boa sucção</button>
+                    <button type="button" onclick="appendNoteTag('✨ Postura alinhada')" class="text-[10px] bg-slate-900 hover:bg-slate-750 text-slate-300 border border-slate-700 px-2 py-1 rounded-lg transition active:scale-95">✨ Postura alinhada</button>
+                    <button type="button" onclick="appendNoteTag('🌿 Sem dores')" class="text-[10px] bg-slate-900 hover:bg-slate-750 text-slate-300 border border-slate-700 px-2 py-1 rounded-lg transition active:scale-95">🌿 Sem dores</button>
+                </div>
+
+                <textarea id="modalNoteText" rows="3" placeholder="Ex: Sucção profunda das costelas sem desconforto. Senti alívio imediato na tensão lombar." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none resize-none"></textarea>
+                <input type="hidden" id="modalNoteItemId">
+            </div>
+
+            <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+                <button type="button" onclick="clearItemNote()" class="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1 py-1">
+                    <i class="fa-solid fa-trash-can text-[10px]"></i> Remover
+                </button>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="closeNoteModal()" class="px-3.5 py-2 text-xs font-semibold text-slate-400 hover:text-white">Cancelar</button>
+                    <button type="button" onclick="saveItemNote()" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 text-xs font-bold rounded-xl shadow">Salvar Nota</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Printable Report for PDF Export -->
+    <div id="printReportContainer" class="hidden print-only p-8 text-black bg-white">
+        <div style="border-bottom: 2px solid #059669; padding-bottom: 12px; margin-bottom: 16px;">
+            <h1 style="font-size: 24px; font-weight: 800; color: #065f46; margin: 0;">Relatório Diário de Desempenho - CoreFlow</h1>
+            <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0;">Treinamento de Vácuo Abdominal, Bracing, Kegel & Ergonomia no Trabalho</p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+            <div style="border: 1px solid #cbd5e1; padding: 10px; border-radius: 8px; text-align: center;">
+                <span style="font-size: 11px; color: #64748b;">Ofensiva Atual</span>
+                <p id="printStreak" style="font-size: 18px; font-weight: bold; color: #d97706; margin: 2px 0;">5 Dias</p>
+            </div>
+            <div style="border: 1px solid #cbd5e1; padding: 10px; border-radius: 8px; text-align: center;">
+                <span style="font-size: 11px; color: #64748b;">Exercícios Concluídos</span>
+                <p id="printCompleted" style="font-size: 18px; font-weight: bold; color: #059669; margin: 2px 0;">4 / 5</p>
+            </div>
+            <div style="border: 1px solid #cbd5e1; padding: 10px; border-radius: 8px; text-align: center;">
+                <span style="font-size: 11px; color: #64748b;">Tempo Total</span>
+                <p id="printTime" style="font-size: 18px; font-weight: bold; color: #0284c7; margin: 2px 0;">18 Minutos</p>
+            </div>
+        </div>
+
+        <h3 style="font-size: 14px; font-weight: bold; color: #1e293b; margin-bottom: 8px;">Rotina do Dia & Metas Cumpridas:</h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px;">
+            <thead>
+                <tr style="background: #f1f5f9; text-align: left;">
+                    <th style="padding: 8px; border-bottom: 1px solid #cbd5e1;">Horário</th>
+                    <th style="padding: 8px; border-bottom: 1px solid #cbd5e1;">Exercício / Bloco</th>
+                    <th style="padding: 8px; border-bottom: 1px solid #cbd5e1;">Detalhes</th>
+                    <th style="padding: 8px; border-bottom: 1px solid #cbd5e1;">Status</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody">
+                <!-- Injected by print script -->
+            </tbody>
+        </table>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; font-size: 11px; color: #475569;">
+            <strong style="color: #0f172a;">Recomendações Clínicas & Posturais:</strong><br>
+            • Mantenha o Bracing abdominal a 20-30% durante longas jornadas sentado para proteger a região L4-L5-S1.<br>
+            • Realize pausas ativas a cada 90 minutos para oxigenação do assoalho pélvico e descompressão do nervo ciático.<br>
+            • A prática de Vácuo Abdominal diária reduz a pressão intra-abdominal e tonifica o transverso profundo.
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- BOTTOM NAVIGATION BAR (MATERIAL DESIGN 3 / ANDROID TABS) -->
+    <!-- ============================================================ -->
+    <nav class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-2 py-2 no-print">
+        <div class="max-w-md mx-auto grid grid-cols-4 gap-1">
+            
+            <!-- Tab 1: Vácuo -->
+            <button onclick="switchTab('vacuo')" id="nav-btn-vacuo" class="nav-item active flex flex-col items-center justify-center py-1.5 px-1 rounded-2xl transition text-emerald-400">
+                <div class="nav-icon-box w-10 h-7 flex items-center justify-center rounded-full bg-emerald-500/15 mb-0.5 transition">
+                    <i class="fa-solid fa-lungs text-base"></i>
+                </div>
+                <span class="text-[10px] font-bold tracking-tight">Vácuo LPF</span>
+            </button>
+
+            <!-- Tab 2: Discreto -->
+            <button onclick="switchTab('discreto')" id="nav-btn-discreto" class="nav-item flex flex-col items-center justify-center py-1.5 px-1 rounded-2xl transition text-slate-400 hover:text-slate-200">
+                <div class="nav-icon-box w-10 h-7 flex items-center justify-center rounded-full mb-0.5 transition">
+                    <i class="fa-solid fa-briefcase text-base"></i>
+                </div>
+                <span class="text-[10px] font-bold tracking-tight">Discreto</span>
+            </button>
+
+            <!-- Tab 3: Pausas Ativas -->
+            <button onclick="switchTab('pausas')" id="nav-btn-pausas" class="nav-item flex flex-col items-center justify-center py-1.5 px-1 rounded-2xl transition text-slate-400 hover:text-slate-200">
+                <div class="nav-icon-box w-10 h-7 flex items-center justify-center rounded-full mb-0.5 transition">
+                    <i class="fa-solid fa-chair text-base"></i>
+                </div>
+                <span class="text-[10px] font-bold tracking-tight">Pausas</span>
+            </button>
+
+            <!-- Tab 4: Cronograma / Dashboard -->
+            <button onclick="switchTab('dashboard')" id="nav-btn-dashboard" class="nav-item flex flex-col items-center justify-center py-1.5 px-1 rounded-2xl transition text-slate-400 hover:text-slate-200">
+                <div class="nav-icon-box w-10 h-7 flex items-center justify-center rounded-full mb-0.5 transition">
+                    <i class="fa-solid fa-calendar-check text-base"></i>
+                </div>
+                <span class="text-[10px] font-bold tracking-tight">Painel</span>
+            </button>
+
+        </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT APPLICATION CORE -->
+    <!-- ============================================================ -->
+    <script>
+        /* -------------------------------------------------------------
+           APP STATE & INITIALIZATION
+        ------------------------------------------------------------- */
+        const AppState = {
+            activeTab: 'vacuo',
+            voiceEnabled: true,
+            hapticsEnabled: true,
+            streak: 5,
+            totalMinutesToday: 18,
+            
+            // Vacuo player state
+            vacuo: {
+                isRunning: false,
+                posture: 'deitado', // 'deitado', '4apoios', 'empe'
+                vacDuration: 15,     // default 15s
+                inspireDuration: 4,
+                expireDuration: 6,
+                restDuration: 60,
+                currentPhase: 'ready', // 'ready', 'inspira', 'expira', 'vacuo', 'descanso'
+                timer: 0,
+                seriesCurrent: 1,
+                seriesTotal: 5,
+                intervalId: null,
+                totalElapsedSec: 0,
+            },
+
+            // Desk mode state
+            desk: {
+                subMode: 'kegel-resistencia', // 'kegel-resistencia', 'kegel-velocidade', 'bracing'
+                silentMode: true,
+                // Kegel Resistencia
+                res: {
+                    isRunning: false,
+                    isContract: true,
+                    timer: 10,
+                    series: 1,
+                    totalSeries: 10,
+                    intervalId: null
+                },
+                // Kegel Velocidade
+                fast: {
+                    isRunning: false,
+                    count: 0,
+                    maxCount: 15,
+                    intervalId: null,
+                    isContract: false
+                },
+                // Bracing
+                bracing: {
+                    isRunning: false,
+                    loadPercent: 25,
+                    remainingSec: 120,
+                    intervalId: null
+                }
+            },
+
+            // Pausas ativas timers
+            pausas: {
+                activeTimerId: null,
+                remainingSec: 60,
+                intervalId: null
+            },
+
+            // Schedule Items
+            schedule: [
+                { id: 1, time: '07:00', title: 'Vácuo Matinal em Jejum', sub: '5 séries LPF (10 min)', completed: true, note: 'Ótima sucção das costelas, sem desconforto.' },
+                { id: 2, time: '10:00', title: 'Kegel de Resistência no Banco', sub: '10 séries (10s / 10s)', completed: true, note: 'Respiração ritmada e abdômen firme.' },
+                { id: 3, time: '12:00', title: 'Kegel de Velocidade', sub: '15 contrações rápidas', completed: true, note: '' },
+                { id: 4, time: '14:30', title: 'Combo Bracing & Postura', sub: 'Ativação 25% na cadeira', completed: true, note: 'Alívio perceptível na coluna e lombar relaxada.' },
+                { id: 5, time: '16:30', title: 'Pausa Ativa: Alongamento na Cadeira', sub: 'Posição do 4 & Torção (4 min)', completed: false, note: '' }
+            ]
+        };
+
+        // Load saved state from LocalStorage
+        function loadSavedState() {
+            try {
+                const savedStreak = localStorage.getItem('coreflow_streak');
+                if (savedStreak) AppState.streak = parseInt(savedStreak, 10);
+                
+                const savedSchedule = localStorage.getItem('coreflow_schedule');
+                if (savedSchedule) AppState.schedule = JSON.parse(savedSchedule);
+
+                const savedMinutes = localStorage.getItem('coreflow_minutes');
+                if (savedMinutes) AppState.totalMinutesToday = parseInt(savedMinutes, 10);
+            } catch(e) {
+                console.log('Storage load fallback', e);
+            }
+            updateHeaderStats();
+            renderScheduleList();
+            renderMonthlyBars();
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem('coreflow_streak', AppState.streak);
+                localStorage.setItem('coreflow_schedule', JSON.stringify(AppState.schedule));
+                localStorage.setItem('coreflow_minutes', AppState.totalMinutesToday);
+            } catch(e) {
+                console.log('Storage save error', e);
+            }
+        }
+
+        /* -------------------------------------------------------------
+           SOUND & HAPTICS (Web Audio + Web Speech API + Android Bridge)
+        ------------------------------------------------------------- */
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        // Web Audio Synth Beeper
+        function playBeep(freq = 600, duration = 0.15, type = 'sine') {
+            if (!AppState.voiceEnabled && AppState.desk.silentMode) return;
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        function playTibetanChime() {
+            try {
+                const ctx = getAudioContext();
+                [528, 660, 792].forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.05);
+                    gain.gain.setValueAtTime(0.25, ctx.currentTime + idx * 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.8);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime + idx * 0.05);
+                    osc.stop(ctx.currentTime + 1.8);
+                });
+            } catch(e) {}
+        }
+
+        // Speech synthesis in PT-BR
+        function speakVoice(text) {
+            if (!AppState.voiceEnabled) return;
+            if (AppState.activeTab === 'discreto' && AppState.desk.silentMode) return;
+
+            // Check if Android Native Bridge exists
+            if (window.AndroidBridge && window.AndroidBridge.speakText) {
+                window.AndroidBridge.speakText(text);
+                return;
+            }
+
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'pt-BR';
+                utterance.rate = 1.05;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Trigger vibration
+        function triggerHaptic(pattern = [60]) {
+            if (!AppState.hapticsEnabled) return;
+
+            if (window.AndroidBridge) {
+                if (Array.isArray(pattern) && pattern.length > 1 && window.AndroidBridge.vibratePattern) {
+                    window.AndroidBridge.vibratePattern(pattern.join(','));
+                    return;
+                } else if (window.AndroidBridge.vibrate) {
+                    const dur = Array.isArray(pattern) ? (pattern[0] || 60) : pattern;
+                    window.AndroidBridge.vibrate(dur);
+                    return;
+                }
+            }
+
+            if ('vibrate' in navigator) {
+                try {
+                    navigator.vibrate(pattern);
+                } catch(e) {}
+            }
+        }
+
+        function toggleVoice() {
+            AppState.voiceEnabled = !AppState.voiceEnabled;
+            const icon = document.getElementById('voiceIcon');
+            if (AppState.voiceEnabled) {
+                icon.className = 'fa-solid fa-volume-high text-emerald-400';
+                speakVoice('Voz ativada');
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark text-slate-500';
+            }
+        }
+
+        function toggleHaptics() {
+            AppState.hapticsEnabled = !AppState.hapticsEnabled;
+            const icon = document.getElementById('hapticIcon');
+            if (AppState.hapticsEnabled) {
+                icon.className = 'fa-solid fa-mobile-screen-button text-cyan-400';
+                triggerHaptic([100]);
+            } else {
+                icon.className = 'fa-solid fa-mobile-screen text-slate-500';
+            }
+        }
+
+        /* -------------------------------------------------------------
+           NAVIGATION TABS
+        ------------------------------------------------------------- */
+        function switchTab(tabName) {
+            AppState.activeTab = tabName;
+
+            // Update content visibility
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById('tab-' + tabName);
+            if (target) target.classList.add('active');
+
+            // Update Nav buttons and trigger bouncy icon animation
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.classList.remove('text-emerald-400');
+                btn.classList.add('text-slate-400');
+                const box = btn.querySelector('.nav-icon-box');
+                if (box) {
+                    box.classList.remove('bg-emerald-500/15', 'nav-bounce');
+                }
+            });
+
+            const activeNavBtn = document.getElementById('nav-btn-' + tabName);
+            if (activeNavBtn) {
+                activeNavBtn.classList.remove('text-slate-400');
+                activeNavBtn.classList.add('text-emerald-400');
+                const box = activeNavBtn.querySelector('.nav-icon-box');
+                if (box) {
+                    box.classList.add('bg-emerald-500/15');
+                    // Trigger DOM reflow to cleanly restart bounce animation
+                    void box.offsetWidth;
+                    box.classList.add('nav-bounce');
+                }
+            }
+
+            triggerHaptic([30]);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* -------------------------------------------------------------
+           ABA 1: PLAYER DE VÁCUO ABDOMINAL (LPF ENGINE)
+        ------------------------------------------------------------- */
+        const VAC_CIRCUMFERENCE = 603; // 2 * PI * 96
+
+        function setPosture(posture, vacSec) {
+            AppState.vacuo.posture = posture;
+            AppState.vacuo.vacDuration = vacSec;
+
+            // Update UI posture buttons
+            document.querySelectorAll('.posture-btn').forEach(btn => {
+                btn.className = 'posture-btn py-2 px-1.5 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-slate-900/60 border-slate-700 text-slate-300 hover:border-slate-600';
+            });
+            const activeBtn = document.getElementById('posture-' + posture);
+            if (activeBtn) {
+                activeBtn.className = 'posture-btn active py-2 px-1.5 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-emerald-500/15 border-emerald-500 text-emerald-400';
+            }
+
+            // Update badge & guide text
+            const badge = document.getElementById('currentLevelBadge');
+            const guide = document.getElementById('postureGuideText');
+
+            if (posture === 'deitado') {
+                badge.innerText = 'Iniciante';
+                guide.innerHTML = '<strong class="text-emerald-400 block mb-1">Deitado com Joelhos Flexionados:</strong> 1. Mantenha os pés no chão e coluna neutra.<br>2. Inspire pelo nariz expandindo as costelas por 4 segundos.<br>3. Solte todo o ar pela boca suavemente em 6 segundos.<br>4. Em apneia, abra as costelas e sugue o umbigo para cima e para dentro.';
+            } else if (posture === '4apoios') {
+                badge.innerText = 'Intermediário';
+                guide.innerHTML = '<strong class="text-emerald-400 block mb-1">Posição de 4 Apoios (Gato LPF):</strong> 1. Joelhos alinhados com o quadril e mãos sob os ombros.<br>2. Mantenha a coluna neutra e queixo levemente recolhido.<br>3. Inspire e expire todo o ar sem desabar as costas.<br>4. Sugue o abdômen contra a gravidade, alargando a caixa torácica.';
+            } else {
+                badge.innerText = 'Avançado';
+                guide.innerHTML = '<strong class="text-emerald-400 block mb-1">Postura Em Pé (Vênus / Atena):</strong> 1. Pés paralelos, joelhos levemente destravados.<br>2. Incline suavemente o eixo do corpo à frente (peso nos metatarsos).<br>3. Braços empurrando para fora (tração das escápulas).<br>4. Expire total e realize a sucção profunda em apneia.';
+            }
+
+            // Update vacuum pills
+            updateVacDurationPills(vacSec);
+            triggerHaptic([40]);
+        }
+
+        function setVacuumDuration(sec) {
+            AppState.vacuo.vacDuration = sec;
+            updateVacDurationPills(sec);
+            triggerHaptic([30]);
+        }
+
+        function updateVacDurationPills(sec) {
+            document.querySelectorAll('.vac-dur-btn').forEach(btn => {
+                const dur = parseInt(btn.getAttribute('data-dur'), 10);
+                if (dur === sec) {
+                    btn.className = 'vac-dur-btn px-2 py-0.5 text-xs rounded-lg font-mono font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+                } else {
+                    btn.className = 'vac-dur-btn px-2 py-0.5 text-xs rounded-lg font-mono font-semibold bg-slate-900 border border-slate-700 text-slate-400';
+                }
+            });
+            document.getElementById('indicatorVacSec').innerText = sec + 's';
+        }
+
+        function togglePlayVacuo() {
+            if (AppState.vacuo.isRunning) {
+                pauseVacuo();
+            } else {
+                startVacuo();
+            }
+        }
+
+        function startVacuo() {
+            AppState.vacuo.isRunning = true;
+            document.getElementById('vacPlayIcon').className = 'fa-solid fa-pause';
+            document.getElementById('vacPlayText').innerText = 'Pausar';
+            getAudioContext();
+
+            if (AppState.vacuo.currentPhase === 'ready') {
+                transitionVacuoPhase('inspira');
+            } else {
+                runVacuoTick();
+            }
+        }
+
+        function pauseVacuo() {
+            AppState.vacuo.isRunning = false;
+            clearInterval(AppState.vacuo.intervalId);
+            document.getElementById('vacPlayIcon').className = 'fa-solid fa-play';
+            document.getElementById('vacPlayText').innerText = 'Continuar';
+        }
+
+        function resetVacuo() {
+            pauseVacuo();
+            AppState.vacuo.currentPhase = 'ready';
+            AppState.vacuo.timer = 0;
+            AppState.vacuo.seriesCurrent = 1;
+            AppState.vacuo.totalElapsedSec = 0;
+
+            document.getElementById('vacPlayText').innerText = 'Iniciar';
+            document.getElementById('vacPhaseTitle').innerText = 'Pronto para iniciar';
+            document.getElementById('vacPhaseTitle').className = 'text-sm font-heading font-extrabold tracking-tight text-slate-300 transition-colors duration-300';
+            document.getElementById('vacTimerMain').innerText = '▶';
+            document.getElementById('vacCurrentSeries').innerText = '1 de ' + AppState.vacuo.seriesTotal;
+            document.getElementById('vacTotalTime').innerText = '00:00';
+
+            const ring = document.getElementById('vacProgressRing');
+            if (ring) {
+                ring.className = 'ring-circle text-emerald-500 transition-all';
+            }
+
+            // Reset circles
+            setVacProgress(0);
+            updateCoreAnimation('ready');
+            highlightPhaseCard(null);
+        }
+
+        function skipVacuoPhase() {
+            if (!AppState.vacuo.isRunning) return;
+            clearInterval(AppState.vacuo.intervalId);
+            
+            if (AppState.vacuo.currentPhase === 'inspira') {
+                transitionVacuoPhase('expira');
+            } else if (AppState.vacuo.currentPhase === 'expira') {
+                transitionVacuoPhase('vacuo');
+            } else if (AppState.vacuo.currentPhase === 'vacuo') {
+                transitionVacuoPhase('descanso');
+            } else {
+                advanceVacuoSeries();
+            }
+        }
+
+        function transitionVacuoPhase(phase) {
+            AppState.vacuo.currentPhase = phase;
+            clearInterval(AppState.vacuo.intervalId);
+
+            const title = document.getElementById('vacPhaseTitle');
+            const icon = document.getElementById('phaseIcon');
+            const iconCont = document.getElementById('phaseIconContainer');
+            const timerEl = document.getElementById('vacTimerMain');
+            const glow = document.getElementById('ringGlowBg');
+            const ring = document.getElementById('vacProgressRing');
+
+            highlightPhaseCard(phase);
+
+            if (phase === 'inspira') {
+                AppState.vacuo.timer = AppState.vacuo.inspireDuration;
+                title.innerText = 'Inspire pelo nariz...';
+                title.className = 'text-sm font-heading font-extrabold text-sky-400';
+                icon.className = 'fa-solid fa-arrow-up text-xl text-sky-400';
+                iconCont.className = 'w-12 h-12 rounded-full bg-sky-500/20 border border-sky-400/40 flex items-center justify-center mb-1 shadow-inner';
+                if (ring) ring.className = 'ring-circle text-sky-400 transition-all';
+                glow.className = 'absolute w-48 h-48 rounded-full bg-sky-500/20 blur-3xl pointer-events-none transition-all duration-700';
+
+                speakVoice('Inspire pelo nariz');
+                triggerHaptic([80, 50, 80]);
+                updateCoreAnimation('inspira');
+
+            } else if (phase === 'expira') {
+                AppState.vacuo.timer = AppState.vacuo.expireDuration;
+                title.innerText = 'Solte TODO o ar...';
+                title.className = 'text-sm font-heading font-extrabold text-sky-300';
+                icon.className = 'fa-solid fa-arrow-down text-xl text-sky-300';
+                iconCont.className = 'w-12 h-12 rounded-full bg-sky-500/20 border border-sky-400/40 flex items-center justify-center mb-1 shadow-inner';
+                if (ring) ring.className = 'ring-circle text-sky-300 transition-all';
+                glow.className = 'absolute w-48 h-48 rounded-full bg-sky-500/20 blur-3xl pointer-events-none transition-all duration-700';
+
+                speakVoice('Solte todo o ar');
+                triggerHaptic([120]);
+                updateCoreAnimation('expira');
+
+            } else if (phase === 'vacuo') {
+                AppState.vacuo.timer = AppState.vacuo.vacDuration;
+                title.innerText = 'SUGUE O ABDÔMEN!';
+                title.className = 'text-sm font-heading font-extrabold text-emerald-400 animate-pulse';
+                icon.className = 'fa-solid fa-lungs text-xl text-emerald-400';
+                iconCont.className = 'w-12 h-12 rounded-full bg-emerald-500/30 border border-emerald-400 flex items-center justify-center mb-1 shadow-lg shadow-emerald-500/30';
+                if (ring) ring.className = 'ring-circle text-emerald-400 transition-all';
+                glow.className = 'absolute w-64 h-64 rounded-full bg-emerald-500/35 blur-3xl pointer-events-none transition-all duration-700 animate-pulse';
+
+                speakVoice('Sugue o abdômen!');
+                triggerHaptic([200, 100, 200]);
+                updateCoreAnimation('vacuo');
+
+            } else if (phase === 'descanso') {
+                AppState.vacuo.timer = AppState.vacuo.restDuration;
+                title.innerText = 'Descanse';
+                title.className = 'text-sm font-heading font-extrabold text-slate-400';
+                icon.className = 'fa-solid fa-bed text-xl text-slate-400';
+                iconCont.className = 'w-12 h-12 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center mb-1 shadow-inner';
+                if (ring) ring.className = 'ring-circle text-slate-500 transition-all';
+                glow.className = 'absolute w-48 h-48 rounded-full bg-slate-500/10 blur-3xl pointer-events-none transition-all duration-700';
+
+                speakVoice('Descanse');
+                triggerHaptic([100]);
+                updateCoreAnimation('descanso');
+            }
+
+            timerEl.innerText = AppState.vacuo.timer;
+            runVacuoTick();
+        }
+
+        function runVacuoTick() {
+            let totalPhaseTime = 0;
+            if (AppState.vacuo.currentPhase === 'inspira') totalPhaseTime = AppState.vacuo.inspireDuration;
+            else if (AppState.vacuo.currentPhase === 'expira') totalPhaseTime = AppState.vacuo.expireDuration;
+            else if (AppState.vacuo.currentPhase === 'vacuo') totalPhaseTime = AppState.vacuo.vacDuration;
+            else if (AppState.vacuo.currentPhase === 'descanso') totalPhaseTime = AppState.vacuo.restDuration;
+
+            AppState.vacuo.intervalId = setInterval(() => {
+                if (!AppState.vacuo.isRunning) return;
+
+                AppState.vacuo.timer--;
+                AppState.vacuo.totalElapsedSec++;
+                
+                // Update total elapsed
+                const mins = String(Math.floor(AppState.vacuo.totalElapsedSec / 60)).padStart(2, '0');
+                const secs = String(AppState.vacuo.totalElapsedSec % 60).padStart(2, '0');
+                document.getElementById('vacTotalTime').innerText = `${mins}:${secs}`;
+
+                // Update display & ring
+                document.getElementById('vacTimerMain').innerText = Math.max(0, AppState.vacuo.timer);
+                const progressRatio = (totalPhaseTime - AppState.vacuo.timer) / totalPhaseTime;
+                setVacProgress(progressRatio);
+
+                // Audio beeps for countdown
+                if (AppState.vacuo.timer <= 3 && AppState.vacuo.timer > 0) {
+                    playBeep(440, 0.1, 'sine');
+                    triggerHaptic([50]);
+                }
+
+                if (AppState.vacuo.timer <= 0) {
+                    clearInterval(AppState.vacuo.intervalId);
+                    playBeep(880, 0.25, 'triangle');
+
+                    if (AppState.vacuo.currentPhase === 'inspira') {
+                        transitionVacuoPhase('expira');
+                    } else if (AppState.vacuo.currentPhase === 'expira') {
+                        transitionVacuoPhase('vacuo');
+                    } else if (AppState.vacuo.currentPhase === 'vacuo') {
+                        transitionVacuoPhase('descanso');
+                    } else if (AppState.vacuo.currentPhase === 'descanso') {
+                        advanceVacuoSeries();
+                    }
+                }
+            }, 1000);
+        }
+
+        function advanceVacuoSeries() {
+            if (AppState.vacuo.seriesCurrent < AppState.vacuo.seriesTotal) {
+                AppState.vacuo.seriesCurrent++;
+                document.getElementById('vacCurrentSeries').innerText = `${AppState.vacuo.seriesCurrent} de ${AppState.vacuo.seriesTotal}`;
+                transitionVacuoPhase('inspira');
+            } else {
+                // Workout Completed!
+                pauseVacuo();
+                speakVoice('Treino de Vácuo Concluído! Excelente trabalho.');
+                playTibetanChime();
+                triggerHaptic([200, 100, 200, 100, 400]);
+
+                document.getElementById('vacPhaseTitle').innerText = 'Concluído! 🎉';
+                document.getElementById('vacPhaseInstruction').innerText = '5 séries finalizadas com sucesso!';
+                document.getElementById('vacTimerMain').innerText = '✓';
+
+                // Mark schedule item 1 as completed
+                markScheduleDone(1, true);
+                addMinutesToday(10);
+            }
+        }
+
+        function setVacProgress(ratio) {
+            const ring = document.getElementById('vacProgressRing');
+            const offset = VAC_CIRCUMFERENCE - (ratio * VAC_CIRCUMFERENCE);
+            ring.style.strokeDashoffset = offset;
+        }
+
+        function updateCoreAnimation(phase) {
+            const core = document.getElementById('breatheCoreNode');
+            core.className = 'absolute inset-0 flex flex-col items-center justify-center text-center p-4 rounded-full ';
+            if (phase === 'inspira') core.classList.add('breathe-expand');
+            else if (phase === 'expira') core.classList.add('breathe-contract');
+            else if (phase === 'vacuo') core.classList.add('breathe-vacuum');
+            else if (phase === 'descanso') core.classList.add('breathe-rest');
+        }
+
+        function highlightPhaseCard(phase) {
+            ['inspira', 'expira', 'vacuo', 'descanso'].forEach(p => {
+                const card = document.getElementById('phase-card-' + p);
+                if (card) {
+                    if (p === phase) {
+                        card.className = 'py-1.5 px-1 rounded-lg bg-emerald-500/20 border border-emerald-500 shadow-md shadow-emerald-500/20';
+                    } else {
+                        card.className = 'py-1.5 px-1 rounded-lg bg-slate-800/60 border border-slate-700/40';
+                    }
+                }
+            });
+        }
+
+        /* -------------------------------------------------------------
+           ABA 2: MODO DISCRETO (KEGEL & BRACING NO ESCRITÓRIO)
+        ------------------------------------------------------------- */
+        function toggleDeskSilentMode() {
+            const toggle = document.getElementById('deskSilentModeToggle');
+            AppState.desk.silentMode = toggle.checked;
+            if (AppState.desk.silentMode) {
+                triggerHaptic([60, 40, 60]);
+            }
+        }
+
+        function setDeskMode(mode) {
+            AppState.desk.subMode = mode;
+
+            // Update sub-buttons
+            document.querySelectorAll('.desk-sub-btn').forEach(btn => {
+                btn.className = 'desk-sub-btn flex-1 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-slate-200';
+            });
+            const activeSub = document.getElementById('btn-sub-' + mode.replace('kegel-', ''));
+            if (activeSub) {
+                activeSub.className = 'desk-sub-btn flex-1 py-2 rounded-xl text-xs font-bold transition text-emerald-400 bg-slate-900 shadow';
+            }
+
+            // Update sub-views
+            document.getElementById('desk-view-resistencia').classList.add('hidden');
+            document.getElementById('desk-view-velocidade').classList.add('hidden');
+            document.getElementById('desk-view-bracing').classList.add('hidden');
+
+            if (mode === 'kegel-resistencia') {
+                document.getElementById('desk-view-resistencia').classList.remove('hidden');
+            } else if (mode === 'kegel-velocidade') {
+                document.getElementById('desk-view-velocidade').classList.remove('hidden');
+            } else if (mode === 'bracing') {
+                document.getElementById('desk-view-bracing').classList.remove('hidden');
+            }
+
+            triggerHaptic([30]);
+        }
+
+        // KEGEL RESISTÊNCIA
+        const KEGEL_CIRCUMFERENCE = 502; // 2 * PI * 80
+
+        function toggleKegelRes() {
+            if (AppState.desk.res.isRunning) {
+                pauseKegelRes();
+            } else {
+                startKegelRes();
+            }
+        }
+
+        function startKegelRes() {
+            AppState.desk.res.isRunning = true;
+            document.getElementById('kegelResIcon').className = 'fa-solid fa-pause';
+            document.getElementById('kegelResText').innerText = 'Pausar';
+            runKegelResTick();
+        }
+
+        function pauseKegelRes() {
+            AppState.desk.res.isRunning = false;
+            clearInterval(AppState.desk.res.intervalId);
+            document.getElementById('kegelResIcon').className = 'fa-solid fa-play';
+            document.getElementById('kegelResText').innerText = 'Continuar';
+        }
+
+        function resetKegelRes() {
+            pauseKegelRes();
+            AppState.desk.res.isContract = true;
+            AppState.desk.res.timer = 10;
+            AppState.desk.res.series = 1;
+
+            document.getElementById('kegelResText').innerText = 'Iniciar Treino';
+            document.getElementById('kegelResStateText').innerText = 'Pronto';
+            document.getElementById('kegelResTimer').innerText = '10';
+            document.getElementById('kegelResSub').innerText = 'Contração Sustentada';
+            document.getElementById('kegelResSeriesLabel').innerText = 'Série 1 / 10';
+
+            setKegelResRing(0);
+        }
+
+        function runKegelResTick() {
+            updateKegelResStateUI();
+
+            AppState.desk.res.intervalId = setInterval(() => {
+                if (!AppState.desk.res.isRunning) return;
+
+                AppState.desk.res.timer--;
+                document.getElementById('kegelResTimer').innerText = AppState.desk.res.timer;
+                
+                const ratio = (10 - AppState.desk.res.timer) / 10;
+                setKegelResRing(ratio);
+
+                if (AppState.desk.res.timer <= 0) {
+                    if (AppState.desk.res.isContract) {
+                        // Switch to Relax
+                        AppState.desk.res.isContract = false;
+                        AppState.desk.res.timer = 10;
+                        triggerHaptic([100]); // single short pulse for relax
+                        if (!AppState.desk.silentMode) speakVoice('Relaxe');
+                    } else {
+                        // Complete 1 round
+                        if (AppState.desk.res.series < AppState.desk.res.totalSeries) {
+                            AppState.desk.res.series++;
+                            AppState.desk.res.isContract = true;
+                            AppState.desk.res.timer = 10;
+                            document.getElementById('kegelResSeriesLabel').innerText = `Série ${AppState.desk.res.series} / 10`;
+                            triggerHaptic([200, 100, 200]); // double strong pulse for contraction
+                            if (!AppState.desk.silentMode) speakVoice('Contraia');
+                        } else {
+                            // Completed 10 sets
+                            pauseKegelRes();
+                            triggerHaptic([300, 150, 300]);
+                            playTibetanChime();
+                            document.getElementById('kegelResStateText').innerText = 'Concluído! 🏆';
+                            document.getElementById('kegelResSub').innerText = '10 séries finalizadas';
+                            markScheduleDone(2, true);
+                            addMinutesToday(5);
+                            return;
+                        }
+                    }
+                    updateKegelResStateUI();
+                }
+            }, 1000);
+        }
+
+        function updateKegelResStateUI() {
+            const state = document.getElementById('kegelResStateText');
+            const sub = document.getElementById('kegelResSub');
+            const timer = document.getElementById('kegelResTimer');
+            const ring = document.getElementById('kegelResRing');
+
+            if (AppState.desk.res.isContract) {
+                state.innerText = 'CONTRAIA';
+                state.className = 'text-lg font-heading font-extrabold text-emerald-400 animate-pulse';
+                sub.innerText = 'Sustente o assoalho pélvico';
+                timer.className = 'text-4xl font-extrabold font-mono text-emerald-400';
+                ring.className = 'ring-circle text-emerald-400';
+            } else {
+                state.innerText = 'RELAXE';
+                state.className = 'text-lg font-heading font-extrabold text-cyan-300';
+                sub.innerText = 'Solte totalmente a tensão';
+                timer.className = 'text-4xl font-extrabold font-mono text-cyan-400';
+                ring.className = 'ring-circle text-cyan-400';
+            }
+        }
+
+        function setKegelResRing(ratio) {
+            const ring = document.getElementById('kegelResRing');
+            const offset = KEGEL_CIRCUMFERENCE - (ratio * KEGEL_CIRCUMFERENCE);
+            ring.style.strokeDashoffset = offset;
+        }
+
+        // KEGEL DE VELOCIDADE (METRÔNOMO RÁPIDO)
+        function toggleKegelFast() {
+            if (AppState.desk.fast.isRunning) {
+                pauseKegelFast();
+            } else {
+                startKegelFast();
+            }
+        }
+
+        function startKegelFast() {
+            AppState.desk.fast.isRunning = true;
+            document.getElementById('kegelFastIcon').className = 'fa-solid fa-pause';
+            document.getElementById('kegelFastText').innerText = 'Pausar';
+            runKegelFastTick();
+        }
+
+        function pauseKegelFast() {
+            AppState.desk.fast.isRunning = false;
+            clearInterval(AppState.desk.fast.intervalId);
+            document.getElementById('kegelFastIcon').className = 'fa-solid fa-play';
+            document.getElementById('kegelFastText').innerText = 'Continuar';
+        }
+
+        function resetKegelFast() {
+            pauseKegelFast();
+            AppState.desk.fast.count = 0;
+            AppState.desk.fast.isContract = false;
+
+            document.getElementById('kegelFastText').innerText = 'Iniciar 15 Pulsos';
+            document.getElementById('kegelFastProgress').innerText = '0 / 15';
+            document.getElementById('fastMetronomeState').innerText = 'Pronto';
+            document.getElementById('fastMetronomeCounter').innerText = '0';
+            document.getElementById('fastMetronomeOrb').classList.remove('beat-active');
+        }
+
+        function runKegelFastTick() {
+            const orb = document.getElementById('fastMetronomeOrb');
+            const state = document.getElementById('fastMetronomeState');
+            const counter = document.getElementById('fastMetronomeCounter');
+            const prog = document.getElementById('kegelFastProgress');
+
+            AppState.desk.fast.intervalId = setInterval(() => {
+                if (!AppState.desk.fast.isRunning) return;
+
+                AppState.desk.fast.isContract = !AppState.desk.fast.isContract;
+
+                if (AppState.desk.fast.isContract) {
+                    AppState.desk.fast.count++;
+                    counter.innerText = AppState.desk.fast.count;
+                    prog.innerText = `${AppState.desk.fast.count} / 15`;
+                    state.innerText = 'PULSO!';
+                    state.className = 'text-sm font-extrabold text-emerald-300';
+                    orb.classList.add('beat-active');
+
+                    triggerHaptic([60]);
+                    playBeep(800, 0.08, 'triangle');
+                } else {
+                    state.innerText = 'Solta';
+                    state.className = 'text-sm font-semibold text-slate-400';
+                    orb.classList.remove('beat-active');
+                }
+
+                if (AppState.desk.fast.count >= AppState.desk.fast.maxCount && !AppState.desk.fast.isContract) {
+                    pauseKegelFast();
+                    triggerHaptic([200, 100, 200]);
+                    playTibetanChime();
+                    state.innerText = 'Excelente! ⚡';
+                    document.getElementById('kegelFastText').innerText = 'Repetir';
+                    markScheduleDone(3, true);
+                    addMinutesToday(2);
+                }
+            }, 800); // 800ms fast metronome rhythm
+        }
+
+        // MEDIDOR DE BRACING ABDOMINAL (20% - 30%)
+        const BRACING_CIRCUMFERENCE = 471; // 2 * PI * 75
+
+        function updateBracingLoad(val) {
+            AppState.desk.bracing.loadPercent = parseInt(val, 10);
+            document.getElementById('bracingPercentDisplay').innerText = val + '%';
+            
+            const ring = document.getElementById('bracingLoadRing');
+            const ratio = val / 100;
+            const offset = BRACING_CIRCUMFERENCE - (ratio * BRACING_CIRCUMFERENCE);
+            ring.style.strokeDashoffset = offset;
+
+            // Color indicator
+            if (val >= 20 && val <= 35) {
+                ring.className = 'ring-circle text-emerald-400';
+                document.getElementById('bracingPercentDisplay').className = 'text-3xl font-extrabold font-mono text-emerald-400';
+            } else if (val < 20) {
+                ring.className = 'ring-circle text-cyan-400';
+                document.getElementById('bracingPercentDisplay').className = 'text-3xl font-extrabold font-mono text-cyan-400';
+            } else {
+                ring.className = 'ring-circle text-amber-400';
+                document.getElementById('bracingPercentDisplay').className = 'text-3xl font-extrabold font-mono text-amber-400';
+            }
+        }
+
+        function toggleBracingTimer() {
+            if (AppState.desk.bracing.isRunning) {
+                pauseBracingTimer();
+            } else {
+                startBracingTimer();
+            }
+        }
+
+        function startBracingTimer() {
+            AppState.desk.bracing.isRunning = true;
+            document.getElementById('bracingIcon').className = 'fa-solid fa-pause';
+            document.getElementById('bracingText').innerText = 'Pausar Bracing';
+
+            AppState.desk.bracing.intervalId = setInterval(() => {
+                if (!AppState.desk.bracing.isRunning) return;
+
+                AppState.desk.bracing.remainingSec--;
+                const mins = String(Math.floor(AppState.desk.bracing.remainingSec / 60)).padStart(2, '0');
+                const secs = String(AppState.desk.bracing.remainingSec % 60).padStart(2, '0');
+                document.getElementById('bracingTimerDisplay').innerText = `${mins}:${secs}`;
+
+                // Haptic posture reminder every 30s
+                if (AppState.desk.bracing.remainingSec % 30 === 0 && AppState.desk.bracing.remainingSec > 0) {
+                    triggerHaptic([80, 40, 80]);
+                }
+
+                if (AppState.desk.bracing.remainingSec <= 0) {
+                    pauseBracingTimer();
+                    triggerHaptic([300, 150, 300]);
+                    playTibetanChime();
+                    document.getElementById('bracingTimerDisplay').innerText = '✓ 2 min';
+                    markScheduleDone(4, true);
+                    addMinutesToday(2);
+                }
+            }, 1000);
+        }
+
+        function pauseBracingTimer() {
+            AppState.desk.bracing.isRunning = false;
+            clearInterval(AppState.desk.bracing.intervalId);
+            document.getElementById('bracingIcon').className = 'fa-solid fa-play';
+            document.getElementById('bracingText').innerText = 'Continuar';
+        }
+
+        function resetBracingTimer() {
+            pauseBracingTimer();
+            AppState.desk.bracing.remainingSec = 120;
+            document.getElementById('bracingTimerDisplay').innerText = '02:00';
+            document.getElementById('bracingText').innerText = 'Manter Postura 2min';
+        }
+
+        /* -------------------------------------------------------------
+           ABA 3: PAUSAS ATIVAS & ALONGAMENTOS (1 MIN CRONÔMETRO)
+        ------------------------------------------------------------- */
+        function toggleStretchTimer(cardId) {
+            if (AppState.pausas.activeTimerId === cardId) {
+                // Pause current
+                pauseStretchTimer(cardId);
+            } else {
+                // Stop any other active and start this
+                if (AppState.pausas.activeTimerId) {
+                    pauseStretchTimer(AppState.pausas.activeTimerId);
+                }
+                startStretchTimer(cardId);
+            }
+        }
+
+        function startStretchTimer(cardId) {
+            AppState.pausas.activeTimerId = cardId;
+            AppState.pausas.remainingSec = 60;
+
+            const icon = document.getElementById('stretch-icon-' + cardId);
+            const label = document.getElementById('stretch-label-' + cardId);
+            const disp = document.getElementById('stretch-timer-display-' + cardId);
+            const bar = document.getElementById('stretch-bar-' + cardId);
+
+            icon.className = 'fa-solid fa-pause';
+            disp.classList.remove('hidden');
+            triggerHaptic([60]);
+            playBeep(600, 0.1);
+
+            AppState.pausas.intervalId = setInterval(() => {
+                AppState.pausas.remainingSec--;
+                const sec = AppState.pausas.remainingSec;
+                
+                label.innerText = `0:${String(sec).padStart(2, '0')}`;
+                disp.innerText = `${sec}s`;
+                bar.style.width = `${((60 - sec) / 60) * 100}%`;
+
+                if (sec === 30) {
+                    // Halfway reminder to switch side if applicable
+                    triggerHaptic([100, 50, 100]);
+                    speakVoice('30 segundos. Troque o lado suavemente');
+                }
+
+                if (sec <= 0) {
+                    clearInterval(AppState.pausas.intervalId);
+                    AppState.pausas.activeTimerId = null;
+
+                    icon.className = 'fa-solid fa-check';
+                    label.innerText = 'Feito!';
+                    disp.innerText = '✓ Concluído';
+                    bar.style.width = '100%';
+                    bar.className = 'bg-emerald-400 h-full w-full';
+
+                    playTibetanChime();
+                    triggerHaptic([200, 100, 300]);
+                    speakVoice('Alongamento concluído!');
+                    markScheduleDone(5, true);
+                    addMinutesToday(1);
+                }
+            }, 1000);
+        }
+
+        function pauseStretchTimer(cardId) {
+            clearInterval(AppState.pausas.intervalId);
+            AppState.pausas.activeTimerId = null;
+            const icon = document.getElementById('stretch-icon-' + cardId);
+            if (icon) icon.className = 'fa-solid fa-play';
+        }
+
+        function startFullStretchCircuit() {
+            switchTab('pausas');
+            toggleStretchTimer(1);
+        }
+
+        /* -------------------------------------------------------------
+           ABA 4: CRONOGRAMA, DASHBOARD & PDF EXPORT
+        ------------------------------------------------------------- */
+        function renderScheduleList() {
+            const container = document.getElementById('scheduleListContainer');
+            if (!container) return;
+
+            container.innerHTML = AppState.schedule.map(item => `
+                <div class="p-3 rounded-2xl ${item.completed ? 'bg-slate-900/60 border border-slate-800' : 'bg-slate-800 border border-slate-700'} transition shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <button onclick="toggleScheduleItem(${item.id})" class="w-6 h-6 rounded-lg flex items-center justify-center border transition ${item.completed ? 'bg-emerald-500 border-emerald-500 text-slate-950 shadow-sm' : 'border-slate-600 bg-slate-900 text-transparent hover:border-emerald-500'}">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </button>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-mono font-bold text-xs ${item.completed ? 'text-slate-500 line-through' : 'text-emerald-400'}">${item.time}</span>
+                                    <h4 class="text-xs font-bold ${item.completed ? 'text-slate-400 line-through' : 'text-slate-200'}">${item.title}</h4>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mt-0.5">${item.sub}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            ${item.completed ? `
+                                <button onclick="openNoteModal(${item.id})" class="p-2 text-xs transition ${item.note ? 'text-emerald-400 hover:text-emerald-300' : 'text-slate-500 hover:text-emerald-400'}" title="${item.note ? 'Editar anotação' : 'Como se sentiu?'}">
+                                    <i class="fa-solid ${item.note ? 'fa-comment-dots text-sm' : 'fa-pen-to-square'}"></i>
+                                </button>
+                            ` : ''}
+                            <button onclick="deleteScheduleItem(${item.id})" class="text-slate-500 hover:text-rose-400 text-xs p-2 transition">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    ${item.completed ? (
+                        item.note ? `
+                            <div class="mt-2.5 pt-2 border-t border-slate-800/80 flex items-start justify-between gap-2">
+                                <div class="flex items-start gap-2 text-[11px] text-emerald-300/90 bg-slate-950/70 px-2.5 py-1.5 rounded-xl border border-emerald-500/20 w-full">
+                                    <i class="fa-solid fa-comment-medical text-emerald-400 mt-0.5 flex-shrink-0 text-xs"></i>
+                                    <div class="flex-1 min-w-0">
+                                        <span class="text-[10px] text-emerald-400 font-bold block uppercase tracking-wider">Como se sentiu:</span>
+                                        <span class="leading-relaxed break-words text-slate-200">${item.note}</span>
+                                    </div>
+                                    <button onclick="openNoteModal(${item.id})" class="text-slate-400 hover:text-emerald-300 p-0.5 text-xs transition flex-shrink-0" title="Editar anotação">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        ` : `
+                            <div class="mt-2 pt-1.5 border-t border-slate-800/60 flex items-center justify-between">
+                                <button onclick="openNoteModal(${item.id})" class="text-[11px] text-slate-400 hover:text-emerald-400 flex items-center gap-1.5 py-0.5 transition group">
+                                    <i class="fa-solid fa-plus-circle text-slate-500 group-hover:text-emerald-400 transition text-xs"></i>
+                                    <span>Como se sentiu no treino? (Adicionar anotação)</span>
+                                </button>
+                            </div>
+                        `
+                    ) : ''}
+                </div>
+            `).join('');
+
+            updateHeaderStats();
+        }
+
+        function toggleScheduleItem(id) {
+            const item = AppState.schedule.find(s => s.id === id);
+            if (item) {
+                item.completed = !item.completed;
+                triggerHaptic([40]);
+                saveState();
+                renderScheduleList();
+            }
+        }
+
+        function markScheduleDone(id, isDone) {
+            const item = AppState.schedule.find(s => s.id === id);
+            if (item) {
+                item.completed = isDone;
+                saveState();
+                renderScheduleList();
+            }
+        }
+
+        function deleteScheduleItem(id) {
+            AppState.schedule = AppState.schedule.filter(s => s.id !== id);
+            saveState();
+            renderScheduleList();
+        }
+
+        function openAddScheduleModal() {
+            document.getElementById('scheduleModal').classList.remove('hidden');
+        }
+
+        function closeScheduleModal() {
+            document.getElementById('scheduleModal').classList.add('hidden');
+        }
+
+        function saveScheduleModal() {
+            const time = document.getElementById('modalScheduleTime').value;
+            const title = document.getElementById('modalScheduleTitle').value.trim();
+            const sub = document.getElementById('modalScheduleSub').value.trim();
+
+            if (!title) return;
+
+            const newItem = {
+                id: Date.now(),
+                time: time || '08:00',
+                title: title,
+                sub: sub || 'Rotina personalizada',
+                completed: false,
+                note: ''
+            };
+
+            AppState.schedule.push(newItem);
+            AppState.schedule.sort((a, b) => a.time.localeCompare(b.time));
+            saveState();
+            renderScheduleList();
+            closeScheduleModal();
+            triggerHaptic([60]);
+        }
+
+        /* -------------------------------------------------------------
+           NOTE MANAGEMENT FOR COMPLETED SCHEDULE ITEMS
+        ------------------------------------------------------------- */
+        function openNoteModal(id) {
+            const item = AppState.schedule.find(s => s.id === id);
+            if (!item) return;
+
+            document.getElementById('modalNoteItemId').value = id;
+            document.getElementById('modalNoteExerciseTitle').innerText = `${item.time} - ${item.title}`;
+            document.getElementById('modalNoteText').value = item.note || '';
+            document.getElementById('noteModal').classList.remove('hidden');
+            triggerHaptic([30]);
+        }
+
+        function closeNoteModal() {
+            document.getElementById('noteModal').classList.add('hidden');
+        }
+
+        function appendNoteTag(tag) {
+            const textarea = document.getElementById('modalNoteText');
+            if (textarea.value.trim().length > 0) {
+                textarea.value = textarea.value.trim() + '. ' + tag;
+            } else {
+                textarea.value = tag;
+            }
+            triggerHaptic([20]);
+        }
+
+        function saveItemNote() {
+            const id = parseInt(document.getElementById('modalNoteItemId').value, 10);
+            const noteText = document.getElementById('modalNoteText').value.trim();
+            const item = AppState.schedule.find(s => s.id === id);
+            if (item) {
+                item.note = noteText;
+                saveState();
+                renderScheduleList();
+                triggerHaptic([60]);
+            }
+            closeNoteModal();
+        }
+
+        function clearItemNote() {
+            const id = parseInt(document.getElementById('modalNoteItemId').value, 10);
+            const item = AppState.schedule.find(s => s.id === id);
+            if (item) {
+                item.note = '';
+                saveState();
+                renderScheduleList();
+                triggerHaptic([40]);
+            }
+            closeNoteModal();
+        }
+
+        function updateHeaderStats() {
+            const completedCount = AppState.schedule.filter(s => s.completed).length;
+            const totalCount = AppState.schedule.length;
+
+            document.getElementById('headerStreakCount').innerText = AppState.streak;
+            document.getElementById('dashStreakValue').innerText = AppState.streak + ' dias';
+            document.getElementById('dashCompletedValue').innerText = `${completedCount} / ${totalCount}`;
+            document.getElementById('dashTotalTimeValue').innerText = AppState.totalMinutesToday + ' min';
+        }
+
+        function addMinutesToday(mins) {
+            AppState.totalMinutesToday += mins;
+            saveState();
+            updateHeaderStats();
+        }
+
+        // Render visual monthly progress bars
+        function renderMonthlyBars() {
+            const container = document.getElementById('monthlyBarsContainer');
+            if (!container) return;
+
+            // Generate 14 days preview data
+            const daysData = [
+                { day: '09', pct: 60, done: true },
+                { day: '10', pct: 80, done: true },
+                { day: '11', pct: 100, done: true },
+                { day: '12', pct: 40, done: true },
+                { day: '13', pct: 100, done: true },
+                { day: '14', pct: 75, done: true },
+                { day: '15', pct: 90, done: true },
+                { day: '16', pct: 100, done: true },
+                { day: '17', pct: 85, done: true },
+                { day: '18', pct: 100, done: true },
+                { day: '19', pct: 90, done: true },
+                { day: '20', pct: 100, done: true },
+                { day: '21', pct: 100, done: true },
+                { day: '22', pct: 80, done: true, today: true },
+            ];
+
+            container.innerHTML = daysData.map(d => `
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end group">
+                    <div class="w-full rounded-t-md transition-all duration-500 ${d.today ? 'bg-gradient-to-t from-emerald-600 to-cyan-400 shadow-sm shadow-cyan-500/50' : 'bg-slate-700/80 hover:bg-emerald-500/60'}" style="height: ${d.pct}%"></div>
+                    <span class="text-[9px] font-mono ${d.today ? 'text-cyan-400 font-bold' : 'text-slate-500'}">${d.day}</span>
+                </div>
+            `).join('');
+        }
+
+        // EXPORT PDF / PRINT PERFORMANCE REPORT
+        function exportPerformancePDF() {
+            triggerHaptic([60]);
+            
+            // Populate printable table
+            const tbody = document.getElementById('printTableBody');
+            tbody.innerHTML = AppState.schedule.map(s => `
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 8px; font-weight: bold; color: #0f172a;">${s.time}</td>
+                    <td style="padding: 8px; font-weight: 600; color: #1e293b;">
+                        ${s.title}
+                        ${s.note ? `<div style="font-size: 11px; color: #047857; font-style: italic; margin-top: 2px;">Nota: "${s.note}"</div>` : ''}
+                    </td>
+                    <td style="padding: 8px; color: #64748b;">${s.sub}</td>
+                    <td style="padding: 8px; font-weight: bold; color: ${s.completed ? '#059669' : '#d97706'};">${s.completed ? '✓ Concluído' : 'Pendente'}</td>
+                </tr>
+            `).join('');
+
+            const completedCount = AppState.schedule.filter(s => s.completed).length;
+            document.getElementById('printStreak').innerText = AppState.streak + ' Dias';
+            document.getElementById('printCompleted').innerText = `${completedCount} / ${AppState.schedule.length}`;
+            document.getElementById('printTime').innerText = AppState.totalMinutesToday + ' Minutos';
+
+            // Check if Android Native bridge is present
+            if (window.AndroidBridge && window.AndroidBridge.printPdf) {
+                window.AndroidBridge.printPdf();
+                return;
+            }
+
+            // Web native print dialog (can save as PDF on mobile & desktop)
+            window.print();
+        }
+
+        // PUSH NOTIFICATIONS SETUP
+        function requestPushNotifications() {
+            triggerHaptic([50]);
+            const btnText = document.getElementById('pushNotifBtnText');
+
+            if (window.AndroidBridge && window.AndroidBridge.schedulePushNotification) {
+                window.AndroidBridge.schedulePushNotification();
+                btnText.innerText = 'Lembretes Ativos ✓';
+                return;
+            }
+
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        btnText.innerText = 'Lembretes Ativos ✓';
+                        new Notification('CoreFlow Notificações Ativadas', {
+                            body: 'Você receberá avisos para as pausas de vácuo e postura.',
+                            icon: 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png'
+                        });
+                    } else {
+                        btnText.innerText = 'Ativo (In-App)';
+                    }
+                });
+            } else {
+                btnText.innerText = 'Ativo (In-App)';
+            }
+        }
+
+        /* -------------------------------------------------------------
+           HEALTH TIPS & QUICK ACTIONS
+        ------------------------------------------------------------- */
+        const HEALTH_TIPS = [
+            "Ao analisar propostas de crédito, alinhe os ombros e ative 20% do bracing.",
+            "Na sua cadeira, verifique se o peso está bem distribuído sobre os ísquios.",
+            "Durante o atendimento, mantenha os pés firmes no chão e o core ativo.",
+            "Use a transição entre reuniões para uma pausa ativa de 5 minutos.",
+            "Ao parar no sinal vermelho, lembre-se de alinhar a postura e ativar o abdômen.",
+            "No vácuo abdominal, lembre-se: solte TODO o ar antes de realizar a sucção.",
+            "Ative o assoalho pélvico de forma suave enquanto digita e-mails longos.",
+            "O relaxamento é tão importante quanto a contração nos exercícios de Kegel.",
+            "Mantenha o topo da cabeça apontando para o teto para evitar tensão no pescoço.",
+            "Faça o Combo Postural (Bracing + Kegel) de forma discreta na sua mesa."
+        ];
+
+        let currentTipIndex = 0;
+
+        function displayHealthTip(index) {
+            const tipEl = document.getElementById('dailyHealthTipText');
+            if (!tipEl) return;
+            tipEl.style.opacity = '0';
+            setTimeout(() => {
+                tipEl.innerText = HEALTH_TIPS[index];
+                tipEl.style.opacity = '1';
+            }, 150);
+        }
+
+        function nextHealthTip() {
+            const icon = document.getElementById('refreshTipIcon');
+            if (icon) {
+                icon.classList.add('rotate-180');
+                setTimeout(() => icon.classList.remove('rotate-180'), 400);
+            }
+            currentTipIndex = (currentTipIndex + 1) % HEALTH_TIPS.length;
+            displayHealthTip(currentTipIndex);
+            triggerHaptic([30]);
+        }
+
+        function speakDailyTip() {
+            const tip = HEALTH_TIPS[currentTipIndex];
+            speakText(tip);
+            triggerHaptic([20]);
+        }
+
+        function triggerQuickAction(action) {
+            triggerHaptic([50]);
+            switch (action) {
+                case 'bracing_2min':
+                    switchTab('discreto');
+                    switchDiscreteSubtab('bracing');
+                    setTimeout(() => {
+                        if (!AppState.discrete.bracing.isRunning) {
+                            toggleBracingTimer();
+                        }
+                    }, 250);
+                    break;
+                case 'vacuo_rapido':
+                    switchTab('vacuo');
+                    setPosture('deitado', 10);
+                    setTimeout(() => {
+                        if (!AppState.vacuum.isRunning) {
+                            startVacuumCycle();
+                        }
+                    }, 250);
+                    break;
+                case 'kegel_velocidade':
+                    switchTab('discreto');
+                    switchDiscreteSubtab('kegel');
+                    setKegelMode('rapido');
+                    setTimeout(() => {
+                        if (!AppState.discrete.kegel.isRunning) {
+                            toggleKegelTimer();
+                        }
+                    }, 250);
+                    break;
+                case 'pausa':
+                    switchTab('pausas');
+                    setTimeout(() => {
+                        startFullStretchCircuit();
+                    }, 250);
+                    break;
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSavedState();
+            setPosture('deitado', 10);
+            updateBracingLoad(25);
+            // Set random initial health tip
+            currentTipIndex = Math.floor(Math.random() * HEALTH_TIPS.length);
+            displayHealthTip(currentTipIndex);
+        });
+    </script>
+</body>
+</html>
