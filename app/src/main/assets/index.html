@@ -681,102 +681,161 @@
         <!-- ============================================================ -->
         <!-- ABA 4: CRONOGRAMA & DASHBOARD -->
         <!-- ============================================================ -->
-        <section id="tab-dashboard" class="tab-content space-y-5">
+        <section id="tab-dashboard" class="tab-content space-y-6">
             
-            <!-- Card da Dica de Saúde do Dia -->
-            <div class="bg-gradient-to-br from-slate-800 to-slate-850 border border-slate-700/80 rounded-3xl p-4 shadow-xl relative overflow-hidden">
-                <div class="flex items-center justify-between pb-2.5 border-b border-slate-700/60">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 text-sm">
-                            <i class="fa-solid fa-circle-info"></i>
+            <!-- 1. SEÇÃO DE CONQUISTAS (BADGES) NO TOPO -->
+            <div>
+                <h3 class="text-lg font-heading font-extrabold text-white tracking-tight">Suas Conquistas</h3>
+                <div class="flex items-start gap-3 overflow-x-auto pb-2 pt-3 no-scrollbar">
+                    
+                    <!-- Badge 1: Gerente Focado (Desbloqueado / Azul) -->
+                    <div class="flex flex-col items-center text-center w-[100px] flex-shrink-0">
+                        <div class="w-16 h-16 rounded-full bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 text-2xl shadow-inner mb-2">
+                            <i class="fa-solid fa-star"></i>
                         </div>
-                        <div>
-                            <h3 class="text-xs font-bold text-white uppercase tracking-wider">Dica de Saúde do Dia</h3>
-                            <p class="text-[10px] text-slate-400">Ergonomia & Banco</p>
+                        <span class="text-xs font-bold text-slate-100 leading-tight">Gerente Focado</span>
+                        <span class="text-[10px] text-slate-400 leading-tight mt-0.5">100 mins de treino</span>
+                    </div>
+
+                    <!-- Badge 2: Chama Acesa (Desbloqueado / Verde) -->
+                    <div class="flex flex-col items-center text-center w-[100px] flex-shrink-0">
+                        <div class="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl shadow-inner mb-2">
+                            <i class="fa-solid fa-fire"></i>
                         </div>
+                        <span class="text-xs font-bold text-slate-100 leading-tight">Chama Acesa</span>
+                        <span class="text-[10px] text-slate-400 leading-tight mt-0.5">7 dias de streak</span>
+                    </div>
+
+                    <!-- Badge 3: Core Blindado (Bloqueado / Cinza) -->
+                    <div class="flex flex-col items-center text-center w-[100px] flex-shrink-0 opacity-40">
+                        <div class="w-16 h-16 rounded-full bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-400 text-2xl mb-2">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                        </div>
+                        <span class="text-xs font-bold text-slate-300 leading-tight">Core Blindado</span>
+                        <span class="text-[10px] text-slate-500 leading-tight mt-0.5">50 sessões de Bracing</span>
+                    </div>
+
+                    <!-- Badge 4: Pulmão de Aço (Bloqueado / Cinza) -->
+                    <div class="flex flex-col items-center text-center w-[100px] flex-shrink-0 opacity-40">
+                        <div class="w-16 h-16 rounded-full bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-400 text-2xl mb-2">
+                            <i class="fa-solid fa-lungs"></i>
+                        </div>
+                        <span class="text-xs font-bold text-slate-300 leading-tight">Pulmão de Aço</span>
+                        <span class="text-[10px] text-slate-500 leading-tight mt-0.5">100x Vácuos Abdominais</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 2. DICA DE SAÚDE DO DIA -->
+            <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-4 shadow-xl relative overflow-hidden">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-700/60">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-sky-400 text-base"></i>
+                        <h4 class="text-sm font-bold text-white">Dica de Saúde do Dia</h4>
                     </div>
                     <div class="flex items-center gap-1">
-                        <button onclick="speakDailyTip()" class="w-8 h-8 rounded-xl bg-slate-900/60 border border-slate-700/70 text-slate-400 hover:text-sky-300 flex items-center justify-center transition text-xs" title="Ouvir Dica">
+                        <button onclick="speakDailyTip()" class="w-8 h-8 rounded-lg bg-slate-900/60 border border-slate-700/70 text-slate-400 hover:text-sky-300 flex items-center justify-center transition text-xs" title="Ouvir Dica">
                             <i class="fa-solid fa-volume-high"></i>
                         </button>
-                        <button onclick="nextHealthTip()" id="refreshTipBtn" class="w-8 h-8 rounded-xl bg-slate-900/60 border border-slate-700/70 text-emerald-400 hover:text-emerald-300 flex items-center justify-center transition text-xs active:scale-90" title="Nova Dica">
+                        <button onclick="nextHealthTip()" id="refreshTipBtn" class="w-8 h-8 rounded-lg bg-slate-900/60 border border-slate-700/70 text-emerald-400 hover:text-emerald-300 flex items-center justify-center transition text-xs active:scale-90" title="Nova Dica">
                             <i id="refreshTipIcon" class="fa-solid fa-arrows-rotate text-xs transition-transform duration-500"></i>
                         </button>
                     </div>
                 </div>
                 <div class="pt-3">
-                    <p id="dailyHealthTipText" class="text-sm font-medium text-slate-200 leading-relaxed transition-opacity duration-300">
+                    <p id="dailyHealthTipText" class="text-sm text-slate-300 leading-relaxed transition-opacity duration-300">
                         Ao analisar propostas de crédito, alinhe os ombros e ative 20% do bracing.
                     </p>
                 </div>
             </div>
 
-            <!-- Quick Stats Row -->
-            <div class="grid grid-cols-3 gap-2.5">
-                <div class="bg-slate-800/80 border border-slate-700/70 p-3.5 rounded-2xl text-center">
-                    <i class="fa-solid fa-fire text-amber-500 text-lg mb-1"></i>
-                    <p class="text-[11px] text-slate-400 font-medium">Ofensiva</p>
-                    <p id="dashStreakValue" class="text-xl font-bold font-mono text-white">5 dias</p>
-                </div>
-                <div class="bg-slate-800/80 border border-slate-700/70 p-3.5 rounded-2xl text-center">
-                    <i class="fa-solid fa-circle-check text-emerald-400 text-lg mb-1"></i>
-                    <p class="text-[11px] text-slate-400 font-medium">Concluídos</p>
-                    <p id="dashCompletedValue" class="text-xl font-bold font-mono text-white">4 / 5</p>
-                </div>
-                <div class="bg-slate-800/80 border border-slate-700/70 p-3.5 rounded-2xl text-center">
-                    <i class="fa-solid fa-stopwatch text-cyan-400 text-lg mb-1"></i>
-                    <p class="text-[11px] text-slate-400 font-medium">Tempo Hoje</p>
-                    <p id="dashTotalTimeValue" class="text-xl font-bold font-mono text-white">18 min</p>
+            <!-- 3. GRÁFICO DE CONSISTÊNCIA SEMANAL (WeeklyBarChart) -->
+            <div>
+                <h3 class="text-lg font-heading font-extrabold text-white tracking-tight mb-3">Consistência da Semana</h3>
+                <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700/80 shadow-xl h-[190px] flex flex-col justify-between">
+                    <div class="flex items-end justify-between h-[125px] px-2" id="weeklyBarsContainer">
+                        <!-- Seg (35m) -->
+                        <div class="flex flex-col items-center justify-end h-full w-9">
+                            <span class="text-[10px] text-slate-300 font-mono font-medium mb-1">35m</span>
+                            <div class="w-5 h-full rounded-t-lg bg-slate-900/60 flex items-end overflow-hidden">
+                                <div class="w-full bg-emerald-500 rounded-t-lg transition-all duration-700" style="height: 100%;"></div>
+                            </div>
+                            <span class="text-xs text-slate-300 font-medium mt-2">Seg</span>
+                        </div>
+                        <!-- Ter (45m) -->
+                        <div class="flex flex-col items-center justify-end h-full w-9">
+                            <span class="text-[10px] text-slate-300 font-mono font-medium mb-1">45m</span>
+                            <div class="w-5 h-full rounded-t-lg bg-slate-900/60 flex items-end overflow-hidden">
+                                <div class="w-full bg-emerald-500 rounded-t-lg transition-all duration-700" style="height: 100%;"></div>
+                            </div>
+                            <span class="text-xs text-slate-300 font-medium mt-2">Ter</span>
+                        </div>
+                        <!-- Qua (20m) -->
+                        <div class="flex flex-col items-center justify-end h-full w-9">
+                            <span class="text-[10px] text-slate-300 font-mono font-medium mb-1">20m</span>
+                            <div class="w-5 h-full rounded-t-lg bg-slate-900/60 flex items-end overflow-hidden">
+                                <div class="w-full bg-sky-400 rounded-t-lg transition-all duration-700" style="height: 66%;"></div>
+                            </div>
+                            <span class="text-xs text-slate-300 font-medium mt-2">Qua</span>
+                        </div>
+                        <!-- Qui (30m) -->
+                        <div class="flex flex-col items-center justify-end h-full w-9">
+                            <span class="text-[10px] text-slate-300 font-mono font-medium mb-1">30m</span>
+                            <div class="w-5 h-full rounded-t-lg bg-slate-900/60 flex items-end overflow-hidden">
+                                <div class="w-full bg-emerald-500 rounded-t-lg transition-all duration-700" style="height: 100%;"></div>
+                            </div>
+                            <span class="text-xs text-slate-300 font-medium mt-2">Qui</span>
+                        </div>
+                        <!-- Sex (50m) -->
+                        <div class="flex flex-col items-center justify-end h-full w-9">
+                            <span class="text-[10px] text-slate-300 font-mono font-medium mb-1">50m</span>
+                            <div class="w-5 h-full rounded-t-lg bg-slate-900/60 flex items-end overflow-hidden">
+                                <div class="w-full bg-emerald-500 rounded-t-lg transition-all duration-700" style="height: 100%;"></div>
+                            </div>
+                            <span class="text-xs text-slate-300 font-medium mt-2">Sex</span>
+                        </div>
+                        <!-- Sáb (0m) -->
+                        <div class="flex flex-col items-center justify-end h-full w-9">
+                            <div class="w-5 h-full rounded-t-lg bg-slate-900/60 flex items-end overflow-hidden">
+                                <div class="w-full bg-slate-700 rounded-t-lg" style="height: 0%;"></div>
+                            </div>
+                            <span class="text-xs text-slate-400 font-medium mt-2">Sáb</span>
+                        </div>
+                        <!-- Dom (15m) -->
+                        <div class="flex flex-col items-center justify-end h-full w-9">
+                            <span class="text-[10px] text-slate-300 font-mono font-medium mb-1">15m</span>
+                            <div class="w-5 h-full rounded-t-lg bg-slate-900/60 flex items-end overflow-hidden">
+                                <div class="w-full bg-sky-400 rounded-t-lg transition-all duration-700" style="height: 50%;"></div>
+                            </div>
+                            <span class="text-xs text-slate-300 font-medium mt-2">Dom</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Editable Schedule Table -->
-            <div class="bg-slate-800/90 rounded-3xl p-4 border border-slate-700/80 shadow-xl space-y-3">
-                <div class="flex items-center justify-between pb-2 border-b border-slate-700/60">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-day text-emerald-400 text-sm"></i>
-                        <h3 class="text-sm font-bold text-white">Cronograma Diário do Banco</h3>
-                    </div>
+            <!-- 4. CRONOGRAMA DE HOJE -->
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-heading font-extrabold text-white tracking-tight">Cronograma de Hoje</h3>
                     <button onclick="openAddScheduleModal()" class="text-xs font-bold text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20 flex items-center gap-1 transition">
                         <i class="fa-solid fa-plus text-[10px]"></i> Adicionar
                     </button>
                 </div>
-
-                <!-- Schedule List -->
-                <div id="scheduleListContainer" class="space-y-2">
-                    <!-- Dynamic Items rendered by JS -->
-                </div>
-            </div>
-
-            <!-- Monthly Visual Progress Chart -->
-            <div class="bg-slate-800/90 rounded-3xl p-4 border border-slate-700/80 shadow-xl space-y-3">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-chart-column text-cyan-400 text-sm"></i>
-                        <h3 class="text-sm font-bold text-white">Consistência Mensal</h3>
-                    </div>
-                    <span class="text-[11px] text-slate-400 font-mono font-medium">Agosto / 2026</span>
-                </div>
-
-                <!-- SVG / Canvas Bar Chart representation -->
-                <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
-                    <div class="flex items-end justify-between h-28 gap-1.5 px-1 pt-2 pb-1" id="monthlyBarsContainer">
-                        <!-- Bars dynamically populated by JS -->
-                    </div>
-                    <div class="flex justify-between text-[10px] text-slate-500 font-mono px-1 mt-1 border-t border-slate-800 pt-1">
-                        <span>Sem 1</span>
-                        <span>Sem 2</span>
-                        <span>Sem 3</span>
-                        <span>Sem 4 (Hoje)</span>
+                
+                <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700/80 shadow-xl space-y-2.5">
+                    <!-- Schedule List items rendered dynamically -->
+                    <div id="scheduleListContainer" class="space-y-2">
+                        <!-- Dynamic Items -->
                     </div>
                 </div>
             </div>
 
-            <!-- PDF Report Export & Push Notifications Row -->
+            <!-- Quick Stats & Tools Row -->
             <div class="grid grid-cols-2 gap-3">
                 <button onclick="exportPerformancePDF()" class="py-3.5 px-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-95 text-white font-bold rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 transition">
                     <i class="fa-solid fa-file-pdf text-sm"></i>
-                    <span>Exportar PDF</span>
+                    <span>Exportar Relatório PDF</span>
                 </button>
                 
                 <button onclick="requestPushNotifications()" class="py-3.5 px-3 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 text-slate-200 font-bold rounded-2xl text-xs flex items-center justify-center gap-2 shadow transition">
