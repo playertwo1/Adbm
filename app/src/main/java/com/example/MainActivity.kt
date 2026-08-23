@@ -4,6 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import androidx.compose.foundation.layout.Box
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -53,6 +65,8 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
+            val showConfetti = remember { mutableStateOf(false) }
+
             MyApplicationTheme {
                 Surface(
                     modifier = Modifier
@@ -60,12 +74,22 @@ class MainActivity : ComponentActivity() {
                         .background(Color(0xFF0F172A)),
                     color = Color(0xFF0F172A)
                 ) {
-                    CoreFlowWebView(
-                        onWebViewCreated = { wv ->
-                            webView = wv
-                        },
-                        tts = tts
-                    )
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        CoreFlowWebView(
+                            onWebViewCreated = { wv ->
+                                webView = wv
+                            },
+                            tts = tts,
+                            onPlayConfetti = {
+                                showConfetti.value = true
+                            }
+                        )
+                        if (showConfetti.value) {
+                            ConfettiAnimationOverlay(
+                                onFinished = { showConfetti.value = false }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -83,7 +107,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun CoreFlowWebView(
     onWebViewCreated: (WebView) -> Unit,
-    tts: TextToSpeech?
+    tts: TextToSpeech?,
+    onPlayConfetti: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -123,7 +148,7 @@ fun CoreFlowWebView(
 
                 // Inject Native JavaScript Bridge
                 addJavascriptInterface(
-                    AndroidBridge(ctx, this, tts),
+                    AndroidBridge(ctx, this, tts, onPlayConfetti),
                     "AndroidBridge"
                 )
 
@@ -140,8 +165,17 @@ fun CoreFlowWebView(
 class AndroidBridge(
     private val context: Context,
     private val webView: WebView,
-    private val tts: TextToSpeech?
+    private val tts: TextToSpeech?,
+    private val onPlayConfetti: () -> Unit
 ) {
+
+    @JavascriptInterface
+    fun playConfetti() {
+        val activity = context as? ComponentActivity ?: return
+        activity.runOnUiThread {
+            onPlayConfetti()
+        }
+    }
 
     @JavascriptInterface
     fun vibrate(durationMs: Long) {
@@ -341,5 +375,32 @@ object AdvancedHapticsManager {
             @Suppress("DEPRECATION")
             vibrator.vibrate(timings, -1)
         }
+    }
+}
+
+@Composable
+fun ConfettiAnimationOverlay(onFinished: () -> Unit) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.Url("https://assets10.lottiefiles.com/packages/lf20_u4yrau.json"))
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        isPlaying = true,
+        iterations = 1
+    )
+
+    LaunchedEffect(progress) {
+        if (progress == 1f) {
+            onFinished()
+        }
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        LottieAnimation(
+            composition = composition,
+            progress = { progress },
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
