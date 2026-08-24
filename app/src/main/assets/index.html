@@ -481,81 +481,166 @@
                 </div>
             </div>
 
-            <!-- SUB-VIEW 3: MEDIDOR DE BRACING ABDOMINAL (20% a 30%) -->
+            <!-- SUB-VIEW 3: MEDIDOR E GUIA VISUAL DE BRACING ABDOMINAL (20% a 30%) -->
             <div id="desk-view-bracing" class="hidden space-y-4 transition-all duration-300 transform opacity-0 translate-y-4">
-                <div class="bg-slate-800/90 rounded-3xl p-6 border border-slate-700 text-center relative shadow-xl">
-                    <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
-                        <span class="font-bold uppercase tracking-wider text-emerald-400">Estabilidade Lombar Contínua</span>
-                        <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-mono text-[11px]">20% - 30% Ideal</span>
+                
+                <!-- 1. Painel Visual de Ativação 360° -->
+                <div class="bg-slate-800/90 rounded-3xl p-6 border border-slate-700 text-center relative shadow-xl overflow-hidden">
+                    <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                        <span class="font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-halved"></i> Estabilidade Lombar 360°
+                        </span>
+                        <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-mono text-[11px] font-bold">20% - 30% Ideal</span>
                     </div>
 
-                    <!-- Bracing Activation Gauge Gauge -->
-                    <div class="relative w-48 h-48 mx-auto my-2 flex items-center justify-center">
-                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
-                            <!-- Background track -->
-                            <circle cx="100" cy="100" r="75" class="text-slate-900" stroke-width="14" stroke="currentColor" fill="none" />
-                            <!-- Target sweet spot marker (20%-30%) -->
-                            <circle cx="100" cy="100" r="75" class="text-emerald-500/30" stroke-width="14" stroke="currentColor" fill="none" stroke-dasharray="471" stroke-dashoffset="350" />
-                            <!-- Dynamic load ring -->
-                            <circle id="bracingLoadRing" cx="100" cy="100" r="75" stroke-linecap="round" class="ring-circle text-emerald-400" stroke-width="14" stroke="currentColor" fill="none" stroke-dasharray="471" stroke-dashoffset="350" />
+                    <!-- Visual Diagram: Torso Expansion 360° with Animated Lateral Arrows -->
+                    <div class="relative w-52 h-52 mx-auto my-3 flex items-center justify-center">
+                        <!-- Outer Glow Ring (Breathing Expansion) -->
+                        <div id="bracingVisualGlow" class="absolute inset-0 rounded-full bg-emerald-500/15 animate-pulse blur-xl pointer-events-none"></div>
+
+                        <!-- 360 Lateral Expansion Indicator Arrows -->
+                        <div class="absolute inset-x-0 flex justify-between px-2 items-center text-emerald-400 text-sm font-bold z-20 pointer-events-none">
+                            <i class="fa-solid fa-arrow-left animate-bounce"></i>
+                            <i class="fa-solid fa-arrow-right animate-bounce"></i>
+                        </div>
+
+                        <!-- Circular Gauge -->
+                        <svg class="w-full h-full transform -rotate-90 relative z-10" viewBox="0 0 200 200">
+                            <circle cx="100" cy="100" r="78" class="text-slate-900" stroke-width="12" stroke="currentColor" fill="none" />
+                            <!-- 20-30% Target Sweetspot -->
+                            <circle cx="100" cy="100" r="78" class="text-emerald-500/25" stroke-width="12" stroke="currentColor" fill="none" stroke-dasharray="490" stroke-dashoffset="360" />
+                            <!-- Dynamic Load Ring -->
+                            <circle id="bracingLoadRing" cx="100" cy="100" r="78" stroke-linecap="round" class="ring-circle text-emerald-400" stroke-width="12" stroke="currentColor" fill="none" stroke-dasharray="490" stroke-dashoffset="360" />
                         </svg>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span class="text-xs font-semibold text-slate-400">Ativação</span>
-                            <span id="bracingPercentDisplay" class="text-3xl font-extrabold font-mono text-emerald-400">25%</span>
-                            <span id="bracingTimerDisplay" class="text-xs font-mono text-cyan-300 mt-0.5">02:00</span>
+
+                        <!-- Central Status Inside Circle -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center z-20">
+                            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Cinta Natural</span>
+                            <span id="bracingPercentDisplay" class="text-3xl font-black font-mono text-emerald-400 my-0.5">25%</span>
+                            <span id="bracingTimerDisplay" class="text-xs font-mono font-bold text-cyan-300">02:00</span>
+                            <span class="text-[10px] text-emerald-300 font-semibold mt-0.5">Pressão Lateral</span>
                         </div>
                     </div>
 
-                    <!-- Interactive Slider to adjust Bracing feeling -->
-                    <div class="mt-2 px-2">
-                        <div class="flex justify-between text-[11px] text-slate-400 mb-1">
-                            <span>0% (Relaxado)</span>
-                            <span class="text-emerald-400 font-bold">25% (Ideal Postura)</span>
-                            <span>100% (Manobra Pesada)</span>
+                    <!-- Slider to adjust simulated load -->
+                    <div class="px-2 mt-1">
+                        <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                            <span>0% (Solto)</span>
+                            <span class="text-emerald-400 font-bold">25% (Trabalho / Sentado)</span>
+                            <span>100% (Carga Pesada)</span>
                         </div>
                         <input type="range" min="0" max="100" value="25" id="bracingRangeSlider" oninput="updateBracingLoad(this.value)" class="w-full h-2 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-emerald-500">
                     </div>
 
+                    <!-- Timer Controls -->
                     <div class="flex items-center justify-center gap-3 mt-4">
                         <button onclick="resetBracingTimer()" class="p-3 bg-slate-900 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-300 text-sm">
                             <i class="fa-solid fa-rotate-left"></i>
                         </button>
-                        <button id="btnBracingPlay" onclick="toggleBracingTimer()" class="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-95 text-slate-950 font-extrabold rounded-xl flex items-center gap-2 shadow-lg shadow-emerald-500/20 text-sm">
+                        <button id="btnBracingPlay" onclick="toggleBracingTimer()" class="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-95 text-slate-950 font-extrabold rounded-xl flex items-center gap-2 shadow-lg shadow-emerald-500/20 text-sm transition">
                             <i id="bracingIcon" class="fa-solid fa-play"></i>
-                            <span id="bracingText">Manter Postura 2min</span>
+                            <span id="bracingText">Praticar Bracing (2 min)</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Posture checklist -->
-                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-4 space-y-2.5">
-                    <h4 class="text-xs font-bold text-slate-200 flex items-center gap-2">
-                        <i class="fa-solid fa-list-check text-emerald-400"></i> Checklist de Postura no Banco / Escritório:
-                    </h4>
-                    <div class="space-y-1.5 text-xs text-slate-300">
-                        <label class="flex items-center gap-2.5 cursor-pointer">
-                            <input type="checkbox" checked class="rounded border-slate-700 text-emerald-500 focus:ring-0 bg-slate-900">
-                            <span>Pés 100% apoiados e paralelos no chão</span>
-                        </label>
-                        <label class="flex items-center gap-2.5 cursor-pointer">
-                            <input type="checkbox" checked class="rounded border-slate-700 text-emerald-500 focus:ring-0 bg-slate-900">
-                            <span>Peso distribuído sobre os ísquios (ossos do bumbum)</span>
-                        </label>
-                        <label class="flex items-center gap-2.5 cursor-pointer">
-                            <input type="checkbox" checked class="rounded border-slate-700 text-emerald-500 focus:ring-0 bg-slate-900">
-                            <span>Abdômen firme como uma cinta natural (sem prender a respiração)</span>
-                        </label>
-                        <label class="flex items-center gap-2.5 cursor-pointer">
-                            <input type="checkbox" checked class="rounded border-slate-700 text-emerald-500 focus:ring-0 bg-slate-900">
-                            <span>Ombros destravados para trás e para baixo</span>
-                        </label>
+                <!-- 2. Como Fazer o Passo a Passo (Visual & Descritivo) -->
+                <div class="bg-slate-800/80 border border-slate-700/70 rounded-3xl p-5 space-y-3 shadow-lg">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-lungs"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Como Fazer o Passo a Passo:</h4>
+                            <p class="text-[11px] text-slate-400">Técnica de expansão e blindagem 360°</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5 pt-1">
+                        <!-- Passo 1 -->
+                        <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-900/70 border border-slate-800">
+                            <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">1</div>
+                            <div>
+                                <h5 class="text-xs font-bold text-slate-100">Inspiração Costal Baixa</h5>
+                                <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed">Puxe o ar pelo nariz e encha a parte baixa do tórax e costelas (sinta as costelas abrirem para os lados).</p>
+                            </div>
+                        </div>
+
+                        <!-- Passo 2 -->
+                        <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-900/70 border border-slate-800">
+                            <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">2</div>
+                            <div>
+                                <h5 class="text-xs font-bold text-slate-100">Expiração Lenta e Suave</h5>
+                                <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed">Solte o ar devagar pela boca ou garganta sem desabar a coluna.</p>
+                            </div>
+                        </div>
+
+                        <!-- Passo 3 -->
+                        <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-900/70 border border-slate-800">
+                            <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">3</div>
+                            <div>
+                                <h5 class="text-xs font-bold text-slate-100">Pressão para Fora e Laterais</h5>
+                                <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed">Pressione a barriga para fora e para as laterais de leve, tencionando toda a musculatura (como se fosse receber um leve toque).</p>
+                            </div>
+                        </div>
+
+                        <!-- Passo 4 -->
+                        <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-900/70 border border-slate-800">
+                            <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">4</div>
+                            <div>
+                                <h5 class="text-xs font-bold text-slate-100">Manutenção e Respiração Curta</h5>
+                                <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed">Mantenha o tronco firme enquanto continua respirando de forma curta pelo peito sem soltar a barriga.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Botão para abrir o Programa de 6 Semanas -->
+                <!-- 3. Dicas para Praticar com Segurança (3 Alertas Visuais) -->
+                <div class="bg-slate-800/80 border border-slate-700/70 rounded-3xl p-5 space-y-3 shadow-lg">
+                    <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved"></i> Dicas para Praticar com Segurança
+                    </h4>
+
+                    <div class="space-y-2.5">
+                        <!-- Dica 1: Não prenda a respiração -->
+                        <div class="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-3.5 flex items-start gap-3">
+                            <i class="fa-solid fa-ban text-rose-400 text-base mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-xs font-bold text-rose-300 block">Não prenda a respiração:</strong>
+                                <p class="text-[11px] text-rose-100/90 mt-0.5 leading-relaxed">
+                                    O maior erro é fazer apneia. Você deve conseguir falar e respirar (curto e pelo peito) enquanto o abdômen continua duro.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Dica 2: Use como aquecimento -->
+                        <div class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-3.5 flex items-start gap-3">
+                            <i class="fa-solid fa-fire-flame-curved text-amber-400 text-base mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-xs font-bold text-amber-300 block">Use como aquecimento:</strong>
+                                <p class="text-[11px] text-amber-100/90 mt-0.5 leading-relaxed">
+                                    Faça de 2 a 3 séries de 10 repetições (ou 20 segundos) do Dead Bug ou Bird Dog antes do seu treino de musculação para "ligar" o abdômen.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Dica 3: Atenção à lombar -->
+                        <div class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-3.5 flex items-start gap-3">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-400 text-base mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-xs font-bold text-amber-300 block">Atenção à lombar:</strong>
+                                <p class="text-[11px] text-amber-100/90 mt-0.5 leading-relaxed">
+                                    Se a sua lombar começar a doer ou arquear durante os movimentos, pare. Isso significa que o abdômen cansou e desativou o bracing.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Botão para abrir o Programa de 6 Semanas -->
                 <button onclick="openBracingProgramModal()" class="w-full py-3.5 mt-2 rounded-2xl bg-slate-800/80 hover:bg-slate-750 border border-slate-700/80 text-emerald-400 font-bold text-sm flex items-center justify-center gap-2.5 shadow transition active:scale-95">
                     <i class="fa-solid fa-graduation-cap"></i>
-                    Ver Programa de Treino (6 Semanas)
+                    Ver Programa Completo de Bracing (6 Semanas)
                 </button>
             </div>
         </section>
@@ -693,26 +778,46 @@
         </section>
 
         <!-- ============================================================ -->
-        <!-- ABA 3: PROGRAMAS (NOVA TELA) -->
+        <!-- ABA 4: PROGRAMAS DE EVOLUÇÃO (TREINOS GUIADOS PASSO A PASSO) -->
         <!-- ============================================================ -->
-        <section id="tab-programas" class="tab-content hidden space-y-6">
-            <div class="flex items-center justify-between mb-2">
+        <section id="tab-programas" class="tab-content space-y-5">
+            <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-2xl font-heading font-extrabold text-white tracking-tight">Meus Programas</h2>
-                    <p class="text-sm text-slate-400 mt-1">Acompanhe sua evolução semanal.</p>
+                    <h2 class="text-xl font-heading font-extrabold text-white tracking-tight">Programas de Evolução</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Treinos guiados passo a passo (2 sessões ao dia)</p>
                 </div>
-                <button onclick="triggerHaptic([20]); alert('Novo Programa (Simulação)')" class="w-10 h-10 rounded-full bg-indigo-500/15 text-indigo-400 flex items-center justify-center hover:bg-indigo-500/25 transition">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-xs bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                        <i class="fa-solid fa-fire text-amber-400"></i> 2x ao dia
+                    </span>
+                </div>
             </div>
             
-            <button onclick="openDailyExecutionModal()" class="w-full bg-indigo-500 hover:bg-indigo-600 rounded-2xl py-4 flex flex-col items-center justify-center gap-1 shadow-lg shadow-indigo-500/20 active:scale-95 transition">
-                <div class="flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-play text-white"></i>
-                    <span class="text-white font-bold text-lg">Treino de Hoje</span>
+            <!-- Hero Banner: Treino do Dia Ativo -->
+            <div id="todayWorkoutHeroBanner" class="bg-gradient-to-br from-indigo-600 via-indigo-700 to-slate-900 rounded-3xl p-5 shadow-2xl border border-indigo-400/30 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-indigo-400/20 rounded-full blur-2xl pointer-events-none"></div>
+                
+                <div class="relative z-10 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-200 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-400/20 flex items-center gap-1.5">
+                            <i class="fa-solid fa-play text-emerald-400 text-xs"></i> Treino Recomendado de Hoje
+                        </span>
+                        <span id="heroSessionsTodayBadge" class="text-xs font-black text-amber-300 bg-black/40 px-2.5 py-0.5 rounded-full border border-amber-400/30">0/2 Sessões</span>
+                    </div>
+
+                    <div>
+                        <h3 id="heroWorkoutProgramTitle" class="text-lg font-black text-white leading-tight">Cronograma Avançado de 8 Semanas</h3>
+                        <p id="heroWorkoutPhaseSubtitle" class="text-xs text-indigo-200 font-medium mt-1 leading-snug">Semana 1: Volume Acumulado • 5 Passos com acompanhamento</p>
+                    </div>
+
+                    <div class="pt-1 flex gap-2">
+                        <button onclick="openDailyExecutionModal('2')" class="flex-1 py-3.5 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 active:scale-95 text-slate-950 font-extrabold text-sm rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition">
+                            <i class="fa-solid fa-play"></i>
+                            <span id="heroWorkoutButtonText">Iniciar Treino Guiado Passo a Passo</span>
+                        </button>
+                    </div>
                 </div>
-                <span class="text-indigo-200 text-xs font-semibold">2 sessões recomendadas</span>
-            </button>
+            </div>
             
             <div id="programsListContainer" class="space-y-4 pb-12">
                 <!-- Preenchido via JS -->
@@ -864,9 +969,55 @@
                 </button>
             </div>
             
-            <p class="text-[13px] text-slate-400 leading-relaxed mb-5">
+            <p class="text-[13px] text-slate-400 leading-relaxed mb-4">
                 Diferente do vácuo, a barriga fica firme para <strong class="text-slate-300">FORA</strong> (como se fosse levar um soco). Não prenda a respiração por completo.
             </p>
+
+            <!-- Passo a Passo Rápido -->
+            <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 mb-4 space-y-2">
+                <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-lungs"></i> Como Fazer o Passo a Passo
+                </h4>
+                <div class="text-xs text-slate-300 space-y-2 pt-1">
+                    <div class="flex items-start gap-2">
+                        <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5">1</span>
+                        <span><strong>Inspiração costal:</strong> Puxe o ar pelo nariz e encha a parte baixa do tórax e costelas.</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5">2</span>
+                        <span><strong>Expiração:</strong> Solte o ar devagar pela boca ou garganta.</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5">3</span>
+                        <span><strong>Pressão 360°:</strong> Pressione a barriga para fora e para as laterais de leve, tencionando toda a musculatura.</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5">4</span>
+                        <span><strong>Manutenção:</strong> Mantenha o tronco firme enquanto continua respirando de forma curta.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dicas de Segurança -->
+            <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 mb-4 space-y-2">
+                <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-shield-halved"></i> Dicas para Praticar com Segurança
+                </h4>
+                <div class="space-y-2 pt-1 text-xs">
+                    <div class="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-200">
+                        <strong class="text-rose-300 block mb-0.5"><i class="fa-solid fa-ban mr-1"></i> Não prenda a respiração:</strong>
+                        O maior erro é fazer apneia. Você deve conseguir falar e respirar (curto e pelo peito) enquanto o abdômen continua duro.
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-200">
+                        <strong class="text-amber-300 block mb-0.5"><i class="fa-solid fa-fire mr-1"></i> Use como aquecimento:</strong>
+                        Faça de 2 a 3 séries de 10 repetições (ou 20 segundos) do Dead Bug ou Bird Dog antes do treino de musculação para "ligar" o abdômen.
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-200">
+                        <strong class="text-amber-300 block mb-0.5"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Atenção à lombar:</strong>
+                        Se a sua lombar começar a doer ou arquear durante os movimentos, pare. Isso significa que o abdômen cansou e desativou o bracing.
+                    </div>
+                </div>
+            </div>
 
             <div class="space-y-4 pb-4" id="bracingProgramList">
                 <!-- Cards renderizados via JS -->
@@ -931,47 +1082,173 @@
         </div>
     </div>
 
-    <!-- Modal for Daily Execution Screen -->
-    <div id="dailyExecutionModal" class="fixed inset-0 bg-slate-950 z-[60] hidden flex-col items-center justify-center p-6 no-print">
-        <div class="flex flex-col items-center w-full max-w-sm">
-            <span class="text-slate-400 text-sm font-semibold mb-1">Treino de Hoje</span>
-            <h2 id="dailyExecutionTitle" class="text-2xl font-bold text-white text-center mb-8">Bracing Avançado</h2>
-            
-            <!-- Meta Indicators -->
-            <div class="flex items-center gap-2" id="dailyMetaIndicators">
-                <!-- Preenchido via JS -->
+    <!-- Modal for Guided Workout Session Player -->
+    <div id="dailyExecutionModal" class="fixed inset-0 bg-slate-950/98 backdrop-blur-md z-[60] hidden flex-col items-center justify-between p-6 no-print overflow-y-auto">
+        <!-- Header -->
+        <div class="w-full max-w-sm flex items-center justify-between pt-2">
+            <button onclick="requestCancelDailySession()" class="w-10 h-10 rounded-full bg-slate-850 border border-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center">
+                <span id="dailyExecutionSessionTag" class="text-[11px] font-bold text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20 uppercase tracking-wider">Sessão 1/2</span>
+                <p id="dailyExecutionStepProgress" class="text-xs text-slate-400 mt-1 font-semibold">Passo 1 de 5</p>
             </div>
-            
-            <p id="dailyMetaStatus" class="text-slate-300 mt-2 text-sm font-medium"></p>
-            
-            <!-- Timer Display -->
-            <div class="mt-12 mb-12">
-                <span id="dailyExecutionTimer" class="text-7xl font-bold text-white font-mono tracking-tighter">01:00</span>
+            <div class="w-10"></div>
+        </div>
+
+        <!-- Center Content -->
+        <div class="w-full max-w-sm flex flex-col items-center my-auto py-4">
+            <h2 id="dailyExecutionTitle" class="text-xl font-bold text-white text-center">Cronograma Avançado</h2>
+            <p id="dailyExecutionPhaseTitle" class="text-sm font-semibold text-indigo-400 text-center mt-0.5">Semana 1: Volume Acumulado</p>
+
+            <!-- Circular Progress & Timer Box -->
+            <div class="relative w-60 h-60 my-6 flex items-center justify-center">
+                <!-- Outer Ring Glow -->
+                <div id="workoutRingGlow" class="absolute inset-0 rounded-full bg-emerald-500/10 blur-xl transition-all duration-500"></div>
+                
+                <div id="workoutCircleBg" class="w-56 h-56 rounded-full bg-slate-900 border-4 border-slate-800 flex flex-col items-center justify-center p-4 transition-all duration-500 shadow-2xl relative z-10">
+                    <span id="workoutStepBadge" class="text-[11px] font-extrabold uppercase tracking-widest text-emerald-400 mb-1">EM AÇÃO</span>
+                    <span id="dailyExecutionTimer" class="text-6xl font-black text-white font-mono tracking-tighter">00:06</span>
+                    <span id="dailyMetaStatus" class="text-[11px] text-slate-400 mt-1 font-medium text-center">Contraia firmemente</span>
+                </div>
             </div>
-            
-            <!-- Action Buttons -->
-            <div class="w-full" id="dailyExecutionActionContainer">
+
+            <!-- Current Step Details -->
+            <div class="text-center px-4 w-full">
+                <h3 id="workoutStepTitle" class="text-lg font-bold text-white leading-snug">Lento: 8 contrações de 6s</h3>
+                <p id="workoutStepInstruction" class="text-xs text-slate-300 mt-1.5 leading-relaxed bg-slate-900/60 border border-slate-800 p-3 rounded-xl">Contraia por 6 segundos e relaxe por 6 segundos com respiração fluida.</p>
+            </div>
+
+            <!-- Next Step Preview Card -->
+            <div id="workoutNextStepCard" class="w-full mt-4 bg-slate-900/80 border border-slate-800 rounded-2xl p-3 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-xl bg-slate-800 text-slate-400 flex items-center justify-center flex-shrink-0 text-xs">
+                    <i class="fa-solid fa-forward-step"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <span class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">A Seguir:</span>
+                    <p id="workoutNextStepTitle" class="text-xs font-semibold text-slate-200 truncate">Rápido: 20 contrações rápidas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Action Controls -->
+        <div class="w-full max-w-sm space-y-3 pb-4">
+            <div id="dailyExecutionActionContainer" class="flex gap-2">
                 <!-- Renderizado via JS -->
             </div>
-            
-            <!-- Botão Secundário para fechar se não estiver rodando -->
-            <button id="dailyExecutionCloseBtn" onclick="closeDailyExecutionModal()" class="mt-6 text-slate-500 text-sm font-bold hover:text-white transition">FECHAR</button>
+            <button id="dailyExecutionCloseBtn" onclick="closeDailyExecutionModal()" class="w-full py-2 text-slate-500 text-xs font-bold hover:text-white transition uppercase tracking-wider">Voltar aos Programas</button>
         </div>
     </div>
 
     <!-- Modal for Cancel Confirmation -->
-    <div id="cancelDailyConfirmModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4 no-print">
-        <div class="bg-slate-850 border border-slate-700 rounded-3xl p-5 w-full max-w-xs space-y-4 shadow-2xl">
-            <h3 class="text-lg font-bold text-white text-center">Cancelar Sessão?</h3>
-            <p class="text-[13px] text-slate-400 text-center leading-relaxed">
-                Se você parar agora, o progresso desta sessão não será salvo para a meta diária.
+    <div id="cancelDailyConfirmModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[70] hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-slate-850 border border-slate-700 rounded-3xl p-6 w-full max-w-xs space-y-4 shadow-2xl text-center">
+            <div class="w-14 h-14 rounded-full bg-rose-500/20 border border-rose-500/30 text-rose-400 flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white">Interromper Treino?</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+                Se você cancelar agora, o progresso desta sessão não será computado para a meta diária (2x ao dia).
             </p>
-            <div class="pt-2 space-y-3">
-                <button onclick="abortDailySession()" class="w-full py-2.5 bg-rose-500 hover:bg-rose-600 rounded-xl text-white font-bold text-sm transition shadow-lg shadow-rose-500/30">
-                    Sim, parar
+            <div class="pt-2 space-y-2">
+                <button onclick="abortDailySession()" class="w-full py-3 bg-rose-500 hover:bg-rose-600 rounded-xl text-white font-bold text-sm transition shadow-lg shadow-rose-500/30">
+                    Sim, Cancelar Sessão
                 </button>
-                <button onclick="resumeDailySession()" class="w-full py-2.5 bg-slate-700 hover:bg-slate-600 rounded-xl text-slate-200 font-bold text-sm transition">
-                    Continuar Treino
+                <button onclick="resumeDailySession()" class="w-full py-3 bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-200 font-bold text-sm transition">
+                    Continuar Treinando
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Setting/Rescheduling Reminders (2x ao dia) -->
+    <div id="reminderConfigModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[65] hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-slate-850 border border-slate-700 rounded-3xl p-5 w-full max-w-sm space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-700/60 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Horários de Notificação</h3>
+                        <p id="reminderProgramNameSubtitle" class="text-[11px] text-slate-400">Meta: 2 sessões por dia</p>
+                    </div>
+                </div>
+                <button onclick="closeReminderConfigModal()" class="text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 pt-1">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center justify-between">
+                        <span>⏰ 1ª Sessão Diária:</span>
+                        <span class="text-[10px] text-emerald-400 font-bold">Manhã / Turno 1</span>
+                    </label>
+                    <input type="time" id="reminderTimeInput1" value="09:00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-mono focus:border-amber-500 focus:outline-none transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center justify-between">
+                        <span>⏰ 2ª Sessão Diária:</span>
+                        <span class="text-[10px] text-indigo-400 font-bold">Tarde / Turno 2</span>
+                    </label>
+                    <input type="time" id="reminderTimeInput2" value="16:00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-mono focus:border-amber-500 focus:outline-none transition">
+                </div>
+
+                <div class="flex items-center justify-between bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-mobile-screen text-amber-400 text-xs"></i>
+                        <span class="text-xs text-slate-300 font-semibold">Ativar Notificações</span>
+                    </div>
+                    <input type="checkbox" id="reminderEnabledToggle" checked class="w-5 h-5 accent-amber-500 rounded cursor-pointer">
+                </div>
+            </div>
+
+            <div class="pt-2 space-y-2">
+                <button onclick="saveReminderConfig()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-amber-500/20 transition">
+                    Salvar Horários
+                </button>
+                <button onclick="testNotificationNow()" class="w-full py-2 bg-slate-800 hover:bg-slate-750 text-slate-300 text-xs font-semibold rounded-xl border border-slate-700 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play text-amber-400"></i> Testar Alerta Agora
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Interactive Reminder Popup / Snooze / Reschedule -->
+    <div id="interactiveReminderModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[75] hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-slate-850 border border-amber-500/40 rounded-3xl p-6 w-full max-w-sm space-y-4 shadow-2xl text-center relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mx-auto text-3xl shadow-inner animate-bounce">
+                <i class="fa-solid fa-bell"></i>
+            </div>
+
+            <div>
+                <span class="text-[11px] font-extrabold text-amber-400 uppercase tracking-wider">Lembrete Diário (2x ao dia)</span>
+                <h3 id="interactiveReminderTitle" class="text-xl font-bold text-white mt-1">Hora do seu Treino!</h3>
+                <p id="interactiveReminderDesc" class="text-xs text-slate-300 mt-1 leading-relaxed">
+                    Sessão programada para agora. Reserve 2 minutos para blindar sua saúde e postura.
+                </p>
+            </div>
+
+            <div class="space-y-2 pt-2">
+                <button onclick="startSessionFromReminder()" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition active:scale-95">
+                    <i class="fa-solid fa-play"></i> Iniciar Sessão Agora
+                </button>
+                
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="snoozeReminder(15)" class="py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700 text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-clock-rotate-left text-amber-400"></i> Adiar 15 min
+                    </button>
+                    <button onclick="snoozeReminder(30)" class="py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700 text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-clock-rotate-left text-amber-400"></i> Adiar 30 min
+                    </button>
+                </div>
+
+                <button onclick="openRescheduleFromPopup()" class="w-full py-2 text-slate-400 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+                    <i class="fa-solid fa-pen-to-square text-xs"></i> Remarcar Horário
                 </button>
             </div>
         </div>
@@ -1242,6 +1519,13 @@
                     title: 'Bracing: Automação (6 Semanas)',
                     description: 'Foco em manter o abdômen firme no escritório e corrigir postura.',
                     expanded: false,
+                    currentPhaseIndex: 0,
+                    currentDayInWeek: 1,
+                    daysCompletedInPhase: 0,
+                    sessionsToday: 0,
+                    dailyTarget: 2,
+                    reminderTimes: ['09:00', '15:00'],
+                    remindersEnabled: true,
                     phases: [
                         { title: 'Semana 1 e 2: Base', details: 'Deitado (Casa) + Sentado (Trabalho)', completed: false },
                         { title: 'Semana 3 e 4: Resistência', details: '4 Apoios (Casa) + Em Pé (Trabalho)', completed: false },
@@ -1250,15 +1534,25 @@
                 },
                 {
                     id: '2',
-                    title: 'Kegel: Assoalho Pélvico (8 Semanas)',
-                    description: 'Foco em resistência, agilidade reflexa e controle extremo.',
-                    expanded: false,
+                    title: 'Cronograma Avançado de 8 Semanas',
+                    description: 'Kegel e Assoalho Pélvico: foco em resistência, agilidade reflexa e controle extremo.',
+                    expanded: true,
+                    currentPhaseIndex: 0,
+                    currentDayInWeek: 1,
+                    daysCompletedInPhase: 0,
+                    sessionsToday: 0,
+                    dailyTarget: 2,
+                    reminderTimes: ['10:30', '16:30'],
+                    remindersEnabled: true,
                     phases: [
-                        { title: 'Semana 1: Volume Acumulado', details: '8 longas + 20 rápidas', completed: false },
-                        { title: 'Semana 2: O Elevador', details: 'Subida em 5s, pausa 5s, descida 5s', completed: false },
-                        { title: 'Semana 3: Isometria', details: '6x 10s + 25 rápidas', completed: false },
-                        { title: 'Semana 4: Simulação de Platô', details: '50% força máxima por 30s', completed: false },
-                        { title: 'Semana 5 a 8: Avançado', details: 'Exaustão e polimento reflexo', completed: false }
+                        { title: 'Semana 1: Volume Acumulado', details: 'Lento: 8x 6s (descanso 6s) | Rápido: 20x (1s/1s) | Pico: 1x 12s máx', completed: false },
+                        { title: 'Semana 2: O Elevador Intermediário', details: 'O Elevador: 6x (5s subida / 5s topo / 5s descida) | Tiros: 2x 12 rápidas (10s descanso)', completed: false },
+                        { title: 'Semana 3: Isometria Dinâmica', details: 'Sustentada: 6x 10s (descanso 5s) | Metralhadora: 25 rápidas sem parar', completed: false },
+                        { title: 'Semana 4: Simulação de Platô 1', details: 'O Platô: 50% por 30s contínuos | Combo: 3x (5 rápidas + 1x 8s)', completed: false },
+                        { title: 'Semana 5: Choque de Fibras (Controle Ejaculatório)', details: 'Transição brusca | 4x (1x 12s longa + 10 tiros rápidos imediatos)', completed: false },
+                        { title: 'Semana 6: O Elevador Avançado', details: '5x (Subida 5s + 5 tiros no topo + Descida 5s)', completed: false },
+                        { title: 'Semana 7: Exaustão e Resistência Crítica', details: '2x (Platô 80% 45s + 15 tiros rápidos de recuperação fadigado)', completed: false },
+                        { title: 'Semana 8: Polimento e Agilidade Reflexa', details: 'Volume 2x/dia | Super Combo: 2x 15s + 30 tiros rápidos (relaxamento instantâneo)', completed: false }
                     ]
                 }
             ]
@@ -1273,8 +1567,60 @@
                 const savedSchedule = localStorage.getItem('coreflow_schedule');
                 if (savedSchedule) AppState.schedule = JSON.parse(savedSchedule);
 
+                const todayStr = new Date().toISOString().split('T')[0];
+                const savedDailyDate = localStorage.getItem('coreflow_daily_date');
+                const isNewDay = savedDailyDate !== todayStr;
+
                 const savedPrograms = localStorage.getItem('coreflow_programs');
-                if (savedPrograms) AppState.programs = JSON.parse(savedPrograms);
+                if (savedPrograms) {
+                    try {
+                        const loaded = JSON.parse(savedPrograms);
+                        if (Array.isArray(loaded)) {
+                            AppState.programs.forEach((defaultProg, pIdx) => {
+                                const matchingLoaded = loaded.find(p => p.id === defaultProg.id);
+                                if (matchingLoaded) {
+                                    if (matchingLoaded.title && matchingLoaded.title !== 'Kegel: Assoalho Pélvico (8 Semanas)') {
+                                        defaultProg.title = matchingLoaded.title;
+                                    }
+                                    if (typeof matchingLoaded.expanded !== 'undefined') {
+                                        defaultProg.expanded = matchingLoaded.expanded;
+                                    }
+                                    if (typeof matchingLoaded.currentPhaseIndex !== 'undefined') {
+                                        defaultProg.currentPhaseIndex = matchingLoaded.currentPhaseIndex;
+                                    }
+                                    if (typeof matchingLoaded.daysCompletedInPhase !== 'undefined') {
+                                        defaultProg.daysCompletedInPhase = matchingLoaded.daysCompletedInPhase;
+                                    }
+                                    defaultProg.currentDayInWeek = Math.min((defaultProg.daysCompletedInPhase || 0) + 1, 7);
+
+                                    if (matchingLoaded.reminderTimes && Array.isArray(matchingLoaded.reminderTimes)) {
+                                        defaultProg.reminderTimes = matchingLoaded.reminderTimes;
+                                    }
+                                    if (typeof matchingLoaded.remindersEnabled !== 'undefined') {
+                                        defaultProg.remindersEnabled = matchingLoaded.remindersEnabled;
+                                    }
+                                    
+                                    // Daily session count resets on new day
+                                    if (!isNewDay && typeof matchingLoaded.sessionsToday !== 'undefined') {
+                                        defaultProg.sessionsToday = matchingLoaded.sessionsToday;
+                                    } else {
+                                        defaultProg.sessionsToday = 0;
+                                    }
+
+                                    if (Array.isArray(matchingLoaded.phases)) {
+                                        defaultProg.phases.forEach((phase, phIdx) => {
+                                            if (matchingLoaded.phases[phIdx]) {
+                                                phase.completed = !!matchingLoaded.phases[phIdx].completed;
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    } catch (pe) {
+                        console.log('Error parsing saved programs', pe);
+                    }
+                }
 
                 const savedMinutes = localStorage.getItem('coreflow_minutes');
                 if (savedMinutes) AppState.totalMinutesToday = parseInt(savedMinutes, 10);
@@ -1286,8 +1632,6 @@
                 if (savedPrevWeekly) AppState.previousWeeklyHistory = JSON.parse(savedPrevWeekly);
 
                 // Daily Execution Session Tracker
-                const todayStr = new Date().toISOString().split('T')[0];
-                const savedDailyDate = localStorage.getItem('coreflow_daily_date');
                 if (savedDailyDate === todayStr) {
                     const savedDailyCount = localStorage.getItem('coreflow_daily_count');
                     if (savedDailyCount) AppState.dailyExecution.sessionsCompletedToday = parseInt(savedDailyCount, 10);
@@ -1520,6 +1864,7 @@
                 }
             }
 
+            renderSmartSuggestionCard();
             triggerHaptic([30]);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -2315,59 +2660,60 @@
                 title: "Semana 1: Volume Acumulado",
                 exercises: [
                     { type: "Lento", desc: "8 contrações de 6 segundos (descanso de 6 segundos)." },
-                    { type: "Rápido", desc: "20 contrações rápidas (1s contrai, 1s relaxa)." },
+                    { type: "Rápido", desc: "20 contrações rápidas (1 segundo contrai, 1 segundo relaxa)." },
                     { type: "Pico", desc: "Ao final, faça 1 contração máxima de 12 segundos." }
                 ]
             },
             {
                 title: "Semana 2: O Elevador Intermediário",
                 exercises: [
-                    { type: "O Elevador", desc: "6 repetições completas (suba em 5s, segure 5s no topo, desça controladamente em 5s)." },
-                    { type: "Tiros Curtos", desc: "2 séries de 12 contrações rápidas (10s de descanso entre as séries)." }
+                    { type: "O Elevador", desc: "6 repetições completas (suba em 5 segundos, segure 5 segundos no topo, desça controladamente em 5 segundos)." },
+                    { type: "Tiros Curtos", desc: "2 séries de 12 contrações rápidas (10 segundos de descanso entre as séries)." }
                 ]
             },
             {
                 title: "Semana 3: Isometria Dinâmica",
                 exercises: [
-                    { type: "Contração Sustentada", desc: "6 contrações de 10 segundos (descanso curto de apenas 5s para gerar sobrecarga)." },
+                    { type: "Contração Sustentada", desc: "6 contrações de 10 segundos (descanso curto de apenas 5 segundos para gerar sobrecarga)." },
                     { type: "Metralhadora", desc: "25 contrações rápidas consecutivas sem parar." }
                 ]
             },
             {
                 title: "Semana 4: Simulação de Platô 1",
                 exercises: [
-                    { type: "O Platô", desc: "Contraia a 50% da força máxima e segure por 30s contínuos. Foque em manter a respiração perfeitamente fluida." },
-                    { type: "Combo", desc: "5 contrações rápidas + 1 contração de 8s. Repita o combo 3 vezes." }
+                    { type: "O Platô", desc: "Contraia a 50% da força máxima e segure por 30 segundos contínuos. Foque em manter a respiração perfeitamente fluida." },
+                    { type: "Combo", desc: "5 contrações rápidas + 1 contração de 8 segundos. Repita o combo 3 vezes." }
                 ]
             },
             {
-                title: "Semana 5: Choque de Fibras",
+                title: "Semana 5: Choque de Fibras (Foco em Controle Ejaculatório)",
                 note: "Esta semana foca na transição brusca, simulando o momento de conter o orgasmo.",
                 exercises: [
-                    { type: "Exercício", desc: "1 contração longa de 12s seguida imediatamente (sem descanso) por 10 tiros rápidos." },
+                    { type: "Exercício", desc: "1 contração longa de 12 segundos seguida imediatamente (sem descanso) por 10 tiros rápidos." },
                     { type: "Volume", desc: "Repita essa sequência 4 vezes por sessão." }
                 ]
             },
             {
                 title: "Semana 6: O Elevador Avançado",
                 exercises: [
-                    { type: "Elevador com Paradas", desc: "Suba o elevador em 5s. No topo (andar 5), faça 5 contrações rápidas sem descer o elevador. Depois, desça em 5s." },
+                    { type: "Elevador com Paradas", desc: "Suba o elevador em 5 segundos. No topo (andar 5), faça 5 contrações rápidas sem descer o elevador. Depois, desça em 5 segundos." },
                     { type: "Volume", desc: "5 repetições completas por sessão." }
                 ]
             },
             {
                 title: "Semana 7: Exaustão e Resistência Crítica",
                 exercises: [
-                    { type: "O Platô Máximo", desc: "Contraia a 80% da força máxima e segure por 45s." },
+                    { type: "O Platô Máximo", desc: "Contraia a 80% da força máxima e segure por 45 segundos." },
                     { type: "Tiros de Recuperação", desc: "Logo após o platô, faça 15 contrações rápidas para forçar o músculo a trabalhar fadigado." },
                     { type: "Volume", desc: "Faça 2 séries deste combo por sessão." }
                 ]
             },
             {
                 title: "Semana 8: Polimento e Agilidade Reflexa",
-                note: "Reduza o volume para 2 sessões diárias para recuperar o músculo, focando em pura velocidade e precisão. O relaxamento pós-tiro deve ser instantâneo.",
+                note: "Reduza o volume para 2 sessões diárias para recuperar o músculo, focando em pura velocidade e precisão.",
                 exercises: [
-                    { type: "Super Combo", desc: "2 contrações de 15 segundos + 30 contrações rápidas o mais veloz que conseguir." }
+                    { type: "Super Combo", desc: "2 contrações de 15 segundos + 30 contrações rápidas o mais veloz que conseguir." },
+                    { type: "Foco", desc: "O relaxamento pós-tiro deve ser instantâneo." }
                 ]
             }
         ];
@@ -2523,57 +2869,739 @@
         }
 
         /* -------------------------------------------------------------
-           ABA 3: PROGRAMAS
+           ABA 3: PROGRAMAS & EVOLUÇÃO (AVANÇO DIÁRIO 2X AO DIA)
         ------------------------------------------------------------- */
+        function getProgramSteps(progId, phaseIdx) {
+            if (progId === '2') { // Cronograma Avançado de 8 Semanas de Kegel
+                switch (phaseIdx) {
+                    case 0: { // Semana 1: Volume Acumulado
+                        const steps = [];
+                        // 1. Lento: 8 contrações de 6s com 6s de descanso
+                        for (let rep = 1; rep <= 8; rep++) {
+                            steps.push({
+                                title: `Lento: Repetição ${rep}/8 (Contração 6s)`,
+                                instruction: `Contraia o assoalho pélvico e segure firme por 6 segundos (${rep} de 8).`,
+                                duration: 6,
+                                isRest: false,
+                                voice: `Contração ${rep}`,
+                                badge: `CONTRAIA 6s (${rep}/8)`
+                            });
+                            steps.push({
+                                title: `Lento: Repetição ${rep}/8 (Descanso 6s)`,
+                                instruction: `Relaxe completamente o assoalho pélvico por 6 segundos com respiração fluida.`,
+                                duration: 6,
+                                isRest: true,
+                                voice: `Relaxe`,
+                                badge: `RELAXE 6s`
+                            });
+                        }
+                        // 2. Transição
+                        steps.push({
+                            title: `Descanso de Transição (15s)`,
+                            instruction: `Respire fundo e prepare-se para a sequência de 20 tiros rápidos.`,
+                            duration: 15,
+                            isRest: true,
+                            voice: `Descanse 15 segundos`,
+                            badge: `DESCANSO 15s`
+                        });
+                        // 3. Rápido: 20 contrações rápidas (1s contrai, 1s relaxa)
+                        for (let rep = 1; rep <= 20; rep++) {
+                            steps.push({
+                                title: `Tiros Rápidos: ${rep}/20 (Contrai 1s)`,
+                                instruction: `Contração rápida potente de 1 segundo (${rep} de 20).`,
+                                duration: 1,
+                                isRest: false,
+                                voice: rep === 1 ? `Inicie 20 tiros rápidos` : (rep === 10 ? `Metade: 10` : (rep === 20 ? `Último tiro!` : '')),
+                                badge: `TIRO RÁPIDO #${rep}`
+                            });
+                            steps.push({
+                                title: `Tiros Rápidos: ${rep}/20 (Relaxa 1s)`,
+                                instruction: `Solte instantaneamente.`,
+                                duration: 1,
+                                isRest: true,
+                                voice: '',
+                                badge: `SOLTE`
+                            });
+                        }
+                        // 4. Transição para o Pico
+                        steps.push({
+                            title: `Descanso Pré-Pico (10s)`,
+                            instruction: `Prepare-se para a contração isométrica máxima de 12 segundos!`,
+                            duration: 10,
+                            isRest: true,
+                            voice: `Prepare a contração de pico`,
+                            badge: `PREPARE O PICO`
+                        });
+                        // 5. Pico Máximo de 12s
+                        steps.push({
+                            title: `Pico Máximo Sustentado (12s)`,
+                            instruction: `Contração máxima contínua no topo por 12 segundos! Segure com força total!`,
+                            duration: 12,
+                            isRest: false,
+                            voice: `Pico máximo! Segure firme por 12 segundos!`,
+                            badge: `PICO MÁXIMO 100%`
+                        });
+                        return steps;
+                    }
+
+                    case 1: { // Semana 2: O Elevador Intermediário
+                        const steps = [];
+                        // 6 Repetições de Elevador: Suba em 5s, Segure 5s no topo, Desça em 5s, Base 3s
+                        for (let rep = 1; rep <= 6; rep++) {
+                            steps.push({
+                                title: `O Elevador: Rep ${rep}/6 (Subida 5s)`,
+                                instruction: `Suba gradualmente a contração do andar 1 ao andar 5 (5 segundos).`,
+                                duration: 5,
+                                isRest: false,
+                                voice: `Subindo o elevador ${rep}`,
+                                badge: `SUBIDA 5s (${rep}/6)`
+                            });
+                            steps.push({
+                                title: `O Elevador: Rep ${rep}/6 (Topo 5s)`,
+                                instruction: `Segure no topo (andar 5) em contração máxima contínua por 5 segundos.`,
+                                duration: 5,
+                                isRest: false,
+                                voice: `Segure no topo`,
+                                badge: `TOPO SUSTENTADO 5s`
+                            });
+                            steps.push({
+                                title: `O Elevador: Rep ${rep}/6 (Descida 5s)`,
+                                instruction: `Desça andar por andar com controle motor até a base (5 segundos).`,
+                                duration: 5,
+                                isRest: false,
+                                voice: `Descendo com controle`,
+                                badge: `DESCIDA 5s`
+                            });
+                            steps.push({
+                                title: `O Elevador: Rep ${rep}/6 (Base 3s)`,
+                                instruction: `Solte completamente a musculatura na base.`,
+                                duration: 3,
+                                isRest: true,
+                                voice: `Relaxe na base`,
+                                badge: `BASE RELAXADA`
+                            });
+                        }
+                        // Transição
+                        steps.push({
+                            title: `Descanso de Transição (15s)`,
+                            instruction: `Respire fundo. A seguir: 2 séries de 12 contrações rápidas.`,
+                            duration: 15,
+                            isRest: true,
+                            voice: `Descanse 15 segundos`,
+                            badge: `DESCANSO 15s`
+                        });
+                        // Tiros Série 1 (12 Tiros)
+                        for (let rep = 1; rep <= 12; rep++) {
+                            steps.push({
+                                title: `Tiros Série 1: ${rep}/12 (Contrai 1s)`,
+                                instruction: `Tiro rápido potente (${rep}/12).`,
+                                duration: 1,
+                                isRest: false,
+                                voice: rep === 1 ? `Série 1: tiros rápidos` : '',
+                                badge: `SÉRIE 1 - TIRO #${rep}`
+                            });
+                            steps.push({
+                                title: `Tiros Série 1: ${rep}/12 (Relaxa 1s)`,
+                                instruction: `Solte.`,
+                                duration: 1,
+                                isRest: true,
+                                voice: '',
+                                badge: `SOLTE`
+                            });
+                        }
+                        // Descanso entre séries (10s)
+                        steps.push({
+                            title: `Descanso Entre Séries (10s)`,
+                            instruction: `10 segundos de descanso antes da Série 2.`,
+                            duration: 10,
+                            isRest: true,
+                            voice: `Descanse 10 segundos`,
+                            badge: `PAUSA 10s`
+                        });
+                        // Tiros Série 2 (12 Tiros)
+                        for (let rep = 1; rep <= 12; rep++) {
+                            steps.push({
+                                title: `Tiros Série 2: ${rep}/12 (Contrai 1s)`,
+                                instruction: `Tiro rápido potente final (${rep}/12).`,
+                                duration: 1,
+                                isRest: false,
+                                voice: rep === 1 ? `Série 2: tiros finais` : '',
+                                badge: `SÉRIE 2 - TIRO #${rep}`
+                            });
+                            steps.push({
+                                title: `Tiros Série 2: ${rep}/12 (Relaxa 1s)`,
+                                instruction: `Solte.`,
+                                duration: 1,
+                                isRest: true,
+                                voice: '',
+                                badge: `SOLTE`
+                            });
+                        }
+                        return steps;
+                    }
+
+                    case 2: { // Semana 3: Isometria Dinâmica
+                        const steps = [];
+                        // 6x Contração Sustentada 10s com descanso 5s
+                        for (let rep = 1; rep <= 6; rep++) {
+                            steps.push({
+                                title: `Isometria: Rep ${rep}/6 (Contração 10s)`,
+                                instruction: `Contração sustentada contínua por 10 segundos para gerar sobrecarga.`,
+                                duration: 10,
+                                isRest: false,
+                                voice: `Contração sustentada ${rep}`,
+                                badge: `ISOMETRIA 10s (${rep}/6)`
+                            });
+                            steps.push({
+                                title: `Isometria: Rep ${rep}/6 (Descanso Curto 5s)`,
+                                instruction: `Pausa curta de apenas 5 segundos (sobrecarga metabólica).`,
+                                duration: 5,
+                                isRest: true,
+                                voice: `Pausa curta`,
+                                badge: `PAUSA CURTA 5s`
+                            });
+                        }
+                        // Transição para Metralhadora
+                        steps.push({
+                            title: `Descanso de Transição (15s)`,
+                            instruction: `Respire fundo e prepare a Metralhadora de 25 tiros consecutivos!`,
+                            duration: 15,
+                            isRest: true,
+                            voice: `Prepare a metralhadora de 25 tiros`,
+                            badge: `PREPARE METRALHADORA`
+                        });
+                        // Metralhadora: 25 Tiros Rápidos sem parar
+                        for (let rep = 1; rep <= 25; rep++) {
+                            steps.push({
+                                title: `Metralhadora: ${rep}/25 (Contrai 1s)`,
+                                instruction: `Tiro rápido consecutivo sem parar (${rep}/25).`,
+                                duration: 1,
+                                isRest: false,
+                                voice: rep === 1 ? `Metralhadora: vai!` : (rep === 15 ? `15!` : (rep === 25 ? `Último!` : '')),
+                                badge: `METRALHADORA #${rep}`
+                            });
+                            steps.push({
+                                title: `Metralhadora: ${rep}/25 (Relaxa 1s)`,
+                                instruction: `Solte.`,
+                                duration: 1,
+                                isRest: true,
+                                voice: '',
+                                badge: `SOLTE`
+                            });
+                        }
+                        return steps;
+                    }
+
+                    case 3: { // Semana 4: Simulação de Platô 1
+                        const steps = [];
+                        // 1. O Platô: 50% de Força por 30 segundos contínuos
+                        steps.push({
+                            title: `O Platô: 50% Força (30s contínuos)`,
+                            instruction: `Contraia a 50% da força máxima e segure por 30s contínuos. Mantenha a respiração perfeitamente fluida.`,
+                            duration: 30,
+                            isRest: false,
+                            voice: `Iniciando platô de 30 segundos a 50% de força`,
+                            badge: `PLATÔ 50% (30s)`
+                        });
+                        // Transição
+                        steps.push({
+                            title: `Descanso (15s)`,
+                            instruction: `Solte e respire. A seguir: 3 combos de 5 tiros rápidos + 1 contração de 8s.`,
+                            duration: 15,
+                            isRest: true,
+                            voice: `Descanse 15 segundos`,
+                            badge: `DESCANSO 15s`
+                        });
+                        // 2. Combo: 3 ciclos de 5 tiros + 1 contração de 8s
+                        for (let ciclo = 1; ciclo <= 3; ciclo++) {
+                            for (let t = 1; t <= 5; t++) {
+                                steps.push({
+                                    title: `Combo ${ciclo}/3: Tiro Rápido ${t}/5`,
+                                    instruction: `Tiro rápido ${t} de 5 do Combo ${ciclo}.`,
+                                    duration: 1,
+                                    isRest: false,
+                                    badge: `COMBO ${ciclo}/3 - TIRO #${t}`
+                                });
+                                steps.push({
+                                    title: `Combo ${ciclo}/3: Tiro Rápido ${t}/5 (Solte)`,
+                                    instruction: `Solte.`,
+                                    duration: 1,
+                                    isRest: true,
+                                    badge: `SOLTE`
+                                });
+                            }
+                            steps.push({
+                                title: `Combo ${ciclo}/3: Contração Longa (8s)`,
+                                instruction: `Contração longa imediata de 8 segundos!`,
+                                duration: 8,
+                                isRest: false,
+                                voice: `Contração de 8 segundos`,
+                                badge: `LONGA 8s (COMBO ${ciclo}/3)`
+                            });
+                            if (ciclo < 3) {
+                                steps.push({
+                                    title: `Pausa Entre Combos (10s)`,
+                                    instruction: `Pausa de 10 segundos antes do próximo ciclo.`,
+                                    duration: 10,
+                                    isRest: true,
+                                    voice: `Pausa de 10 segundos`,
+                                    badge: `PAUSA 10s`
+                                });
+                            }
+                        }
+                        return steps;
+                    }
+
+                    case 4: { // Semana 5: Choque de Fibras (Controle Ejaculatório)
+                        const steps = [];
+                        // 4 Ciclos de Choque de Fibras: 1x 12s longa + 10 tiros rápidos sem descanso
+                        for (let ciclo = 1; ciclo <= 4; ciclo++) {
+                            steps.push({
+                                title: `Choque ${ciclo}/4: Contração Longa (12s)`,
+                                instruction: `Segure a contração contínua por 12s. Na sequência, entre direto nos 10 tiros rápidos sem descanso!`,
+                                duration: 12,
+                                isRest: false,
+                                voice: `Choque de fibras ${ciclo}: segure 12 segundos`,
+                                badge: `LONGA 12s (CICLO ${ciclo}/4)`
+                            });
+                            for (let t = 1; t <= 10; t++) {
+                                steps.push({
+                                    title: `Choque ${ciclo}/4: Tiro Rápido ${t}/10 (Sem descanso)`,
+                                    instruction: `Transição brusca: tiro rápido ${t} de 10 imediatamente após a sustentação!`,
+                                    duration: 1,
+                                    isRest: false,
+                                    voice: t === 1 ? `Tiros rápidos agora!` : '',
+                                    badge: `TIRO BRUSCO #${t}/10`
+                                });
+                                steps.push({
+                                    title: `Choque ${ciclo}/4: Tiro Rápido ${t}/10 (Solte)`,
+                                    instruction: `Solte.`,
+                                    duration: 1,
+                                    isRest: true,
+                                    badge: `SOLTE`
+                                });
+                            }
+                            if (ciclo < 4) {
+                                steps.push({
+                                    title: `Descanso Entre Ciclos (15s)`,
+                                    instruction: `Respire fundo e solte totalmente o assoalho pélvico.`,
+                                    duration: 15,
+                                    isRest: true,
+                                    voice: `Descanse 15 segundos`,
+                                    badge: `DESCANSO 15s`
+                                });
+                            }
+                        }
+                        return steps;
+                    }
+
+                    case 5: { // Semana 6: O Elevador Avançado
+                        const steps = [];
+                        // 5 Repetições do Elevador Avançado: Suba 5s + 5 tiros no topo + Desça 5s + Base 5s
+                        for (let rep = 1; rep <= 5; rep++) {
+                            steps.push({
+                                title: `Elevador Avançado ${rep}/5: Subida (5s)`,
+                                instruction: `Suba gradualmente a contração até o andar 5 (5 segundos).`,
+                                duration: 5,
+                                isRest: false,
+                                voice: `Subindo o elevador ${rep}`,
+                                badge: `SUBIDA 5s (${rep}/5)`
+                            });
+                            for (let t = 1; t <= 5; t++) {
+                                steps.push({
+                                    title: `Elevador Avançado ${rep}/5: Tiro no Topo ${t}/5`,
+                                    instruction: `Mantenha no topo e faça o tiro rápido ${t}/5 sem descer!`,
+                                    duration: 1,
+                                    isRest: false,
+                                    voice: t === 1 ? `5 tiros no topo!` : '',
+                                    badge: `TOPO - TIRO #${t}/5`
+                                });
+                                steps.push({
+                                    title: `Elevador Avançado ${rep}/5: Tiro no Topo ${t}/5 (Solte no topo)`,
+                                    instruction: `Solte rápido no topo.`,
+                                    duration: 1,
+                                    isRest: true,
+                                    badge: `TOPO`
+                                });
+                            }
+                            steps.push({
+                                title: `Elevador Avançado ${rep}/5: Descida (5s)`,
+                                instruction: `Desça controladamente andar por andar até a base (5 segundos).`,
+                                duration: 5,
+                                isRest: false,
+                                voice: `Descendo controladamente`,
+                                badge: `DESCIDA 5s`
+                            });
+                            steps.push({
+                                title: `Pausa de Base (5s)`,
+                                instruction: `Solte a musculatura na base.`,
+                                duration: 5,
+                                isRest: true,
+                                voice: `Relaxe na base`,
+                                badge: `BASE 5s`
+                            });
+                        }
+                        return steps;
+                    }
+
+                    case 6: { // Semana 7: Exaustão e Resistência Crítica
+                        const steps = [];
+                        // Ciclo 1: Platô 80% (45s) + 15 Tiros Rápidos em Fadiga + Descanso 20s
+                        steps.push({
+                            title: `Ciclo 1/2: Platô Máximo 80% (45s)`,
+                            instruction: `Contraia a 80% da força máxima e segure por 45 segundos contínuos!`,
+                            duration: 45,
+                            isRest: false,
+                            voice: `Platô máximo de 45 segundos! Segure com força!`,
+                            badge: `PLATÔ MÁXIMO 80% (45s)`
+                        });
+                        for (let t = 1; t <= 15; t++) {
+                            steps.push({
+                                title: `Ciclo 1/2: Tiro de Recuperação ${t}/15`,
+                                instruction: `O músculo está fadigado: force a velocidade no tiro ${t}/15!`,
+                                duration: 1,
+                                isRest: false,
+                                voice: t === 1 ? `Tiros em fadiga! Force a velocidade!` : '',
+                                badge: `FADIGA - TIRO #${t}/15`
+                            });
+                            steps.push({
+                                title: `Ciclo 1/2: Tiro de Recuperação ${t}/15 (Solte)`,
+                                instruction: `Solte.`,
+                                duration: 1,
+                                isRest: true,
+                                badge: `SOLTE`
+                            });
+                        }
+                        steps.push({
+                            title: `Descanso Entre Séries (20s)`,
+                            instruction: `Respire fundo e recupere o tônus para o último ciclo.`,
+                            duration: 20,
+                            isRest: true,
+                            voice: `Descanse 20 segundos`,
+                            badge: `DESCANSO 20s`
+                        });
+                        // Ciclo 2: Platô 80% (45s) + 15 Tiros Rápidos em Fadiga
+                        steps.push({
+                            title: `Ciclo 2/2: Platô Máximo 80% (45s)`,
+                            instruction: `Último platô de 45 segundos. Foco e determinação total!`,
+                            duration: 45,
+                            isRest: false,
+                            voice: `Último platô de 45 segundos!`,
+                            badge: `PLATÔ FINAL 80% (45s)`
+                        });
+                        for (let t = 1; t <= 15; t++) {
+                            steps.push({
+                                title: `Ciclo 2/2: Tiro de Recuperação ${t}/15`,
+                                instruction: `Finalize a exaustão com o tiro rápido ${t}/15!`,
+                                duration: 1,
+                                isRest: false,
+                                voice: t === 1 ? `Tiros finais!` : (t === 15 ? `Último tiro!` : ''),
+                                badge: `FINAL - TIRO #${t}/15`
+                            });
+                            steps.push({
+                                title: `Ciclo 2/2: Tiro de Recuperação ${t}/15 (Solte)`,
+                                instruction: `Solte.`,
+                                duration: 1,
+                                isRest: true,
+                                badge: `SOLTE`
+                            });
+                        }
+                        return steps;
+                    }
+
+                    case 7: { // Semana 8: Polimento e Agilidade Reflexa
+                        const steps = [];
+                        // Contração Longa 1 (15s)
+                        steps.push({
+                            title: `Super Combo: Contração Longa 1 (15s)`,
+                            instruction: `Contração contínua sustentada por 15 segundos.`,
+                            duration: 15,
+                            isRest: false,
+                            voice: `Contração sustentada de 15 segundos`,
+                            badge: `LONGA 15s (1/2)`
+                        });
+                        steps.push({
+                            title: `Descanso Curto (10s)`,
+                            instruction: `Relaxe completamente.`,
+                            duration: 10,
+                            isRest: true,
+                            voice: `Relaxe 10 segundos`,
+                            badge: `DESCANSO 10s`
+                        });
+                        // Contração Longa 2 (15s)
+                        steps.push({
+                            title: `Super Combo: Contração Longa 2 (15s)`,
+                            instruction: `Segunda contração sustentada de 15 segundos.`,
+                            duration: 15,
+                            isRest: false,
+                            voice: `Segunda contração de 15 segundos`,
+                            badge: `LONGA 15s (2/2)`
+                        });
+                        steps.push({
+                            title: `Descanso Pré-Tiros (10s)`,
+                            instruction: `Prepare-se para os 30 tiros ultra velozes! O relaxamento pós-tiro deve ser instantâneo.`,
+                            duration: 10,
+                            isRest: true,
+                            voice: `Prepare 30 tiros em velocidade máxima`,
+                            badge: `PREPARE 30 TIROS`
+                        });
+                        // 30 Tiros Ultra Rápidos
+                        for (let t = 1; t <= 30; t++) {
+                            steps.push({
+                                title: `Super Tiros: ${t}/30 (Velocidade Máxima)`,
+                                instruction: `Tiro ultra veloz ${t}/30 com relaxamento instantâneo.`,
+                                duration: 1,
+                                isRest: false,
+                                voice: t === 1 ? `30 tiros em velocidade máxima! Vai!` : (t === 15 ? `15!` : (t === 30 ? `Último tiro!` : '')),
+                                badge: `SUPER TIRO #${t}/30`
+                            });
+                            steps.push({
+                                title: `Super Tiros: ${t}/30 (Relaxamento Instantâneo)`,
+                                instruction: `Relaxamento reflexo imediato.`,
+                                duration: 1,
+                                isRest: true,
+                                badge: `RELAXAMENTO REFLEXO`
+                            });
+                        }
+                        return steps;
+                    }
+
+                    default:
+                        return [{ title: 'Treino de Kegel', instruction: 'Execute as contrações no seu ritmo.', duration: 60, isRest: false }];
+                }
+            } else { // Program 1: Bracing (6 Semanas)
+                switch (phaseIdx) {
+                    case 0: // Semana 1 e 2: Base
+                        return [
+                            { title: 'Bracing Deitado 20% (60s)', instruction: 'Deite-se com joelhos dobrados, ative 20% do abdômen expandindo as costelas.', duration: 60, isRest: false, voice: 'Bracing deitado: 60 segundos', badge: 'DEITADO (20%)' },
+                            { title: 'Descanso (15s)', instruction: 'Respire normalmente e solte a musculatura.', duration: 15, isRest: true, voice: 'Descanse 15 segundos', badge: 'DESCANSO' },
+                            { title: 'Bracing Sentado 20% (60s)', instruction: 'Sente-se com a coluna ereta, pés apoiados e ative 20% de bracing.', duration: 60, isRest: false, voice: 'Bracing sentado: 60 segundos', badge: 'SENTADO (20%)' },
+                            { title: 'Descanso (15s)', instruction: 'Respire.', duration: 15, isRest: true, badge: 'DESCANSO' },
+                            { title: 'Bracing com Respiração Costal (60s)', instruction: 'Mantenha o tronco firme enquanto faz trocas curtas de ar pelo peito.', duration: 60, isRest: false, voice: 'Respiração costal com abdômen firme', badge: 'COSTAL 360°' }
+                        ];
+                    case 1: // Semana 3 e 4: Resistência
+                        return [
+                            { title: 'Bracing 4 Apoios (60s)', instruction: 'Posição de 4 apoios com coluna neutra e abdômen blindado.', duration: 60, isRest: false, voice: 'Bracing em 4 apoios: 60 segundos', badge: '4 APOIOS' },
+                            { title: 'Descanso (15s)', instruction: 'Respire.', duration: 15, isRest: true, badge: 'DESCANSO' },
+                            { title: 'Bracing Em Pé (60s)', instruction: 'Em pé, alinhe os ombros e ative 25% de bracing postural.', duration: 60, isRest: false, voice: 'Bracing em pé: 60 segundos', badge: 'EM PÉ (25%)' },
+                            { title: 'Descanso (15s)', instruction: 'Respire.', duration: 15, isRest: true, badge: 'DESCANSO' },
+                            { title: 'Bracing Isométrico Contínuo (60s)', instruction: 'Mantenha 25% de firmeza contínua com postura impecável.', duration: 60, isRest: false, voice: 'Bracing isométrico contínuo', badge: 'ISOMETRIA' }
+                        ];
+                    case 2: // Semana 5 e 6: Avançado
+                        return [
+                            { title: 'Bracing Dinâmico (60s)', instruction: 'Ativação do abdômen com pequenos movimentos suaves de braços e pernas.', duration: 60, isRest: false, voice: 'Bracing dinâmico: 60 segundos', badge: 'DINÂMICO' },
+                            { title: 'Descanso (15s)', instruction: 'Respire.', duration: 15, isRest: true, badge: 'DESCANSO' },
+                            { title: 'Bracing Digitando 30% (90s)', instruction: 'Mantenha 30% de firmeza abdominal enquanto trabalha e digita no teclado.', duration: 90, isRest: false, voice: 'Bracing no trabalho: 90 segundos', badge: 'DIGITANDO (30%)' },
+                            { title: 'Descanso (15s)', instruction: 'Respire.', duration: 15, isRest: true, badge: 'DESCANSO' },
+                            { title: 'Bracing Funcional Final (60s)', instruction: 'Fechamento da sessão com estabilização lombar total.', duration: 60, isRest: false, voice: 'Bracing funcional final', badge: 'FUNCIONAL' }
+                        ];
+                    default:
+                        return [{ title: 'Bracing Funcional', instruction: 'Ativação postural de 60 segundos.', duration: 60, isRest: false }];
+                }
+            }
+        }
+
         function renderProgramsList() {
             const container = document.getElementById('programsListContainer');
             if (!container) return;
             container.innerHTML = '';
+
+            // Update Hero Banner with Active Program Info
+            const mainProg = AppState.programs.find(p => p.id === '2') || AppState.programs[0];
+            if (mainProg) {
+                const activePh = mainProg.phases[mainProg.currentPhaseIndex || 0] || mainProg.phases[0];
+                const sToday = mainProg.sessionsToday || 0;
+                const currentDay = mainProg.currentDayInWeek || Math.min((mainProg.daysCompletedInPhase || 0) + 1, 7);
+                const daysCompleted = mainProg.daysCompletedInPhase || 0;
+                
+                const heroTitle = document.getElementById('heroWorkoutProgramTitle');
+                const heroSub = document.getElementById('heroWorkoutPhaseSubtitle');
+                const heroBadge = document.getElementById('heroSessionsTodayBadge');
+                const heroBtn = document.getElementById('heroWorkoutButtonText');
+
+                if (heroTitle) heroTitle.innerText = mainProg.title;
+                if (heroSub) heroSub.innerText = `${activePh.title} • Dia ${currentDay} de 7 (${daysCompleted}/7 dias concluídos)`;
+                if (heroBadge) {
+                    heroBadge.innerText = `${sToday}/2 Sessões Hoje`;
+                    heroBadge.className = `text-xs font-black px-2.5 py-0.5 rounded-full border ${sToday >= 2 ? 'text-emerald-300 bg-emerald-950/80 border-emerald-400/40' : 'text-amber-300 bg-black/40 border-amber-400/30'}`;
+                }
+                if (heroBtn) {
+                    if (sToday === 0) heroBtn.innerText = `Iniciar Sessão 1/2 (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
+                    else if (sToday === 1) heroBtn.innerText = `Iniciar Sessão 2/2 (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
+                    else heroBtn.innerText = `Meta Diária Concluída (2/2) ✓ - Repetir Treino`;
+                }
+            }
             
             AppState.programs.forEach((prog, pIdx) => {
                 const completedCount = prog.phases.filter(p => p.completed).length;
                 const progressPct = prog.phases.length > 0 ? (completedCount / prog.phases.length) * 100 : 0;
                 const isExpanded = prog.expanded;
+                const sessionsToday = prog.sessionsToday || 0;
+                const targetSessions = prog.dailyTarget || 2;
+                const activePhaseIdx = prog.currentPhaseIndex || 0;
+                const activePhase = prog.phases[activePhaseIdx] || prog.phases[0];
+                const reminderTimes = prog.reminderTimes || ['09:00', '16:00'];
+                const currentDay = prog.currentDayInWeek || Math.min((prog.daysCompletedInPhase || 0) + 1, 7);
+                const daysCompleted = prog.daysCompletedInPhase || 0;
 
-                let phasesHtml = prog.phases.map((phase, i) => `
-                    <div class="flex items-center gap-3 py-2 cursor-pointer active:opacity-70 transition" onclick="toggleProgramPhase(${pIdx}, ${i})">
-                        <div class="w-6 h-6 rounded-md border flex items-center justify-center transition-all ${phase.completed ? 'bg-indigo-500 border-indigo-500 text-white' : 'border-slate-600 bg-slate-800 text-transparent'}">
-                            <i class="fa-solid fa-check text-xs"></i>
+                let guideBtnHtml = '';
+                if (prog.id === '2') {
+                    guideBtnHtml = `
+                        <button onclick="event.stopPropagation(); openKegelProgramModal()" title="Ver Guia Detalhado de 8 Semanas" class="w-8 h-8 rounded-full bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 flex items-center justify-center transition">
+                            <i class="fa-solid fa-book-open text-xs"></i>
+                        </button>
+                    `;
+                } else if (prog.id === '1') {
+                    guideBtnHtml = `
+                        <button onclick="event.stopPropagation(); openBracingProgramModal()" title="Ver Guia de Bracing" class="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 flex items-center justify-center transition">
+                            <i class="fa-solid fa-book-open text-xs"></i>
+                        </button>
+                    `;
+                }
+
+                // 7-Day Consistency Week Indicator Pills
+                let daysPillsHtml = '';
+                for (let d = 1; d <= 7; d++) {
+                    const isDayDone = d <= daysCompleted;
+                    const isCurrentDay = d === currentDay && !isDayDone;
+                    let pillClass = 'bg-slate-800/80 border-slate-700 text-slate-400';
+                    let pillContent = `<span class="text-[10px] font-bold">D${d}</span>`;
+                    if (isDayDone) {
+                        pillClass = 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300';
+                        pillContent = `<i class="fa-solid fa-check text-[10px]"></i>`;
+                    } else if (isCurrentDay) {
+                        pillClass = 'bg-indigo-500/30 border-indigo-400/60 text-indigo-300 ring-1 ring-indigo-400/40';
+                        pillContent = `<span class="text-[10px] font-black text-indigo-300">D${d}</span>`;
+                    }
+                    daysPillsHtml += `
+                        <div class="flex-1 py-1.5 px-1 rounded-xl border text-center flex flex-col items-center justify-center gap-0.5 ${pillClass}">
+                            <span class="text-[8px] uppercase font-extrabold tracking-tight opacity-70">Dia ${d}</span>
+                            ${pillContent}
                         </div>
-                        <div class="flex-1">
-                            <h4 class="text-xs font-bold ${phase.completed ? 'text-slate-500 line-through' : 'text-slate-200'}">${phase.title}</h4>
-                            <p class="text-[11px] text-slate-500 mt-0.5">${phase.details}</p>
+                    `;
+                }
+
+                // Daily Sessions Indicator (2x ao dia)
+                let session1Done = sessionsToday >= 1;
+                let session2Done = sessionsToday >= 2;
+
+                let sessionBtnText = '';
+                let sessionBtnIcon = 'fa-play';
+                let sessionBtnBg = 'bg-gradient-to-r from-indigo-500 to-sky-500 hover:from-indigo-600 hover:to-sky-600';
+                
+                if (sessionsToday === 0) {
+                    sessionBtnText = `Iniciar Sessão 1 de 2 (${activePhase.title.split(':')[0]} • Dia ${currentDay})`;
+                } else if (sessionsToday === 1) {
+                    sessionBtnText = `Iniciar Sessão 2 de 2 (${activePhase.title.split(':')[0]} • Dia ${currentDay})`;
+                    sessionBtnBg = 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950';
+                } else {
+                    sessionBtnText = `Meta Diária Concluída (2/2) ✓ • Dia ${currentDay}/7`;
+                    sessionBtnIcon = 'fa-check-double';
+                    sessionBtnBg = 'bg-emerald-600/80 text-white cursor-default';
+                }
+
+                let phasesHtml = prog.phases.map((phase, i) => {
+                    const isCurrent = i === activePhaseIdx;
+                    return `
+                        <div class="flex items-start gap-3 py-3 border-b border-slate-700/40 last:border-0 transition ${isCurrent ? 'bg-slate-750/30 -mx-2 px-2 rounded-xl' : ''}">
+                            <div class="w-6 h-6 rounded-md border flex items-center justify-center transition-all mt-0.5 cursor-pointer ${phase.completed ? 'bg-indigo-500 border-indigo-500 text-white' : 'border-slate-600 bg-slate-800 text-transparent'}" onclick="toggleProgramPhase(${pIdx}, ${i})">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div>
+                            <div class="flex-1 cursor-pointer" onclick="toggleProgramPhase(${pIdx}, ${i})">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-xs font-bold ${phase.completed ? 'text-slate-500 line-through' : (isCurrent ? 'text-indigo-300' : 'text-slate-200')}">${phase.title}</h4>
+                                    ${isCurrent ? '<span class="text-[9px] font-extrabold bg-indigo-500/20 text-indigo-400 px-2 py-0.2 rounded-full border border-indigo-500/30">FASE ATIVA</span>' : ''}
+                                </div>
+                                <p class="text-[11px] ${phase.completed ? 'text-slate-600' : 'text-slate-400'} mt-0.5 leading-relaxed">${phase.details}</p>
+                            </div>
+                            <button onclick="event.stopPropagation(); openDailyExecutionModal('${prog.id}', ${i})" title="Treinar esta Fase" class="p-2 text-slate-400 hover:text-indigo-400 transition text-xs">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
                         </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
 
                 container.innerHTML += `
-                    <div class="bg-slate-800/90 rounded-2xl overflow-hidden border border-slate-700/80 shadow-xl">
-                        <div class="p-4">
+                    <div class="bg-slate-850 rounded-3xl overflow-hidden border border-slate-700/80 shadow-2xl transition-all">
+                        <div class="p-5">
+                            <!-- Card Header -->
                             <div class="flex items-start justify-between">
-                                <div class="flex-1 pr-4">
-                                    <h3 class="text-base font-bold text-slate-100">${prog.title}</h3>
+                                <div class="flex-1 pr-3 cursor-pointer" onclick="toggleProgramExpand(${pIdx})">
+                                    <h3 class="text-lg font-bold text-white tracking-tight">${prog.title}</h3>
                                     <p class="text-xs text-slate-400 mt-1 leading-relaxed">${prog.description}</p>
                                 </div>
-                                <div class="flex items-center gap-1">
-                                    <button onclick="openEditProgramModal(${pIdx})" class="w-8 h-8 rounded-full bg-slate-700/50 text-slate-400 hover:text-indigo-400 flex items-center justify-center transition">
+                                <div class="flex items-center gap-1.5 flex-shrink-0">
+                                    ${guideBtnHtml}
+                                    <button onclick="openReminderConfigModal('${prog.id}')" title="Configurar Lembretes (2x ao dia)" class="w-8 h-8 rounded-full bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 flex items-center justify-center transition">
+                                        <i class="fa-solid fa-bell text-xs"></i>
+                                    </button>
+                                    <button onclick="openEditProgramModal(${pIdx})" title="Editar Nome" class="w-8 h-8 rounded-full bg-slate-750 text-slate-400 hover:text-indigo-400 flex items-center justify-center transition">
                                         <i class="fa-solid fa-pen text-xs"></i>
                                     </button>
-                                    <button onclick="toggleProgramExpand(${pIdx})" class="w-8 h-8 rounded-full bg-slate-700/50 text-slate-400 hover:text-white flex items-center justify-center transition">
+                                    <button onclick="toggleProgramExpand(${pIdx})" title="${isExpanded ? 'Recolher' : 'Expandir'}" class="w-8 h-8 rounded-full bg-slate-750 text-slate-400 hover:text-white flex items-center justify-center transition">
                                         <i class="fa-solid ${isExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} text-xs"></i>
                                     </button>
                                 </div>
                             </div>
-                            
-                            <div class="mt-4 flex items-center gap-3">
-                                <div class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                    <div class="h-full bg-indigo-500 transition-all duration-700" style="width: ${progressPct}%"></div>
+
+                            <!-- Meta Diária 2x ao Dia & Trilha Semanal Box -->
+                            <div class="mt-4 bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-3.5">
+                                <!-- 7-Day Consistency Week Indicator -->
+                                <div class="space-y-1.5">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="font-bold text-slate-300 flex items-center gap-1.5">
+                                            <i class="fa-solid fa-calendar-week text-indigo-400 text-[11px]"></i>
+                                            Trilha da Semana Atual:
+                                        </span>
+                                        <span class="text-[11px] font-black text-indigo-300">Dia ${currentDay}/7 (${daysCompleted}/7 concluídos)</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        ${daysPillsHtml}
+                                    </div>
                                 </div>
-                                <span class="text-xs font-bold text-indigo-400">${completedCount}/${prog.phases.length}</span>
+
+                                <div class="border-t border-slate-800 pt-3 flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs font-bold text-slate-200 uppercase tracking-wider">Sessões de Hoje:</span>
+                                        <span class="text-[11px] font-extrabold ${sessionsToday >= 2 ? 'text-emerald-400' : 'text-amber-400'}">${sessionsToday}/2 Feitas</span>
+                                    </div>
+                                    <button onclick="openReminderConfigModal('${prog.id}')" class="text-[11px] text-amber-400 hover:underline flex items-center gap-1 font-semibold">
+                                        <i class="fa-solid fa-clock text-[10px]"></i>
+                                        <span>${reminderTimes[0]} e ${reminderTimes[1]}</span>
+                                    </button>
+                                </div>
+
+                                <!-- 2 Sessions Badges -->
+                                <div class="grid grid-cols-2 gap-2 text-xs font-semibold">
+                                    <div class="p-2.5 rounded-xl border flex items-center justify-between ${session1Done ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' : 'bg-slate-800/80 border-slate-700 text-slate-400'}">
+                                        <span>1ª Sessão (${reminderTimes[0]})</span>
+                                        <i class="fa-solid ${session1Done ? 'fa-circle-check text-emerald-400' : 'fa-circle text-slate-600'}"></i>
+                                    </div>
+                                    <div class="p-2.5 rounded-xl border flex items-center justify-between ${session2Done ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' : 'bg-slate-800/80 border-slate-700 text-slate-400'}">
+                                        <span>2ª Sessão (${reminderTimes[1]})</span>
+                                        <i class="fa-solid ${session2Done ? 'fa-circle-check text-emerald-400' : 'fa-circle text-slate-600'}"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Action Button for Today's Workout -->
+                                <button onclick="openDailyExecutionModal('${prog.id}')" class="w-full py-3.5 ${sessionBtnBg} rounded-xl font-bold text-xs shadow-lg flex items-center justify-center gap-2 active:scale-95 transition">
+                                    <i class="fa-solid ${sessionBtnIcon}"></i>
+                                    <span>${sessionBtnText}</span>
+                                </button>
+                            </div>
+                            
+                            <!-- Overall Program Progress Bar -->
+                            <div class="mt-4 flex items-center gap-3 cursor-pointer" onclick="toggleProgramExpand(${pIdx})">
+                                <div class="flex-1 h-2 bg-slate-700/60 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-indigo-500 to-sky-400 transition-all duration-700" style="width: ${progressPct}%"></div>
+                                </div>
+                                <span class="text-xs font-bold text-indigo-400">${completedCount}/${prog.phases.length} sem.</span>
                             </div>
                         </div>
                         
-                        <div class="${isExpanded ? 'block' : 'hidden'} px-4 pb-4 border-t border-slate-700/50 pt-4">
+                        <!-- Collapsible Weeks List -->
+                        <div class="${isExpanded ? 'block' : 'hidden'} px-5 pb-5 border-t border-slate-800/80 pt-3 bg-slate-900/40">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Trilha de Evolução:</span>
                             ${phasesHtml}
                         </div>
                     </div>
@@ -2623,26 +3651,55 @@
         }
 
         /* -------------------------------------------------------------
-           DAILY EXECUTION LOGIC (Com Modal e Cancelamento)
+           WORKOUT SESSION PLAYER ENGINE (COM PAUSA, CONTROLES E CANCELAMENTO)
         ------------------------------------------------------------- */
-        function openDailyExecutionModal(programName = "Bracing Avançado") {
+        function openDailyExecutionModal(programId = '2', phaseIndex = null) {
             triggerHaptic([30]);
-            AppState.dailyExecution.currentProgram = programName;
-            AppState.dailyExecution.timeLeft = AppState.dailyExecution.totalTime;
+            
+            const prog = AppState.programs.find(p => p.id === programId) || AppState.programs[1] || AppState.programs[0];
+            let pIdx = phaseIndex;
+            if (pIdx === null || typeof pIdx === 'undefined') {
+                pIdx = prog.currentPhaseIndex || 0;
+            }
+            
+            const phase = prog.phases[pIdx] || prog.phases[0];
+            const steps = getProgramSteps(prog.id, pIdx);
+            const currentDay = prog.currentDayInWeek || Math.min((prog.daysCompletedInPhase || 0) + 1, 7);
+            
+            AppState.dailyExecution.programId = prog.id;
+            AppState.dailyExecution.phaseIndex = pIdx;
+            AppState.dailyExecution.programTitle = prog.title;
+            AppState.dailyExecution.phaseTitle = phase.title;
+            AppState.dailyExecution.steps = steps;
+            AppState.dailyExecution.currentStepIndex = 0;
+            AppState.dailyExecution.sessionNumber = Math.min((prog.sessionsToday || 0) + 1, 2);
+            AppState.dailyExecution.targetSessions = 2;
+            AppState.dailyExecution.stepTimeLeft = steps[0].duration;
             AppState.dailyExecution.isRunning = false;
-            
-            document.getElementById('dailyExecutionTitle').innerText = programName;
+            AppState.dailyExecution.isPaused = false;
+            AppState.dailyExecution.totalSessionElapsed = 0;
+            if (AppState.dailyExecution.intervalId) clearInterval(AppState.dailyExecution.intervalId);
+            AppState.dailyExecution.intervalId = null;
+
+            document.getElementById('dailyExecutionTitle').innerText = prog.title;
+            document.getElementById('dailyExecutionPhaseTitle').innerText = phase.title;
+            document.getElementById('dailyExecutionSessionTag').innerText = `Semana ${pIdx + 1} • Dia ${currentDay}/7 (Sessão ${AppState.dailyExecution.sessionNumber}/2)`;
+
             renderDailyExecutionUI();
-            
-            document.getElementById('dailyExecutionModal').classList.remove('hidden');
+            const modal = document.getElementById('dailyExecutionModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
         
         function closeDailyExecutionModal() {
-            if (AppState.dailyExecution.isRunning) {
-                // If running, warn before closing
-                document.getElementById('cancelDailyConfirmModal').classList.remove('hidden');
+            if (AppState.dailyExecution.isRunning && !AppState.dailyExecution.isPaused) {
+                requestCancelDailySession();
             } else {
-                document.getElementById('dailyExecutionModal').classList.add('hidden');
+                if (AppState.dailyExecution.intervalId) clearInterval(AppState.dailyExecution.intervalId);
+                AppState.dailyExecution.isRunning = false;
+                const modal = document.getElementById('dailyExecutionModal');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
             }
         }
         
@@ -2653,108 +3710,249 @@
         }
         
         function renderDailyExecutionUI() {
-            const { sessionsCompletedToday, targetSessions, timeLeft, isRunning } = AppState.dailyExecution;
-            
-            // 1. Meta Indicators
-            const indicatorsContainer = document.getElementById('dailyMetaIndicators');
-            indicatorsContainer.innerHTML = '';
-            for (let i = 1; i <= targetSessions; i++) {
-                if (i <= sessionsCompletedToday) {
-                    indicatorsContainer.innerHTML += `
-                        <div class="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center">
-                            <i class="fa-solid fa-check text-white font-bold"></i>
-                        </div>
-                    `;
-                } else {
-                    indicatorsContainer.innerHTML += `
-                        <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700">
-                            <span class="text-slate-500 font-bold">${i}</span>
-                        </div>
-                    `;
-                }
-            }
-            
-            // 2. Status text
+            const { steps, currentStepIndex, stepTimeLeft, isRunning, isPaused } = AppState.dailyExecution;
+            const currentStep = steps[currentStepIndex] || { title: 'Treino', instruction: 'Execute as contrações', duration: 60, isRest: false };
+            const nextStep = steps[currentStepIndex + 1];
+
+            // 1. Progress tag & Step text
+            document.getElementById('dailyExecutionStepProgress').innerText = `Passo ${currentStepIndex + 1} de ${steps.length}`;
+            document.getElementById('workoutStepTitle').innerText = currentStep.title;
+            document.getElementById('workoutStepInstruction').innerText = currentStep.instruction;
+            document.getElementById('dailyExecutionTimer').innerText = formatDailyTime(stepTimeLeft);
+
+            // 2. State Badge & Rings (Rest vs Action vs Peak/Fast)
+            const badgeEl = document.getElementById('workoutStepBadge');
+            const circleBg = document.getElementById('workoutCircleBg');
+            const ringGlow = document.getElementById('workoutRingGlow');
             const statusEl = document.getElementById('dailyMetaStatus');
-            if (sessionsCompletedToday >= targetSessions) {
-                statusEl.innerText = "Meta Diária Batida! 🎉";
-                statusEl.classList.remove('text-slate-300');
-                statusEl.classList.add('text-indigo-400');
+
+            if (currentStep.isRest) {
+                badgeEl.innerText = currentStep.badge || "DESCANSO / RELAXE";
+                badgeEl.className = "text-[11px] font-extrabold uppercase tracking-widest text-sky-400 mb-1";
+                circleBg.className = "w-56 h-56 rounded-full bg-slate-900 border-4 border-sky-500/50 flex flex-col items-center justify-center p-4 transition-all duration-500 shadow-2xl relative z-10 shadow-sky-500/20";
+                ringGlow.className = "absolute inset-0 rounded-full bg-sky-500/20 blur-xl transition-all duration-500";
+                statusEl.innerText = "Solte completamente a tensão muscular";
+            } else if (currentStep.badge && (currentStep.badge.includes('TOPO') || currentStep.badge.includes('PICO') || currentStep.badge.includes('PLATÔ') || currentStep.badge.includes('TIRO') || currentStep.badge.includes('SUPER') || currentStep.badge.includes('METRALHADORA'))) {
+                badgeEl.innerText = currentStep.badge;
+                badgeEl.className = "text-[11px] font-extrabold uppercase tracking-widest text-amber-400 mb-1";
+                circleBg.className = "w-56 h-56 rounded-full bg-slate-900 border-4 border-amber-500/60 flex flex-col items-center justify-center p-4 transition-all duration-500 shadow-2xl relative z-10 shadow-amber-500/30";
+                ringGlow.className = "absolute inset-0 rounded-full bg-amber-500/30 blur-xl transition-all duration-500";
+                statusEl.innerText = "Mantenha a postura e intensidade máxima";
             } else {
-                statusEl.innerText = `Faltam ${targetSessions - sessionsCompletedToday} sessões hoje.`;
-                statusEl.classList.remove('text-indigo-400');
-                statusEl.classList.add('text-slate-300');
+                badgeEl.innerText = currentStep.badge || "EM AÇÃO / CONTRAIA";
+                badgeEl.className = "text-[11px] font-extrabold uppercase tracking-widest text-emerald-400 mb-1";
+                circleBg.className = "w-56 h-56 rounded-full bg-slate-900 border-4 border-emerald-500/50 flex flex-col items-center justify-center p-4 transition-all duration-500 shadow-2xl relative z-10 shadow-emerald-500/20";
+                ringGlow.className = "absolute inset-0 rounded-full bg-emerald-500/20 blur-xl transition-all duration-500";
+                statusEl.innerText = "Mantenha a respiração fluida e foco";
             }
-            
-            // 3. Timer text
-            const timerEl = document.getElementById('dailyExecutionTimer');
-            timerEl.innerText = formatDailyTime(timeLeft);
-            if (isRunning) {
-                timerEl.classList.remove('text-white');
-                timerEl.classList.add('text-teal-400');
+
+            // 3. Next step preview card
+            const nextCard = document.getElementById('workoutNextStepCard');
+            const nextTitle = document.getElementById('workoutNextStepTitle');
+            if (nextStep) {
+                nextCard.style.display = 'flex';
+                nextTitle.innerText = nextStep.title;
             } else {
-                timerEl.classList.remove('text-teal-400');
-                timerEl.classList.add('text-white');
+                nextCard.style.display = 'flex';
+                nextTitle.innerText = '🏁 Último Passo (Finalização da Sessão)';
             }
-            
-            // 4. Action Buttons
+
+            // 4. Action Buttons Container
             const btnContainer = document.getElementById('dailyExecutionActionContainer');
-            if (!isRunning && sessionsCompletedToday < targetSessions) {
+            if (!isRunning) {
                 btnContainer.innerHTML = `
-                    <button onclick="startDailySession()" class="w-full py-4 bg-indigo-500 hover:bg-indigo-600 rounded-2xl text-white font-bold text-lg transition shadow-lg flex items-center justify-center gap-2">
+                    <button onclick="startDailySession()" class="flex-1 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 rounded-2xl text-slate-950 font-bold text-base transition shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-play"></i> Iniciar Sessão
                     </button>
                 `;
-            } else if (isRunning) {
+            } else if (isPaused) {
                 btnContainer.innerHTML = `
-                    <button onclick="requestCancelDailySession()" class="w-full py-4 bg-rose-500 hover:bg-rose-600 rounded-2xl text-white font-bold text-lg transition shadow-lg flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-xmark"></i> Interromper (Cancelar)
+                    <button onclick="resumeDailySession()" class="flex-1 py-4 bg-emerald-500 hover:bg-emerald-400 rounded-2xl text-slate-950 font-bold text-base transition shadow-lg flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> Continuar
+                    </button>
+                    <button onclick="skipWorkoutStep()" class="px-4 py-4 bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-2xl text-slate-300 font-semibold text-sm transition flex items-center justify-center gap-1.5" title="Pular Passo">
+                        <i class="fa-solid fa-forward-step"></i>
+                    </button>
+                    <button onclick="requestCancelDailySession()" class="px-4 py-4 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/30 rounded-2xl text-rose-400 font-semibold text-sm transition flex items-center justify-center gap-1.5" title="Cancelar Sessão">
+                        <i class="fa-solid fa-xmark"></i>
                     </button>
                 `;
             } else {
-                // Completed target
+                // Running active
                 btnContainer.innerHTML = `
-                    <button onclick="closeDailyExecutionModal()" class="w-full py-4 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-2xl text-white font-bold text-lg transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-check-double"></i> Voltar
+                    <button onclick="pauseDailySession()" class="flex-1 py-4 bg-amber-500 hover:bg-amber-400 rounded-2xl text-slate-950 font-bold text-base transition shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-pause"></i> Pausar
+                    </button>
+                    <button onclick="skipWorkoutStep()" class="px-4 py-4 bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-2xl text-slate-300 font-semibold text-sm transition flex items-center justify-center gap-1.5" title="Pular Passo">
+                        <i class="fa-solid fa-forward-step"></i>
+                    </button>
+                    <button onclick="requestCancelDailySession()" class="px-4 py-4 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/30 rounded-2xl text-rose-400 font-semibold text-sm transition flex items-center justify-center gap-1.5" title="Cancelar Sessão">
+                        <i class="fa-solid fa-xmark"></i>
                     </button>
                 `;
             }
-            
-            // Hide close secondary btn if running
+
             document.getElementById('dailyExecutionCloseBtn').style.display = isRunning ? 'none' : 'block';
         }
         
         function startDailySession() {
             triggerHaptic([30]);
             AppState.dailyExecution.isRunning = true;
-            if (AppState.dailyExecution.intervalId) clearInterval(AppState.dailyExecution.intervalId);
+            AppState.dailyExecution.isPaused = false;
             
-            // Prevent display sleeping if supported
+            const currentStep = AppState.dailyExecution.steps[AppState.dailyExecution.currentStepIndex];
+            if (currentStep.voice) {
+                speakVoice(currentStep.voice);
+            } else if (currentStep.isRest) {
+                speakVoice('Fase de relaxamento');
+            } else {
+                speakVoice('Iniciando ' + currentStep.title);
+            }
+
+            if (currentStep.isRest) {
+                if (window.AndroidBridge && window.AndroidBridge.playRelaxationSignal) {
+                    window.AndroidBridge.playRelaxationSignal();
+                }
+            } else {
+                if (window.AndroidBridge && window.AndroidBridge.playHeavyPulse) {
+                    window.AndroidBridge.playHeavyPulse();
+                }
+            }
+
+            if (AppState.dailyExecution.intervalId) clearInterval(AppState.dailyExecution.intervalId);
             try { if (navigator.wakeLock) navigator.wakeLock.request('screen'); } catch (e) {}
 
             renderDailyExecutionUI();
             
             AppState.dailyExecution.intervalId = setInterval(() => {
-                if (AppState.dailyExecution.timeLeft > 0) {
-                    AppState.dailyExecution.timeLeft--;
+                if (AppState.dailyExecution.stepTimeLeft > 0) {
+                    AppState.dailyExecution.stepTimeLeft--;
+                    AppState.dailyExecution.totalSessionElapsed++;
                     renderDailyExecutionUI();
                 } else {
-                    finishDailySession();
+                    finishWorkoutStep();
                 }
             }, 1000);
         }
+
+        function pauseDailySession() {
+            triggerHaptic([20]);
+            AppState.dailyExecution.isPaused = true;
+            clearInterval(AppState.dailyExecution.intervalId);
+            AppState.dailyExecution.intervalId = null;
+            renderDailyExecutionUI();
+        }
+
+        function resumeDailySession() {
+            triggerHaptic([20]);
+            document.getElementById('cancelDailyConfirmModal').classList.add('hidden');
+            AppState.dailyExecution.isPaused = false;
+            AppState.dailyExecution.isRunning = true;
+
+            if (AppState.dailyExecution.intervalId) clearInterval(AppState.dailyExecution.intervalId);
+            AppState.dailyExecution.intervalId = setInterval(() => {
+                if (AppState.dailyExecution.stepTimeLeft > 0) {
+                    AppState.dailyExecution.stepTimeLeft--;
+                    AppState.dailyExecution.totalSessionElapsed++;
+                    renderDailyExecutionUI();
+                } else {
+                    finishWorkoutStep();
+                }
+            }, 1000);
+            renderDailyExecutionUI();
+        }
+
+        function skipWorkoutStep() {
+            triggerHaptic([30, 20]);
+            finishWorkoutStep();
+        }
+
+        function finishWorkoutStep() {
+            const { steps, currentStepIndex } = AppState.dailyExecution;
+            if (currentStepIndex < steps.length - 1) {
+                AppState.dailyExecution.currentStepIndex++;
+                const nextStep = steps[AppState.dailyExecution.currentStepIndex];
+                AppState.dailyExecution.stepTimeLeft = nextStep.duration;
+
+                if (nextStep.voice) {
+                    speakVoice(nextStep.voice);
+                } else if (nextStep.isRest) {
+                    speakVoice('Relaxe agora');
+                } else {
+                    speakVoice('Contração');
+                }
+
+                if (nextStep.isRest) {
+                    if (window.AndroidBridge && window.AndroidBridge.playRelaxationSignal) {
+                        window.AndroidBridge.playRelaxationSignal();
+                    } else {
+                        triggerHaptic([40, 80, 40]);
+                    }
+                } else {
+                    if (window.AndroidBridge && window.AndroidBridge.playHeavyPulse) {
+                        window.AndroidBridge.playHeavyPulse();
+                    } else {
+                        triggerHaptic([80]);
+                    }
+                }
+
+                renderDailyExecutionUI();
+            } else {
+                finishDailySession();
+            }
+        }
         
         function finishDailySession() {
-            triggerHaptic([50, 100, 50, 100, 50]);
             clearInterval(AppState.dailyExecution.intervalId);
             AppState.dailyExecution.intervalId = null;
             AppState.dailyExecution.isRunning = false;
-            AppState.dailyExecution.sessionsCompletedToday++;
-            AppState.dailyExecution.timeLeft = AppState.dailyExecution.totalTime;
+            AppState.dailyExecution.isPaused = false;
+
+            if (window.AndroidBridge && window.AndroidBridge.playSuccessPattern) {
+                window.AndroidBridge.playSuccessPattern();
+            } else {
+                triggerHaptic([50, 100, 50, 100, 50]);
+            }
+            speakVoice('Parabéns! Sessão de treino concluída com sucesso!');
+
+            // Adiciona os minutos ao total do dia
+            const trainedMinutes = Math.max(1, Math.ceil(AppState.dailyExecution.totalSessionElapsed / 60));
+            addMinutesToday(trainedMinutes);
+
+            // Atualiza o progresso do programa específico
+            const prog = AppState.programs.find(p => p.id === AppState.dailyExecution.programId);
+            if (prog) {
+                prog.sessionsToday = (prog.sessionsToday || 0) + 1;
+                
+                // Se completou 2 sessões hoje, avança o dia da semana!
+                if (prog.sessionsToday >= 2) {
+                    prog.daysCompletedInPhase = (prog.daysCompletedInPhase || 0) + 1;
+                    
+                    // Se completou os 7 dias da semana (ou meta da fase), conclui a semana atual e avança para a próxima
+                    if (prog.daysCompletedInPhase >= 7) {
+                        const phase = prog.phases[AppState.dailyExecution.phaseIndex];
+                        if (phase) phase.completed = true;
+                        
+                        if (AppState.dailyExecution.phaseIndex < prog.phases.length - 1) {
+                            prog.currentPhaseIndex = AppState.dailyExecution.phaseIndex + 1;
+                            prog.daysCompletedInPhase = 0;
+                        }
+                    }
+                    prog.currentDayInWeek = Math.min((prog.daysCompletedInPhase || 0) + 1, 7);
+                    celebrateDailyGoal();
+                }
+            }
             
-            saveState(); // Persist to LocalStorage simulating Room
+            saveState();
             renderDailyExecutionUI();
-            renderSmartSuggestionCard();
+            renderProgramsList();
+            
+            setTimeout(() => {
+                closeDailyExecutionModal();
+                const daysDone = (prog && prog.daysCompletedInPhase) || 0;
+                const sessions = (prog && prog.sessionsToday) || 0;
+                alert(`Sessão ${sessions}/2 registrada com sucesso! ${sessions >= 2 ? `Meta diária batida! Dia ${daysDone}/7 da semana concluído.` : 'Falta apenas mais 1 sessão hoje para completar a meta do dia.'}`);
+            }, 500);
         }
         
         function requestCancelDailySession() {
@@ -2762,61 +3960,254 @@
             document.getElementById('cancelDailyConfirmModal').classList.remove('hidden');
         }
         
-        function resumeDailySession() {
-            triggerHaptic([10]);
-            document.getElementById('cancelDailyConfirmModal').classList.add('hidden');
-            // Timer continua rodando por trás
-        }
-        
         function abortDailySession() {
             triggerHaptic([40, 50]);
             clearInterval(AppState.dailyExecution.intervalId);
             AppState.dailyExecution.intervalId = null;
             AppState.dailyExecution.isRunning = false;
-            AppState.dailyExecution.timeLeft = AppState.dailyExecution.totalTime;
+            AppState.dailyExecution.isPaused = false;
             
             document.getElementById('cancelDailyConfirmModal').classList.add('hidden');
-            renderDailyExecutionUI();
+            const modal = document.getElementById('dailyExecutionModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            renderProgramsList();
         }
+
+        /* -------------------------------------------------------------
+           SISTEMA DE LEMBRETES & NOTIFICAÇÕES (2X AO DIA - ADIAR / REMARCAR)
+        ------------------------------------------------------------- */
+        let activeReminderProgId = null;
+        let lastFiredReminderKey = '';
+
+        function openReminderConfigModal(progId) {
+            triggerHaptic([20]);
+            activeReminderProgId = progId;
+            const prog = AppState.programs.find(p => p.id === progId) || AppState.programs[0];
+            
+            document.getElementById('reminderProgramNameSubtitle').innerText = `${prog.title} (2x ao dia)`;
+            const times = prog.reminderTimes || ['09:00', '16:00'];
+            document.getElementById('reminderTimeInput1').value = times[0] || '09:00';
+            document.getElementById('reminderTimeInput2').value = times[1] || '16:00';
+            document.getElementById('reminderEnabledToggle').checked = prog.remindersEnabled !== false;
+
+            document.getElementById('reminderConfigModal').classList.remove('hidden');
+        }
+
+        function closeReminderConfigModal() {
+            document.getElementById('reminderConfigModal').classList.add('hidden');
+        }
+
+        function saveReminderConfig() {
+            triggerHaptic([30]);
+            const prog = AppState.programs.find(p => p.id === activeReminderProgId);
+            if (prog) {
+                const t1 = document.getElementById('reminderTimeInput1').value || '09:00';
+                const t2 = document.getElementById('reminderTimeInput2').value || '16:00';
+                const enabled = document.getElementById('reminderEnabledToggle').checked;
+
+                prog.reminderTimes = [t1, t2];
+                prog.remindersEnabled = enabled;
+                saveState();
+                renderProgramsList();
+
+                if (window.AndroidBridge && window.AndroidBridge.schedulePushNotification) {
+                    window.AndroidBridge.schedulePushNotification();
+                }
+            }
+            closeReminderConfigModal();
+            alert('Horários de notificação salvos com sucesso!');
+        }
+
+        function testNotificationNow() {
+            const prog = AppState.programs.find(p => p.id === activeReminderProgId) || AppState.programs[0];
+            triggerReminderAlert(prog, (prog.sessionsToday || 0) + 1);
+            closeReminderConfigModal();
+        }
+
+        function triggerReminderAlert(prog, sessionNumber = 1) {
+            triggerHaptic([100, 50, 100]);
+            playTibetanChime();
+            
+            const title = `CoreFlow: ${prog.title}`;
+            const message = `Hora da Sessão ${sessionNumber}/2 do dia! Reserve 2 minutos para blindar sua saúde.`;
+            
+            if (window.AndroidBridge && window.AndroidBridge.postLocalNotification) {
+                window.AndroidBridge.postLocalNotification(title, message);
+            }
+            
+            activeReminderProgId = prog.id;
+            document.getElementById('interactiveReminderTitle').innerText = `Hora da Sessão ${sessionNumber}/2!`;
+            document.getElementById('interactiveReminderDesc').innerText = `${prog.title}: sessão agendada para agora. Pronto para treinar?`;
+            document.getElementById('interactiveReminderModal').classList.remove('hidden');
+        }
+
+        function startSessionFromReminder() {
+            document.getElementById('interactiveReminderModal').classList.add('hidden');
+            openDailyExecutionModal(activeReminderProgId);
+        }
+
+        function snoozeReminder(minutes) {
+            triggerHaptic([20]);
+            document.getElementById('interactiveReminderModal').classList.add('hidden');
+            alert(`Lembrete adiado por ${minutes} minutos. Avisaremos você em seguida!`);
+            
+            setTimeout(() => {
+                const prog = AppState.programs.find(p => p.id === activeReminderProgId) || AppState.programs[0];
+                triggerReminderAlert(prog, (prog.sessionsToday || 0) + 1);
+            }, minutes * 60 * 1000);
+        }
+
+        function openRescheduleFromPopup() {
+            document.getElementById('interactiveReminderModal').classList.add('hidden');
+            openReminderConfigModal(activeReminderProgId);
+        }
+
+        // Background Reminder Checker (Verifica a cada 30 segundos)
+        setInterval(() => {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const currentHm = `${hours}:${minutes}`;
+
+            AppState.programs.forEach(prog => {
+                if (prog.remindersEnabled !== false && (prog.sessionsToday || 0) < 2) {
+                    const times = prog.reminderTimes || ['09:00', '16:00'];
+                    const targetSession = (prog.sessionsToday || 0) + 1;
+                    const scheduledTime = targetSession === 1 ? times[0] : times[1];
+
+                    const fireKey = `${prog.id}-${targetSession}-${currentHm}`;
+                    if (currentHm === scheduledTime && lastFiredReminderKey !== fireKey) {
+                        lastFiredReminderKey = fireKey;
+                        triggerReminderAlert(prog, targetSession);
+                    }
+                }
+            });
+        }, 30000);
 
         function renderSmartSuggestionCard() {
             const container = document.getElementById('smartSuggestionCardContainer');
             if (!container) return;
 
             const currentHour = new Date().getHours();
-            const completedSessionsToday = AppState.dailyExecution.sessionsCompletedToday;
+            // Calcula o total de sessões feitas hoje (em programas ou execuções diárias)
+            const progSessions = (AppState.programs || []).reduce((acc, p) => acc + (p.sessionsToday || 0), 0);
+            const totalSessionsToday = Math.max(progSessions, AppState.dailyExecution.sessionsCompletedToday || 0);
 
+            let tag = "";
             let title = "";
             let description = "";
+            let iconClass = "fa-wand-magic-sparkles";
+            let colorTheme = "emerald"; // emerald, cyan, indigo, amber
+            let actionBtnHtml = "";
 
-            if (currentHour >= 8 && currentHour <= 11) {
-                title = "Ativação Matinal";
-                description = "Inicie o dia com 2 minutos de Bracing a 20% para blindar a coluna antes das reuniões.";
-            } else if (currentHour >= 12 && currentHour <= 14 && completedSessionsToday === 0) {
-                title = "Recuperação de Foco";
-                description = "Você ainda não treinou hoje. Que tal 15 repetições rápidas de Kegel de Velocidade após o almoço?";
-            } else if (currentHour >= 14 && currentHour <= 17) {
-                title = "Descompressão de Pico";
-                description = "Muito tempo sentado atendendo? Faça 1 minuto da 'Posição do 4' para destravar o quadril e a lombar.";
+            if (currentHour >= 6 && currentHour <= 11) {
+                tag = "Ativação Matinal • Início de Dia";
+                title = "Bracing Abdominal 360° (20% a 30%)";
+                description = "Inicie o dia blindando sua coluna com a ativação 360° e respiração costal antes das reuniões.";
+                iconClass = "fa-shield-halved";
+                colorTheme = "emerald";
+                actionBtnHtml = `
+                    <button onclick="startBracingFromSuggestion()" class="w-full mt-3 py-2.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-md transition active:scale-95">
+                        <i class="fa-solid fa-play"></i> Fazer Bracing Guiado (2 min)
+                    </button>
+                `;
+            } else if (currentHour >= 12 && currentHour <= 14) {
+                if (totalSessionsToday === 0) {
+                    tag = "Pausa Pós-Almoço • Recuperação";
+                    title = "Posição do 4 na Cadeira (1 min)";
+                    description = "Você ainda não realizou suas pausas hoje. Destrave o piriforme, glúteos e ciático pós-almoço.";
+                    iconClass = "fa-chair";
+                    colorTheme = "amber";
+                    actionBtnHtml = `
+                        <button onclick="toggleStretchTimer(1)" class="w-full mt-3 py-2.5 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-md transition active:scale-95">
+                            <i class="fa-solid fa-play"></i> Iniciar Posição do 4 (1 min)
+                        </button>
+                    `;
+                } else {
+                    tag = "Pausa Pós-Almoço • Manutenção";
+                    title = "Torção de Coluna na Cadeira (1 min)";
+                    description = "Ótimo ritmo hoje! Gire suavemente o tronco para descompressão discal e alívio pós-refeição.";
+                    iconClass = "fa-arrows-spin";
+                    colorTheme = "cyan";
+                    actionBtnHtml = `
+                        <button onclick="toggleStretchTimer(2)" class="w-full mt-3 py-2.5 px-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-md transition active:scale-95">
+                            <i class="fa-solid fa-play"></i> Fazer Torção na Cadeira (1 min)
+                        </button>
+                    `;
+                }
+            } else if (currentHour >= 15 && currentHour <= 17) {
+                tag = "Descompressão de Pico • Tarde";
+                title = "Torção de Coluna na Cadeira (1 min)";
+                description = "Muitas horas seguidas sentado? Faça 1 minuto de torção para hidratar as vértebras e aliviar a lombar.";
+                iconClass = "fa-arrows-spin";
+                colorTheme = "cyan";
+                actionBtnHtml = `
+                    <button onclick="toggleStretchTimer(2)" class="w-full mt-3 py-2.5 px-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-md transition active:scale-95">
+                        <i class="fa-solid fa-play"></i> Destravar Coluna Agora (1 min)
+                    </button>
+                `;
+            } else if (currentHour >= 18 && currentHour <= 22) {
+                if (totalSessionsToday >= 2) {
+                    tag = "Meta do Dia Batida (2/2) 🎉 • Fim de Turno";
+                    title = "Abertura de Peitoral & Relaxamento";
+                    description = "Parabéns pelas 2 sessões diárias! Desfaça a postura curvada com uma abertura peitoral de 1 minuto.";
+                    iconClass = "fa-shield-heart";
+                    colorTheme = "emerald";
+                    actionBtnHtml = `
+                        <button onclick="toggleStretchTimer(3)" class="w-full mt-3 py-2.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-md transition active:scale-95">
+                            <i class="fa-solid fa-play"></i> Alongar Peitoral (1 min)
+                        </button>
+                    `;
+                } else {
+                    tag = "Alívio Noturno • Fim de Expediente";
+                    title = "Abertura de Peitoral & Desbloqueio";
+                    description = "Fim de expediente. Faça 1 minuto de abertura de peitoral para corrigir os ombros caídos e soltar a tensão.";
+                    iconClass = "fa-shield-heart";
+                    colorTheme = "indigo";
+                    actionBtnHtml = `
+                        <button onclick="toggleStretchTimer(3)" class="w-full mt-3 py-2.5 px-4 bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-md transition active:scale-95">
+                            <i class="fa-solid fa-play"></i> Iniciar Alongamento (1 min)
+                        </button>
+                    `;
+                }
             } else {
-                title = "Alívio Noturno";
-                description = "Fim de expediente. Faça uma Torção de Coluna na cadeira para liberar a tensão acumulada.";
+                tag = "Recuperação Noturna • Repouso";
+                title = "Respiração e Descompressão";
+                description = "Hora de descansar a musculatura estabilizadora e recuperar as fibras neuromusculares para amanhã.";
+                iconClass = "fa-moon";
+                colorTheme = "indigo";
+                actionBtnHtml = `
+                    <button onclick="startBracingFromSuggestion()" class="w-full mt-3 py-2.5 px-4 bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-md transition active:scale-95">
+                        <i class="fa-solid fa-lungs"></i> Ver Guia Visual do Bracing
+                    </button>
+                `;
             }
 
             container.innerHTML = `
-                <div class="bg-indigo-500/15 rounded-2xl p-4 w-full shadow-sm border border-indigo-500/20 mb-4">
-                    <div class="flex items-start">
-                        <div class="w-10 h-10 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                <div class="bg-slate-800/90 border border-slate-700/80 rounded-3xl p-5 shadow-xl relative overflow-hidden mb-4">
+                    <div class="flex items-start gap-3.5 relative z-10">
+                        <div class="w-11 h-11 rounded-2xl bg-${colorTheme}-500/20 text-${colorTheme}-400 border border-${colorTheme}-500/30 flex items-center justify-center text-lg flex-shrink-0">
+                            <i class="fa-solid ${iconClass}"></i>
                         </div>
-                        <div class="ml-4">
-                            <p class="text-indigo-400 text-xs font-bold uppercase tracking-wider mb-1">Sugestão Inteligente</p>
-                            <h4 class="text-white font-bold text-base leading-tight">${title}</h4>
-                            <p class="text-slate-300 text-[13px] leading-snug mt-1">${description}</p>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-${colorTheme}-400">${tag}</span>
+                                <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded-full text-slate-400 border border-slate-700 font-mono">Sessões: ${totalSessionsToday}/2</span>
+                            </div>
+                            <h4 class="text-white font-bold text-sm mt-0.5 leading-snug">${title}</h4>
+                            <p class="text-slate-300 text-xs mt-1 leading-relaxed">${description}</p>
+                            ${actionBtnHtml}
                         </div>
                     </div>
                 </div>
             `;
+        }
+
+        function startBracingFromSuggestion() {
+            switchTab('desk');
+            setDeskMode('bracing');
+            triggerHaptic([30]);
         }
 
         /* -------------------------------------------------------------

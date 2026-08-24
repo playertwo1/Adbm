@@ -16,6 +16,11 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.pm.PackageManager
+import android.Manifest
+import androidx.core.app.NotificationCompat
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -57,6 +62,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        createNotificationChannel()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)
+            }
+        }
+
         // Initialize Android TextToSpeech in Portuguese
         tts = TextToSpeech(this) { status ->
             if (status == TextToSpeech.SUCCESS) {
@@ -92,6 +104,20 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Lembretes CoreFlow"
+            val descriptionText = "Lembretes diários de treinos e programas"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel("coreflow_reminders", name, importance).apply {
+                description = descriptionText
+                enableVibration(true)
+            }
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
         }
     }
 
@@ -258,6 +284,27 @@ class AndroidBridge(
             val printAdapter = webView.createPrintDocumentAdapter("CoreFlow_Relatorio_Desempenho")
             val jobName = "CoreFlow Relatório " + System.currentTimeMillis()
             printManager?.print(jobName, printAdapter, PrintAttributes.Builder().build())
+        }
+    }
+
+    @JavascriptInterface
+    fun postLocalNotification(title: String, message: String) {
+        val activity = context as? ComponentActivity ?: return
+        activity.runOnUiThread {
+            try {
+                val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager ?: return@runOnUiThread
+                val channelId = "coreflow_reminders"
+                val builder = NotificationCompat.Builder(context, channelId)
+                    .setSmallIcon(android.R.drawable.ic_dialog_info)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setAutoCancel(true)
+                notificationManager.notify((System.currentTimeMillis() % 100000).toInt(), builder.build())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 

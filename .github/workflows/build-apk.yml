@@ -4,17 +4,18 @@ on:
   push:
     branches: [main]
   pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
@@ -34,12 +35,17 @@ jobs:
         with:
           gradle-version: 9.3.1
 
-      - name: Build debug APK
+      - name: Create .env file for build
+        run: |
+          touch .env
+          echo "MAPS_API_KEY=" >> .env
+
+      - name: Build Debug APK
         run: gradle --no-daemon assembleDebug
 
-      - name: Upload APK
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: adbm-debug-apk
+          name: CoreFlow-debug-apk
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
