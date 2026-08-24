@@ -285,6 +285,16 @@ class AndroidBridge(
     }
 
     @JavascriptInterface
+    fun playInhaleSignal() {
+        AdvancedHapticsManager.playInhaleSignal(context)
+    }
+
+    @JavascriptInterface
+    fun playExhaleSignal() {
+        AdvancedHapticsManager.playExhaleSignal(context)
+    }
+
+    @JavascriptInterface
     fun playSuccessPattern() {
         AdvancedHapticsManager.playSuccessPattern(context)
     }
@@ -403,13 +413,17 @@ object AdvancedHapticsManager {
      */
     fun playHeavyPulse(context: Context) {
         val vibrator = getVibrator(context)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(150L, VibrationEffect.DEFAULT_AMPLITUDE))
+        val timings = longArrayOf(0, 220, 70, 220)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val amplitudes = intArrayOf(0, 255, 0, 255)
+            if (vibrator.hasAmplitudeControl()) {
+                vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
+            } else {
+                vibrator.vibrate(VibrationEffect.createWaveform(timings, -1))
+            }
         } else {
             @Suppress("DEPRECATION")
-            vibrator.vibrate(150L)
+            vibrator.vibrate(timings, -1)
         }
     }
 
@@ -419,16 +433,17 @@ object AdvancedHapticsManager {
      */
     fun playRelaxationSignal(context: Context) {
         val vibrator = getVibrator(context)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK))
-        } else {
-            val timings = longArrayOf(0, 50, 100, 50)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createWaveform(timings, -1))
+        val timings = longArrayOf(0, 150, 110, 150, 110, 150)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val amplitudes = intArrayOf(0, 220, 0, 220, 0, 220)
+            if (vibrator.hasAmplitudeControl()) {
+                vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
             } else {
-                @Suppress("DEPRECATION")
-                vibrator.vibrate(timings, -1)
+                vibrator.vibrate(VibrationEffect.createWaveform(timings, -1))
             }
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(timings, -1)
         }
     }
 
@@ -438,20 +453,42 @@ object AdvancedHapticsManager {
      * Ideal para: Guiar a inspiração de 4s no Player de Vácuo sem olhar para a tela.
      */
     fun playBreathingWave(context: Context) {
+        playInhaleSignal(context)
+    }
+
+    /** Inspiração: pulsos crescentes e fortes durante quatro segundos. */
+    fun playInhaleSignal(context: Context) {
         val vibrator = getVibrator(context)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val timings = longArrayOf(0, 500, 500, 500, 500, 500, 500)
-            val amplitudes = intArrayOf(0, 20, 50, 100, 150, 200, 255)
+            val timings = longArrayOf(0, 500, 140, 600, 140, 700, 140, 780)
+            val amplitudes = intArrayOf(0, 95, 0, 145, 0, 205, 0, 255)
             
             if (vibrator.hasAmplitudeControl()) {
                 val effect = VibrationEffect.createWaveform(timings, amplitudes, -1)
                 vibrator.vibrate(effect)
             } else {
-                vibrator.vibrate(VibrationEffect.createOneShot(3000L, VibrationEffect.DEFAULT_AMPLITUDE))
+                vibrator.vibrate(VibrationEffect.createWaveform(timings, -1))
             }
         } else {
             @Suppress("DEPRECATION")
-            vibrator.vibrate(3000L)
+            vibrator.vibrate(longArrayOf(0, 500, 140, 600, 140, 700, 140, 780), -1)
+        }
+    }
+
+    /** Expiração: seis pulsos fortes que diminuem gradualmente. */
+    fun playExhaleSignal(context: Context) {
+        val vibrator = getVibrator(context)
+        val timings = longArrayOf(0, 650, 160, 600, 160, 550, 160, 500, 160, 450, 160, 400)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val amplitudes = intArrayOf(0, 255, 0, 235, 0, 215, 0, 195, 0, 175, 0, 155)
+            if (vibrator.hasAmplitudeControl()) {
+                vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
+            } else {
+                vibrator.vibrate(VibrationEffect.createWaveform(timings, -1))
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(timings, -1)
         }
     }
 
