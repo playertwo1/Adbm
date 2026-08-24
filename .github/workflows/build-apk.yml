@@ -36,9 +36,11 @@ jobs:
           gradle-version: 9.3.1
 
       - name: Create .env file for build
-        run: |
-          touch .env
-          echo "MAPS_API_KEY=" >> .env
+        # The Secrets Gradle Plugin accepts an empty properties file, but an
+        # empty value such as `MAPS_API_KEY=` generates invalid BuildConfig
+        # Java (`public static final String MAPS_API_KEY = ;`). The app does
+        # not currently use Google Maps, so no placeholder key is needed.
+        run: touch .env
 
       - name: Build Debug APK
         run: gradle --no-daemon assembleDebug
