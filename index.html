@@ -1636,8 +1636,14 @@
                     const savedDailyCount = localStorage.getItem('coreflow_daily_count');
                     if (savedDailyCount) AppState.dailyExecution.sessionsCompletedToday = parseInt(savedDailyCount, 10);
                 } else {
+                    AppState.schedule.forEach(s => s.completed = false);
+                    AppState.totalMinutesToday = 0;
                     AppState.dailyExecution.sessionsCompletedToday = 0;
+                    AppState.programs.forEach(p => p.sessionsToday = 0);
                     localStorage.setItem('coreflow_daily_date', todayStr);
+                    localStorage.setItem('coreflow_minutes', '0');
+                    localStorage.setItem('coreflow_daily_count', '0');
+                    localStorage.setItem('coreflow_schedule', JSON.stringify(AppState.schedule));
                 }
             } catch(e) {
                 console.log('Storage load fallback', e);
@@ -1650,6 +1656,49 @@
             renderSmartSuggestionCard();
             renderWeeklyTimeSummary();
         }
+
+        /* -------------------------------------------------------------
+           ANDROID HARDWARE BACK BUTTON NAVIGATION HANDLER
+        ------------------------------------------------------------- */
+        window.handleAndroidBack = function() {
+            // 1. Cancel Confirmation Modal
+            const cancelConfirm = document.getElementById('cancelDailyConfirmModal');
+            if (cancelConfirm && !cancelConfirm.classList.contains('hidden')) {
+                cancelConfirm.classList.add('hidden');
+                return true;
+            }
+
+            // 2. Active Daily Workout Modal
+            const dailyModal = document.getElementById('dailyExecutionModal');
+            if (dailyModal && !dailyModal.classList.contains('hidden')) {
+                closeDailyExecutionModal();
+                return true;
+            }
+
+            // 3. Other overlays / modals
+            const overlayIds = [
+                'interactiveReminderModal',
+                'reminderConfigModal',
+                'editProgramModal',
+                'kegelProgramModal',
+                'bracingProgramModal'
+            ];
+            for (const id of overlayIds) {
+                const modal = document.getElementById(id);
+                if (modal && !modal.classList.contains('hidden')) {
+                    modal.classList.add('hidden');
+                    return true;
+                }
+            }
+
+            // 4. If not on home tab, return to home tab
+            if (AppState.activeTab && AppState.activeTab !== 'rotina') {
+                switchTab('rotina');
+                return true;
+            }
+
+            return false;
+        };
 
         function saveState() {
             try {
@@ -1935,6 +1984,9 @@
 
         function startVacuo() {
             AppState.vacuo.isRunning = true;
+            if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
+                window.AndroidBridge.setKeepScreenOn(true);
+            }
             document.getElementById('vacPlayIcon').className = 'fa-solid fa-pause';
             document.getElementById('vacPlayText').innerText = 'Pausar';
             getAudioContext();
@@ -1948,6 +2000,9 @@
 
         function pauseVacuo() {
             AppState.vacuo.isRunning = false;
+            if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
+                window.AndroidBridge.setKeepScreenOn(false);
+            }
             clearInterval(AppState.vacuo.intervalId);
             document.getElementById('vacPlayIcon').className = 'fa-solid fa-play';
             document.getElementById('vacPlayText').innerText = 'Continuar';
@@ -3692,6 +3747,9 @@
         }
         
         function closeDailyExecutionModal() {
+            if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
+                window.AndroidBridge.setKeepScreenOn(false);
+            }
             if (AppState.dailyExecution.isRunning && !AppState.dailyExecution.isPaused) {
                 requestCancelDailySession();
             } else {
@@ -3800,6 +3858,10 @@
             AppState.dailyExecution.isRunning = true;
             AppState.dailyExecution.isPaused = false;
             
+            if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
+                window.AndroidBridge.setKeepScreenOn(true);
+            }
+
             const currentStep = AppState.dailyExecution.steps[AppState.dailyExecution.currentStepIndex];
             if (currentStep.voice) {
                 speakVoice(currentStep.voice);
@@ -3908,6 +3970,10 @@
             AppState.dailyExecution.isRunning = false;
             AppState.dailyExecution.isPaused = false;
 
+            if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
+                window.AndroidBridge.setKeepScreenOn(false);
+            }
+
             if (window.AndroidBridge && window.AndroidBridge.playSuccessPattern) {
                 window.AndroidBridge.playSuccessPattern();
             } else {
@@ -3966,6 +4032,10 @@
             AppState.dailyExecution.intervalId = null;
             AppState.dailyExecution.isRunning = false;
             AppState.dailyExecution.isPaused = false;
+
+            if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
+                window.AndroidBridge.setKeepScreenOn(false);
+            }
             
             document.getElementById('cancelDailyConfirmModal').classList.add('hidden');
             const modal = document.getElementById('dailyExecutionModal');

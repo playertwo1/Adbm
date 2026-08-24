@@ -18,8 +18,12 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.Manifest
+import android.view.WindowManager
+import androidx.activity.compose.BackHandler
 import androidx.core.app.NotificationCompat
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -69,15 +73,39 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // Initialize Android TextToSpeech in Portuguese
+        // Initialize Android TextToSpeech with Portuguese with robust fallback
         tts = TextToSpeech(this) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                tts?.language = Locale("pt", "BR")
+                val ptBr = Locale("pt", "BR")
+                val res = tts?.setLanguage(ptBr)
+                if (res == TextToSpeech.LANG_MISSING_DATA || res == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    val pt = Locale("pt")
+                    val resPt = tts?.setLanguage(pt)
+                    if (resPt == TextToSpeech.LANG_MISSING_DATA || resPt == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        tts?.setLanguage(Locale.getDefault())
+                    }
+                }
             }
         }
 
         setContent {
             val showConfetti = remember { mutableStateOf(false) }
+
+            // Native Android Back Button Navigation
+            BackHandler(enabled = true) {
+                webView?.evaluateJavascript(
+                    "if (typeof window.handleAndroidBack === 'function') { window.handleAndroidBack(); } else { false; }"
+                ) { result ->
+                    val handled = result?.trim()?.replace("\"", "") == "true"
+                    if (!handled) {
+                        if (webView?.canGoBack() == true) {
+                            webView?.goBack()
+                        } else {
+                            finish()
+                        }
+                    }
+                }
+            }
 
             MyApplicationTheme {
                 Surface(
@@ -272,6 +300,18 @@ class AndroidBridge(
     }
 
     @JavascriptInterface
+    fun setKeepScreenOn(enable: Boolean) {
+        val activity = context as? ComponentActivity ?: return
+        activity.runOnUiThread {
+            if (enable) {
+                activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            } else {
+                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+        }
+    }
+
+    @JavascriptInterface
     fun speakText(text: String) {
         tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "CoreFlowUtterance")
     }
@@ -294,11 +334,21 @@ class AndroidBridge(
             try {
                 val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager ?: return@runOnUiThread
                 val channelId = "coreflow_reminders"
+                val intent = Intent(context, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                }
+                val pendingIntent = PendingIntent.getActivity(
+                    context,
+                    0,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
                 val builder = NotificationCompat.Builder(context, channelId)
                     .setSmallIcon(android.R.drawable.ic_dialog_info)
                     .setContentTitle(title)
                     .setContentText(message)
                     .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+                    .setContentIntent(pendingIntent)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setAutoCancel(true)
                 notificationManager.notify((System.currentTimeMillis() % 100000).toInt(), builder.build())
