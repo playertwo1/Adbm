@@ -835,45 +835,7 @@
             <!-- 1. SEÇÃO DE CONQUISTAS (BADGES) NO TOPO -->
             <div>
                 <h3 class="text-lg font-heading font-extrabold text-white tracking-tight">Suas Conquistas</h3>
-                <div class="flex items-start gap-3 overflow-x-auto pb-2 pt-3 no-scrollbar">
-                    
-                    <!-- Badge 1: Gerente Focado (Desbloqueado / Azul) -->
-                    <div class="flex flex-col items-center text-center w-[100px] flex-shrink-0">
-                        <div class="w-16 h-16 rounded-full bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 text-2xl shadow-inner mb-2">
-                            <i class="fa-solid fa-star"></i>
-                        </div>
-                        <span class="text-xs font-bold text-slate-100 leading-tight">Gerente Focado</span>
-                        <span class="text-[10px] text-slate-400 leading-tight mt-0.5">100 mins de treino</span>
-                    </div>
-
-                    <!-- Badge 2: Chama Acesa (Desbloqueado / Verde) -->
-                    <div class="flex flex-col items-center text-center w-[100px] flex-shrink-0">
-                        <div class="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl shadow-inner mb-2">
-                            <i class="fa-solid fa-fire"></i>
-                        </div>
-                        <span class="text-xs font-bold text-slate-100 leading-tight">Chama Acesa</span>
-                        <span class="text-[10px] text-slate-400 leading-tight mt-0.5">7 dias de streak</span>
-                    </div>
-
-                    <!-- Badge 3: Core Blindado (Bloqueado / Cinza) -->
-                    <div class="flex flex-col items-center text-center w-[100px] flex-shrink-0 opacity-40">
-                        <div class="w-16 h-16 rounded-full bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-400 text-2xl mb-2">
-                            <i class="fa-solid fa-thumbs-up"></i>
-                        </div>
-                        <span class="text-xs font-bold text-slate-300 leading-tight">Core Blindado</span>
-                        <span class="text-[10px] text-slate-500 leading-tight mt-0.5">50 sessões de Bracing</span>
-                    </div>
-
-                    <!-- Badge 4: Pulmão de Aço (Bloqueado / Cinza) -->
-                    <div class="flex flex-col items-center text-center w-[100px] flex-shrink-0 opacity-40">
-                        <div class="w-16 h-16 rounded-full bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-400 text-2xl mb-2">
-                            <i class="fa-solid fa-lungs"></i>
-                        </div>
-                        <span class="text-xs font-bold text-slate-300 leading-tight">Pulmão de Aço</span>
-                        <span class="text-[10px] text-slate-500 leading-tight mt-0.5">100x Vácuos Abdominais</span>
-                    </div>
-
-                </div>
+                <div id="achievementsContainer" class="flex items-start gap-3 overflow-x-auto pb-2 pt-3 no-scrollbar"></div>
             </div>
 
             <!-- 2. DICA DE SAÚDE DO DIA -->
@@ -905,8 +867,7 @@
                     <h3 class="text-lg font-heading font-extrabold text-white tracking-tight">Consistência da Semana</h3>
                     <div class="text-xs bg-slate-800/80 border border-slate-700 rounded-lg px-2 py-1 flex items-center gap-1.5 shadow-sm">
                         <i class="fa-solid fa-stopwatch text-emerald-400"></i>
-                        <span class="text-slate-300 font-medium">Meta Diária:</span>
-                        <span id="dashGoalTimeValue" class="text-white font-bold">18 / 30m</span>
+                        <span id="weeklyConsistencyValue" class="text-white font-bold">0/7 dias ativos</span>
                     </div>
                 </div>
                 <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700/80 shadow-xl h-[190px] flex flex-col justify-between">
@@ -1434,11 +1395,13 @@
             activeTab: 'vacuo',
             voiceEnabled: true,
             hapticsEnabled: true,
-            streak: 5,
-            totalMinutesToday: 18,
+            streak: 0,
+            totalMinutesToday: 0,
             dailyGoal: 30,
-            weeklyHistory: [35, 45, 20, 30, 50, 0, 15], // Seg - Dom
-            previousWeeklyHistory: [30, 40, 20, 25, 45, 10, 10], // Seg - Dom
+            weeklyHistory: [0, 0, 0, 0, 0, 0, 0], // Seg - Dom, derivado do diário real
+            previousWeeklyHistory: [0, 0, 0, 0, 0, 0, 0],
+            activityLog: {},
+            unlockedAchievements: [],
             
             dailyExecution: {
                 isRunning: false,
@@ -1506,10 +1469,10 @@
 
             // Schedule Items
             schedule: [
-                { id: 1, time: '07:00', title: 'Vácuo Matinal em Jejum', sub: '5 séries LPF (10 min)', completed: true, note: 'Ótima sucção das costelas, sem desconforto.' },
-                { id: 2, time: '10:00', title: 'Kegel de Resistência no Banco', sub: '10 séries (10s / 10s)', completed: true, note: 'Respiração ritmada e abdômen firme.' },
-                { id: 3, time: '12:00', title: 'Kegel de Velocidade', sub: '15 contrações rápidas', completed: true, note: '' },
-                { id: 4, time: '14:30', title: 'Combo Bracing & Postura', sub: 'Ativação 25% na cadeira', completed: true, note: 'Alívio perceptível na coluna e lombar relaxada.' },
+                { id: 1, time: '07:00', title: 'Vácuo Matinal em Jejum', sub: '5 séries LPF (10 min)', completed: false, note: '' },
+                { id: 2, time: '10:00', title: 'Kegel de Resistência no Banco', sub: '10 séries (10s / 10s)', completed: false, note: '' },
+                { id: 3, time: '12:00', title: 'Kegel de Velocidade', sub: '15 contrações rápidas', completed: false, note: '' },
+                { id: 4, time: '14:30', title: 'Combo Bracing & Postura', sub: 'Ativação 25% na cadeira', completed: false, note: '' },
                 { id: 5, time: '16:30', title: 'Pausa Ativa: Alongamento na Cadeira', sub: 'Posição do 4 & Torção (4 min)', completed: false, note: '' }
             ],
 
@@ -1559,18 +1522,75 @@
             ]
         };
 
+        const CORE_DATA_VERSION = 2;
+
+        function localDateKey(date = new Date()) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function weekDateKeys(offsetWeeks = 0) {
+            const today = new Date();
+            today.setHours(12, 0, 0, 0);
+            const mondayOffset = today.getDay() === 0 ? -6 : 1 - today.getDay();
+            today.setDate(today.getDate() + mondayOffset + (offsetWeeks * 7));
+            return Array.from({ length: 7 }, (_, index) => {
+                const date = new Date(today);
+                date.setDate(today.getDate() + index);
+                return localDateKey(date);
+            });
+        }
+
+        function syncDerivedStats() {
+            const todayKey = localDateKey();
+            AppState.totalMinutesToday = Math.max(0, AppState.activityLog[todayKey]?.minutes || 0);
+            AppState.weeklyHistory = weekDateKeys(0).map(key => Math.max(0, AppState.activityLog[key]?.minutes || 0));
+            AppState.previousWeeklyHistory = weekDateKeys(-1).map(key => Math.max(0, AppState.activityLog[key]?.minutes || 0));
+
+            let cursor = new Date();
+            cursor.setHours(12, 0, 0, 0);
+            if (!(AppState.activityLog[localDateKey(cursor)]?.minutes > 0)) {
+                cursor.setDate(cursor.getDate() - 1);
+            }
+            let streak = 0;
+            while (AppState.activityLog[localDateKey(cursor)]?.minutes > 0) {
+                streak++;
+                cursor.setDate(cursor.getDate() - 1);
+            }
+            AppState.streak = streak;
+        }
+
         // Load saved state from LocalStorage
         function loadSavedState() {
             try {
-                const savedStreak = localStorage.getItem('coreflow_streak');
-                if (savedStreak) AppState.streak = parseInt(savedStreak, 10);
-                
+                const storedVersion = parseInt(localStorage.getItem('coreflow_data_version') || '0', 10);
+                const hasRealStats = storedVersion >= CORE_DATA_VERSION;
                 const savedSchedule = localStorage.getItem('coreflow_schedule');
                 if (savedSchedule) AppState.schedule = JSON.parse(savedSchedule);
 
-                const todayStr = new Date().toISOString().split('T')[0];
+                const todayStr = localDateKey();
                 const savedDailyDate = localStorage.getItem('coreflow_daily_date');
                 const isNewDay = savedDailyDate !== todayStr;
+
+                if (hasRealStats) {
+                    const savedActivityLog = localStorage.getItem('coreflow_activity_log');
+                    const savedAchievements = localStorage.getItem('coreflow_achievements');
+                    AppState.activityLog = savedActivityLog ? JSON.parse(savedActivityLog) : {};
+                    AppState.unlockedAchievements = savedAchievements ? JSON.parse(savedAchievements) : [];
+                } else {
+                    // A versão antiga continha números demonstrativos misturados aos
+                    // registros. Eles não podem ser separados com segurança, então a
+                    // migração começa o painel real do zero e preserva os programas.
+                    AppState.activityLog = {};
+                    AppState.unlockedAchievements = [];
+                    AppState.schedule.forEach(item => {
+                        item.completed = false;
+                        if ([1, 2, 3, 4].includes(item.id)) item.note = '';
+                    });
+                    localStorage.setItem('coreflow_data_version', String(CORE_DATA_VERSION));
+                }
 
                 const savedPrograms = localStorage.getItem('coreflow_programs');
                 if (savedPrograms) {
@@ -1602,7 +1622,7 @@
                                     }
                                     
                                     // Daily session count resets on new day
-                                    if (!isNewDay && typeof matchingLoaded.sessionsToday !== 'undefined') {
+                                    if (hasRealStats && !isNewDay && typeof matchingLoaded.sessionsToday !== 'undefined') {
                                         defaultProg.sessionsToday = matchingLoaded.sessionsToday;
                                     } else {
                                         defaultProg.sessionsToday = 0;
@@ -1623,32 +1643,24 @@
                     }
                 }
 
-                const savedMinutes = localStorage.getItem('coreflow_minutes');
-                if (savedMinutes) AppState.totalMinutesToday = parseInt(savedMinutes, 10);
-
-                const savedWeekly = localStorage.getItem('coreflow_weekly');
-                if (savedWeekly) AppState.weeklyHistory = JSON.parse(savedWeekly);
-
-                const savedPrevWeekly = localStorage.getItem('coreflow_prev_weekly');
-                if (savedPrevWeekly) AppState.previousWeeklyHistory = JSON.parse(savedPrevWeekly);
-
                 // Daily Execution Session Tracker
-                if (savedDailyDate === todayStr) {
+                if (hasRealStats && savedDailyDate === todayStr) {
                     const savedDailyCount = localStorage.getItem('coreflow_daily_count');
                     if (savedDailyCount) AppState.dailyExecution.sessionsCompletedToday = parseInt(savedDailyCount, 10);
                 } else {
                     AppState.schedule.forEach(s => s.completed = false);
-                    AppState.totalMinutesToday = 0;
                     AppState.dailyExecution.sessionsCompletedToday = 0;
                     AppState.programs.forEach(p => p.sessionsToday = 0);
                     localStorage.setItem('coreflow_daily_date', todayStr);
-                    localStorage.setItem('coreflow_minutes', '0');
                     localStorage.setItem('coreflow_daily_count', '0');
                     localStorage.setItem('coreflow_schedule', JSON.stringify(AppState.schedule));
                 }
             } catch(e) {
                 console.log('Storage load fallback', e);
             }
+            syncDerivedStats();
+            evaluateAchievements(false);
+            saveState();
             updateHeaderStats();
             renderScheduleList();
             renderProgramsList();
@@ -1656,6 +1668,7 @@
             renderWeeklyChart();
             renderSmartSuggestionCard();
             renderWeeklyTimeSummary();
+            renderAchievements();
         }
 
         /* -------------------------------------------------------------
@@ -1666,6 +1679,12 @@
             const cancelConfirm = document.getElementById('cancelDailyConfirmModal');
             if (cancelConfirm && !cancelConfirm.classList.contains('hidden')) {
                 cancelConfirm.classList.add('hidden');
+                return true;
+            }
+
+            const completionScreen = document.getElementById('programCompletionScreen');
+            if (completionScreen) {
+                completionScreen.remove();
                 return true;
             }
 
@@ -1703,15 +1722,18 @@
 
         function saveState() {
             try {
+                localStorage.setItem('coreflow_data_version', String(CORE_DATA_VERSION));
                 localStorage.setItem('coreflow_streak', AppState.streak);
                 localStorage.setItem('coreflow_schedule', JSON.stringify(AppState.schedule));
                 localStorage.setItem('coreflow_programs', JSON.stringify(AppState.programs));
                 localStorage.setItem('coreflow_minutes', AppState.totalMinutesToday);
                 localStorage.setItem('coreflow_weekly', JSON.stringify(AppState.weeklyHistory));
                 localStorage.setItem('coreflow_prev_weekly', JSON.stringify(AppState.previousWeeklyHistory));
+                localStorage.setItem('coreflow_activity_log', JSON.stringify(AppState.activityLog));
+                localStorage.setItem('coreflow_achievements', JSON.stringify(AppState.unlockedAchievements));
                 
                 localStorage.setItem('coreflow_daily_count', AppState.dailyExecution.sessionsCompletedToday);
-                const todayStr = new Date().toISOString().split('T')[0];
+                const todayStr = localDateKey();
                 localStorage.setItem('coreflow_daily_date', todayStr);
             } catch(e) {
                 console.log('Storage save error', e);
@@ -2274,7 +2296,7 @@
 
                 // Mark schedule item 1 as completed
                 markScheduleDone(1, true);
-                addMinutesToday(10);
+                addMinutesToday(10, 'vacuum');
             }
         }
 
@@ -2443,7 +2465,7 @@
                             document.getElementById('kegelResStateText').innerText = 'Concluído! 🏆';
                             document.getElementById('kegelResSub').innerText = '10 séries finalizadas';
                             markScheduleDone(2, true);
-                            addMinutesToday(5);
+                            addMinutesToday(5, 'kegel');
                             return;
                         }
                     }
@@ -2548,7 +2570,7 @@
                     state.innerText = 'Excelente! ⚡';
                     document.getElementById('kegelFastText').innerText = 'Repetir';
                     markScheduleDone(3, true);
-                    addMinutesToday(2);
+                    addMinutesToday(2, 'kegel');
                 }
             }, 800); // 800ms fast metronome rhythm
         }
@@ -2612,7 +2634,7 @@
                     playTibetanChime();
                     document.getElementById('bracingTimerDisplay').innerText = '✓ 2 min';
                     markScheduleDone(4, true);
-                    addMinutesToday(2);
+                    addMinutesToday(2, 'bracing');
                 }
             }, 1000);
         }
@@ -2998,7 +3020,7 @@
                     triggerHaptic([200, 100, 300]);
                     speakVoice('Alongamento concluído!');
                     markScheduleDone(5, true);
-                    addMinutesToday(1);
+                    addMinutesToday(1, 'stretch');
                 }
             }, 1000);
         }
@@ -4090,7 +4112,7 @@
                 document.getElementById('vacPhaseInstruction').innerText = `${AppState.vacuo.seriesTotal} séries finalizadas com sucesso!`;
                 document.getElementById('vacTimerMain').innerText = '✓';
                 markScheduleDone(1, true);
-                addMinutesToday(Math.max(1, Math.ceil(AppState.vacuo.totalElapsedSec / 60)));
+                addMinutesToday(Math.max(1, Math.ceil(AppState.vacuo.totalElapsedSec / 60)), 'vacuum');
                 return;
             }
 
@@ -4271,15 +4293,17 @@
 
             // Adiciona os minutos ao total do dia
             const trainedMinutes = Math.max(1, Math.ceil(AppState.dailyExecution.totalSessionElapsed / 60));
-            addMinutesToday(trainedMinutes);
+            addMinutesToday(trainedMinutes, 'program');
+            AppState.dailyExecution.sessionsCompletedToday = (AppState.dailyExecution.sessionsCompletedToday || 0) + 1;
 
             // Atualiza o progresso do programa específico
             const prog = AppState.programs.find(p => p.id === AppState.dailyExecution.programId);
             if (prog) {
                 prog.sessionsToday = (prog.sessionsToday || 0) + 1;
+                const dailyTarget = prog.dailyTarget || 2;
                 
-                // Se completou 2 sessões hoje, avança o dia da semana!
-                if (prog.sessionsToday >= 2) {
+                // Avança o dia somente uma vez, exatamente quando a meta diária é atingida.
+                if (prog.sessionsToday === dailyTarget) {
                     prog.daysCompletedInPhase = (prog.daysCompletedInPhase || 0) + 1;
                     
                     // Se completou os 7 dias da semana (ou meta da fase), conclui a semana atual e avança para a próxima
@@ -4304,9 +4328,46 @@
             setTimeout(() => {
                 closeDailyExecutionModal();
                 const daysDone = (prog && prog.daysCompletedInPhase) || 0;
-                const sessions = (prog && prog.sessionsToday) || 0;
-                alert(`Sessão ${sessions}/2 registrada com sucesso! ${sessions >= 2 ? `Meta diária batida! Dia ${daysDone}/7 da semana concluído.` : 'Falta apenas mais 1 sessão hoje para completar a meta do dia.'}`);
+                const sessions = Math.min((prog && prog.sessionsToday) || 0, (prog && prog.dailyTarget) || 2);
+                showProgramCompletionScreen({
+                    title: prog?.title || 'Programa',
+                    sessions,
+                    daysDone,
+                    trainedMinutes
+                });
             }, 500);
+        }
+
+        function showProgramCompletionScreen({ title, sessions, daysDone, trainedMinutes }) {
+            document.getElementById('programCompletionScreen')?.remove();
+            const dailyGoalReached = sessions >= 2;
+            const overlay = document.createElement('div');
+            overlay.id = 'programCompletionScreen';
+            overlay.className = 'fixed inset-0 z-[110] flex items-center justify-center p-5 bg-slate-950/90 backdrop-blur-md';
+            overlay.innerHTML = `
+                <div class="w-full max-w-md rounded-3xl border border-emerald-500/40 bg-gradient-to-br from-emerald-500/20 via-slate-900 to-slate-950 p-6 text-center shadow-2xl shadow-emerald-500/20">
+                    <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 border-emerald-400/60 bg-emerald-500/20 text-4xl text-emerald-300">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <p class="mt-5 text-xs font-black uppercase tracking-[0.2em] text-emerald-300">Sessão concluída</p>
+                    <h2 class="mt-2 text-xl font-black text-white">${title}</h2>
+                    <p class="mt-2 text-sm text-slate-300">${trainedMinutes} min adicionados ao seu histórico real.</p>
+                    <div class="mt-5 rounded-2xl border border-slate-700/70 bg-slate-900/70 p-4">
+                        <p class="text-lg font-extrabold text-white">Sessão ${sessions}/2 de hoje</p>
+                        <p class="mt-1 text-sm ${dailyGoalReached ? 'text-emerald-300' : 'text-slate-400'}">
+                            ${dailyGoalReached ? `Meta diária concluída · Dia ${daysDone}/7` : 'Falta mais 1 sessão para concluir a meta do dia.'}
+                        </p>
+                    </div>
+                    <button onclick="closeProgramCompletionScreen()" class="mt-6 w-full rounded-2xl bg-emerald-500 px-5 py-3.5 font-extrabold text-slate-950 shadow-lg shadow-emerald-500/20 active:scale-95 transition-transform">
+                        Voltar aos programas
+                    </button>
+                </div>`;
+            document.body.appendChild(overlay);
+        }
+
+        function closeProgramCompletionScreen() {
+            document.getElementById('programCompletionScreen')?.remove();
+            switchTab('programas');
         }
         
         function requestCancelDailySession() {
@@ -4745,6 +4806,130 @@
             closeNoteModal();
         }
 
+        const ACHIEVEMENTS = [
+            { id: 'first_session', title: 'Primeiro Passo', description: 'Concluir a primeira sessão', icon: 'fa-shoe-prints', color: 'emerald', test: m => m.totalSessions >= 1 },
+            { id: 'thirty_minutes', title: 'Meia Hora de Foco', description: 'Acumular 30 minutos reais', icon: 'fa-stopwatch', color: 'sky', test: m => m.totalMinutes >= 30 },
+            { id: 'daily_goal', title: 'Meta Batida', description: 'Atingir 30 minutos em um dia', icon: 'fa-bullseye', color: 'amber', test: m => m.bestDayMinutes >= AppState.dailyGoal },
+            { id: 'streak_3', title: 'Ritmo Criado', description: 'Treinar 3 dias seguidos', icon: 'fa-fire-flame-curved', color: 'orange', test: () => AppState.streak >= 3 },
+            { id: 'streak_7', title: 'Chama Acesa', description: 'Treinar 7 dias seguidos', icon: 'fa-fire', color: 'rose', test: () => AppState.streak >= 7 },
+            { id: 'sessions_10', title: 'Dez Sessões', description: 'Concluir 10 sessões', icon: 'fa-medal', color: 'violet', test: m => m.totalSessions >= 10 },
+            { id: 'sessions_25', title: 'Disciplina Forte', description: 'Concluir 25 sessões', icon: 'fa-award', color: 'indigo', test: m => m.totalSessions >= 25 },
+            { id: 'minutes_100', title: 'Gerente Focado', description: 'Acumular 100 minutos reais', icon: 'fa-star', color: 'cyan', test: m => m.totalMinutes >= 100 },
+            { id: 'minutes_300', title: 'Cinco Horas de Evolução', description: 'Acumular 300 minutos', icon: 'fa-clock', color: 'blue', test: m => m.totalMinutes >= 300 },
+            { id: 'week_5', title: 'Semana Consistente', description: 'Treinar em 5 dias da semana', icon: 'fa-calendar-check', color: 'teal', test: m => m.currentWeekActiveDays >= 5 },
+            { id: 'week_7', title: 'Semana Perfeita', description: 'Treinar nos 7 dias da semana', icon: 'fa-crown', color: 'amber', test: m => m.currentWeekActiveDays >= 7 },
+            { id: 'vacuum_5', title: 'Pulmão de Aço', description: 'Concluir 5 treinos de vácuo', icon: 'fa-lungs', color: 'sky', test: m => m.sources.vacuum >= 5 },
+            { id: 'kegel_10', title: 'Controle Refinado', description: 'Concluir 10 treinos de Kegel', icon: 'fa-bolt', color: 'fuchsia', test: m => m.sources.kegel >= 10 },
+            { id: 'bracing_10', title: 'Core Blindado', description: 'Concluir 10 treinos de Bracing', icon: 'fa-shield-halved', color: 'emerald', test: m => m.sources.bracing >= 10 },
+            { id: 'program_10', title: 'Programa em Marcha', description: 'Concluir 10 sessões dos programas', icon: 'fa-list-check', color: 'indigo', test: m => m.sources.program >= 10 }
+        ];
+
+        const ACHIEVEMENT_COLOR_CLASSES = {
+            emerald: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400',
+            sky: 'bg-sky-500/15 border-sky-500/30 text-sky-400',
+            amber: 'bg-amber-500/15 border-amber-500/30 text-amber-400',
+            orange: 'bg-orange-500/15 border-orange-500/30 text-orange-400',
+            rose: 'bg-rose-500/15 border-rose-500/30 text-rose-400',
+            violet: 'bg-violet-500/15 border-violet-500/30 text-violet-400',
+            indigo: 'bg-indigo-500/15 border-indigo-500/30 text-indigo-400',
+            cyan: 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400',
+            blue: 'bg-blue-500/15 border-blue-500/30 text-blue-400',
+            teal: 'bg-teal-500/15 border-teal-500/30 text-teal-400',
+            fuchsia: 'bg-fuchsia-500/15 border-fuchsia-500/30 text-fuchsia-400'
+        };
+
+        const achievementQueue = [];
+        let achievementShowing = false;
+
+        function activityMetrics() {
+            const entries = Object.values(AppState.activityLog || {});
+            const sources = { vacuum: 0, kegel: 0, bracing: 0, stretch: 0, program: 0, general: 0 };
+            let totalMinutes = 0;
+            let totalSessions = 0;
+            let bestDayMinutes = 0;
+            entries.forEach(entry => {
+                const minutes = Math.max(0, entry?.minutes || 0);
+                totalMinutes += minutes;
+                totalSessions += Math.max(0, entry?.sessions || 0);
+                bestDayMinutes = Math.max(bestDayMinutes, minutes);
+                Object.entries(entry?.sources || {}).forEach(([key, value]) => {
+                    sources[key] = (sources[key] || 0) + Math.max(0, value || 0);
+                });
+            });
+            return {
+                totalMinutes,
+                totalSessions,
+                bestDayMinutes,
+                sources,
+                currentWeekActiveDays: AppState.weeklyHistory.filter(minutes => minutes > 0).length
+            };
+        }
+
+        function evaluateAchievements(notify = true) {
+            const metrics = activityMetrics();
+            const newAchievements = ACHIEVEMENTS.filter(achievement =>
+                !AppState.unlockedAchievements.includes(achievement.id) && achievement.test(metrics)
+            );
+            if (!newAchievements.length) return;
+            newAchievements.forEach(achievement => AppState.unlockedAchievements.push(achievement.id));
+            localStorage.setItem('coreflow_achievements', JSON.stringify(AppState.unlockedAchievements));
+            renderAchievements();
+            if (notify) {
+                achievementQueue.push(...newAchievements);
+                showNextAchievement();
+            }
+        }
+
+        function renderAchievements() {
+            const container = document.getElementById('achievementsContainer');
+            if (!container) return;
+            container.innerHTML = ACHIEVEMENTS.map(achievement => {
+                const unlocked = AppState.unlockedAchievements.includes(achievement.id);
+                const unlockedClasses = ACHIEVEMENT_COLOR_CLASSES[achievement.color] || ACHIEVEMENT_COLOR_CLASSES.emerald;
+                return `
+                    <div class="flex flex-col items-center text-center w-[108px] flex-shrink-0 ${unlocked ? '' : 'opacity-40'}">
+                        <div class="w-16 h-16 rounded-full ${unlocked ? `${unlockedClasses} shadow-inner` : 'bg-slate-800/80 border-slate-700/60 text-slate-500'} border flex items-center justify-center text-2xl mb-2">
+                            <i class="fa-solid ${achievement.icon}"></i>
+                        </div>
+                        <span class="text-xs font-bold ${unlocked ? 'text-slate-100' : 'text-slate-400'} leading-tight">${achievement.title}</span>
+                        <span class="text-[10px] text-slate-500 leading-tight mt-0.5">${achievement.description}</span>
+                    </div>`;
+            }).join('');
+        }
+
+        function showNextAchievement() {
+            if (achievementShowing || !achievementQueue.length) return;
+            achievementShowing = true;
+            const achievement = achievementQueue.shift();
+            triggerHaptic([120, 80, 120, 80, 300]);
+            window.AndroidBridge?.playConfetti?.();
+            window.AndroidBridge?.postLocalNotification?.(
+                '🏆 Nova conquista desbloqueada!',
+                `${achievement.title}: ${achievement.description}`
+            );
+
+            const overlay = document.createElement('div');
+            overlay.className = 'fixed inset-0 z-[120] flex items-center justify-center p-6 bg-slate-950/75 backdrop-blur-sm';
+            overlay.innerHTML = `
+                <div class="w-full max-w-sm bg-gradient-to-br from-amber-500/25 via-slate-900 to-slate-950 border border-amber-400/50 rounded-3xl p-6 text-center shadow-2xl shadow-amber-500/20">
+                    <div class="w-24 h-24 mx-auto rounded-full bg-amber-500/20 border-2 border-amber-400/60 flex items-center justify-center text-amber-300 text-5xl animate-bounce">
+                        <i class="fa-solid ${achievement.icon}"></i>
+                    </div>
+                    <p class="mt-5 text-xs font-black uppercase tracking-[0.2em] text-amber-300">Nova conquista!</p>
+                    <h2 class="mt-2 text-2xl font-black text-white">${achievement.title}</h2>
+                    <p class="mt-2 text-sm text-slate-300">${achievement.description}</p>
+                </div>`;
+            document.body.appendChild(overlay);
+            setTimeout(() => {
+                overlay.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+                setTimeout(() => {
+                    overlay.remove();
+                    achievementShowing = false;
+                    showNextAchievement();
+                }, 500);
+            }, 3500);
+        }
+
         function updateHeaderStats() {
             const completedCount = AppState.schedule.filter(s => s.completed).length;
             const totalCount = AppState.schedule.length;
@@ -4763,21 +4948,33 @@
             
             const dashGoal = document.getElementById('dashGoalTimeValue');
             if (dashGoal) dashGoal.innerText = `${AppState.totalMinutesToday} / ${AppState.dailyGoal}m`;
+
+            const consistency = document.getElementById('weeklyConsistencyValue');
+            if (consistency) {
+                const activeDays = AppState.weeklyHistory.filter(minutes => minutes > 0).length;
+                consistency.innerText = `${activeDays}/7 dias ativos`;
+            }
         }
 
-        function addMinutesToday(mins) {
+        function addMinutesToday(mins, source = 'general') {
+            const safeMinutes = Math.max(1, Math.round(Number(mins) || 0));
             const previousMins = AppState.totalMinutesToday;
-            AppState.totalMinutesToday += mins;
-            
-            // Atualiza histórico semanal (0=Dom, 1=Seg...)
-            const dayOfWeek = new Date().getDay();
-            const idx = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Ajusta para Seg-Dom
-            AppState.weeklyHistory[idx] += mins;
+            const todayKey = localDateKey();
+            const entry = AppState.activityLog[todayKey] || { minutes: 0, sessions: 0, sources: {} };
+            entry.minutes = Math.max(0, entry.minutes || 0) + safeMinutes;
+            entry.sessions = Math.max(0, entry.sessions || 0) + 1;
+            entry.sources = entry.sources || {};
+            entry.sources[source] = Math.max(0, entry.sources[source] || 0) + 1;
+            AppState.activityLog[todayKey] = entry;
+
+            syncDerivedStats();
 
             saveState();
             updateHeaderStats();
             renderWeeklyChart();
             renderWeeklyTimeSummary();
+            renderMonthlyBars();
+            evaluateAchievements(true);
             
             if (previousMins < AppState.dailyGoal && AppState.totalMinutesToday >= AppState.dailyGoal) {
                 celebrateDailyGoal();
@@ -4928,26 +5125,22 @@
             const container = document.getElementById('monthlyBarsContainer');
             if (!container) return;
 
-            // Generate 14 days preview data
-            const daysData = [
-                { day: '09', pct: 60, done: true },
-                { day: '10', pct: 80, done: true },
-                { day: '11', pct: 100, done: true },
-                { day: '12', pct: 40, done: true },
-                { day: '13', pct: 100, done: true },
-                { day: '14', pct: 75, done: true },
-                { day: '15', pct: 90, done: true },
-                { day: '16', pct: 100, done: true },
-                { day: '17', pct: 85, done: true },
-                { day: '18', pct: 100, done: true },
-                { day: '19', pct: 90, done: true },
-                { day: '20', pct: 100, done: true },
-                { day: '21', pct: 100, done: true },
-                { day: '22', pct: 80, done: true, today: true },
-            ];
+            const today = new Date();
+            today.setHours(12, 0, 0, 0);
+            const daysData = Array.from({ length: 14 }, (_, index) => {
+                const date = new Date(today);
+                date.setDate(today.getDate() - (13 - index));
+                const minutes = Math.max(0, AppState.activityLog[localDateKey(date)]?.minutes || 0);
+                return {
+                    day: String(date.getDate()).padStart(2, '0'),
+                    minutes,
+                    pct: minutes > 0 ? Math.max(8, Math.min(100, (minutes / AppState.dailyGoal) * 100)) : 3,
+                    today: index === 13
+                };
+            });
 
             container.innerHTML = daysData.map(d => `
-                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end group">
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end group" title="${d.minutes} minutos">
                     <div class="w-full rounded-t-md transition-all duration-500 ${d.today ? 'bg-gradient-to-t from-emerald-600 to-cyan-400 shadow-sm shadow-cyan-500/50' : 'bg-slate-700/80 hover:bg-emerald-500/60'}" style="height: ${d.pct}%"></div>
                     <span class="text-[9px] font-mono ${d.today ? 'text-cyan-400 font-bold' : 'text-slate-500'}">${d.day}</span>
                 </div>
