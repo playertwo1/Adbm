@@ -86,6 +86,29 @@ jobs:
           path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
 
+      - name: Publish APK in GitHub Releases
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: v1.1.${{ github.run_number }}
+        run: |
+          shopt -s nullglob
+          apks=(app/build/outputs/apk/release/*.apk)
+          if [ "${#apks[@]}" -ne 1 ]; then
+            echo "Esperado exatamente um APK release; encontrados: ${#apks[@]}"
+            exit 1
+          fi
+
+          asset_name="CoreFlow-${RELEASE_TAG}.apk"
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" "${apks[0]}#${asset_name}" --clobber
+          else
+            gh release create "$RELEASE_TAG" "${apks[0]}#${asset_name}" \
+              --target "$GITHUB_SHA" \
+              --title "CoreFlow ${RELEASE_TAG}" \
+              --notes "APK release assinado. Pode ser instalado sobre uma versão anterior assinada com a mesma chave."
+          fi
+
       - name: Upload debug APK for pull request
         if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
