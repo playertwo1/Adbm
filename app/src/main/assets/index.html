@@ -1453,6 +1453,7 @@
             // Vacuo player state
             vacuo: {
                 isRunning: false,
+                nativeManaged: false,
                 posture: 'deitado', // 'deitado', '4apoios', 'empe'
                 vacDuration: 15,     // default 15s
                 inspireDuration: 4,
@@ -2001,12 +2002,61 @@
         }
 
         function startVacuo() {
+            if (window.AndroidBridge?.getWorkoutState) {
+                try {
+                    const activeState = JSON.parse(window.AndroidBridge.getWorkoutState());
+                    if ((activeState.status === 'running' || activeState.status === 'paused') && activeState.session?.type !== 'vacuum') {
+                        window.onNativeWorkoutState(activeState);
+                        alert('Já existe outra sessão de treino em andamento. Pause ou finalize essa sessão antes de iniciar o vácuo abdominal.');
+                        return;
+                    }
+                } catch (error) {
+                    console.log('Não foi possível verificar a sessão ativa', error);
+                }
+            }
             AppState.vacuo.isRunning = true;
+            nativeCompletionHandled = false;
             if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
                 window.AndroidBridge.setKeepScreenOn(true);
             }
             document.getElementById('vacPlayIcon').className = 'fa-solid fa-pause';
             document.getElementById('vacPlayText').innerText = 'Pausar';
+
+            if (window.AndroidBridge?.startWorkoutSession) {
+                if (AppState.vacuo.nativeManaged) {
+                    window.AndroidBridge.resumeWorkoutSession();
+                    return;
+                }
+
+                const steps = [];
+                for (let series = 1; series <= AppState.vacuo.seriesTotal; series++) {
+                    steps.push(
+                        { title: 'Inspire pelo nariz', instruction: 'Expanda as costelas', duration: AppState.vacuo.inspireDuration, isRest: false, voice: 'Inspire pelo nariz', phase: 'inspira', haptic: 'inhale', series },
+                        { title: 'Solte todo o ar', instruction: 'Expire lentamente pela boca', duration: AppState.vacuo.expireDuration, isRest: false, voice: 'Solte todo o ar', phase: 'expira', haptic: 'exhale', series },
+                        { title: 'Sugue o abdômen', instruction: 'Abra as costelas mantendo a apneia', duration: AppState.vacuo.vacDuration, isRest: false, voice: 'Sugue o abdômen!', phase: 'vacuo', haptic: 'success', series },
+                        { title: 'Descanse', instruction: 'Respire normalmente e relaxe', duration: AppState.vacuo.restDuration, isRest: true, voice: 'Descanse', phase: 'descanso', haptic: 'relax', series }
+                    );
+                }
+                const payload = JSON.stringify({
+                    type: 'vacuum',
+                    programTitle: 'Vácuo Abdominal',
+                    phaseTitle: AppState.vacuo.posture,
+                    completionMessage: 'Treino de Vácuo Concluído! Excelente trabalho.',
+                    seriesTotal: AppState.vacuo.seriesTotal,
+                    currentStepIndex: 0,
+                    stepTimeLeft: steps[0].duration,
+                    totalSessionElapsed: AppState.vacuo.totalElapsedSec,
+                    voiceEnabled: AppState.voiceEnabled,
+                    hapticsEnabled: AppState.hapticsEnabled,
+                    steps
+                });
+                if (window.AndroidBridge.startWorkoutSession(payload)) {
+                    AppState.vacuo.nativeManaged = true;
+                    AppState.vacuo.intervalId = null;
+                    return;
+                }
+            }
+
             getAudioContext();
 
             if (AppState.vacuo.currentPhase === 'ready') {
@@ -2022,12 +2072,24 @@
                 window.AndroidBridge.setKeepScreenOn(false);
             }
             clearInterval(AppState.vacuo.intervalId);
+            if (AppState.vacuo.nativeManaged && window.AndroidBridge?.pauseWorkoutSession) {
+                window.AndroidBridge.pauseWorkoutSession();
+            }
             document.getElementById('vacPlayIcon').className = 'fa-solid fa-play';
             document.getElementById('vacPlayText').innerText = 'Continuar';
         }
 
         function resetVacuo() {
-            pauseVacuo();
+            if (AppState.vacuo.nativeManaged && window.AndroidBridge?.stopWorkoutSession) {
+                window.AndroidBridge.stopWorkoutSession();
+            }
+            clearInterval(AppState.vacuo.intervalId);
+            AppState.vacuo.intervalId = null;
+            AppState.vacuo.isRunning = false;
+            AppState.vacuo.nativeManaged = false;
+            if (window.AndroidBridge?.setKeepScreenOn) {
+                window.AndroidBridge.setKeepScreenOn(false);
+            }
             AppState.vacuo.currentPhase = 'ready';
             AppState.vacuo.timer = 0;
             AppState.vacuo.seriesCurrent = 1;
@@ -2053,6 +2115,10 @@
 
         function skipVacuoPhase() {
             if (!AppState.vacuo.isRunning) return;
+            if (AppState.vacuo.nativeManaged && window.AndroidBridge?.skipWorkoutStep) {
+                window.AndroidBridge.skipWorkoutStep();
+                return;
+            }
             clearInterval(AppState.vacuo.intervalId);
             
             if (AppState.vacuo.currentPhase === 'inspira') {
@@ -2066,7 +2132,7 @@
             }
         }
 
-        function transitionVacuoPhase(phase) {
+        function transitionVacuoPhase(phase, nativeState = null) {
             AppState.vacuo.currentPhase = phase;
             clearInterval(AppState.vacuo.intervalId);
 
@@ -2080,7 +2146,7 @@
             highlightPhaseCard(phase);
 
             if (phase === 'inspira') {
-                AppState.vacuo.timer = AppState.vacuo.inspireDuration;
+                AppState.vacuo.timer = nativeState?.timer ?? AppState.vacuo.inspireDuration;
                 title.innerText = 'Inspire pelo nariz...';
                 title.className = 'text-sm font-heading font-extrabold text-sky-400';
                 icon.className = 'fa-solid fa-arrow-up text-xl text-sky-400';
@@ -2088,12 +2154,14 @@
                 if (ring) ring.className = 'ring-circle text-sky-400 transition-all';
                 glow.className = 'absolute w-48 h-48 rounded-full bg-sky-500/20 blur-3xl pointer-events-none transition-all duration-700';
 
-                speakVoice('Inspire pelo nariz');
-                playInhaleSignal(); // Pulsos crescentes durante a inspiração
+                if (!nativeState) {
+                    speakVoice('Inspire pelo nariz');
+                    playInhaleSignal(); // Pulsos crescentes durante a inspiração
+                }
                 updateCoreAnimation('inspira');
 
             } else if (phase === 'expira') {
-                AppState.vacuo.timer = AppState.vacuo.expireDuration;
+                AppState.vacuo.timer = nativeState?.timer ?? AppState.vacuo.expireDuration;
                 title.innerText = 'Solte TODO o ar...';
                 title.className = 'text-sm font-heading font-extrabold text-sky-300';
                 icon.className = 'fa-solid fa-arrow-down text-xl text-sky-300';
@@ -2101,12 +2169,14 @@
                 if (ring) ring.className = 'ring-circle text-sky-300 transition-all';
                 glow.className = 'absolute w-48 h-48 rounded-full bg-sky-500/20 blur-3xl pointer-events-none transition-all duration-700';
 
-                speakVoice('Solte todo o ar');
-                playExhaleSignal(); // Pulsos decrescentes durante a expiração
+                if (!nativeState) {
+                    speakVoice('Solte todo o ar');
+                    playExhaleSignal(); // Pulsos decrescentes durante a expiração
+                }
                 updateCoreAnimation('expira');
 
             } else if (phase === 'vacuo') {
-                AppState.vacuo.timer = AppState.vacuo.vacDuration;
+                AppState.vacuo.timer = nativeState?.timer ?? AppState.vacuo.vacDuration;
                 title.innerText = 'SUGUE O ABDÔMEN!';
                 title.className = 'text-sm font-heading font-extrabold text-emerald-400 animate-pulse';
                 icon.className = 'fa-solid fa-lungs text-xl text-emerald-400';
@@ -2114,12 +2184,14 @@
                 if (ring) ring.className = 'ring-circle text-emerald-400 transition-all';
                 glow.className = 'absolute w-64 h-64 rounded-full bg-emerald-500/35 blur-3xl pointer-events-none transition-all duration-700 animate-pulse';
 
-                speakVoice('Sugue o abdômen!');
-                playSuccessPattern(); // Hora de sugar!
+                if (!nativeState) {
+                    speakVoice('Sugue o abdômen!');
+                    playSuccessPattern(); // Hora de sugar!
+                }
                 updateCoreAnimation('vacuo');
 
             } else if (phase === 'descanso') {
-                AppState.vacuo.timer = AppState.vacuo.restDuration;
+                AppState.vacuo.timer = nativeState?.timer ?? AppState.vacuo.restDuration;
                 title.innerText = 'Descanse';
                 title.className = 'text-sm font-heading font-extrabold text-slate-400';
                 icon.className = 'fa-solid fa-bed text-xl text-slate-400';
@@ -2127,13 +2199,15 @@
                 if (ring) ring.className = 'ring-circle text-slate-500 transition-all';
                 glow.className = 'absolute w-48 h-48 rounded-full bg-slate-500/10 blur-3xl pointer-events-none transition-all duration-700';
 
-                speakVoice('Descanse');
-                playRelaxationSignal(); // Relaxe
+                if (!nativeState) {
+                    speakVoice('Descanse');
+                    playRelaxationSignal(); // Relaxe
+                }
                 updateCoreAnimation('descanso');
             }
 
             timerEl.innerText = AppState.vacuo.timer;
-            runVacuoTick();
+            if (!nativeState) runVacuoTick();
         }
 
         function runVacuoTick() {
@@ -3728,6 +3802,18 @@
         ------------------------------------------------------------- */
         function openDailyExecutionModal(programId = '2', phaseIndex = null) {
             triggerHaptic([30]);
+
+            if (window.AndroidBridge?.getWorkoutState) {
+                try {
+                    const nativeState = JSON.parse(window.AndroidBridge.getWorkoutState());
+                    if (nativeState.status === 'running' || nativeState.status === 'paused') {
+                        window.onNativeWorkoutState(nativeState);
+                        return;
+                    }
+                } catch (error) {
+                    console.log('Não foi possível recuperar a sessão ativa', error);
+                }
+            }
             
             const prog = AppState.programs.find(p => p.id === programId) || AppState.programs[1] || AppState.programs[0];
             let pIdx = phaseIndex;
@@ -3870,14 +3956,179 @@
 
             document.getElementById('dailyExecutionCloseBtn').style.display = isRunning ? 'none' : 'block';
         }
+
+        let nativeCompletionHandled = false;
+
+        function hasNativeWorkoutService() {
+            return !!(window.AndroidBridge && window.AndroidBridge.startWorkoutSession);
+        }
+
+        function buildNativeWorkoutPayload() {
+            const execution = AppState.dailyExecution;
+            return JSON.stringify({
+                programId: execution.programId,
+                phaseIndex: execution.phaseIndex,
+                programTitle: execution.programTitle,
+                phaseTitle: execution.phaseTitle,
+                sessionNumber: execution.sessionNumber,
+                targetSessions: execution.targetSessions,
+                currentStepIndex: execution.currentStepIndex,
+                stepTimeLeft: execution.stepTimeLeft,
+                totalSessionElapsed: execution.totalSessionElapsed,
+                voiceEnabled: AppState.voiceEnabled,
+                hapticsEnabled: AppState.hapticsEnabled,
+                steps: execution.steps
+            });
+        }
+
+        window.onNativeWorkoutState = function(rawState) {
+            let state;
+            try {
+                state = typeof rawState === 'string' ? JSON.parse(rawState) : rawState;
+            } catch (error) {
+                console.log('Estado nativo de treino inválido', error);
+                return;
+            }
+            if (!state || state.status === 'idle') return;
+
+            if (state.session?.type === 'vacuum') {
+                handleNativeVacuumState(state);
+                return;
+            }
+
+            if (state.status === 'canceled') {
+                AppState.dailyExecution.isRunning = false;
+                AppState.dailyExecution.isPaused = false;
+                AppState.dailyExecution.intervalId = null;
+                document.getElementById('cancelDailyConfirmModal')?.classList.add('hidden');
+                const modal = document.getElementById('dailyExecutionModal');
+                modal?.classList.add('hidden');
+                modal?.classList.remove('flex');
+                if (window.AndroidBridge?.acknowledgeWorkoutState) {
+                    window.AndroidBridge.acknowledgeWorkoutState();
+                }
+                renderProgramsList();
+                return;
+            }
+
+            const session = state.session || {};
+            if (Array.isArray(state.steps) && state.steps.length) {
+                AppState.dailyExecution.steps = state.steps;
+            }
+            AppState.dailyExecution.programId = session.programId ?? AppState.dailyExecution.programId;
+            AppState.dailyExecution.phaseIndex = session.phaseIndex ?? AppState.dailyExecution.phaseIndex;
+            AppState.dailyExecution.programTitle = session.programTitle ?? AppState.dailyExecution.programTitle;
+            AppState.dailyExecution.phaseTitle = session.phaseTitle ?? AppState.dailyExecution.phaseTitle;
+            AppState.dailyExecution.sessionNumber = session.sessionNumber ?? AppState.dailyExecution.sessionNumber;
+            AppState.dailyExecution.targetSessions = session.targetSessions ?? AppState.dailyExecution.targetSessions;
+            AppState.dailyExecution.currentStepIndex = state.currentStepIndex || 0;
+            AppState.dailyExecution.stepTimeLeft = Math.max(0, state.stepTimeLeft || 0);
+            AppState.dailyExecution.totalSessionElapsed = Math.max(0, state.totalSessionElapsed || 0);
+            AppState.dailyExecution.isPaused = state.status === 'paused';
+            AppState.dailyExecution.isRunning = state.status === 'running' || state.status === 'paused';
+            AppState.dailyExecution.intervalId = null;
+
+            const title = document.getElementById('dailyExecutionTitle');
+            const phaseTitle = document.getElementById('dailyExecutionPhaseTitle');
+            if (title && AppState.dailyExecution.programTitle) title.innerText = AppState.dailyExecution.programTitle;
+            if (phaseTitle && AppState.dailyExecution.phaseTitle) phaseTitle.innerText = AppState.dailyExecution.phaseTitle;
+
+            if (state.status === 'completed') {
+                if (document.hidden || nativeCompletionHandled) return;
+                nativeCompletionHandled = true;
+                if (window.AndroidBridge?.acknowledgeWorkoutState) {
+                    window.AndroidBridge.acknowledgeWorkoutState();
+                }
+                finishDailySession(true);
+                return;
+            }
+
+            const modal = document.getElementById('dailyExecutionModal');
+            modal?.classList.remove('hidden');
+            modal?.classList.add('flex');
+            renderDailyExecutionUI();
+        };
+
+        function handleNativeVacuumState(state) {
+            if (state.status === 'canceled') {
+                AppState.vacuo.isRunning = false;
+                AppState.vacuo.nativeManaged = false;
+                AppState.vacuo.currentPhase = 'ready';
+                AppState.vacuo.timer = 0;
+                AppState.vacuo.seriesCurrent = 1;
+                AppState.vacuo.totalElapsedSec = 0;
+                document.getElementById('vacPlayIcon').className = 'fa-solid fa-play';
+                document.getElementById('vacPlayText').innerText = 'Iniciar';
+                document.getElementById('vacPhaseTitle').innerText = 'Pronto para iniciar';
+                document.getElementById('vacTimerMain').innerText = '▶';
+                document.getElementById('vacCurrentSeries').innerText = `1 de ${AppState.vacuo.seriesTotal}`;
+                document.getElementById('vacTotalTime').innerText = '00:00';
+                setVacProgress(0);
+                updateCoreAnimation('ready');
+                highlightPhaseCard(null);
+                window.AndroidBridge?.acknowledgeWorkoutState?.();
+                return;
+            }
+
+            const step = state.steps?.[state.currentStepIndex];
+            if (!step && state.status !== 'completed') return;
+            AppState.vacuo.nativeManaged = state.status === 'running' || state.status === 'paused';
+            AppState.vacuo.isRunning = state.status === 'running';
+            AppState.vacuo.timer = Math.max(0, state.stepTimeLeft || 0);
+            AppState.vacuo.totalElapsedSec = Math.max(0, state.totalSessionElapsed || 0);
+            AppState.vacuo.seriesCurrent = step?.series || AppState.vacuo.seriesTotal;
+
+            if (state.status === 'completed') {
+                if (document.hidden || nativeCompletionHandled) return;
+                nativeCompletionHandled = true;
+                AppState.vacuo.nativeManaged = false;
+                AppState.vacuo.isRunning = false;
+                window.AndroidBridge?.acknowledgeWorkoutState?.();
+                document.getElementById('vacPlayIcon').className = 'fa-solid fa-play';
+                document.getElementById('vacPlayText').innerText = 'Iniciar';
+                document.getElementById('vacPhaseTitle').innerText = 'Concluído! 🎉';
+                document.getElementById('vacPhaseInstruction').innerText = `${AppState.vacuo.seriesTotal} séries finalizadas com sucesso!`;
+                document.getElementById('vacTimerMain').innerText = '✓';
+                markScheduleDone(1, true);
+                addMinutesToday(Math.max(1, Math.ceil(AppState.vacuo.totalElapsedSec / 60)));
+                return;
+            }
+
+            document.getElementById('vacPlayIcon').className = state.status === 'paused' ? 'fa-solid fa-play' : 'fa-solid fa-pause';
+            document.getElementById('vacPlayText').innerText = state.status === 'paused' ? 'Continuar' : 'Pausar';
+            document.getElementById('vacCurrentSeries').innerText = `${AppState.vacuo.seriesCurrent} de ${AppState.vacuo.seriesTotal}`;
+            document.getElementById('vacTotalTime').innerText = formatDailyTime(AppState.vacuo.totalElapsedSec);
+            transitionVacuoPhase(step.phase, { timer: AppState.vacuo.timer });
+            const phaseProgress = step.duration > 0 ? (step.duration - AppState.vacuo.timer) / step.duration : 0;
+            setVacProgress(Math.max(0, Math.min(1, phaseProgress)));
+        }
+
+        function syncNativeWorkoutState() {
+            if (!window.AndroidBridge?.getWorkoutState) return;
+            try {
+                window.onNativeWorkoutState(window.AndroidBridge.getWorkoutState());
+            } catch (error) {
+                console.log('Não foi possível sincronizar o treino nativo', error);
+            }
+        }
         
         function startDailySession() {
             triggerHaptic([30]);
             AppState.dailyExecution.isRunning = true;
             AppState.dailyExecution.isPaused = false;
+            nativeCompletionHandled = false;
             
             if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
                 window.AndroidBridge.setKeepScreenOn(true);
+            }
+
+            if (hasNativeWorkoutService()) {
+                const started = window.AndroidBridge.startWorkoutSession(buildNativeWorkoutPayload());
+                if (started) {
+                    AppState.dailyExecution.intervalId = null;
+                    renderDailyExecutionUI();
+                    return;
+                }
             }
 
             const currentStep = AppState.dailyExecution.steps[AppState.dailyExecution.currentStepIndex];
@@ -3918,6 +4169,12 @@
         function pauseDailySession() {
             triggerHaptic([20]);
             AppState.dailyExecution.isPaused = true;
+            if (window.AndroidBridge?.pauseWorkoutSession) {
+                window.AndroidBridge.pauseWorkoutSession();
+                AppState.dailyExecution.intervalId = null;
+                renderDailyExecutionUI();
+                return;
+            }
             clearInterval(AppState.dailyExecution.intervalId);
             AppState.dailyExecution.intervalId = null;
             renderDailyExecutionUI();
@@ -3928,6 +4185,13 @@
             document.getElementById('cancelDailyConfirmModal').classList.add('hidden');
             AppState.dailyExecution.isPaused = false;
             AppState.dailyExecution.isRunning = true;
+
+            if (window.AndroidBridge?.resumeWorkoutSession) {
+                window.AndroidBridge.resumeWorkoutSession();
+                AppState.dailyExecution.intervalId = null;
+                renderDailyExecutionUI();
+                return;
+            }
 
             if (AppState.dailyExecution.intervalId) clearInterval(AppState.dailyExecution.intervalId);
             AppState.dailyExecution.intervalId = setInterval(() => {
@@ -3944,6 +4208,10 @@
 
         function skipWorkoutStep() {
             triggerHaptic([30, 20]);
+            if (window.AndroidBridge?.skipWorkoutStep) {
+                window.AndroidBridge.skipWorkoutStep();
+                return;
+            }
             finishWorkoutStep();
         }
 
@@ -3982,7 +4250,7 @@
             }
         }
         
-        function finishDailySession() {
+        function finishDailySession(fromNativeService = false) {
             clearInterval(AppState.dailyExecution.intervalId);
             AppState.dailyExecution.intervalId = null;
             AppState.dailyExecution.isRunning = false;
@@ -3992,12 +4260,14 @@
                 window.AndroidBridge.setKeepScreenOn(false);
             }
 
-            if (window.AndroidBridge && window.AndroidBridge.playSuccessPattern) {
-                window.AndroidBridge.playSuccessPattern();
-            } else {
-                triggerHaptic([50, 100, 50, 100, 50]);
+            if (!fromNativeService) {
+                if (window.AndroidBridge && window.AndroidBridge.playSuccessPattern) {
+                    window.AndroidBridge.playSuccessPattern();
+                } else {
+                    triggerHaptic([50, 100, 50, 100, 50]);
+                }
+                speakVoice('Parabéns! Sessão de treino concluída com sucesso!');
             }
-            speakVoice('Parabéns! Sessão de treino concluída com sucesso!');
 
             // Adiciona os minutos ao total do dia
             const trainedMinutes = Math.max(1, Math.ceil(AppState.dailyExecution.totalSessionElapsed / 60));
@@ -4050,6 +4320,10 @@
             AppState.dailyExecution.intervalId = null;
             AppState.dailyExecution.isRunning = false;
             AppState.dailyExecution.isPaused = false;
+
+            if (window.AndroidBridge?.stopWorkoutSession) {
+                window.AndroidBridge.stopWorkoutSession();
+            }
 
             if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
                 window.AndroidBridge.setKeepScreenOn(false);
@@ -4829,11 +5103,16 @@
         // Initialize on load
         window.addEventListener('DOMContentLoaded', () => {
             loadSavedState();
+            syncNativeWorkoutState();
             setPosture('deitado', 10);
             updateBracingLoad(25);
             // Set random initial health tip
             currentTipIndex = Math.floor(Math.random() * HEALTH_TIPS.length);
             displayHealthTip(currentTipIndex);
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) syncNativeWorkoutState();
         });
     </script>
 </body>

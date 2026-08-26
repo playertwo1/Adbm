@@ -2,6 +2,7 @@ package com.example
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.BroadcastReceiver
 import android.os.Build
 import android.os.Bundle
 import androidx.compose.foundation.layout.Box
@@ -20,11 +21,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.Manifest
 import android.view.WindowManager
 import androidx.activity.compose.BackHandler
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -56,15 +59,32 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.ui.theme.MyApplicationTheme
 import java.util.Locale
+import org.json.JSONObject
 
 class MainActivity : ComponentActivity() {
 
     private var tts: TextToSpeech? = null
     private var webView: WebView? = null
+    private var workoutReceiverRegistered = false
+    private val workoutStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action != WorkoutForegroundService.ACTION_STATE_CHANGED) return
+            intent.getStringExtra(WorkoutForegroundService.EXTRA_STATE_JSON)?.let(::deliverWorkoutState)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val workoutFilter = IntentFilter(WorkoutForegroundService.ACTION_STATE_CHANGED)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(workoutStateReceiver, workoutFilter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            @Suppress("DEPRECATION")
+            registerReceiver(workoutStateReceiver, workoutFilter)
+        }
+        workoutReceiverRegistered = true
 
         createNotificationChannel()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -150,10 +170,28 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
+        if (workoutReceiverRegistered) {
+            unregisterReceiver(workoutStateReceiver)
+            workoutReceiverRegistered = false
+        }
         tts?.stop()
         tts?.shutdown()
         webView?.destroy()
         super.onDestroy()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        deliverWorkoutState(WorkoutForegroundService.readStoredState(this))
+    }
+
+    private fun deliverWorkoutState(stateJson: String) {
+        runOnUiThread {
+            webView?.evaluateJavascript(
+                "if (window.onNativeWorkoutState) window.onNativeWorkoutState(${JSONObject.quote(stateJson)});",
+                null
+            )
+        }
     }
 }
 
@@ -191,6 +229,11 @@ fun CoreFlowWebView(
                 webViewClient = object : WebViewClient() {
                     override fun onPageFinished(view: WebView?, url: String?) {
                         super.onPageFinished(view, url)
+                        val state = WorkoutForegroundService.readStoredState(ctx)
+                        view?.evaluateJavascript(
+                            "if (window.onNativeWorkoutState) window.onNativeWorkoutState(${JSONObject.quote(state)});",
+                            null
+                        )
                     }
                 }
 
@@ -297,6 +340,49 @@ class AndroidBridge(
     @JavascriptInterface
     fun playSuccessPattern() {
         AdvancedHapticsManager.playSuccessPattern(context)
+    }
+
+    @JavascriptInterface
+    fun startWorkoutSession(sessionJson: String): Boolean = runCatching {
+        val intent = Intent(context, WorkoutForegroundService::class.java)
+            .setAction(WorkoutForegroundService.ACTION_START)
+            .putExtra(WorkoutForegroundService.EXTRA_SESSION_JSON, sessionJson)
+        ContextCompat.startForegroundService(context, intent)
+        true
+    }.getOrDefault(false)
+
+    @JavascriptInterface
+    fun pauseWorkoutSession() {
+        sendWorkoutAction(WorkoutForegroundService.ACTION_PAUSE)
+    }
+
+    @JavascriptInterface
+    fun resumeWorkoutSession() {
+        sendWorkoutAction(WorkoutForegroundService.ACTION_RESUME)
+    }
+
+    @JavascriptInterface
+    fun skipWorkoutStep() {
+        sendWorkoutAction(WorkoutForegroundService.ACTION_SKIP)
+    }
+
+    @JavascriptInterface
+    fun stopWorkoutSession() {
+        sendWorkoutAction(WorkoutForegroundService.ACTION_STOP)
+    }
+
+    @JavascriptInterface
+    fun getWorkoutState(): String = WorkoutForegroundService.readStoredState(context)
+
+    @JavascriptInterface
+    fun acknowledgeWorkoutState() {
+        WorkoutForegroundService.clearStoredState(context)
+    }
+
+    private fun sendWorkoutAction(action: String) {
+        context.startService(
+            Intent(context, WorkoutForegroundService::class.java).setAction(action)
+        )
     }
 
     private fun getVibrator(context: Context): Vibrator {
