@@ -37,8 +37,10 @@ object ReminderScheduler {
         title: String,
         time1: String,
         time2: String,
+        targetSessions: Int,
         enabled: Boolean
     ) {
+        val safeTarget = targetSessions.coerceIn(1, 2)
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val ids = prefs.getStringSet(PROGRAM_IDS, emptySet()).orEmpty().toMutableSet()
         ids.add(programId)
@@ -47,13 +49,14 @@ object ReminderScheduler {
             .putString(key(programId, "title"), title)
             .putString(key(programId, "time1"), time1)
             .putString(key(programId, "time2"), time2)
+            .putInt(key(programId, "target_sessions"), safeTarget)
             .putBoolean(key(programId, "enabled"), enabled)
             .apply()
 
         cancelProgram(context, programId)
         if (enabled) {
             scheduleDaily(context, programId, title, 1, time1)
-            scheduleDaily(context, programId, title, 2, time2)
+            if (safeTarget > 1) scheduleDaily(context, programId, title, 2, time2)
         }
     }
 
@@ -64,8 +67,9 @@ object ReminderScheduler {
             val title = prefs.getString(key(programId, "title"), "Programa CoreFlow") ?: "Programa CoreFlow"
             val time1 = prefs.getString(key(programId, "time1"), "09:00") ?: "09:00"
             val time2 = prefs.getString(key(programId, "time2"), "16:00") ?: "16:00"
+            val targetSessions = prefs.getInt(key(programId, "target_sessions"), 2).coerceIn(1, 2)
             scheduleDaily(context, programId, title, 1, time1)
-            scheduleDaily(context, programId, title, 2, time2)
+            if (targetSessions > 1) scheduleDaily(context, programId, title, 2, time2)
         }
     }
 
@@ -104,7 +108,8 @@ object ReminderScheduler {
         }
 
         if (sessions < sessionNumber) {
-            showNotification(context, programId, title, sessionNumber)
+            val targetSessions = prefs.getInt(key(programId, "target_sessions"), 2).coerceIn(1, 2)
+            showNotification(context, programId, title, sessionNumber, targetSessions)
         }
 
         if (!isSnooze) {
@@ -113,7 +118,13 @@ object ReminderScheduler {
         }
     }
 
-    fun showNotification(context: Context, programId: String, title: String, sessionNumber: Int) {
+    fun showNotification(
+        context: Context,
+        programId: String,
+        title: String,
+        sessionNumber: Int,
+        targetSessions: Int = 2
+    ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
         ) return
@@ -145,7 +156,8 @@ object ReminderScheduler {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val message = "Hora da sessão $sessionNumber/2. Toque para abrir o treino."
+        val safeTarget = targetSessions.coerceIn(1, 2)
+        val message = "Hora da sessão $sessionNumber/$safeTarget. Toque para abrir o treino."
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentTitle("CoreFlow: $title")

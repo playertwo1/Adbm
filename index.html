@@ -1149,7 +1149,7 @@
                     <input type="time" id="reminderTimeInput1" value="09:00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-mono focus:border-amber-500 focus:outline-none transition">
                 </div>
 
-                <div>
+                <div id="reminderTimeBlock2">
                     <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center justify-between">
                         <span>⏰ 2ª Sessão Diária:</span>
                         <span class="text-[10px] text-indigo-400 font-bold">Tarde / Turno 2</span>
@@ -1526,6 +1526,29 @@
                         { title: 'Semana 7: Exaustão e Resistência Crítica', details: '2x (Platô 80% 45s + 15 tiros rápidos de recuperação fadigado)', completed: false },
                         { title: 'Semana 8: Polimento e Agilidade Reflexa', details: 'Volume 2x/dia | Super Combo: 2x 15s + 30 tiros rápidos (relaxamento instantâneo)', completed: false }
                     ]
+                },
+                {
+                    id: '3',
+                    title: 'Stomach Vacuum: 8 Semanas no Escritório',
+                    description: 'Fortalecimento progressivo do transverso abdominal, sentado ou em pé, sem precisar deitar.',
+                    expanded: true,
+                    currentPhaseIndex: 0,
+                    currentDayInWeek: 1,
+                    daysCompletedInPhase: 0,
+                    sessionsToday: 0,
+                    dailyTarget: 1,
+                    reminderTimes: ['07:00', '07:00'],
+                    remindersEnabled: false,
+                    phases: [
+                        { title: 'Semana 1: Iniciante 1', details: 'Sentado inclinado 30° • 3 séries • sucção 10–12s • descanso 60s • 5x/semana', weeklyTargetDays: 5, sets: 3, holdMin: 10, holdMax: 12, restSeconds: 60, completed: false },
+                        { title: 'Semana 2: Iniciante 2', details: 'Sentado inclinado com apoio • 4 séries • sucção 12–15s • descanso 60s • 5x/semana', weeklyTargetDays: 5, sets: 4, holdMin: 12, holdMax: 15, restSeconds: 60, completed: false },
+                        { title: 'Semana 3: Intermediário 1', details: 'Sentado ereto sem encosto • 4 séries • sucção 15–18s • descanso 50s • 5x/semana', weeklyTargetDays: 5, sets: 4, holdMin: 15, holdMax: 18, restSeconds: 50, completed: false },
+                        { title: 'Semana 4: Intermediário 2', details: 'Sentado ereto e expansão costal • 4 séries • sucção 18–20s • descanso 45s • 6x/semana', weeklyTargetDays: 6, sets: 4, holdMin: 18, holdMax: 20, restSeconds: 45, completed: false },
+                        { title: 'Semana 5: Avançado 1', details: 'Em pé inclinado com apoio • 4 séries • sucção 20–22s • descanso 45s • 6x/semana', weeklyTargetDays: 6, sets: 4, holdMin: 20, holdMax: 22, restSeconds: 45, completed: false },
+                        { title: 'Semana 6: Avançado 2', details: 'Em pé inclinado com apoio leve • 4–5 séries • sucção 22–25s • descanso 45s • diário', weeklyTargetDays: 7, sets: 5, minSets: 4, holdMin: 22, holdMax: 25, restSeconds: 45, completed: false },
+                        { title: 'Semana 7: Avançado 3', details: 'Em pé totalmente ereto • 4–5 séries • sucção 25–28s • descanso 40s • diário', weeklyTargetDays: 7, sets: 5, minSets: 4, holdMin: 25, holdMax: 28, restSeconds: 40, completed: false },
+                        { title: 'Semana 8: Domínio Total', details: 'Alternar em pé e sentado • 5 séries • sucção 30s • descanso 40s • diário', weeklyTargetDays: 7, sets: 5, holdMin: 30, holdMax: 30, restSeconds: 40, completed: false }
+                    ]
                 }
             ]
         };
@@ -1620,7 +1643,8 @@
                                     if (typeof matchingLoaded.daysCompletedInPhase !== 'undefined') {
                                         defaultProg.daysCompletedInPhase = matchingLoaded.daysCompletedInPhase;
                                     }
-                                    defaultProg.currentDayInWeek = Math.min((defaultProg.daysCompletedInPhase || 0) + 1, 7);
+                                    const loadedTargetDays = defaultProg.phases[defaultProg.currentPhaseIndex || 0]?.weeklyTargetDays || 7;
+                                    defaultProg.currentDayInWeek = Math.min((defaultProg.daysCompletedInPhase || 0) + 1, loadedTargetDays);
 
                                     if (matchingLoaded.reminderTimes && Array.isArray(matchingLoaded.reminderTimes)) {
                                         defaultProg.reminderTimes = matchingLoaded.reminderTimes;
@@ -3569,6 +3593,93 @@
                     default:
                         return [{ title: 'Treino de Kegel', instruction: 'Execute as contrações no seu ritmo.', duration: 60, isRest: false }];
                 }
+            } else if (progId === '3') { // Stomach Vacuum: 8 semanas no escritório
+                const program = AppState.programs.find(program => program.id === '3');
+                const phase = program?.phases[phaseIdx] || program?.phases[0];
+                if (!phase) return [];
+
+                const positions = [
+                    'Sente-se na ponta da cadeira, incline o tronco cerca de 30 graus e apoie as mãos nos joelhos.',
+                    'Sente-se inclinado à frente e apoie as mãos nos joelhos ou na mesa.',
+                    'Sente-se totalmente ereto, sem encostar as costas, com as mãos nas coxas.',
+                    'Sente-se ereto e prepare uma expansão ampla das costelas.',
+                    'Fique em pé, incline levemente o tronco e apoie as mãos na mesa ou banco.',
+                    'Fique em pé, levemente inclinado, usando apenas um apoio suave das mãos.',
+                    'Fique totalmente ereto, em postura neutra, com os braços relaxados.',
+                    'Alterne as séries: ímpares em pé ereto e pares sentado ereto.'
+                ];
+                const steps = [];
+                const progressed = (program.daysCompletedInPhase || 0) >= Math.ceil((phase.weeklyTargetDays || 7) / 2);
+                const holdSeconds = progressed ? phase.holdMax : phase.holdMin;
+                const setCount = progressed ? phase.sets : (phase.minSets || phase.sets);
+                for (let set = 1; set <= setCount; set++) {
+                    const alternatingPosition = phaseIdx === 7
+                        ? (set % 2 === 1
+                            ? 'Fique totalmente ereto, em postura neutra, com os braços relaxados.'
+                            : 'Sente-se totalmente ereto, sem usar o encosto, com os pés no chão.')
+                        : positions[phaseIdx];
+                    steps.push({
+                        title: `Série ${set}/${setCount}: Posicionamento`,
+                        instruction: `${alternatingPosition} Mantenha os joelhos destravados e a coluna neutra.`,
+                        duration: 8,
+                        isRest: true,
+                        voice: `Série ${set}. Ajuste a posição.`,
+                        badge: `PREPARE ${set}/${setCount}`,
+                        haptic: 'relax'
+                    });
+                    steps.push({
+                        title: `Série ${set}/${setCount}: Inspire`,
+                        instruction: 'Inspire suavemente pelo nariz, expandindo as costelas sem elevar os ombros.',
+                        duration: 4,
+                        isRest: false,
+                        voice: 'Inspire suavemente pelo nariz.',
+                        badge: 'INSPIRE PELO NARIZ',
+                        phase: 'inspira',
+                        haptic: 'inhale'
+                    });
+                    steps.push({
+                        title: `Série ${set}/${setCount}: Exalação Total`,
+                        instruction: 'Solte todo o ar pela boca, de forma contínua, até esvaziar completamente os pulmões.',
+                        duration: 6,
+                        isRest: false,
+                        voice: 'Solte todo o ar pela boca.',
+                        badge: 'EXPIRE TODO O AR',
+                        phase: 'expira',
+                        haptic: 'exhale'
+                    });
+                    steps.push({
+                        title: `Série ${set}/${setCount}: Sucção Abdominal`,
+                        instruction: `Sem puxar ar, abra as costelas e leve o umbigo para dentro e para cima. Sustente por ${holdSeconds} segundos.`,
+                        duration: holdSeconds,
+                        isRest: false,
+                        voice: `Sem puxar ar. Abra as costelas e faça a sucção por ${holdSeconds} segundos.`,
+                        badge: `VÁCUO ${holdSeconds}s • ${set}/${setCount}`,
+                        phase: 'vacuo',
+                        haptic: 'success'
+                    });
+                    steps.push({
+                        title: `Série ${set}/${setCount}: Retorno Controlado`,
+                        instruction: 'Solte primeiro a sucção abdominal; só depois inspire calmamente pelo nariz.',
+                        duration: 5,
+                        isRest: true,
+                        voice: 'Solte a sucção antes de inspirar calmamente.',
+                        badge: 'RETORNO CONTROLADO',
+                        haptic: 'relax'
+                    });
+                    if (set < setCount) {
+                        steps.push({
+                            title: `Descanso entre Séries (${phase.restSeconds}s)`,
+                            instruction: 'Respire normalmente, relaxe o abdômen e preserve a postura.',
+                            duration: phase.restSeconds,
+                            isRest: true,
+                            voice: `Descanse por ${phase.restSeconds} segundos.`,
+                            badge: `DESCANSO ${phase.restSeconds}s`,
+                            phase: 'descanso',
+                            haptic: 'relax'
+                        });
+                    }
+                }
+                return steps;
             } else { // Program 1: Bracing (6 Semanas)
                 switch (phaseIdx) {
                     case 0: // Semana 1 e 2: Base
@@ -3641,7 +3752,8 @@
                 const activePhaseIdx = prog.currentPhaseIndex || 0;
                 const activePhase = prog.phases[activePhaseIdx] || prog.phases[0];
                 const reminderTimes = prog.reminderTimes || ['09:00', '16:00'];
-                const currentDay = prog.currentDayInWeek || Math.min((prog.daysCompletedInPhase || 0) + 1, 7);
+                const targetDays = activePhase.weeklyTargetDays || 7;
+                const currentDay = prog.currentDayInWeek || Math.min((prog.daysCompletedInPhase || 0) + 1, targetDays);
                 const daysCompleted = prog.daysCompletedInPhase || 0;
 
                 let guideBtnHtml = '';
@@ -3659,9 +3771,9 @@
                     `;
                 }
 
-                // 7-Day Consistency Week Indicator Pills
+                // Indicador de consistência conforme a frequência semanal da fase
                 let daysPillsHtml = '';
-                for (let d = 1; d <= 7; d++) {
+                for (let d = 1; d <= targetDays; d++) {
                     const isDayDone = d <= daysCompleted;
                     const isCurrentDay = d === currentDay && !isDayDone;
                     let pillClass = 'bg-slate-800/80 border-slate-700 text-slate-400';
@@ -3681,21 +3793,27 @@
                     `;
                 }
 
-                // Daily Sessions Indicator (2x ao dia)
-                let session1Done = sessionsToday >= 1;
-                let session2Done = sessionsToday >= 2;
+                const sessionBadgesHtml = Array.from({ length: targetSessions }, (_, index) => {
+                    const number = index + 1;
+                    const isDone = sessionsToday >= number;
+                    const label = number === 1 ? '1ª' : `${number}ª`;
+                    return `<div class="p-2.5 rounded-xl border flex items-center justify-between ${isDone ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' : 'bg-slate-800/80 border-slate-700 text-slate-400'}">
+                        <span>${label} Sessão (${reminderTimes[index] || reminderTimes[0]})</span>
+                        <i class="fa-solid ${isDone ? 'fa-circle-check text-emerald-400' : 'fa-circle text-slate-600'}"></i>
+                    </div>`;
+                }).join('');
 
                 let sessionBtnText = '';
                 let sessionBtnIcon = 'fa-play';
                 let sessionBtnBg = 'bg-gradient-to-r from-indigo-500 to-sky-500 hover:from-indigo-600 hover:to-sky-600';
                 
-                if (sessionsToday === 0) {
-                    sessionBtnText = `Iniciar Sessão 1 de 2 (${activePhase.title.split(':')[0]} • Dia ${currentDay})`;
-                } else if (sessionsToday === 1) {
-                    sessionBtnText = `Iniciar Sessão 2 de 2 (${activePhase.title.split(':')[0]} • Dia ${currentDay})`;
-                    sessionBtnBg = 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950';
+                if (sessionsToday < targetSessions) {
+                    sessionBtnText = `Iniciar Sessão ${sessionsToday + 1} de ${targetSessions} (${activePhase.title.split(':')[0]} • Dia ${currentDay})`;
+                    if (sessionsToday > 0) {
+                        sessionBtnBg = 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950';
+                    }
                 } else {
-                    sessionBtnText = `Meta Diária Concluída (2/2) ✓ • Dia ${currentDay}/7`;
+                    sessionBtnText = `Meta Diária Concluída (${targetSessions}/${targetSessions}) ✓ • Dia ${currentDay}/${targetDays}`;
                     sessionBtnIcon = 'fa-check-double';
                     sessionBtnBg = 'bg-emerald-600/80 text-white cursor-default';
                 }
@@ -3732,7 +3850,7 @@
                                 </div>
                                 <div class="flex items-center gap-1.5 flex-shrink-0">
                                     ${guideBtnHtml}
-                                    <button onclick="openReminderConfigModal('${prog.id}')" title="Configurar Lembretes (2x ao dia)" class="w-8 h-8 rounded-full bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 flex items-center justify-center transition">
+                                    <button onclick="openReminderConfigModal('${prog.id}')" title="Configurar lembrete${targetSessions > 1 ? 's' : ''}" class="w-8 h-8 rounded-full bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 flex items-center justify-center transition">
                                         <i class="fa-solid fa-bell text-xs"></i>
                                     </button>
                                     <button onclick="openEditProgramModal(${pIdx})" title="Editar Nome" class="w-8 h-8 rounded-full bg-slate-750 text-slate-400 hover:text-indigo-400 flex items-center justify-center transition">
@@ -3753,7 +3871,7 @@
                                             <i class="fa-solid fa-calendar-week text-indigo-400 text-[11px]"></i>
                                             Trilha da Semana Atual:
                                         </span>
-                                        <span class="text-[11px] font-black text-indigo-300">Dia ${currentDay}/7 (${daysCompleted}/7 concluídos)</span>
+                                        <span class="text-[11px] font-black text-indigo-300">Dia ${currentDay}/${targetDays} (${daysCompleted}/${targetDays} concluídos)</span>
                                     </div>
                                     <div class="flex items-center gap-1.5">
                                         ${daysPillsHtml}
@@ -3763,24 +3881,16 @@
                                 <div class="border-t border-slate-800 pt-3 flex items-center justify-between">
                                     <div class="flex items-center gap-2">
                                         <span class="text-xs font-bold text-slate-200 uppercase tracking-wider">Sessões de Hoje:</span>
-                                        <span class="text-[11px] font-extrabold ${sessionsToday >= 2 ? 'text-emerald-400' : 'text-amber-400'}">${sessionsToday}/2 Feitas</span>
+                                        <span class="text-[11px] font-extrabold ${sessionsToday >= targetSessions ? 'text-emerald-400' : 'text-amber-400'}">${sessionsToday}/${targetSessions} Feitas</span>
                                     </div>
                                     <button onclick="openReminderConfigModal('${prog.id}')" class="text-[11px] text-amber-400 hover:underline flex items-center gap-1 font-semibold">
                                         <i class="fa-solid fa-clock text-[10px]"></i>
-                                        <span>${reminderTimes[0]} e ${reminderTimes[1]}</span>
+                                        <span>${targetSessions === 1 ? reminderTimes[0] : `${reminderTimes[0]} e ${reminderTimes[1]}`}</span>
                                     </button>
                                 </div>
 
-                                <!-- 2 Sessions Badges -->
-                                <div class="grid grid-cols-2 gap-2 text-xs font-semibold">
-                                    <div class="p-2.5 rounded-xl border flex items-center justify-between ${session1Done ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' : 'bg-slate-800/80 border-slate-700 text-slate-400'}">
-                                        <span>1ª Sessão (${reminderTimes[0]})</span>
-                                        <i class="fa-solid ${session1Done ? 'fa-circle-check text-emerald-400' : 'fa-circle text-slate-600'}"></i>
-                                    </div>
-                                    <div class="p-2.5 rounded-xl border flex items-center justify-between ${session2Done ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' : 'bg-slate-800/80 border-slate-700 text-slate-400'}">
-                                        <span>2ª Sessão (${reminderTimes[1]})</span>
-                                        <i class="fa-solid ${session2Done ? 'fa-circle-check text-emerald-400' : 'fa-circle text-slate-600'}"></i>
-                                    </div>
+                                <div class="grid ${targetSessions > 1 ? 'grid-cols-2' : 'grid-cols-1'} gap-2 text-xs font-semibold">
+                                    ${sessionBadgesHtml}
                                 </div>
 
                                 <!-- Action Button for Today's Workout -->
@@ -3876,7 +3986,8 @@
             
             const phase = prog.phases[pIdx] || prog.phases[0];
             const steps = getProgramSteps(prog.id, pIdx);
-            const currentDay = prog.currentDayInWeek || Math.min((prog.daysCompletedInPhase || 0) + 1, 7);
+            const targetDays = prog.phases[pIdx]?.weeklyTargetDays || 7;
+            const currentDay = prog.currentDayInWeek || Math.min((prog.daysCompletedInPhase || 0) + 1, targetDays);
             
             AppState.dailyExecution.programId = prog.id;
             AppState.dailyExecution.phaseIndex = pIdx;
@@ -3884,8 +3995,8 @@
             AppState.dailyExecution.phaseTitle = phase.title;
             AppState.dailyExecution.steps = steps;
             AppState.dailyExecution.currentStepIndex = 0;
-            AppState.dailyExecution.sessionNumber = Math.min((prog.sessionsToday || 0) + 1, 2);
-            AppState.dailyExecution.targetSessions = 2;
+            AppState.dailyExecution.sessionNumber = Math.min((prog.sessionsToday || 0) + 1, prog.dailyTarget || 2);
+            AppState.dailyExecution.targetSessions = prog.dailyTarget || 2;
             AppState.dailyExecution.stepTimeLeft = steps[0].duration;
             AppState.dailyExecution.isRunning = false;
             AppState.dailyExecution.isPaused = false;
@@ -3895,7 +4006,7 @@
 
             document.getElementById('dailyExecutionTitle').innerText = prog.title;
             document.getElementById('dailyExecutionPhaseTitle').innerText = phase.title;
-            document.getElementById('dailyExecutionSessionTag').innerText = `Semana ${pIdx + 1} • Dia ${currentDay}/7 (Sessão ${AppState.dailyExecution.sessionNumber}/2)`;
+            document.getElementById('dailyExecutionSessionTag').innerText = `Semana ${pIdx + 1} • Dia ${currentDay}/${targetDays} (Sessão ${AppState.dailyExecution.sessionNumber}/${AppState.dailyExecution.targetSessions})`;
 
             renderDailyExecutionUI();
             const modal = document.getElementById('dailyExecutionModal');
@@ -4324,7 +4435,8 @@
 
             // Adiciona os minutos ao total do dia
             const trainedMinutes = Math.max(1, Math.ceil(AppState.dailyExecution.totalSessionElapsed / 60));
-            addMinutesToday(trainedMinutes, 'program');
+            const completedProgramId = AppState.dailyExecution.programId;
+            addMinutesToday(trainedMinutes, 'program', completedProgramId === '3' ? ['vacuum'] : []);
             AppState.dailyExecution.sessionsCompletedToday = (AppState.dailyExecution.sessionsCompletedToday || 0) + 1;
 
             // Atualiza o progresso do programa específico
@@ -4333,14 +4445,15 @@
                 prog.sessionsToday = (prog.sessionsToday || 0) + 1;
                 window.AndroidBridge?.updateProgramReminderProgress?.(prog.id, prog.sessionsToday, localDateKey());
                 const dailyTarget = prog.dailyTarget || 2;
+                const phase = prog.phases[AppState.dailyExecution.phaseIndex];
+                const weeklyTargetDays = phase?.weeklyTargetDays || 7;
                 
                 // Avança o dia somente uma vez, exatamente quando a meta diária é atingida.
                 if (prog.sessionsToday === dailyTarget) {
                     prog.daysCompletedInPhase = (prog.daysCompletedInPhase || 0) + 1;
                     
                     // Se completou os 7 dias da semana (ou meta da fase), conclui a semana atual e avança para a próxima
-                    if (prog.daysCompletedInPhase >= 7) {
-                        const phase = prog.phases[AppState.dailyExecution.phaseIndex];
+                    if (prog.daysCompletedInPhase >= weeklyTargetDays) {
                         if (phase) phase.completed = true;
                         
                         if (AppState.dailyExecution.phaseIndex < prog.phases.length - 1) {
@@ -4348,7 +4461,9 @@
                             prog.daysCompletedInPhase = 0;
                         }
                     }
-                    prog.currentDayInWeek = Math.min((prog.daysCompletedInPhase || 0) + 1, 7);
+                    const nextPhase = prog.phases[prog.currentPhaseIndex || 0];
+                    const nextWeeklyTarget = nextPhase?.weeklyTargetDays || 7;
+                    prog.currentDayInWeek = Math.min((prog.daysCompletedInPhase || 0) + 1, nextWeeklyTarget);
                     celebrateDailyGoal();
                 }
             }
@@ -4361,18 +4476,22 @@
                 closeDailyExecutionModal();
                 const daysDone = (prog && prog.daysCompletedInPhase) || 0;
                 const sessions = Math.min((prog && prog.sessionsToday) || 0, (prog && prog.dailyTarget) || 2);
+                const targetSessions = (prog && prog.dailyTarget) || 2;
+                const targetDays = prog?.phases[prog.currentPhaseIndex || 0]?.weeklyTargetDays || 7;
                 showProgramCompletionScreen({
                     title: prog?.title || 'Programa',
                     sessions,
                     daysDone,
-                    trainedMinutes
+                    trainedMinutes,
+                    targetSessions,
+                    targetDays
                 });
             }, 500);
         }
 
-        function showProgramCompletionScreen({ title, sessions, daysDone, trainedMinutes }) {
+        function showProgramCompletionScreen({ title, sessions, daysDone, trainedMinutes, targetSessions = 2, targetDays = 7 }) {
             document.getElementById('programCompletionScreen')?.remove();
-            const dailyGoalReached = sessions >= 2;
+            const dailyGoalReached = sessions >= targetSessions;
             const overlay = document.createElement('div');
             overlay.id = 'programCompletionScreen';
             overlay.className = 'fixed inset-0 z-[110] flex items-center justify-center p-5 bg-slate-950/90 backdrop-blur-md';
@@ -4385,9 +4504,9 @@
                     <h2 class="mt-2 text-xl font-black text-white">${title}</h2>
                     <p class="mt-2 text-sm text-slate-300">${trainedMinutes} min adicionados ao seu histórico real.</p>
                     <div class="mt-5 rounded-2xl border border-slate-700/70 bg-slate-900/70 p-4">
-                        <p class="text-lg font-extrabold text-white">Sessão ${sessions}/2 de hoje</p>
+                        <p class="text-lg font-extrabold text-white">Sessão ${sessions}/${targetSessions} de hoje</p>
                         <p class="mt-1 text-sm ${dailyGoalReached ? 'text-emerald-300' : 'text-slate-400'}">
-                            ${dailyGoalReached ? `Meta diária concluída · Dia ${daysDone}/7` : 'Falta mais 1 sessão para concluir a meta do dia.'}
+                            ${dailyGoalReached ? `Meta diária concluída · ${daysDone}/${targetDays} dias da fase` : `Faltam ${targetSessions - sessions} sessão(ões) para concluir a meta do dia.`}
                         </p>
                     </div>
                     <button onclick="closeProgramCompletionScreen()" class="mt-6 w-full rounded-2xl bg-emerald-500 px-5 py-3.5 font-extrabold text-slate-950 shadow-lg shadow-emerald-500/20 active:scale-95 transition-transform">
@@ -4452,6 +4571,7 @@
                 prog.title,
                 times[0] || '09:00',
                 times[1] || '16:00',
+                prog.dailyTarget || 2,
                 prog.remindersEnabled === true,
                 showConfirmation
             );
@@ -4489,10 +4609,12 @@
             activeReminderProgId = progId;
             const prog = AppState.programs.find(p => p.id === progId) || AppState.programs[0];
             
-            document.getElementById('reminderProgramNameSubtitle').innerText = `${prog.title} (2x ao dia)`;
+            const targetSessions = prog.dailyTarget || 2;
+            document.getElementById('reminderProgramNameSubtitle').innerText = `${prog.title} (${targetSessions}x ao dia)`;
             const times = prog.reminderTimes || ['09:00', '16:00'];
             document.getElementById('reminderTimeInput1').value = times[0] || '09:00';
             document.getElementById('reminderTimeInput2').value = times[1] || '16:00';
+            document.getElementById('reminderTimeBlock2').classList.toggle('hidden', targetSessions === 1);
             document.getElementById('reminderEnabledToggle').checked = prog.remindersEnabled !== false;
 
             document.getElementById('reminderConfigModal').classList.remove('hidden');
@@ -4517,16 +4639,17 @@
                 renderProgramsList();
                 updatePushNotificationButton();
                 syncProgramNativeReminder(prog, true);
-                showInlineToast(enabled ? `Lembretes salvos: ${t1} e ${t2}` : 'Lembretes desativados para este programa');
+                const savedTimes = (prog.dailyTarget || 2) === 1 ? t1 : `${t1} e ${t2}`;
+                showInlineToast(enabled ? `Lembretes salvos: ${savedTimes}` : 'Lembretes desativados para este programa');
             }
             closeReminderConfigModal();
         }
 
         function testNotificationNow() {
             const prog = AppState.programs.find(p => p.id === activeReminderProgId) || AppState.programs[0];
-            const sessionNumber = Math.min((prog.sessionsToday || 0) + 1, 2);
+            const sessionNumber = Math.min((prog.sessionsToday || 0) + 1, prog.dailyTarget || 2);
             if (window.AndroidBridge?.postReminderNotification) {
-                window.AndroidBridge.postReminderNotification(String(prog.id), prog.title, sessionNumber);
+                window.AndroidBridge.postReminderNotification(String(prog.id), prog.title, sessionNumber, prog.dailyTarget || 2);
                 showInlineToast('Notificação de teste enviada');
             } else {
                 triggerReminderAlert(prog, sessionNumber);
@@ -4539,17 +4662,18 @@
             playTibetanChime();
             
             const title = `CoreFlow: ${prog.title}`;
-            const message = `Hora da Sessão ${sessionNumber}/2 do dia! Reserve 2 minutos para blindar sua saúde.`;
+            const targetSessions = prog.dailyTarget || 2;
+            const message = `Hora da Sessão ${sessionNumber}/${targetSessions} do dia! Reserve alguns minutos para cuidar da sua saúde.`;
             
             if (postNativeNotification && window.AndroidBridge?.postReminderNotification) {
-                window.AndroidBridge.postReminderNotification(String(prog.id), prog.title, sessionNumber);
+                window.AndroidBridge.postReminderNotification(String(prog.id), prog.title, sessionNumber, targetSessions);
             } else if (postNativeNotification && window.AndroidBridge?.postLocalNotification) {
                 window.AndroidBridge.postLocalNotification(title, message);
             }
             
             activeReminderProgId = prog.id;
             activeReminderSessionNumber = sessionNumber;
-            document.getElementById('interactiveReminderTitle').innerText = `Hora da Sessão ${sessionNumber}/2!`;
+            document.getElementById('interactiveReminderTitle').innerText = `Hora da Sessão ${sessionNumber}/${targetSessions}!`;
             document.getElementById('interactiveReminderDesc').innerText = `${prog.title}: sessão agendada para agora. Pronto para treinar?`;
             document.getElementById('interactiveReminderModal').classList.remove('hidden');
         }
@@ -4616,7 +4740,7 @@
             const currentHm = `${hours}:${minutes}`;
 
             AppState.programs.forEach(prog => {
-                if (prog.remindersEnabled === true && (prog.sessionsToday || 0) < 2) {
+                if (prog.remindersEnabled === true && (prog.sessionsToday || 0) < (prog.dailyTarget || 2)) {
                     const times = prog.reminderTimes || ['09:00', '16:00'];
                     const targetSession = (prog.sessionsToday || 0) + 1;
                     const scheduledTime = targetSession === 1 ? times[0] : times[1];
@@ -5078,7 +5202,7 @@
             }
         }
 
-        function addMinutesToday(mins, source = 'general') {
+        function addMinutesToday(mins, source = 'general', additionalSources = []) {
             const safeMinutes = Math.max(1, Math.round(Number(mins) || 0));
             const previousMins = AppState.totalMinutesToday;
             const todayKey = localDateKey();
@@ -5087,6 +5211,9 @@
             entry.sessions = Math.max(0, entry.sessions || 0) + 1;
             entry.sources = entry.sources || {};
             entry.sources[source] = Math.max(0, entry.sources[source] || 0) + 1;
+            additionalSources.forEach(additionalSource => {
+                entry.sources[additionalSource] = Math.max(0, entry.sources[additionalSource] || 0) + 1;
+            });
             AppState.activityLog[todayKey] = entry;
 
             syncDerivedStats();
