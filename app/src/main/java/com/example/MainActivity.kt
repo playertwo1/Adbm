@@ -508,16 +508,17 @@ class AndroidBridge(
         title: String,
         time1: String,
         time2: String,
+        targetSessions: Int,
         enabled: Boolean,
         showConfirmation: Boolean
     ) {
-        ReminderScheduler.updateProgram(context, programId, title, time1, time2, enabled)
+        ReminderScheduler.updateProgram(context, programId, title, time1, time2, targetSessions, enabled)
         val activity = context as? ComponentActivity ?: return
         activity.runOnUiThread {
             if (enabled) requestNotificationPermission(activity)
             if (showConfirmation) {
                 val message = if (enabled) {
-                    "Lembretes ativos às $time1 e $time2"
+                    if (targetSessions <= 1) "Lembrete ativo às $time1" else "Lembretes ativos às $time1 e $time2"
                 } else {
                     "Lembretes desativados para este programa"
                 }
@@ -537,8 +538,8 @@ class AndroidBridge(
     }
 
     @JavascriptInterface
-    fun postReminderNotification(programId: String, title: String, sessionNumber: Int) {
-        ReminderScheduler.showNotification(context, programId, title, sessionNumber)
+    fun postReminderNotification(programId: String, title: String, sessionNumber: Int, targetSessions: Int) {
+        ReminderScheduler.showNotification(context, programId, title, sessionNumber, targetSessions)
     }
 
     @JavascriptInterface
