@@ -1200,11 +1200,18 @@
                 </button>
                 
                 <div class="grid grid-cols-2 gap-2">
+                    <button onclick="snoozeReminder(5)" class="py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700 text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-clock-rotate-left text-amber-400"></i> Adiar 5 min
+                    </button>
                     <button onclick="snoozeReminder(15)" class="py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700 text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5">
                         <i class="fa-solid fa-clock-rotate-left text-amber-400"></i> Adiar 15 min
                     </button>
-                    <button onclick="snoozeReminder(30)" class="py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700 text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-clock-rotate-left text-amber-400"></i> Adiar 30 min
+                </div>
+
+                <div class="flex gap-2 rounded-xl border border-slate-700 bg-slate-900/80 p-2">
+                    <input type="number" id="customSnoozeMinutes" min="1" max="720" value="30" inputmode="numeric" class="min-w-0 flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-xs font-bold text-white focus:border-amber-500 focus:outline-none" aria-label="Minutos para adiar">
+                    <button onclick="snoozeReminderCustom()" class="rounded-lg bg-amber-500 px-3 py-2 text-xs font-extrabold text-slate-950 active:scale-95 transition">
+                        Adiar minutos
                     </button>
                 </div>
 
@@ -1402,6 +1409,7 @@
             previousWeeklyHistory: [0, 0, 0, 0, 0, 0, 0],
             activityLog: {},
             unlockedAchievements: [],
+            pushNotificationsEnabled: false,
             
             dailyExecution: {
                 isRunning: false,
@@ -1489,7 +1497,7 @@
                     sessionsToday: 0,
                     dailyTarget: 2,
                     reminderTimes: ['09:00', '15:00'],
-                    remindersEnabled: true,
+                    remindersEnabled: false,
                     phases: [
                         { title: 'Semana 1 e 2: Base', details: 'Deitado (Casa) + Sentado (Trabalho)', completed: false },
                         { title: 'Semana 3 e 4: Resistência', details: '4 Apoios (Casa) + Em Pé (Trabalho)', completed: false },
@@ -1507,7 +1515,7 @@
                     sessionsToday: 0,
                     dailyTarget: 2,
                     reminderTimes: ['10:30', '16:30'],
-                    remindersEnabled: true,
+                    remindersEnabled: false,
                     phases: [
                         { title: 'Semana 1: Volume Acumulado', details: 'Lento: 8x 6s (descanso 6s) | Rápido: 20x (1s/1s) | Pico: 1x 12s máx', completed: false },
                         { title: 'Semana 2: O Elevador Intermediário', details: 'O Elevador: 6x (5s subida / 5s topo / 5s descida) | Tiros: 2x 12 rápidas (10s descanso)', completed: false },
@@ -1643,6 +1651,20 @@
                     }
                 }
 
+                const savedReminderSettings = localStorage.getItem('coreflow_reminder_settings');
+                if (savedReminderSettings) {
+                    const reminderSettings = JSON.parse(savedReminderSettings);
+                    AppState.programs.forEach(program => {
+                        const setting = reminderSettings[program.id];
+                        if (!setting) return;
+                        if (Array.isArray(setting.times)) program.reminderTimes = setting.times;
+                        if (typeof setting.enabled === 'boolean') program.remindersEnabled = setting.enabled;
+                    });
+                }
+                AppState.pushNotificationsEnabled =
+                    localStorage.getItem('coreflow_push_enabled') === 'true' ||
+                    AppState.programs.some(program => program.remindersEnabled === true);
+
                 // Daily Execution Session Tracker
                 if (hasRealStats && savedDailyDate === todayStr) {
                     const savedDailyCount = localStorage.getItem('coreflow_daily_count');
@@ -1669,6 +1691,8 @@
             renderSmartSuggestionCard();
             renderWeeklyTimeSummary();
             renderAchievements();
+            updatePushNotificationButton();
+            syncAllNativeReminders();
         }
 
         /* -------------------------------------------------------------
@@ -1731,6 +1755,13 @@
                 localStorage.setItem('coreflow_prev_weekly', JSON.stringify(AppState.previousWeeklyHistory));
                 localStorage.setItem('coreflow_activity_log', JSON.stringify(AppState.activityLog));
                 localStorage.setItem('coreflow_achievements', JSON.stringify(AppState.unlockedAchievements));
+                localStorage.setItem('coreflow_push_enabled', String(AppState.pushNotificationsEnabled));
+                localStorage.setItem('coreflow_reminder_settings', JSON.stringify(
+                    Object.fromEntries(AppState.programs.map(program => [program.id, {
+                        times: program.reminderTimes,
+                        enabled: program.remindersEnabled === true
+                    }]))
+                ));
                 
                 localStorage.setItem('coreflow_daily_count', AppState.dailyExecution.sessionsCompletedToday);
                 const todayStr = localDateKey();
@@ -4300,6 +4331,7 @@
             const prog = AppState.programs.find(p => p.id === AppState.dailyExecution.programId);
             if (prog) {
                 prog.sessionsToday = (prog.sessionsToday || 0) + 1;
+                window.AndroidBridge?.updateProgramReminderProgress?.(prog.id, prog.sessionsToday, localDateKey());
                 const dailyTarget = prog.dailyTarget || 2;
                 
                 // Avança o dia somente uma vez, exatamente quando a meta diária é atingida.
@@ -4401,7 +4433,56 @@
            SISTEMA DE LEMBRETES & NOTIFICAÇÕES (2X AO DIA - ADIAR / REMARCAR)
         ------------------------------------------------------------- */
         let activeReminderProgId = null;
+        let activeReminderSessionNumber = 1;
         let lastFiredReminderKey = '';
+
+        function hasNativeReminderScheduler() {
+            try {
+                return window.AndroidBridge?.hasNativeReminderScheduler?.() === true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        function syncProgramNativeReminder(prog, showConfirmation = false) {
+            if (!prog || !window.AndroidBridge?.scheduleProgramReminders) return;
+            const times = prog.reminderTimes || ['09:00', '16:00'];
+            window.AndroidBridge.scheduleProgramReminders(
+                String(prog.id),
+                prog.title,
+                times[0] || '09:00',
+                times[1] || '16:00',
+                prog.remindersEnabled === true,
+                showConfirmation
+            );
+            window.AndroidBridge?.updateProgramReminderProgress?.(
+                String(prog.id),
+                prog.sessionsToday || 0,
+                localDateKey()
+            );
+        }
+
+        function syncAllNativeReminders() {
+            if (!hasNativeReminderScheduler()) return;
+            AppState.programs.forEach(syncProgramNativeReminder);
+        }
+
+        function updatePushNotificationButton() {
+            const btnText = document.getElementById('pushNotifBtnText');
+            if (!btnText) return;
+            const enabledCount = AppState.programs.filter(program => program.remindersEnabled === true).length;
+            btnText.innerText = enabledCount > 0 ? `Lembretes Ativos (${enabledCount}) ✓` : 'Ativar Lembretes Push';
+        }
+
+        function showInlineToast(message) {
+            document.getElementById('coreflowInlineToast')?.remove();
+            const toast = document.createElement('div');
+            toast.id = 'coreflowInlineToast';
+            toast.className = 'fixed left-1/2 top-6 z-[140] -translate-x-1/2 rounded-2xl border border-emerald-500/40 bg-slate-900/95 px-4 py-3 text-center text-xs font-bold text-emerald-300 shadow-2xl backdrop-blur-md';
+            toast.innerText = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3200);
+        }
 
         function openReminderConfigModal(progId) {
             triggerHaptic([20]);
@@ -4431,35 +4512,43 @@
 
                 prog.reminderTimes = [t1, t2];
                 prog.remindersEnabled = enabled;
+                AppState.pushNotificationsEnabled = AppState.programs.some(program => program.remindersEnabled === true);
                 saveState();
                 renderProgramsList();
-
-                if (window.AndroidBridge && window.AndroidBridge.schedulePushNotification) {
-                    window.AndroidBridge.schedulePushNotification();
-                }
+                updatePushNotificationButton();
+                syncProgramNativeReminder(prog, true);
+                showInlineToast(enabled ? `Lembretes salvos: ${t1} e ${t2}` : 'Lembretes desativados para este programa');
             }
             closeReminderConfigModal();
-            alert('Horários de notificação salvos com sucesso!');
         }
 
         function testNotificationNow() {
             const prog = AppState.programs.find(p => p.id === activeReminderProgId) || AppState.programs[0];
-            triggerReminderAlert(prog, (prog.sessionsToday || 0) + 1);
+            const sessionNumber = Math.min((prog.sessionsToday || 0) + 1, 2);
+            if (window.AndroidBridge?.postReminderNotification) {
+                window.AndroidBridge.postReminderNotification(String(prog.id), prog.title, sessionNumber);
+                showInlineToast('Notificação de teste enviada');
+            } else {
+                triggerReminderAlert(prog, sessionNumber);
+            }
             closeReminderConfigModal();
         }
 
-        function triggerReminderAlert(prog, sessionNumber = 1) {
+        function triggerReminderAlert(prog, sessionNumber = 1, postNativeNotification = true) {
             triggerHaptic([100, 50, 100]);
             playTibetanChime();
             
             const title = `CoreFlow: ${prog.title}`;
             const message = `Hora da Sessão ${sessionNumber}/2 do dia! Reserve 2 minutos para blindar sua saúde.`;
             
-            if (window.AndroidBridge && window.AndroidBridge.postLocalNotification) {
+            if (postNativeNotification && window.AndroidBridge?.postReminderNotification) {
+                window.AndroidBridge.postReminderNotification(String(prog.id), prog.title, sessionNumber);
+            } else if (postNativeNotification && window.AndroidBridge?.postLocalNotification) {
                 window.AndroidBridge.postLocalNotification(title, message);
             }
             
             activeReminderProgId = prog.id;
+            activeReminderSessionNumber = sessionNumber;
             document.getElementById('interactiveReminderTitle').innerText = `Hora da Sessão ${sessionNumber}/2!`;
             document.getElementById('interactiveReminderDesc').innerText = `${prog.title}: sessão agendada para agora. Pronto para treinar?`;
             document.getElementById('interactiveReminderModal').classList.remove('hidden');
@@ -4471,30 +4560,63 @@
         }
 
         function snoozeReminder(minutes) {
+            const safeMinutes = Math.max(1, Math.min(720, parseInt(minutes, 10) || 5));
             triggerHaptic([20]);
             document.getElementById('interactiveReminderModal').classList.add('hidden');
-            alert(`Lembrete adiado por ${minutes} minutos. Avisaremos você em seguida!`);
-            
-            setTimeout(() => {
-                const prog = AppState.programs.find(p => p.id === activeReminderProgId) || AppState.programs[0];
-                triggerReminderAlert(prog, (prog.sessionsToday || 0) + 1);
-            }, minutes * 60 * 1000);
+            const prog = AppState.programs.find(p => p.id === activeReminderProgId) || AppState.programs[0];
+            if (window.AndroidBridge?.snoozeProgramReminder) {
+                window.AndroidBridge.snoozeProgramReminder(
+                    String(prog.id),
+                    prog.title,
+                    activeReminderSessionNumber,
+                    safeMinutes
+                );
+            } else {
+                setTimeout(() => {
+                    triggerReminderAlert(prog, activeReminderSessionNumber);
+                }, safeMinutes * 60 * 1000);
+            }
+            showInlineToast(`Lembrete adiado por ${safeMinutes} minutos`);
         }
+
+        function snoozeReminderCustom() {
+            const input = document.getElementById('customSnoozeMinutes');
+            const minutes = Math.max(1, Math.min(720, parseInt(input?.value || '30', 10) || 30));
+            if (input) input.value = minutes;
+            snoozeReminder(minutes);
+        }
+
+        window.onNativeReminderOpened = function(programId, sessionNumber = 1, openCustomSnooze = false) {
+            const prog = AppState.programs.find(program => String(program.id) === String(programId)) || AppState.programs[0];
+            activeReminderProgId = prog.id;
+            activeReminderSessionNumber = Math.max(1, Math.min(2, parseInt(sessionNumber, 10) || 1));
+            switchTab('programas');
+            triggerReminderAlert(prog, activeReminderSessionNumber, false);
+            if (openCustomSnooze) {
+                setTimeout(() => {
+                    const input = document.getElementById('customSnoozeMinutes');
+                    input?.focus();
+                    input?.select();
+                }, 300);
+            }
+        };
 
         function openRescheduleFromPopup() {
             document.getElementById('interactiveReminderModal').classList.add('hidden');
             openReminderConfigModal(activeReminderProgId);
         }
 
-        // Background Reminder Checker (Verifica a cada 30 segundos)
+        // Fallback para navegador. No Android, os alarmes nativos funcionam
+        // mesmo com o aplicativo fechado e evitam notificações duplicadas.
         setInterval(() => {
+            if (hasNativeReminderScheduler()) return;
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const currentHm = `${hours}:${minutes}`;
 
             AppState.programs.forEach(prog => {
-                if (prog.remindersEnabled !== false && (prog.sessionsToday || 0) < 2) {
+                if (prog.remindersEnabled === true && (prog.sessionsToday || 0) < 2) {
                     const times = prog.reminderTimes || ['09:00', '16:00'];
                     const targetSession = (prog.sessionsToday || 0) + 1;
                     const scheduledTime = targetSession === 1 ? times[0] : times[1];
@@ -5183,14 +5305,21 @@
         // PUSH NOTIFICATIONS SETUP
         function requestPushNotifications() {
             triggerHaptic([50]);
-            const btnText = document.getElementById('pushNotifBtnText');
+            AppState.programs.forEach(program => {
+                program.remindersEnabled = true;
+            });
+            AppState.pushNotificationsEnabled = true;
+            saveState();
+            renderProgramsList();
+            updatePushNotificationButton();
 
-            if (window.AndroidBridge && window.AndroidBridge.schedulePushNotification) {
-                window.AndroidBridge.schedulePushNotification();
-                btnText.innerText = 'Lembretes Ativos ✓';
+            if (hasNativeReminderScheduler()) {
+                syncAllNativeReminders();
+                showInlineToast('Lembretes push ativados nos horários configurados');
                 return;
             }
 
+            const btnText = document.getElementById('pushNotifBtnText');
             if ('Notification' in window) {
                 Notification.requestPermission().then(permission => {
                     if (permission === 'granted') {

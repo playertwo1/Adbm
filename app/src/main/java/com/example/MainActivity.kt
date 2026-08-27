@@ -65,6 +65,9 @@ class MainActivity : ComponentActivity() {
 
     private var tts: TextToSpeech? = null
     private var webView: WebView? = null
+    private var pendingReminderProgramId: String? = null
+    private var pendingReminderSession: Int = 1
+    private var pendingCustomSnooze: Boolean = false
     private var workoutReceiverRegistered = false
     private val workoutStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -76,6 +79,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        captureReminderIntent(intent)
 
         val workoutFilter = IntentFilter(WorkoutForegroundService.ACTION_STATE_CHANGED)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -139,6 +143,9 @@ class MainActivity : ComponentActivity() {
                             onWebViewCreated = { wv ->
                                 webView = wv
                             },
+                            onPageReady = {
+                                deliverPendingReminder()
+                            },
                             tts = tts,
                             onPlayConfetti = {
                                 showConfetti.value = true
@@ -185,6 +192,32 @@ class MainActivity : ComponentActivity() {
         deliverWorkoutState(WorkoutForegroundService.readStoredState(this))
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        captureReminderIntent(intent)
+        deliverPendingReminder()
+    }
+
+    private fun captureReminderIntent(intent: Intent?) {
+        val programId = intent?.getStringExtra(ReminderScheduler.EXTRA_PROGRAM_ID) ?: return
+        pendingReminderProgramId = programId
+        pendingReminderSession = intent.getIntExtra(ReminderScheduler.EXTRA_SESSION_NUMBER, 1)
+        pendingCustomSnooze = intent.getBooleanExtra(ReminderScheduler.EXTRA_OPEN_CUSTOM_SNOOZE, false)
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            .cancel(ReminderScheduler.notificationId(programId, pendingReminderSession))
+    }
+
+    private fun deliverPendingReminder() {
+        val programId = pendingReminderProgramId ?: return
+        val targetWebView = webView ?: return
+        val script = "if (window.onNativeReminderOpened) window.onNativeReminderOpened(" +
+            "${JSONObject.quote(programId)}, $pendingReminderSession, $pendingCustomSnooze);"
+        targetWebView.evaluateJavascript(script, null)
+        pendingReminderProgramId = null
+        pendingCustomSnooze = false
+    }
+
     private fun deliverWorkoutState(stateJson: String) {
         runOnUiThread {
             webView?.evaluateJavascript(
@@ -199,6 +232,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun CoreFlowWebView(
     onWebViewCreated: (WebView) -> Unit,
+    onPageReady: () -> Unit,
     tts: TextToSpeech?,
     onPlayConfetti: () -> Unit
 ) {
@@ -234,6 +268,7 @@ fun CoreFlowWebView(
                             "if (window.onNativeWorkoutState) window.onNativeWorkoutState(${JSONObject.quote(state)});",
                             null
                         )
+                        onPageReady()
                     }
                 }
 
@@ -458,11 +493,72 @@ class AndroidBridge(
     fun schedulePushNotification() {
         val activity = context as? ComponentActivity ?: return
         activity.runOnUiThread {
+            requestNotificationPermission(activity)
             Toast.makeText(
                 context,
-                "Lembretes e notificações locais ativados com sucesso no CoreFlow!",
+                "Ative os horários de cada programa para receber os lembretes.",
                 Toast.LENGTH_LONG
             ).show()
+        }
+    }
+
+    @JavascriptInterface
+    fun scheduleProgramReminders(
+        programId: String,
+        title: String,
+        time1: String,
+        time2: String,
+        enabled: Boolean,
+        showConfirmation: Boolean
+    ) {
+        ReminderScheduler.updateProgram(context, programId, title, time1, time2, enabled)
+        val activity = context as? ComponentActivity ?: return
+        activity.runOnUiThread {
+            if (enabled) requestNotificationPermission(activity)
+            if (showConfirmation) {
+                val message = if (enabled) {
+                    "Lembretes ativos às $time1 e $time2"
+                } else {
+                    "Lembretes desativados para este programa"
+                }
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun snoozeProgramReminder(
+        programId: String,
+        title: String,
+        sessionNumber: Int,
+        minutes: Int
+    ) {
+        ReminderScheduler.scheduleSnooze(context, programId, title, sessionNumber, minutes)
+    }
+
+    @JavascriptInterface
+    fun postReminderNotification(programId: String, title: String, sessionNumber: Int) {
+        ReminderScheduler.showNotification(context, programId, title, sessionNumber)
+    }
+
+    @JavascriptInterface
+    fun updateProgramReminderProgress(programId: String, sessionsToday: Int, dateKey: String) {
+        ReminderScheduler.updateProgress(context, programId, sessionsToday, dateKey)
+    }
+
+    @JavascriptInterface
+    fun hasNativeReminderScheduler(): Boolean = true
+
+    @JavascriptInterface
+    fun notificationsPermissionGranted(): Boolean =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+
+    private fun requestNotificationPermission(activity: ComponentActivity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            activity.requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)
         }
     }
 }
