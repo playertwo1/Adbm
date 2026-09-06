@@ -20,6 +20,7 @@ import java.util.Locale
 object ReminderScheduler {
     const val ACTION_FIRE = "com.example.coreflow.REMINDER_FIRE"
     const val ACTION_SNOOZE = "com.example.coreflow.REMINDER_SNOOZE"
+    const val ACTION_MIND_REMINDER_FIRE = "com.example.coreflow.MIND_REMINDER_FIRE"
     const val EXTRA_PROGRAM_ID = "program_id"
     const val EXTRA_PROGRAM_TITLE = "program_title"
     const val EXTRA_SESSION_NUMBER = "session_number"
@@ -287,6 +288,88 @@ object ReminderScheduler {
         return base * 10 + sessionNumber + if (snooze) 1_000_000 else 0
     }
 
+    private const val MIND_REMINDER_ID = 999_001
+
+    fun scheduleMindSmartReminder(context: Context, timeStr: String, enabled: Boolean) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, ReminderReceiver::class.java).apply {
+            action = ACTION_MIND_REMINDER_FIRE
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            MIND_REMINDER_ID,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        alarmManager.cancel(pendingIntent)
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("mind_reminder_enabled", enabled).putString("mind_reminder_time", timeStr).apply()
+
+        if (!enabled) return
+
+        val parts = timeStr.split(":")
+        val hour = parts.getOrNull(0)?.toIntOrNull()?.coerceIn(0, 23) ?: 15
+        val minute = parts.getOrNull(1)?.toIntOrNull()?.coerceIn(0, 59) ?: 30
+        val now = Calendar.getInstance()
+        val trigger = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+            if (timeInMillis <= now.timeInMillis) add(Calendar.DAY_OF_YEAR, 1)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, trigger.timeInMillis, pendingIntent)
+        } else {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, trigger.timeInMillis, pendingIntent)
+        }
+    }
+
+    fun showMindSmartNotification(context: Context) {
+        createChannel(context)
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            putExtra("action_quick_breath", true)
+            putExtra("breath_pattern_key", "caixa")
+            putExtra("breath_duration_sec", 120)
+        }
+        val openPendingIntent = PendingIntent.getActivity(
+            context,
+            MIND_REMINDER_ID + 10,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val wearableExtender = NotificationCompat.WearableExtender()
+            .setHintShowBackgroundOnly(false)
+
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle("Momento de Pausa Consciente 🧘")
+            .setContentText("Pausa de 2 minutos para descompressão e renovação do foco.")
+            .setStyle(NotificationCompat.BigTextStyle().bigText("Pico de fadiga da tarde identificado. Uma pausa de apenas 2 minutos de respiração consciente restaura o equilíbrio parassimpático e renova o foco."))
+            .setContentIntent(openPendingIntent)
+            .addAction(0, "Respirar 2 min agora", openPendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .setVibrate(longArrayOf(0, 200, 100, 200))
+            .extend(wearableExtender)
+            .setAutoCancel(true)
+            .build()
+
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        manager.notify(MIND_REMINDER_ID, notification)
+
+        // Agendar para o dia seguinte automaticamente
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        if (prefs.getBoolean("mind_reminder_enabled", true)) {
+            val time = prefs.getString("mind_reminder_time", "15:30") ?: "15:30"
+            scheduleMindSmartReminder(context, time, true)
+        }
+    }
+
     fun notificationId(programId: String, sessionNumber: Int): Int =
         requestCode(programId, sessionNumber, false) + 2_000_000
 
@@ -300,6 +383,7 @@ class ReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             ReminderScheduler.ACTION_FIRE -> ReminderScheduler.handleFire(context, intent)
+            ReminderScheduler.ACTION_MIND_REMINDER_FIRE -> ReminderScheduler.showMindSmartNotification(context)
             ReminderScheduler.ACTION_SNOOZE -> {
                 val programId = intent.getStringExtra(ReminderScheduler.EXTRA_PROGRAM_ID) ?: return
                 val title = intent.getStringExtra(ReminderScheduler.EXTRA_PROGRAM_TITLE) ?: "Programa CoreFlow"
@@ -316,5 +400,10 @@ class ReminderReceiver : BroadcastReceiver() {
 class ReminderRescheduleReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         ReminderScheduler.rescheduleAll(context)
+        val prefs = context.getSharedPreferences("coreflow_native_reminders", Context.MODE_PRIVATE)
+        if (prefs.getBoolean("mind_reminder_enabled", false)) {
+            val time = prefs.getString("mind_reminder_time", "15:30") ?: "15:30"
+            ReminderScheduler.scheduleMindSmartReminder(context, time, true)
+        }
     }
 }

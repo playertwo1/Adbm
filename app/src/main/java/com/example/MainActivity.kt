@@ -68,6 +68,8 @@ class MainActivity : ComponentActivity() {
     private var pendingReminderProgramId: String? = null
     private var pendingReminderSession: Int = 1
     private var pendingCustomSnooze: Boolean = false
+    private var pendingQuickBreathPattern: String? = null
+    private var pendingQuickBreathDuration: Int = 0
     private var workoutReceiverRegistered = false
     private val workoutStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -200,6 +202,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun captureReminderIntent(intent: Intent?) {
+        if (intent?.getBooleanExtra("action_quick_breath", false) == true) {
+            pendingQuickBreathPattern = intent.getStringExtra("breath_pattern_key") ?: "caixa"
+            pendingQuickBreathDuration = intent.getIntExtra("breath_duration_sec", 120)
+        }
         val programId = intent?.getStringExtra(ReminderScheduler.EXTRA_PROGRAM_ID) ?: return
         pendingReminderProgramId = programId
         pendingReminderSession = intent.getIntExtra(ReminderScheduler.EXTRA_SESSION_NUMBER, 1)
@@ -209,8 +215,15 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun deliverPendingReminder() {
-        val programId = pendingReminderProgramId ?: return
         val targetWebView = webView ?: return
+        if (pendingQuickBreathPattern != null) {
+            val script = "if (window.onNativeQuickBreath) window.onNativeQuickBreath(" +
+                "${JSONObject.quote(pendingQuickBreathPattern)}, $pendingQuickBreathDuration);"
+            targetWebView.evaluateJavascript(script, null)
+            pendingQuickBreathPattern = null
+            pendingQuickBreathDuration = 0
+        }
+        val programId = pendingReminderProgramId ?: return
         val script = "if (window.onNativeReminderOpened) window.onNativeReminderOpened(" +
             "${JSONObject.quote(programId)}, $pendingReminderSession, $pendingCustomSnooze);"
         targetWebView.evaluateJavascript(script, null)
@@ -306,6 +319,18 @@ class AndroidBridge(
         val activity = context as? ComponentActivity ?: return
         activity.runOnUiThread {
             onPlayConfetti()
+        }
+    }
+
+    @JavascriptInterface
+    fun setKeepScreenOn(enabled: Boolean) {
+        val activity = context as? ComponentActivity ?: return
+        activity.runOnUiThread {
+            if (enabled) {
+                activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            } else {
+                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
         }
     }
 
@@ -431,18 +456,6 @@ class AndroidBridge(
     }
 
     @JavascriptInterface
-    fun setKeepScreenOn(enable: Boolean) {
-        val activity = context as? ComponentActivity ?: return
-        activity.runOnUiThread {
-            if (enable) {
-                activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            } else {
-                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            }
-        }
-    }
-
-    @JavascriptInterface
     fun speakText(text: String) {
         tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "CoreFlowUtterance")
     }
@@ -554,6 +567,124 @@ class AndroidBridge(
     fun notificationsPermissionGranted(): Boolean =
         Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+
+    @JavascriptInterface
+    fun setDoNotDisturbMode(enabled: Boolean): Boolean {
+        return try {
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && notificationManager != null) {
+                if (notificationManager.isNotificationPolicyAccessGranted) {
+                    val filter = if (enabled) {
+                        NotificationManager.INTERRUPTION_FILTER_PRIORITY
+                    } else {
+                        NotificationManager.INTERRUPTION_FILTER_ALL
+                    }
+                    notificationManager.setInterruptionFilter(filter)
+                    return true
+                }
+            }
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as? android.media.AudioManager
+            if (audioManager != null) {
+                if (enabled) {
+                    audioManager.ringerMode = android.media.AudioManager.RINGER_MODE_SILENT
+                } else {
+                    audioManager.ringerMode = android.media.AudioManager.RINGER_MODE_NORMAL
+                }
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    @JavascriptInterface
+    fun postQuickBreathNotification(patternKey: String, durationSec: Int) {
+        val activity = context as? ComponentActivity ?: return
+        activity.runOnUiThread {
+            try {
+                val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager ?: return@runOnUiThread
+                val channelId = "coreflow_reminders"
+                val intent = Intent(context, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    putExtra("action_quick_breath", true)
+                    putExtra("breath_pattern_key", patternKey)
+                    putExtra("breath_duration_sec", durationSec)
+                }
+                val pendingIntent = PendingIntent.getActivity(
+                    context,
+                    1002,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+                val durationMin = Math.max(1, durationSec / 60)
+                val title = "Pausa para Respirar ($durationMin min)"
+                val message = "Toque aqui para desacelerar seu ritmo agora com 1 toque."
+                val builder = NotificationCompat.Builder(context, channelId)
+                    .setSmallIcon(android.R.drawable.ic_dialog_info)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+                    .setContentIntent(pendingIntent)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setAutoCancel(true)
+                notificationManager.notify(1002, builder.build())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun scheduleSmartMindReminder(timeStr: String, enabled: Boolean) {
+        val activity = context as? ComponentActivity ?: return
+        activity.runOnUiThread {
+            if (enabled) requestNotificationPermission(activity)
+            ReminderScheduler.scheduleMindSmartReminder(context, timeStr, enabled)
+            val msg = if (enabled) "Lembrete inteligente de pausa às $timeStr ativado" else "Lembrete de respiração desativado"
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @JavascriptInterface
+    fun startWearableBreathSession(patternName: String, durationMin: Int) {
+        val activity = context as? ComponentActivity ?: return
+        activity.runOnUiThread {
+            try {
+                val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager ?: return@runOnUiThread
+                val channelId = "coreflow_reminders"
+                val wearableExtender = NotificationCompat.WearableExtender()
+                    .setHintShowBackgroundOnly(false)
+                val builder = NotificationCompat.Builder(context, channelId)
+                    .setSmallIcon(android.R.drawable.ic_dialog_info)
+                    .setContentTitle("Sessão no Pulso: $patternName")
+                    .setContentText("Guiando respiração com pulsos hápticos no smartwatch.")
+                    .setOngoing(true)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setCategory(NotificationCompat.CATEGORY_PROGRESS)
+                    .setVibrate(longArrayOf(0, 100, 50, 100))
+                    .extend(wearableExtender)
+                notificationManager.notify(1003, builder.build())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun stopWearableBreathSession() {
+        val activity = context as? ComponentActivity ?: return
+        activity.runOnUiThread {
+            try {
+                val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager ?: return@runOnUiThread
+                notificationManager.cancel(1003)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 
     private fun requestNotificationPermission(activity: ComponentActivity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
