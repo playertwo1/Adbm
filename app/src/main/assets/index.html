@@ -1393,6 +1393,8 @@
                 </div>
             </div>
 
+        </section>
+
         <!-- ============================================================ -->
         <!-- ABA 4: PROGRAMAS DE EVOLUÇÃO (TREINOS GUIADOS PASSO A PASSO) -->
         <!-- ============================================================ -->
@@ -3028,6 +3030,16 @@
                     void box.offsetWidth;
                     box.classList.add('nav-bounce');
                 }
+            }
+
+            if (tabName === 'programas') {
+                renderProgramsList();
+            } else if (tabName === 'dashboard') {
+                renderWeeklyChart();
+                renderMonthlyBars();
+                renderScheduleList();
+                renderWeeklyTimeSummary();
+                renderAchievements();
             }
 
             renderSmartSuggestionCard();
