@@ -315,6 +315,22 @@ class AndroidBridge(
 ) {
 
     @JavascriptInterface
+    fun startMindfulnessAudioSession(title: String) {
+        val intent = Intent(context, MindfulnessAudioService::class.java).apply {
+            action = MindfulnessAudioService.ACTION_START
+            putExtra(MindfulnessAudioService.EXTRA_TITLE, title)
+        }
+        androidx.core.content.ContextCompat.startForegroundService(context, intent)
+    }
+
+    @JavascriptInterface
+    fun stopMindfulnessAudioSession() {
+        context.startService(Intent(context, MindfulnessAudioService::class.java).apply {
+            action = MindfulnessAudioService.ACTION_STOP
+        })
+    }
+
+    @JavascriptInterface
     fun playConfetti() {
         val activity = context as? ComponentActivity ?: return
         activity.runOnUiThread {

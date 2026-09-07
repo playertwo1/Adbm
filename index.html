@@ -1982,6 +1982,32 @@
     </div>
 
     <!-- Modal for Guided Workout Session Player -->
+    <div id="mindfulnessAudioModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/95 backdrop-blur-xl p-4 no-print">
+        <div class="w-full max-w-md overflow-hidden rounded-[2rem] border border-violet-400/30 bg-gradient-to-b from-violet-950 via-slate-900 to-slate-950 shadow-2xl shadow-violet-900/50">
+            <div class="relative p-6 text-center">
+                <button onclick="closeMindfulnessAudioModal()" class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-300"><i class="fa-solid fa-xmark"></i></button>
+                <div id="mindfulnessPulse" class="mx-auto mb-5 mt-4 flex h-32 w-32 items-center justify-center rounded-full border border-violet-300/30 bg-violet-500/15 shadow-[0_0_60px_rgba(139,92,246,.35)]">
+                    <i class="fa-solid fa-brain text-5xl text-violet-300"></i>
+                </div>
+                <span id="mindfulnessWeekLabel" class="rounded-full border border-violet-400/30 bg-violet-500/15 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-violet-200">Semana 1</span>
+                <h2 id="mindfulnessTrackTitle" class="mt-4 text-xl font-black text-white">Meditação</h2>
+                <p id="mindfulnessTrackSubtitle" class="mt-1 text-xs text-slate-400">Encontre uma postura confortável e permita-se estar presente.</p>
+                <select id="mindfulnessTrackSelect" onchange="selectMindfulnessTrack(this.value)" class="mt-4 hidden w-full rounded-xl border border-violet-400/30 bg-slate-900 px-3 py-2 text-sm text-violet-100"></select>
+                <div class="mt-7">
+                    <input id="mindfulnessScrubber" type="range" min="0" value="0" step="1" oninput="seekMindfulnessAudio(this.value)" class="w-full accent-violet-500">
+                    <div class="mt-1 flex justify-between font-mono text-xs text-slate-400"><span id="mindfulnessElapsed">00:00</span><span id="mindfulnessRemaining">-00:00</span></div>
+                </div>
+                <div class="mt-6 flex items-center justify-center gap-7">
+                    <button onclick="skipMindfulnessAudio(-15)" class="h-12 w-12 rounded-full bg-white/10 text-sm font-bold text-slate-200">-15s</button>
+                    <button onclick="toggleMindfulnessAudio()" class="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-violet-400 to-purple-700 text-2xl text-white shadow-xl shadow-violet-500/30"><i id="mindfulnessPlayIcon" class="fa-solid fa-play"></i></button>
+                    <button onclick="skipMindfulnessAudio(15)" class="h-12 w-12 rounded-full bg-white/10 text-sm font-bold text-slate-200">+15s</button>
+                </div>
+                <button onclick="completeMindfulnessAudio()" class="mt-7 w-full rounded-2xl border border-emerald-400/30 bg-emerald-500/15 py-3 text-sm font-bold text-emerald-300"><i class="fa-solid fa-check mr-2"></i>Concluir prática</button>
+            </div>
+        </div>
+        <audio id="mindfulnessAudio" preload="metadata"></audio>
+    </div>
+
     <div id="dailyExecutionModal" class="fixed inset-0 bg-slate-950/98 backdrop-blur-md z-[60] hidden flex-col items-center justify-between p-6 no-print overflow-y-auto">
         <!-- Header -->
         <div class="w-full max-w-sm flex items-center justify-between pt-2">
@@ -2859,11 +2885,37 @@
                         { title: 'Semana 7: Avançado 3', details: 'Em pé totalmente ereto • 4–5 séries • sucção 25–28s • descanso 40s • diário', weeklyTargetDays: 7, sets: 5, minSets: 4, holdMin: 25, holdMax: 28, restSeconds: 40, completed: false },
                         { title: 'Semana 8: Domínio Total', details: 'Alternar em pé e sentado • 5 séries • sucção 30s • descanso 40s • diário', weeklyTargetDays: 7, sets: 5, holdMin: 30, holdMax: 30, restSeconds: 40, completed: false }
                     ]
+                },
+                {
+                    id: '4',
+                    type: 'mindfulness',
+                    title: 'Mindfulness 8 Semanas',
+                    description: 'Atenção Plena & Redução de Estresse (MBCT)',
+                    expanded: true,
+                    currentPhaseIndex: 0,
+                    currentDayInWeek: 1,
+                    daysCompletedInPhase: 0,
+                    sessionsToday: 0,
+                    dailyTarget: 2,
+                    reminderTimes: ['07:30', '15:30'],
+                    remindersEnabled: true,
+                    informalCompletedToday: false,
+                    informalCompletedDate: null,
+                    phases: [
+                        { title: 'Semana 1: Acordando do Piloto Automático', details: 'Corpo e respiração 2x/dia + refeição consciente.', weeklyTargetDays: 6, targetSessionsPerDay: 2, formalTrack: 'audio/mindfulness/1track.mp3', formalTrackTitle: 'Meditação do Corpo e da Respiração', formalTrackDuration: 480, informalTitle: 'Refeição Consciente & Quebra de Padrão', informalDescription: 'Saboreie uma refeição com atenção plena e altere hoje um hábito mecânico simples.', completed: false },
+                        { title: 'Semana 2: Conectando-se ao Corpo', details: 'Escaneamento corporal 2x/dia + atenção sensorial.', weeklyTargetDays: 6, targetSessionsPerDay: 2, formalTrack: 'audio/mindfulness/2track.mp3', formalTrackTitle: 'Escaneamento Corporal (Body Scan)', formalTrackDuration: 840, informalTitle: 'Atenção Sensorial no Cotidiano', informalDescription: 'Faça uma tarefa automática percebendo integralmente as sensações do corpo.', completed: false },
+                        { title: 'Semana 3: O Corpo em Movimento', details: 'Movimento consciente + Espaço de Respiração.', weeklyTargetDays: 6, targetSessionsPerDay: 1, formalTrack: 'audio/mindfulness/3track.mp3', formalTrackTitle: 'Movimento Consciente', formalTrackDuration: 480, alternateTracks: ['audio/mindfulness/1track.mp3'], secondaryTrack: 'audio/mindfulness/8track.mp3', secondaryTrackTitle: 'Espaço de Respiração (3 min)', secondaryTrackDuration: 180, informalTitle: 'Caminhada Consciente', informalDescription: 'Caminhe de 15 a 30 minutos percebendo pés, postura, respiração e ar.', completed: false },
+                        { title: 'Semana 4: Sons e Pensamentos', details: 'Observe pensamentos sem apego + pausas de respiração.', weeklyTargetDays: 6, targetSessionsPerDay: 1, formalTrack: 'audio/mindfulness/5track.mp3', formalTrackTitle: 'Meditação dos Sons e Pensamentos', formalTrackDuration: 480, secondaryTrack: 'audio/mindfulness/8track.mp3', secondaryTrackTitle: 'Espaço de Respiração (2x ao dia)', secondaryTrackDuration: 180, informalTitle: 'Pausa Anti-Ruminação', informalDescription: 'Ao notar preocupações, pause, respire e reconecte-se ao corpo.', completed: false },
+                        { title: 'Semana 5: Explorando a Dificuldade', details: 'Acolha desconfortos e respire através das tensões.', weeklyTargetDays: 6, targetSessionsPerDay: 1, formalTrack: 'audio/mindfulness/6track.mp3', formalTrackTitle: 'Explorando a Dificuldade', formalTrackDuration: 600, secondaryTrack: 'audio/mindfulness/8track.mp3', secondaryTrackTitle: 'Espaço de Respiração de Resposta', secondaryTrackDuration: 180, informalTitle: 'Mapeamento do Desconforto', informalDescription: 'Localize no corpo a reação emocional e acolha-a sem agir automaticamente.', completed: false },
+                        { title: 'Semana 6: Acolhimento e Compaixão', details: 'Cultive gentileza e dissolva a autocrítica.', weeklyTargetDays: 6, targetSessionsPerDay: 1, formalTrack: 'audio/mindfulness/7track.mp3', formalTrackTitle: 'Meditação da Amizade e Gentileza', formalTrackDuration: 600, secondaryTrack: 'audio/mindfulness/8track.mp3', secondaryTrackTitle: 'Espaço de Respiração (2-3x ao dia)', secondaryTrackDuration: 180, informalTitle: 'Ato Deliberado de Gentileza', informalDescription: 'Realize um ato genuíno de gentileza sem esperar retorno.', completed: false },
+                        { title: 'Semana 7: O Ritmo do Cotidiano', details: 'Escolha sua prática favorita e mapeie sua energia.', weeklyTargetDays: 6, targetSessionsPerDay: 1, formalTrack: 'audio/mindfulness/1track.mp3', formalTrackTitle: 'Sua Prática Favorita', formalTrackDuration: 600, selectableTracks: [1,2,3,5,6,7], secondaryTrack: 'audio/mindfulness/8track.mp3', secondaryTrackTitle: 'Espaço de Respiração (3x ao dia)', secondaryTrackDuration: 180, informalTitle: 'Atividades Nutritivas vs Exaustivas', informalDescription: 'Classifique o que nutre e drena sua energia e inclua uma pausa reparadora.', completed: false },
+                        { title: 'Semana 8: Sua Vida Selvagem e Preciosa', details: 'Consolide uma prática pessoal sustentável.', weeklyTargetDays: 6, targetSessionsPerDay: 1, formalTrack: 'audio/mindfulness/1track.mp3', formalTrackTitle: 'Prática Autônoma Consolidada', formalTrackDuration: 600, secondaryTrack: 'audio/mindfulness/8track.mp3', secondaryTrackTitle: 'Espaço de Respiração SOS', secondaryTrackDuration: 180, informalTitle: 'Plano de Prevenção de Recaída', informalDescription: 'Defina três âncoras para quando o estresse subir: áudio, pausa e apoio.', completed: false }
+                    ]
                 }
             ]
         };
 
-        const CORE_DATA_VERSION = 2;
+        const CORE_DATA_VERSION = 3;
 
         function localDateKey(date = new Date()) {
             const year = date.getFullYear();
@@ -2907,7 +2959,8 @@
         function loadSavedState() {
             try {
                 const storedVersion = parseInt(localStorage.getItem('coreflow_data_version') || '0', 10);
-                const hasRealStats = storedVersion >= CORE_DATA_VERSION;
+                // A versão 3 adiciona o mindfulness, mas não invalida os dados reais da v2.
+                const hasRealStats = storedVersion >= 2;
                 const savedSchedule = localStorage.getItem('coreflow_schedule');
                 if (savedSchedule) AppState.schedule = JSON.parse(savedSchedule);
 
@@ -2961,6 +3014,10 @@
                                     }
                                     if (typeof matchingLoaded.remindersEnabled !== 'undefined') {
                                         defaultProg.remindersEnabled = matchingLoaded.remindersEnabled;
+                                    }
+                                    if (defaultProg.type === 'mindfulness') {
+                                        defaultProg.informalCompletedDate = matchingLoaded.informalCompletedDate || null;
+                                        defaultProg.informalCompletedToday = defaultProg.informalCompletedDate === todayStr;
                                     }
                                     
                                     // Daily session count resets on new day
@@ -8211,6 +8268,166 @@
             }
         }
 
+        let mindfulnessPlayer = { programId: '4', phaseIndex: 0, trackType: 'formal', completed: false, wakeLock: null };
+
+        function formatMindfulnessTime(seconds) {
+            const safe = Math.max(0, Math.floor(Number(seconds) || 0));
+            return `${String(Math.floor(safe / 60)).padStart(2, '0')}:${String(safe % 60).padStart(2, '0')}`;
+        }
+
+        function mindfulnessTrackMeta(trackNumber) {
+            const titles = { 1: 'Meditação do Corpo e da Respiração', 2: 'Escaneamento Corporal', 3: 'Movimento Consciente', 4: 'Respiração e Movimento Estendido', 5: 'Sons e Pensamentos', 6: 'Explorando a Dificuldade', 7: 'Amizade e Gentileza', 8: 'Espaço de Respiração (3 min)' };
+            return { path: `audio/mindfulness/${trackNumber}track.mp3`, title: titles[trackNumber] || `Faixa ${trackNumber}` };
+        }
+
+        function openMindfulnessAudioModal(programId = '4', phaseIndex = null, trackType = 'formal') {
+            const prog = AppState.programs.find(p => p.id === programId);
+            if (!prog) return;
+            const idx = phaseIndex === null ? (prog.currentPhaseIndex || 0) : phaseIndex;
+            const phase = prog.phases[idx];
+            if (!phase) return;
+            mindfulnessPlayer = { programId, phaseIndex: idx, trackType, completed: false, wakeLock: null };
+            const isSecondary = trackType === 'secondary';
+            const trackPath = isSecondary ? phase.secondaryTrack : phase.formalTrack;
+            const title = isSecondary ? phase.secondaryTrackTitle : phase.formalTrackTitle;
+            const audio = document.getElementById('mindfulnessAudio');
+            audio.src = trackPath;
+            audio.load();
+            document.getElementById('mindfulnessWeekLabel').innerText = `Semana ${idx + 1} de 8`;
+            document.getElementById('mindfulnessTrackTitle').innerText = title;
+            document.getElementById('mindfulnessTrackSubtitle').innerText = phase.details;
+            const selector = document.getElementById('mindfulnessTrackSelect');
+            const choices = idx === 6 ? [1,2,3,5,6,7] : (idx === 2 && !isSecondary ? [3,1] : []);
+            if (choices.length) {
+                selector.innerHTML = choices.map(n => { const meta = mindfulnessTrackMeta(n); return `<option value="${n}">${meta.title}</option>`; }).join('');
+                selector.classList.remove('hidden');
+            } else selector.classList.add('hidden');
+            const modal = document.getElementById('mindfulnessAudioModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            updateMindfulnessAudioUI();
+        }
+
+        function selectMindfulnessTrack(trackNumber) {
+            const meta = mindfulnessTrackMeta(trackNumber);
+            const audio = document.getElementById('mindfulnessAudio');
+            const wasPlaying = !audio.paused;
+            audio.src = meta.path;
+            document.getElementById('mindfulnessTrackTitle').innerText = meta.title;
+            audio.load();
+            if (wasPlaying) audio.play().catch(() => {});
+        }
+
+        async function toggleMindfulnessAudio() {
+            const audio = document.getElementById('mindfulnessAudio');
+            if (audio.paused) {
+                try {
+                    await audio.play();
+                    if (navigator.wakeLock?.request) mindfulnessPlayer.wakeLock = await navigator.wakeLock.request('screen');
+                    window.AndroidBridge?.setKeepScreenOn?.(true);
+                    window.AndroidBridge?.startMindfulnessAudioSession?.(document.getElementById('mindfulnessTrackTitle').innerText);
+                } catch (error) { showInlineToast('Não foi possível iniciar o áudio.'); }
+            } else {
+                audio.pause();
+                mindfulnessPlayer.wakeLock?.release?.();
+                mindfulnessPlayer.wakeLock = null;
+                window.AndroidBridge?.setKeepScreenOn?.(false);
+            }
+            updateMindfulnessAudioUI();
+        }
+
+        function skipMindfulnessAudio(delta) {
+            const audio = document.getElementById('mindfulnessAudio');
+            audio.currentTime = Math.max(0, Math.min(audio.duration || Infinity, audio.currentTime + delta));
+        }
+
+        function seekMindfulnessAudio(value) {
+            const audio = document.getElementById('mindfulnessAudio');
+            if (Number.isFinite(audio.duration)) audio.currentTime = Math.min(audio.duration, Number(value));
+        }
+
+        function updateMindfulnessAudioUI() {
+            const audio = document.getElementById('mindfulnessAudio');
+            const duration = Number.isFinite(audio.duration) ? audio.duration : 0;
+            const scrubber = document.getElementById('mindfulnessScrubber');
+            scrubber.max = duration || 0;
+            scrubber.value = audio.currentTime || 0;
+            document.getElementById('mindfulnessElapsed').innerText = formatMindfulnessTime(audio.currentTime);
+            document.getElementById('mindfulnessRemaining').innerText = `-${formatMindfulnessTime(duration - (audio.currentTime || 0))}`;
+            document.getElementById('mindfulnessPlayIcon').className = `fa-solid ${audio.paused ? 'fa-play' : 'fa-pause'}`;
+            document.getElementById('mindfulnessPulse').classList.toggle('animate-pulse', !audio.paused);
+        }
+
+        function completeMindfulnessAudio() {
+            if (mindfulnessPlayer.completed) return;
+            mindfulnessPlayer.completed = true;
+            const prog = AppState.programs.find(p => p.id === mindfulnessPlayer.programId);
+            const phase = prog?.phases[mindfulnessPlayer.phaseIndex];
+            const audio = document.getElementById('mindfulnessAudio');
+            const isFormal = mindfulnessPlayer.trackType === 'formal';
+            if (prog && isFormal) {
+                prog.sessionsToday = (prog.sessionsToday || 0) + 1;
+                prog.dailyTarget = phase.targetSessionsPerDay || 1;
+                if (prog.sessionsToday === prog.dailyTarget) {
+                    prog.daysCompletedInPhase = (prog.daysCompletedInPhase || 0) + 1;
+                    if (prog.daysCompletedInPhase >= (phase.weeklyTargetDays || 6)) {
+                        phase.completed = true;
+                        if (mindfulnessPlayer.phaseIndex < prog.phases.length - 1) {
+                            prog.currentPhaseIndex = mindfulnessPlayer.phaseIndex + 1;
+                            prog.daysCompletedInPhase = 0;
+                        }
+                    }
+                }
+                addMinutesToday(Math.max(1, Math.round((audio.currentTime || phase.formalTrackDuration || 60) / 60)), 'mindfulness');
+                saveState();
+            }
+            playTibetanChime?.();
+            triggerHaptic([60, 100, 160]);
+            closeMindfulnessAudioModal();
+            renderProgramsList();
+            showInlineToast(isFormal ? 'Prática de mindfulness registrada.' : 'Espaço de respiração concluído.');
+        }
+
+        function closeMindfulnessAudioModal() {
+            const audio = document.getElementById('mindfulnessAudio');
+            audio.pause();
+            mindfulnessPlayer.wakeLock?.release?.();
+            mindfulnessPlayer.wakeLock = null;
+            window.AndroidBridge?.setKeepScreenOn?.(false);
+            window.AndroidBridge?.stopMindfulnessAudioSession?.();
+            const modal = document.getElementById('mindfulnessAudioModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function toggleMindfulnessInformal() {
+            const prog = AppState.programs.find(p => p.id === '4');
+            if (!prog) return;
+            const today = localDateKey();
+            prog.informalCompletedDate = prog.informalCompletedDate === today ? null : today;
+            prog.informalCompletedToday = prog.informalCompletedDate === today;
+            saveState();
+            renderProgramsList();
+        }
+
+        document.getElementById('mindfulnessAudio')?.addEventListener('timeupdate', updateMindfulnessAudioUI);
+        document.getElementById('mindfulnessAudio')?.addEventListener('loadedmetadata', updateMindfulnessAudioUI);
+        document.getElementById('mindfulnessAudio')?.addEventListener('play', updateMindfulnessAudioUI);
+        document.getElementById('mindfulnessAudio')?.addEventListener('pause', updateMindfulnessAudioUI);
+        document.getElementById('mindfulnessAudio')?.addEventListener('ended', completeMindfulnessAudio);
+
+        function renderMindfulnessProgramCard(prog, pIdx) {
+            const phaseIdx = prog.currentPhaseIndex || 0;
+            const phase = prog.phases[phaseIdx];
+            prog.dailyTarget = phase.targetSessionsPerDay || 1;
+            const sessions = prog.sessionsToday || 0;
+            const days = prog.daysCompletedInPhase || 0;
+            const informalDone = prog.informalCompletedDate === localDateKey();
+            const secondaryButton = phase.secondaryTrack ? `<button onclick="openMindfulnessAudioModal('4', ${phaseIdx}, 'secondary')" class="w-full rounded-xl border border-violet-400/30 bg-violet-500/10 py-3 text-xs font-bold text-violet-200"><i class="fa-solid fa-wind mr-2"></i>${phase.secondaryTrackTitle}</button>` : '';
+            const weeks = prog.phases.map((item, index) => `<button onclick="openMindfulnessAudioModal('4', ${index}, 'formal')" class="flex w-full items-center gap-3 border-t border-slate-700/50 py-3 text-left"><span class="flex h-7 w-7 items-center justify-center rounded-full ${index === phaseIdx ? 'bg-violet-500 text-white' : 'bg-slate-800 text-slate-400'} text-xs font-bold">${index + 1}</span><span class="flex-1"><strong class="block text-xs ${item.completed ? 'text-emerald-400' : 'text-slate-200'}">${item.title}</strong><small class="text-[10px] text-slate-500">${item.formalTrackTitle}</small></span><i class="fa-solid fa-play text-xs text-violet-400"></i></button>`).join('');
+            return `<div class="overflow-hidden rounded-3xl border border-violet-400/30 bg-gradient-to-br from-violet-950/80 via-slate-900 to-slate-950 shadow-2xl shadow-violet-950/30"><div class="p-5"><div class="flex items-start gap-3"><div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/20 text-xl text-violet-300"><i class="fa-solid fa-brain"></i></div><div class="flex-1"><span class="rounded-full bg-violet-500/15 px-2 py-1 text-[9px] font-black uppercase tracking-wider text-violet-300">Mindfulness & Mente</span><h3 class="mt-2 text-lg font-black text-white">${prog.title}</h3><p class="text-xs text-slate-400">${phase.title}</p></div></div><div class="mt-4"><div class="mb-1 flex justify-between text-[11px] text-slate-400"><span>Progresso semanal</span><strong class="text-violet-300">${days}/6 dias</strong></div><div class="h-2 overflow-hidden rounded-full bg-slate-800"><div class="h-full bg-gradient-to-r from-violet-600 to-fuchsia-400" style="width:${Math.min(100, days / 6 * 100)}%"></div></div></div><div class="mt-4 rounded-2xl border border-violet-400/20 bg-slate-950/50 p-4"><div class="flex gap-3"><i class="fa-solid fa-leaf mt-1 text-emerald-400"></i><div class="flex-1"><strong class="text-xs text-white">${phase.informalTitle}</strong><p class="mt-1 text-[11px] leading-relaxed text-slate-400">${phase.informalDescription}</p></div></div><button onclick="toggleMindfulnessInformal()" class="mt-3 w-full rounded-xl py-2 text-xs font-bold ${informalDone ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-300'}"><i class="fa-solid ${informalDone ? 'fa-circle-check' : 'fa-circle'} mr-2"></i>${informalDone ? 'Prática informal concluída hoje' : 'Marcar prática informal de hoje'}</button></div><div class="mt-4 space-y-2"><button onclick="openMindfulnessAudioModal('4', ${phaseIdx}, 'formal')" class="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-700 py-3.5 text-xs font-black text-white"><i class="fa-solid fa-headphones mr-2"></i>Iniciar Prática Formal (${sessions}/${prog.dailyTarget})</button>${secondaryButton}</div><button onclick="toggleProgramExpand(${pIdx})" class="mt-4 w-full text-xs font-bold text-violet-300">${prog.expanded ? 'Ocultar semanas' : 'Ver as 8 semanas'} <i class="fa-solid fa-chevron-${prog.expanded ? 'up' : 'down'} ml-1"></i></button></div><div class="${prog.expanded ? 'block' : 'hidden'} border-t border-violet-400/20 bg-black/15 px-5 pb-3">${weeks}</div></div>`;
+        }
+
         function renderProgramsList() {
             const container = document.getElementById('programsListContainer');
             if (!container) return;
@@ -8243,6 +8460,10 @@
             }
             
             AppState.programs.forEach((prog, pIdx) => {
+                if (prog.type === 'mindfulness') {
+                    container.innerHTML += renderMindfulnessProgramCard(prog, pIdx);
+                    return;
+                }
                 const completedCount = prog.phases.filter(p => p.completed).length;
                 const progressPct = prog.phases.length > 0 ? (completedCount / prog.phases.length) * 100 : 0;
                 const isExpanded = prog.expanded;
