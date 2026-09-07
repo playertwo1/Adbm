@@ -649,10 +649,6 @@
         <!-- ABA 3: PAUSAS ATIVAS & ALONGAMENTOS (1 MINUTO CADA) -->
         <!-- ============================================================ -->
         <section id="tab-pausas" class="tab-content space-y-4">
-            
-            <!-- SMART ACTIVE PAUSE CARD CONTAINER -->
-            <div id="smartSuggestionCardContainer"></div>
-
             <!-- BLOCO COLAPSÁVEL: CORPO -->
             <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl md:rounded-3xl shadow-xl overflow-hidden transition-all duration-300">
                 <!-- Cabeçalho Colapsável -->
@@ -664,7 +660,7 @@
                         <div>
                             <div class="flex items-center gap-2">
                                 <h3 class="text-base font-bold text-white tracking-tight">Corpo</h3>
-                                <span class="text-[10px] bg-emerald-500/15 text-emerald-400 font-bold px-2 py-0.5 rounded-full border border-emerald-500/25 font-mono">4 min • 4 exercícios</span>
+                                <span class="text-[10px] bg-emerald-500/15 text-emerald-400 font-bold px-2 py-0.5 rounded-full border border-emerald-500/25 font-mono" id="corpo-badge-summary">4 técnicas • Circuito Ergonômico</span>
                             </div>
                             <p class="text-xs text-slate-400 mt-0.5">Alongamentos e pausas ativas na cadeira para destravar o corpo</p>
                         </div>
@@ -677,18 +673,213 @@
                 <!-- Conteúdo do Bloco (Colapsável) -->
                 <div id="corpo-content" class="px-4 pb-4 space-y-4 border-t border-slate-700/60 pt-4">
                     
-                    <!-- Botão e Painel: Executar Circuito Completo -->
-                    <div class="bg-slate-900/60 border border-emerald-500/30 rounded-2xl p-3.5 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Circuito Contínuo de Alongamento</span>
+                    <!-- BANNER SOS POSTURA & SUGESTÃO CONTEXTUAL DE HORÁRIO -->
+                    <div class="space-y-2.5">
+                        <!-- Botão de Ação Imediata: SOS Coluna & Postura (1 Min) -->
+                        <div class="bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-cyan-500/15 border border-emerald-500/30 rounded-2xl p-3 flex items-center justify-between shadow-lg shadow-emerald-950/20">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-base flex-shrink-0 animate-pulse">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-xs font-black text-emerald-200 uppercase tracking-wider">SOS Coluna & Lombar</span>
+                                        <span class="text-[9px] bg-emerald-500/20 text-emerald-300 font-bold px-1.5 py-0.2 rounded font-mono">1 Minuto</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-300">Descompressão imediata na cadeira para destravar coluna e ciático</p>
+                                </div>
                             </div>
-                            <span id="circuit-header-badge" class="text-[11px] bg-emerald-500/10 text-emerald-300 font-mono font-bold px-2 py-0.5 rounded-lg border border-emerald-500/20">4 min guiados</span>
+                            <button id="btn-sos-stretch" onclick="startSosStretch()" class="px-3 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-95 text-slate-950 font-black text-xs rounded-xl shadow-md flex items-center gap-1.5 flex-shrink-0 transition">
+                                <i class="fa-solid fa-bolt-lightning text-xs"></i>
+                                <span>Destravar Agora</span>
+                            </button>
                         </div>
 
-                        <!-- Botão Principal do Circuito -->
-                        <div class="flex gap-2">
+                        <!-- Card de Sugestão Inteligente por Horário da Rotina -->
+                        <div id="stretch-smart-recommendation-card" class="bg-slate-900/70 border border-emerald-500/25 rounded-2xl p-3 flex items-center justify-between">
+                            <div class="flex items-center gap-2.5">
+                                <div id="stretch-recom-icon-container" class="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-sm flex-shrink-0">
+                                    <i id="stretch-recom-icon" class="fa-solid fa-arrows-spin"></i>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span id="stretch-recom-period-label" class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Sugestão para esta Tarde</span>
+                                        <span id="stretch-recom-tag" class="text-[9px] bg-emerald-950 text-emerald-300 font-mono px-1 rounded">Descompressão</span>
+                                    </div>
+                                    <p id="stretch-recom-desc" class="text-[11px] text-slate-300 font-medium">Torção de Coluna na Cadeira: Hidrate os discos e elimine a rigidez lombar</p>
+                                </div>
+                            </div>
+                            <button id="btn-start-smart-stretch-recom" onclick="startRecommendedStretch()" class="px-2.5 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 active:scale-95 border border-emerald-500/40 text-emerald-300 hover:text-emerald-200 text-xs font-bold rounded-xl flex items-center gap-1 flex-shrink-0 transition">
+                                <span>Alongar</span>
+                                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </button>
+                        </div>
+
+                        <!-- Barra de Tags de Contexto Rápido (Filtro por Região Muscular) -->
+                        <div class="space-y-1.5 pt-0.5">
+                            <div class="flex items-center justify-between text-[11px]">
+                                <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Filtrar por região / foco:</span>
+                                <span class="text-slate-500 text-[10px]" id="stretch-filter-status">Exibindo todos</span>
+                            </div>
+                            <div id="stretch-intent-tags" class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+                                <button onclick="setStretchIntentFilter('all')" id="tag-stretch-all" class="tag-stretch-btn px-2.5 py-1 rounded-lg text-[11px] font-bold border transition bg-emerald-500/20 text-emerald-300 border-emerald-500/40 flex-shrink-0">
+                                    🌟 Todos (4)
+                                </button>
+                                <button onclick="setStretchIntentFilter('coluna')" id="tag-stretch-coluna" class="tag-stretch-btn px-2.5 py-1 rounded-lg text-[11px] font-bold border transition bg-slate-850 text-slate-400 border-slate-700 hover:text-slate-200 flex-shrink-0">
+                                    🪑 Coluna & Lombar
+                                </button>
+                                <button onclick="setStretchIntentFilter('gluteos')" id="tag-stretch-gluteos" class="tag-stretch-btn px-2.5 py-1 rounded-lg text-[11px] font-bold border transition bg-slate-850 text-slate-400 border-slate-700 hover:text-slate-200 flex-shrink-0">
+                                    🧘 Glúteos & Ciático
+                                </button>
+                                <button onclick="setStretchIntentFilter('peitoral')" id="tag-stretch-peitoral" class="tag-stretch-btn px-2.5 py-1 rounded-lg text-[11px] font-bold border transition bg-slate-850 text-slate-400 border-slate-700 hover:text-slate-200 flex-shrink-0">
+                                    💪 Peitoral & Ombros
+                                </button>
+                                <button onclick="setStretchIntentFilter('cervical')" id="tag-stretch-cervical" class="tag-stretch-btn px-2.5 py-1 rounded-lg text-[11px] font-bold border transition bg-slate-850 text-slate-400 border-slate-700 hover:text-slate-200 flex-shrink-0">
+                                    💆 Cervical & Trapézio
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Informativo: Antes de Começar (Ergonomia & Segurança) -->
+                    <div class="bg-slate-900/60 border border-slate-700/60 rounded-2xl p-3.5 space-y-2">
+                        <div class="flex items-center justify-between cursor-pointer" onclick="toggleCorpoTips()">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-chair text-xs text-emerald-400"></i>
+                                <span class="text-xs font-bold text-slate-200">Antes de Começar: Ergonomia & Segurança</span>
+                            </div>
+                            <span class="text-[10px] text-emerald-400 flex items-center gap-1">
+                                <span id="corpo-tips-toggle-label">Ver orientações</span>
+                                <i id="corpo-tips-chevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+                            </span>
+                        </div>
+                        <div id="corpo-tips-content" class="hidden text-xs text-slate-300 space-y-2 pt-2 border-t border-slate-800">
+                            <div class="flex items-start gap-2.5">
+                                <div class="w-6 h-6 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-person-chalkboard"></i>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-emerald-300">Posicionamento na Cadeira (90°-90°):</span>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">Mantenha os pés planos e firmes no chão. Apoie os ísquios no assento sem deixar a pelve escorregar para a frente.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2.5">
+                                <div class="w-6 h-6 rounded-lg bg-teal-500/15 text-teal-400 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-wind"></i>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-teal-300">Respiração com Descompressão:</span>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">Inspire alinhando a coluna e expire suavemente aprofundando o alongamento. Nunca bloqueie o ar com esforço.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2.5">
+                                <div class="w-6 h-6 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-amber-300">Limite de Conforto (Sem Dor Aguda):</span>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">O alongamento deve gerar sensação de alívio e liberação miofascial. Interrompa se sentir pontadas ou formigamentos articulares.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Painel da Sessão Guiada de Alongamento -->
+                    <div class="bg-slate-900/60 border border-emerald-500/30 rounded-2xl p-3.5 space-y-3.5">
+                        
+                        <!-- Cabeçalho do Painel + Controles de Duração, Intensidade e Som -->
+                        <div class="space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Sessão Guiada de Mobilidade</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="toggleCorpoSound()" id="btn-corpo-sound" title="Sinos nas trocas de lado e conclusão" class="px-2 py-1 rounded-lg border text-[11px] font-bold flex items-center gap-1.5 transition bg-emerald-500/15 border-emerald-500/30 text-emerald-300">
+                                        <i id="corpo-sound-icon" class="fa-solid fa-bell text-xs"></i>
+                                        <span id="corpo-sound-label">Sinos On</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Controles de Duração Flexível -->
+                            <div class="flex items-center justify-between gap-2 pt-1">
+                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tempo/Ex:</span>
+                                <div class="flex items-center gap-1 flex-wrap justify-end">
+                                    <button onclick="setStretchDuration(30)" id="chip-stretch-dur-30" class="chip-stretch-duration px-2 py-0.5 rounded-md text-[11px] font-mono font-bold border transition bg-slate-800 text-slate-400 border-slate-700">30s (2m)</button>
+                                    <button onclick="setStretchDuration(45)" id="chip-stretch-dur-45" class="chip-stretch-duration px-2 py-0.5 rounded-md text-[11px] font-mono font-bold border transition bg-slate-800 text-slate-400 border-slate-700">45s (3m)</button>
+                                    <button onclick="setStretchDuration(60)" id="chip-stretch-dur-60" class="chip-stretch-duration px-2 py-0.5 rounded-md text-[11px] font-mono font-bold border transition bg-emerald-500/20 text-emerald-300 border-emerald-500/40">60s (4m)</button>
+                                    <button onclick="setStretchDuration(90)" id="chip-stretch-dur-90" class="chip-stretch-duration px-2 py-0.5 rounded-md text-[11px] font-mono font-bold border transition bg-slate-800 text-slate-400 border-slate-700">90s (6m)</button>
+                                    <button onclick="setStretchDuration('infinite')" id="chip-stretch-dur-infinite" class="chip-stretch-duration px-2 py-0.5 rounded-md text-[11px] font-mono font-bold border transition bg-slate-800 text-slate-400 border-slate-700">∞ Livre</button>
+                                </div>
+                            </div>
+
+                            <!-- Intensidade / Amplitude -->
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Intensidade:</span>
+                                <div class="flex items-center gap-1 flex-wrap justify-end">
+                                    <button onclick="setStretchIntensity('suave')" id="chip-stretch-lvl-suave" class="chip-stretch-level px-2 py-0.5 rounded-md text-[11px] font-bold border transition bg-slate-800 text-slate-400 border-slate-700" title="Soltura leve e foco em circulação">Suave</button>
+                                    <button onclick="setStretchIntensity('padrao')" id="chip-stretch-lvl-padrao" class="chip-stretch-level px-2 py-0.5 rounded-md text-[11px] font-bold border transition bg-emerald-500/20 text-emerald-300 border-emerald-500/40" title="Cadência recomendada canônica de ergonomia">Padrão</button>
+                                    <button onclick="setStretchIntensity('profundo')" id="chip-stretch-lvl-profundo" class="chip-stretch-level px-2 py-0.5 rounded-md text-[11px] font-bold border transition bg-slate-800 text-slate-400 border-slate-700" title="Maior permanência e descompressão miofascial">Profundo</button>
+                                </div>
+                            </div>
+
+                            <!-- Controles de Áudio Imersivo & Condução Vocal -->
+                            <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-1.5">
+                                        <i class="fa-solid fa-headphones text-emerald-400 text-xs"></i>
+                                        <span class="text-[11px] font-bold text-slate-300">Condução Vocal & Fones</span>
+                                    </div>
+                                    <button onclick="toggleCorpoVoiceGuide()" id="btn-corpo-voice-guide" class="px-2 py-0.5 rounded-md border text-[10px] font-bold flex items-center gap-1 transition bg-emerald-500/15 border-emerald-500/30 text-emerald-300">
+                                        <i id="corpo-voice-guide-icon" class="fa-solid fa-comment text-[10px]"></i>
+                                        <span id="corpo-voice-guide-label">Voz On</span>
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <!-- Seletor de Som de Fundo -->
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[10px] text-slate-400 font-medium">Fundo:</span>
+                                        <select id="select-corpo-ambient-sound" onchange="changeCorpoAmbientSound(this.value)" class="flex-1 bg-slate-900 border border-slate-700 text-emerald-300 text-[11px] rounded-lg px-2 py-1 outline-none">
+                                            <option value="none">🔇 Desativado</option>
+                                            <option value="nature">🌿 Natureza Zen</option>
+                                            <option value="rain">🌧️ Chuva Leve</option>
+                                            <option value="brown">📻 Ruído Marrom</option>
+                                            <option value="waves">🌊 Ondas do Mar</option>
+                                        </select>
+                                    </div>
+                                    <!-- Volume Slider -->
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-[10px] text-slate-400 font-medium">Volume:</span>
+                                        <input type="range" id="corpo-ambient-volume-slider" min="0" max="100" value="40" oninput="setCorpoAmbientVolume(this.value)" class="flex-1 accent-emerald-400 h-1 bg-slate-800 rounded-lg cursor-pointer">
+                                        <span id="corpo-ambient-volume-label" class="text-[10px] font-mono text-emerald-400 w-7 text-right">40%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Automação & Ergonomia -->
+                            <div class="flex items-center justify-between text-xs pt-0.5 flex-wrap gap-2">
+                                <div class="flex items-center gap-2">
+                                    <button onclick="toggleCorpoDndAutoMode()" id="btn-corpo-toggle-dnd" class="px-2 py-1 rounded-lg border text-[10px] font-bold flex items-center gap-1 transition bg-indigo-500/15 border-indigo-500/30 text-indigo-300" title="Silenciar notificações durante o circuito">
+                                        <i class="fa-solid fa-moon text-[10px]"></i>
+                                        <span id="label-corpo-toggle-dnd">Não Perturbe On</span>
+                                    </button>
+                                    <button onclick="toggleCorpoSmartReminder()" id="btn-corpo-smart-reminder" class="px-2 py-1 rounded-lg border text-[10px] font-bold flex items-center gap-1 transition bg-slate-800 border-slate-700 text-slate-400" title="Lembrete ergonômico na cadeira a cada 60 min">
+                                        <i class="fa-solid fa-clock text-[10px]"></i>
+                                        <span id="label-corpo-smart-reminder">Pausa 60m</span>
+                                    </button>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="openSmartwatchCompanionModal()" class="px-2 py-1 rounded-lg border text-[10px] font-bold flex items-center gap-1 transition bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300">
+                                        <i class="fa-solid fa-clock text-emerald-400 text-[10px]"></i>
+                                        <span>Modo Pulso</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botão Principal de Ação -->
+                        <div class="flex gap-2 pt-1">
                             <button id="btn-circuit-corpo" onclick="startFullStretchCircuit()" class="flex-1 py-3 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-[0.98] text-slate-950 font-bold text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition">
                                 <i id="circuit-corpo-icon" class="fa-solid fa-circle-play text-base"></i>
                                 <span id="circuit-corpo-label">Executar Circuito Completo (4 Minutos)</span>
@@ -698,14 +889,82 @@
                             </button>
                         </div>
 
-                        <!-- Barra de Progresso Geral do Circuito (visível quando rodando) -->
-                        <div id="circuit-overall-progress" class="hidden space-y-1.5 pt-1">
-                            <div class="flex items-center justify-between text-xs">
-                                <span id="circuit-step-info" class="font-medium text-slate-300">Exercício 1/4: Posição do 4</span>
-                                <span id="circuit-time-left" class="font-mono font-bold text-emerald-400">4:00</span>
+                        <!-- Guia Visual Interativo de Alongamento (Ativo durante o circuito ou individual) -->
+                        <div id="stretch-active-display" class="hidden relative bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-3">
+                            <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-2">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <span id="stretch-active-name" class="font-bold text-white">Posição do 4</span>
+                                    <span id="stretch-active-muscle-badge" class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">Glúteo & Ciático</span>
+                                    <span id="stretch-active-side-badge" class="text-[10px] font-bold text-slate-300 bg-slate-800/90 px-1.5 py-0.5 rounded">Lado 1</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span id="stretch-step-badge" class="text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/20">1/4</span>
+                                    <span id="stretch-active-time-left" class="font-mono font-bold text-emerald-400 text-sm">1:00</span>
+                                </div>
                             </div>
-                            <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
-                                <div id="circuit-progress-bar" class="bg-gradient-to-r from-emerald-400 to-teal-400 h-full w-0 transition-all duration-1000"></div>
+
+                            <!-- Overlay de Retomada Suave (3... 2... 1...) -->
+                            <div id="stretch-resume-overlay" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-sm rounded-xl z-20 flex flex-col items-center justify-center text-center p-4 select-none">
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-1">Retomando postura em</span>
+                                <span id="stretch-resume-count" class="text-5xl font-black font-mono text-white animate-pulse">3</span>
+                                <p class="text-xs text-slate-300 mt-2">Alinhe a coluna e relaxe os ombros...</p>
+                                <button onclick="cancelSoftResumeCorpo()" class="mt-3 px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-[10px] text-rose-300 hover:text-rose-200 font-bold border border-rose-500/30 transition">Cancelar</button>
+                            </div>
+
+                            <!-- METÁFORA VISUAL ANATÔMICA INTERATIVA -->
+                            <div class="py-3 text-center relative flex flex-col items-center justify-center min-h-[170px]">
+                                <div class="relative w-36 h-36 flex items-center justify-center">
+                                    <!-- Círculo de pulso neon com aura esmeralda -->
+                                    <div id="stretch-visual-glow" class="absolute inset-0 rounded-full bg-emerald-500/20 blur-xl transition-all duration-1000 transform scale-90"></div>
+                                    
+                                    <svg class="w-36 h-36 relative z-10" viewBox="0 0 120 120">
+                                        <!-- Anel orbital de fundo -->
+                                        <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(51, 65, 85, 0.4)" stroke-width="4" />
+                                        <!-- Arco de progresso ativo -->
+                                        <circle id="stretch-progress-arc" cx="60" cy="60" r="48" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-dasharray="301.6" stroke-dashoffset="0" style="transform: rotate(-90deg); transform-origin: 60px 60px; transition: stroke-dashoffset 0.95s linear;" class="drop-shadow-[0_0_8px_rgba(16,185,129,0.75)]" />
+                                    </svg>
+
+                                    <!-- Centro do Círculo com Ícone Dinâmico, Segundos e Fase -->
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-20">
+                                        <span id="stretch-cue-label" class="text-[10px] font-black uppercase tracking-widest text-emerald-300">ALONGUE</span>
+                                        <span id="stretch-seconds-big" class="text-3xl font-black font-mono text-white mt-0.5">60</span>
+                                        <span id="stretch-switch-hint" class="text-[9px] text-slate-400 font-mono mt-0.5">Troca aos 30s</span>
+                                    </div>
+                                </div>
+
+                                <!-- Instrução de postura ativa -->
+                                <p id="stretch-phase-instruction" class="text-xs text-slate-200 font-medium mt-3 px-3 max-w-sm text-center leading-relaxed">
+                                    Cruze o tornozelo sobre o joelho oposto e incline suavemente o tronco à frente.
+                                </p>
+                            </div>
+
+                            <!-- Controles de Navegação de Etapa -->
+                            <div class="flex items-center justify-between gap-2 pt-1 border-t border-slate-800/80">
+                                <button onclick="prevStretchStep()" id="btn-prev-stretch-step" class="px-2.5 py-1.5 bg-slate-855 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1">
+                                    <i class="fa-solid fa-backward-step text-[10px]"></i>
+                                    <span>Anterior</span>
+                                </button>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="toggleStretchCircuitPause()" id="btn-pause-stretch-ctrl" class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 font-bold rounded-lg text-xs transition flex items-center gap-1">
+                                        <i id="icon-pause-stretch-ctrl" class="fa-solid fa-pause text-xs"></i>
+                                        <span id="label-pause-stretch-ctrl">Pausar</span>
+                                    </button>
+                                </div>
+                                <button onclick="skipStretchStep()" id="btn-skip-stretch-step" class="px-2.5 py-1.5 bg-slate-855 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1">
+                                    <span>Pular</span>
+                                    <i class="fa-solid fa-forward-step text-[10px]"></i>
+                                </button>
+                            </div>
+
+                            <!-- Barra de Progresso e Métricas da Sessão -->
+                            <div class="space-y-1.5 pt-1 border-t border-slate-800">
+                                <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                                    <span id="stretch-circuit-info-realtime">Exercício 1 de 4</span>
+                                    <span id="stretch-circuit-total-time">Circuito: 4:00 min</span>
+                                </div>
+                                <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+                                    <div id="stretch-circuit-progress-bar" class="bg-gradient-to-r from-emerald-400 to-teal-400 h-full w-0 transition-all duration-1000"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -716,21 +975,24 @@
                             <i class="fa-solid fa-list-check text-slate-400 text-xs"></i>
                             <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Fazer Separado</h4>
                         </div>
-                        <span class="text-[11px] text-slate-400 font-mono">1 min cada exercício</span>
+                        <span id="corpo-cards-duration-hint" class="text-[11px] text-slate-400 font-mono">1 min cada exercício</span>
                     </div>
 
-                    <!-- Os 4 Exercícios com Cronômetro Direto -->
+                    <!-- Os 4 Exercícios com Design Refinado & Cronômetro Direto -->
                     <div class="space-y-3">
                         <!-- Card 1: Posição do 4 -->
-                        <div id="stretch-card-1" class="bg-slate-850 hover:bg-slate-800/90 border border-slate-700/70 rounded-2xl p-3.5 transition shadow-sm relative overflow-hidden">
+                        <div id="stretch-card-1" class="stretch-exercise-card bg-slate-850 hover:bg-slate-800/90 border border-slate-700/70 rounded-2xl p-3.5 transition shadow-sm relative overflow-hidden" data-category="gluteos">
                             <div class="flex items-start justify-between">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-lg flex-shrink-0">
                                         <i class="fa-solid fa-chair"></i>
                                     </div>
                                     <div>
-                                        <h5 class="text-sm font-bold text-white">Posição do 4 na Cadeira</h5>
-                                        <p class="text-[11px] text-slate-400 mt-0.5">Alongamento do Piriforme, Glúteo e Ciático</p>
+                                        <div class="flex items-center gap-2">
+                                            <h5 class="text-sm font-bold text-white">Posição do 4 na Cadeira</h5>
+                                            <span class="text-[10px] bg-emerald-500/10 text-emerald-400 font-mono font-bold px-2 py-0.5 rounded border border-emerald-500/20">30s + 30s</span>
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 mt-0.5">Objetivo: <span class="text-emerald-300 font-medium">Glúteos & Ciático</span> • <span class="corpo-card-duration-text">1 min</span></p>
                                     </div>
                                 </div>
                                 <button onclick="toggleStretchTimer(1)" id="stretch-btn-1" class="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 shadow transition flex-shrink-0">
@@ -748,15 +1010,18 @@
                         </div>
 
                         <!-- Card 2: Torção de Coluna -->
-                        <div id="stretch-card-2" class="bg-slate-850 hover:bg-slate-800/90 border border-slate-700/70 rounded-2xl p-3.5 transition shadow-sm relative overflow-hidden">
+                        <div id="stretch-card-2" class="stretch-exercise-card bg-slate-850 hover:bg-slate-800/90 border border-slate-700/70 rounded-2xl p-3.5 transition shadow-sm relative overflow-hidden" data-category="coluna">
                             <div class="flex items-start justify-between">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg flex-shrink-0">
                                         <i class="fa-solid fa-arrows-spin"></i>
                                     </div>
                                     <div>
-                                        <h5 class="text-sm font-bold text-white">Torção de Coluna na Cadeira</h5>
-                                        <p class="text-[11px] text-slate-400 mt-0.5">Mobilidade Torácica & Descompressão Lombar</p>
+                                        <div class="flex items-center gap-2">
+                                            <h5 class="text-sm font-bold text-white">Torção de Coluna na Cadeira</h5>
+                                            <span class="text-[10px] bg-cyan-500/10 text-cyan-400 font-mono font-bold px-2 py-0.5 rounded border border-cyan-500/20">30s + 30s</span>
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 mt-0.5">Objetivo: <span class="text-cyan-300 font-medium">Coluna & Lombar</span> • <span class="corpo-card-duration-text">1 min</span></p>
                                     </div>
                                 </div>
                                 <button onclick="toggleStretchTimer(2)" id="stretch-btn-2" class="px-3 py-1.5 bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 shadow transition flex-shrink-0">
@@ -774,15 +1039,18 @@
                         </div>
 
                         <!-- Card 3: Abertura de Peitoral -->
-                        <div id="stretch-card-3" class="bg-slate-850 hover:bg-slate-800/90 border border-slate-700/70 rounded-2xl p-3.5 transition shadow-sm relative overflow-hidden">
+                        <div id="stretch-card-3" class="stretch-exercise-card bg-slate-850 hover:bg-slate-800/90 border border-slate-700/70 rounded-2xl p-3.5 transition shadow-sm relative overflow-hidden" data-category="peitoral">
                             <div class="flex items-start justify-between">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-teal-400 text-lg flex-shrink-0">
                                         <i class="fa-solid fa-shield-heart"></i>
                                     </div>
                                     <div>
-                                        <h5 class="text-sm font-bold text-white">Abertura de Peitoral & Ombros</h5>
-                                        <p class="text-[11px] text-slate-400 mt-0.5">Correção de Cifose e Ombros Caídos</p>
+                                        <div class="flex items-center gap-2">
+                                            <h5 class="text-sm font-bold text-white">Abertura de Peitoral & Ombros</h5>
+                                            <span class="text-[10px] bg-teal-500/10 text-teal-400 font-mono font-bold px-2 py-0.5 rounded border border-teal-500/20">60s contínuo</span>
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 mt-0.5">Objetivo: <span class="text-teal-300 font-medium">Postura & Respiração</span> • <span class="corpo-card-duration-text">1 min</span></p>
                                     </div>
                                 </div>
                                 <button onclick="toggleStretchTimer(3)" id="stretch-btn-3" class="px-3 py-1.5 bg-teal-500 hover:bg-teal-400 active:scale-95 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 shadow transition flex-shrink-0">
@@ -800,15 +1068,18 @@
                         </div>
 
                         <!-- Card 4: Descompressão Cervical e Trapézio -->
-                        <div id="stretch-card-4" class="bg-slate-850 hover:bg-slate-800/90 border border-slate-700/70 rounded-2xl p-3.5 transition shadow-sm relative overflow-hidden">
+                        <div id="stretch-card-4" class="stretch-exercise-card bg-slate-850 hover:bg-slate-800/90 border border-slate-700/70 rounded-2xl p-3.5 transition shadow-sm relative overflow-hidden" data-category="cervical">
                             <div class="flex items-start justify-between">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-lg flex-shrink-0">
                                         <i class="fa-solid fa-head-side-virus"></i>
                                     </div>
                                     <div>
-                                        <h5 class="text-sm font-bold text-white">Alívio Cervical & Trapézio</h5>
-                                        <p class="text-[11px] text-slate-400 mt-0.5">Tensão de Tela e Digitação Prolongada</p>
+                                        <div class="flex items-center gap-2">
+                                            <h5 class="text-sm font-bold text-white">Alívio Cervical & Trapézio</h5>
+                                            <span class="text-[10px] bg-indigo-500/10 text-indigo-400 font-mono font-bold px-2 py-0.5 rounded border border-indigo-500/20">30s + 30s</span>
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 mt-0.5">Objetivo: <span class="text-indigo-300 font-medium">Pescoço & Ombros</span> • <span class="corpo-card-duration-text">1 min</span></p>
                                     </div>
                                 </div>
                                 <button onclick="toggleStretchTimer(4)" id="stretch-btn-4" class="px-3 py-1.5 bg-indigo-500 hover:bg-indigo-400 active:scale-95 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow transition flex-shrink-0">
@@ -822,6 +1093,55 @@
                             </div>
                             <div class="w-full bg-slate-900 h-1.5 rounded-full mt-2 overflow-hidden">
                                 <div id="stretch-bar-4" class="bg-indigo-500 h-full w-0 transition-all duration-1000"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CARD: Gamificação Saudável & Consistência Postural Mensal -->
+                    <div class="bg-gradient-to-br from-slate-850 to-slate-900 border border-slate-700/70 rounded-2xl p-3.5 space-y-3 shadow-md">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                                <h5 class="text-xs font-bold text-white uppercase tracking-wider">Consistência & Mobilidade</h5>
+                            </div>
+                            <span id="corpo-monthly-badge" class="text-[10px] bg-emerald-500/10 text-emerald-300 font-mono font-bold px-2 py-0.5 rounded border border-emerald-500/20">0 min de postura</span>
+                        </div>
+
+                        <!-- Meta Semanal Flexível -->
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between text-xs">
+                                <span id="corpo-weekly-goal-label" class="text-slate-300 font-medium">🌱 Meta Semanal: 0 de 5 pausas ativas</span>
+                                <span id="corpo-weekly-goal-pct" class="font-mono font-bold text-emerald-400">0%</span>
+                            </div>
+                            <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+                                <div id="corpo-weekly-goal-bar" class="bg-gradient-to-r from-teal-400 to-emerald-400 h-full w-0 transition-all duration-1000"></div>
+                            </div>
+                            <p id="corpo-weekly-goal-message" class="text-[11px] text-slate-400">
+                                Pequenas pausas frequentes protegem seus discos e renovam a oxigenação sem sobrecarregar sua rotina!
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- NOVO CARD: Histórico de Práticas de Mobilidade (Corpo) -->
+                    <div class="bg-slate-850 border border-slate-700/60 rounded-2xl p-3.5 space-y-2.5">
+                        <div class="flex items-center justify-between cursor-pointer" onclick="toggleCorpoHistory()">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-clock-rotate-left text-xs text-emerald-400"></i>
+                                <h5 class="text-xs font-bold text-slate-200">Histórico de Alongamentos & Mobilidade</h5>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span id="corpo-history-count-badge" class="text-[10px] bg-slate-800 text-slate-400 font-mono px-2 py-0.5 rounded-full">0 sessões</span>
+                                <i id="corpo-history-chevron" class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform"></i>
+                            </div>
+                        </div>
+                        <div id="corpo-history-content" class="hidden space-y-2 pt-2 border-t border-slate-800">
+                            <div id="corpo-history-list" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                                <!-- Preenchido dinamicamente por renderCorpoHistory() -->
+                            </div>
+                            <div class="flex justify-end pt-1">
+                                <button onclick="clearCorpoHistory()" class="text-[10px] text-slate-500 hover:text-rose-400 transition flex items-center gap-1">
+                                    <i class="fa-solid fa-trash-can text-[9px]"></i> Limpar histórico
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -2402,7 +2722,21 @@
                 corpoExpanded: true,
                 circuitActive: false,
                 circuitStep: 1,
-                circuitPaused: false
+                circuitPaused: false,
+                selectedDuration: 60,
+                selectedIntensity: 'padrao',
+                soundEnabled: true,
+                voiceGuideEnabled: true,
+                smartDndEnabled: true,
+                smartReminderEnabled: false,
+                activeIntentFilter: 'all',
+                sidePhase: 'side1',
+                sideSecLeft: 30,
+                isResuming: false,
+                resumeCountdownSec: 3,
+                resumeTimerId: null,
+                weeklyGoal: 5,
+                history: []
             },
 
             // Pausas Mente (Respiração Consciente)
@@ -2701,6 +3035,14 @@
             renderWeeklyTimeSummary();
             renderAchievements();
             renderMenteHistory();
+            try {
+                const savedCorpoHist = localStorage.getItem('coreflow_corpo_history');
+                if (savedCorpoHist) AppState.pausas.history = JSON.parse(savedCorpoHist);
+            } catch(e) {}
+            renderCorpoHistory();
+            updateTimeOfDayStretchRecommendation();
+            updateWeeklyMobilityMetrics();
+            updateStretchDurationUI();
             loadCustomPresets();
             updateBreathDurationUI();
             updateBreathLevelUI();
@@ -4050,14 +4392,54 @@
             }, 300);
         }
 
-        /* -------------------------------------------------------------
+                /* -------------------------------------------------------------
            ABA 3: PAUSAS ATIVAS & ALONGAMENTOS (BLOCO CORPO + CIRCUITO)
         ------------------------------------------------------------- */
         const STRETCH_EXERCISES = [
-            { id: 1, name: 'Posição do 4 na Cadeira', voiceSwitch: '30 segundos. Troque a perna suavemente.' },
-            { id: 2, name: 'Torção de Coluna na Cadeira', voiceSwitch: '30 segundos. Gire para o outro lado.' },
-            { id: 3, name: 'Abertura de Peitoral & Ombros', voiceSwitch: '30 segundos. Mantenha o peito aberto e respire.' },
-            { id: 4, name: 'Alívio Cervical & Trapézio', voiceSwitch: '30 segundos. Incline para o outro lado suavemente.' }
+            {
+                id: 1,
+                name: 'Posição do 4 na Cadeira',
+                muscle: 'Piriforme & Ciático',
+                category: 'gluteos',
+                targetZoneDesc: 'Descompressão do nervo ciático e alívio de dor lombar reflexa',
+                instruction: 'Cruze o tornozelo direito sobre o joelho oposto. Mantenha a coluna ereta e incline suavemente o tronco à frente a partir do quadril.',
+                voiceIntro: 'Exercício 1 de 4: Posição do 4 na Cadeira. Cruze o tornozelo sobre o joelho e incline suavemente.',
+                voiceSwitch: 'Metade do tempo! Troque a perna suavemente e repita a inclinação.',
+                sides: 2
+            },
+            {
+                id: 2,
+                name: 'Torção de Coluna na Cadeira',
+                muscle: 'Coluna & Lombar',
+                category: 'coluna',
+                targetZoneDesc: 'Hidratação dos discos intervertebrais e alívio do travamento torácico',
+                instruction: 'Sente-se com a coluna longa. Gire o tronco segurando o encosto ou braço da cadeira sem forçar a cervical.',
+                voiceIntro: 'Exercício 2 de 4: Torção de Coluna na Cadeira. Gire o tronco respirando fundo.',
+                voiceSwitch: 'Metade do tempo! Gire suavemente para o outro lado.',
+                sides: 2
+            },
+            {
+                id: 3,
+                name: 'Abertura de Peitoral & Ombros',
+                muscle: 'Postura & Respiração',
+                category: 'peitoral',
+                targetZoneDesc: 'Reversão da postura curvada e expansão da caixa torácica',
+                instruction: 'Entrelace as mãos atrás das costas ou segure o assento. Abra o peito, afaste os ombros das orelhas e respire pelas costelas.',
+                voiceIntro: 'Exercício 3 de 4: Abertura de Peitoral e Ombros. Abra o peito e respire fundo.',
+                voiceSwitch: '30 segundos. Mantenha o peito aberto e sinta o alívio postural.',
+                sides: 1
+            },
+            {
+                id: 4,
+                name: 'Alívio Cervical & Trapézio',
+                muscle: 'Pescoço & Ombros',
+                category: 'cervical',
+                targetZoneDesc: 'Alívio de tensão por digitação, tela de computador e cefaleia tensional',
+                instruction: 'Incline suavemente a cabeça lateralmente com ajuda suave da mão. Deixe o ombro oposto cair relaxado.',
+                voiceIntro: 'Exercício 4 de 4: Alívio Cervical e Trapézio. Incline a cabeça lateralmente com calma.',
+                voiceSwitch: 'Metade do tempo! Incline suavemente para o outro lado.',
+                sides: 2
+            }
         ];
 
         function toggleCorpoBlock() {
@@ -4076,8 +4458,277 @@
             }
         }
 
+        function toggleCorpoTips() {
+            const content = document.getElementById('corpo-tips-content');
+            const chevron = document.getElementById('corpo-tips-chevron');
+            const label = document.getElementById('corpo-tips-toggle-label');
+            if (!content) return;
+            const isHidden = content.classList.contains('hidden');
+            if (isHidden) {
+                content.classList.remove('hidden');
+                if (chevron) chevron.style.transform = 'rotate(180deg)';
+                if (label) label.innerText = 'Ocultar orientações';
+            } else {
+                content.classList.add('hidden');
+                if (chevron) chevron.style.transform = 'rotate(0deg)';
+                if (label) label.innerText = 'Ver orientações';
+            }
+        }
+
+        // 1. RECOMENDAÇÃO INTELIGENTE POR HORÁRIO (CORPO)
+        function getRecommendedStretch() {
+            const hour = new Date().getHours();
+            if (hour >= 5 && hour < 12) {
+                return {
+                    id: 3,
+                    periodLabel: 'Sugestão para a Manhã',
+                    tag: 'Ativação Matinal',
+                    icon: 'fa-shield-heart',
+                    desc: 'Abertura de Peitoral: Desperte a circulação e abra a caixa torácica para o dia'
+                };
+            } else if (hour >= 12 && hour < 15) {
+                return {
+                    id: 1,
+                    periodLabel: 'Sugestão Pós-Almoço',
+                    tag: 'Descompressão',
+                    icon: 'fa-chair',
+                    desc: 'Posição do 4 na Cadeira: Destrave piriforme, glúteos e ciático pós-refeição'
+                };
+            } else if (hour >= 15 && hour < 18) {
+                return {
+                    id: 2,
+                    periodLabel: 'Sugestão para esta Tarde',
+                    tag: 'Pico de Postura',
+                    icon: 'fa-arrows-spin',
+                    desc: 'Torção de Coluna na Cadeira: Hidrate os discos e elimine a rigidez lombar'
+                };
+            } else {
+                return {
+                    id: 4,
+                    periodLabel: 'Sugestão Fim de Turno',
+                    tag: 'Alívio Noturno',
+                    icon: 'fa-head-side-virus',
+                    desc: 'Alívio Cervical & Trapézio: Solte a tensão acumulada de digitação e tela'
+                };
+            }
+        }
+
+        function updateTimeOfDayStretchRecommendation() {
+            const recom = getRecommendedStretch();
+            const label = document.getElementById('stretch-recom-period-label');
+            const tag = document.getElementById('stretch-recom-tag');
+            const desc = document.getElementById('stretch-recom-desc');
+            const icon = document.getElementById('stretch-recom-icon');
+
+            if (label) label.innerText = recom.periodLabel;
+            if (tag) tag.innerText = recom.tag;
+            if (desc) desc.innerText = recom.desc;
+            if (icon) icon.className = 'fa-solid ' + recom.icon;
+        }
+
+        function startRecommendedStretch() {
+            const recom = getRecommendedStretch();
+            toggleStretchTimer(recom.id);
+        }
+
+        // 2. SOS COLUNA (1 MINUTO)
+        function startSosStretch() {
+            switchTab('pausas');
+            const content = document.getElementById('corpo-content');
+            if (content && content.classList.contains('hidden')) {
+                toggleCorpoBlock();
+            }
+
+            setStretchDuration(60);
+            toggleStretchTimer(2); // Torção de Coluna para descompressão express
+
+            speakVoice('SOS Coluna iniciado. Coluna longa, segure o encosto da cadeira e gire o tronco com calma.');
+            triggerHaptic([60, 40, 100]);
+        }
+
+        // 3. FILTRO POR REGIÃO MUSCULAR
+        function setStretchIntentFilter(filterKey) {
+            AppState.pausas.activeIntentFilter = filterKey;
+            const tags = ['all', 'coluna', 'gluteos', 'peitoral', 'cervical'];
+
+            tags.forEach(t => {
+                const btn = document.getElementById('tag-stretch-' + t);
+                if (!btn) return;
+                if (t === filterKey) {
+                    btn.className = 'tag-stretch-btn px-2.5 py-1 rounded-lg text-[11px] font-bold border transition bg-emerald-500/20 text-emerald-300 border-emerald-500/40 flex-shrink-0 shadow-sm';
+                } else {
+                    btn.className = 'tag-stretch-btn px-2.5 py-1 rounded-lg text-[11px] font-bold border transition bg-slate-850 text-slate-400 border-slate-700 hover:text-slate-200 flex-shrink-0';
+                }
+            });
+
+            const statusEl = document.getElementById('stretch-filter-status');
+            if (statusEl) {
+                statusEl.innerText = filterKey === 'all' ? 'Exibindo todos (4)' : `Foco em: ${filterKey}`;
+            }
+
+            for (let i = 1; i <= 4; i++) {
+                const card = document.getElementById('stretch-card-' + i);
+                if (!card) continue;
+                const cat = card.getAttribute('data-category');
+                if (filterKey === 'all' || cat === filterKey) {
+                    card.classList.remove('opacity-30');
+                    card.classList.add('border-emerald-500/60', 'shadow-md', 'shadow-emerald-500/10');
+                } else {
+                    card.classList.add('opacity-30');
+                    card.classList.remove('border-emerald-500/60', 'shadow-md', 'shadow-emerald-500/10');
+                }
+            }
+            triggerHaptic([20]);
+        }
+
+        // 4. CONTROLES DE DURAÇÃO & INTENSIDADE
+        function setStretchDuration(sec) {
+            AppState.pausas.selectedDuration = sec;
+            updateStretchDurationUI();
+            triggerHaptic([20]);
+        }
+
+        function updateStretchDurationUI() {
+            const sec = AppState.pausas.selectedDuration || 60;
+            const durations = [30, 45, 60, 90, 'infinite'];
+
+            durations.forEach(d => {
+                const chip = document.getElementById('chip-stretch-dur-' + d);
+                if (!chip) return;
+                if (d === sec) {
+                    chip.className = 'chip-stretch-duration px-2 py-0.5 rounded-md text-[11px] font-mono font-bold border transition bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
+                } else {
+                    chip.className = 'chip-stretch-duration px-2 py-0.5 rounded-md text-[11px] font-mono font-bold border transition bg-slate-800 text-slate-400 border-slate-700';
+                }
+            });
+
+            const labelEl = document.getElementById('circuit-corpo-label');
+            const hintEl = document.getElementById('corpo-cards-duration-hint');
+
+            let totalMinutes = 4;
+            let perCardText = '1 min';
+            if (sec === 30) { totalMinutes = 2; perCardText = '30s'; }
+            else if (sec === 45) { totalMinutes = 3; perCardText = '45s'; }
+            else if (sec === 60) { totalMinutes = 4; perCardText = '1 min'; }
+            else if (sec === 90) { totalMinutes = 6; perCardText = '1:30 min'; }
+            else if (sec === 'infinite') { totalMinutes = 'Livre'; perCardText = 'Livre'; }
+
+            if (labelEl && !AppState.pausas.circuitActive) {
+                labelEl.innerText = sec === 'infinite' ? 'Executar Circuito (Modo Livre)' : `Executar Circuito Completo (${totalMinutes} Minutos)`;
+            }
+            if (hintEl) {
+                hintEl.innerText = `${perCardText} cada exercício`;
+            }
+
+            document.querySelectorAll('.corpo-card-duration-text').forEach(el => {
+                el.innerText = perCardText;
+            });
+
+            for (let i = 1; i <= 4; i++) {
+                const btnLabel = document.getElementById('stretch-label-' + i);
+                if (btnLabel && !AppState.pausas.activeTimerId) {
+                    if (sec === 30) btnLabel.innerText = '0:30';
+                    else if (sec === 45) btnLabel.innerText = '0:45';
+                    else if (sec === 60) btnLabel.innerText = '1:00';
+                    else if (sec === 90) btnLabel.innerText = '1:30';
+                    else if (sec === 'infinite') btnLabel.innerText = '∞';
+                }
+            }
+        }
+
+        function setStretchIntensity(lvl) {
+            AppState.pausas.selectedIntensity = lvl;
+            const levels = ['suave', 'padrao', 'profundo'];
+            levels.forEach(l => {
+                const chip = document.getElementById('chip-stretch-lvl-' + l);
+                if (!chip) return;
+                if (l === lvl) {
+                    chip.className = 'chip-stretch-level px-2 py-0.5 rounded-md text-[11px] font-bold border transition bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
+                } else {
+                    chip.className = 'chip-stretch-level px-2 py-0.5 rounded-md text-[11px] font-bold border transition bg-slate-800 text-slate-400 border-slate-700';
+                }
+            });
+            triggerHaptic([20]);
+        }
+
+        function toggleCorpoSound() {
+            AppState.pausas.soundEnabled = !AppState.pausas.soundEnabled;
+            const btn = document.getElementById('btn-corpo-sound');
+            const icon = document.getElementById('corpo-sound-icon');
+            const label = document.getElementById('corpo-sound-label');
+
+            if (AppState.pausas.soundEnabled) {
+                if (btn) btn.className = 'px-2 py-1 rounded-lg border text-[11px] font-bold flex items-center gap-1.5 transition bg-emerald-500/15 border-emerald-500/30 text-emerald-300';
+                if (icon) icon.className = 'fa-solid fa-bell text-xs';
+                if (label) label.innerText = 'Sinos On';
+                playBeep(800, 0.1);
+            } else {
+                if (btn) btn.className = 'px-2 py-1 rounded-lg border text-[11px] font-bold flex items-center gap-1.5 transition bg-slate-800 border-slate-700 text-slate-400';
+                if (icon) icon.className = 'fa-solid fa-bell-slash text-xs';
+                if (label) label.innerText = 'Sinos Off';
+            }
+            triggerHaptic([20]);
+        }
+
+        function toggleCorpoVoiceGuide() {
+            AppState.pausas.voiceGuideEnabled = !AppState.pausas.voiceGuideEnabled;
+            const btn = document.getElementById('btn-corpo-voice-guide');
+            const label = document.getElementById('corpo-voice-guide-label');
+
+            if (AppState.pausas.voiceGuideEnabled) {
+                if (btn) btn.className = 'px-2 py-0.5 rounded-md border text-[10px] font-bold flex items-center gap-1 transition bg-emerald-500/15 border-emerald-500/30 text-emerald-300';
+                if (label) label.innerText = 'Voz On';
+                speakVoice('Voz de orientação postural ativada');
+            } else {
+                if (btn) btn.className = 'px-2 py-0.5 rounded-md border text-[10px] font-bold flex items-center gap-1 transition bg-slate-800 border-slate-700 text-slate-400';
+                if (label) label.innerText = 'Voz Off';
+            }
+            triggerHaptic([20]);
+        }
+
+        function toggleCorpoDndAutoMode() {
+            AppState.pausas.smartDndEnabled = !AppState.pausas.smartDndEnabled;
+            const btn = document.getElementById('btn-corpo-toggle-dnd');
+            const label = document.getElementById('label-corpo-toggle-dnd');
+
+            if (AppState.pausas.smartDndEnabled) {
+                if (btn) btn.className = 'px-2 py-1 rounded-lg border text-[10px] font-bold flex items-center gap-1 transition bg-indigo-500/15 border-indigo-500/30 text-indigo-300';
+                if (label) label.innerText = 'Não Perturbe On';
+            } else {
+                if (btn) btn.className = 'px-2 py-1 rounded-lg border text-[10px] font-bold flex items-center gap-1 transition bg-slate-800 border-slate-700 text-slate-400';
+                if (label) label.innerText = 'Não Perturbe Off';
+            }
+            triggerHaptic([20]);
+        }
+
+        function toggleCorpoSmartReminder() {
+            AppState.pausas.smartReminderEnabled = !AppState.pausas.smartReminderEnabled;
+            const btn = document.getElementById('btn-corpo-smart-reminder');
+            const label = document.getElementById('label-corpo-smart-reminder');
+
+            if (AppState.pausas.smartReminderEnabled) {
+                if (btn) btn.className = 'px-2 py-1 rounded-lg border text-[10px] font-bold flex items-center gap-1 transition bg-emerald-500/15 border-emerald-500/30 text-emerald-300';
+                if (label) label.innerText = 'Pausa 60m Ativa';
+                speakVoice('Lembrete de postura programado para cada 60 minutos');
+            } else {
+                if (btn) btn.className = 'px-2 py-1 rounded-lg border text-[10px] font-bold flex items-center gap-1 transition bg-slate-800 border-slate-700 text-slate-400';
+                if (label) label.innerText = 'Pausa 60m';
+            }
+            triggerHaptic([20]);
+        }
+
+        function changeCorpoAmbientSound(val) {
+            changeAmbientSound(val);
+        }
+
+        function setCorpoAmbientVolume(val) {
+            setAmbientVolume(val);
+            const label = document.getElementById('corpo-ambient-volume-label');
+            if (label) label.innerText = val + '%';
+        }
+
+        // 5. PLAYER DE CIRCUITO GUIADO & CARDS INDIVIDUAIS
         function toggleStretchTimer(cardId) {
-            // Se o circuito estiver rodando, interrompe o modo circuito para foco individual
             if (AppState.pausas.circuitActive) {
                 cancelStretchCircuit(false);
             }
@@ -4094,8 +4745,12 @@
 
         function startStretchTimer(cardId, isFromCircuit = false) {
             AppState.pausas.activeTimerId = cardId;
-            AppState.pausas.remainingSec = 60;
+            const durationSetting = AppState.pausas.selectedDuration;
+            const totalSec = durationSetting === 'infinite' ? 300 : (durationSetting || 60);
+            AppState.pausas.remainingSec = totalSec;
+            AppState.pausas.totalCardSec = totalSec;
 
+            const ex = STRETCH_EXERCISES.find(e => e.id === cardId);
             const icon = document.getElementById('stretch-icon-' + cardId);
             const label = document.getElementById('stretch-label-' + cardId);
             const disp = document.getElementById('stretch-timer-display-' + cardId);
@@ -4106,22 +4761,45 @@
             triggerHaptic([60]);
             playBeep(600, 0.1);
 
+            // Abre o display visual ativo
+            showStretchActiveDisplay(cardId, totalSec);
+
+            if (AppState.pausas.voiceGuideEnabled && ex) {
+                speakVoice(ex.voiceIntro);
+            }
+
             AppState.pausas.intervalId = setInterval(() => {
                 AppState.pausas.remainingSec--;
                 const sec = AppState.pausas.remainingSec;
+                const progressPct = ((totalSec - sec) / totalSec) * 100;
                 
-                if (label) label.innerText = `0:${String(sec).padStart(2, '0')}`;
+                const m = Math.floor(sec / 60);
+                const s = sec % 60;
+                const timeStr = `${m}:${String(s).padStart(2, '0')}`;
+
+                if (label) label.innerText = timeStr;
                 if (disp) disp.innerText = `${sec}s`;
-                if (bar) bar.style.width = `${((60 - sec) / 60) * 100}%`;
+                if (bar) bar.style.width = `${progressPct}%`;
+
+                updateStretchActiveDisplayUI(cardId, sec, totalSec);
 
                 if (AppState.pausas.circuitActive) {
-                    updateCircuitOverallUI(sec);
+                    updateCircuitOverallUI(sec, totalSec);
                 }
 
-                if (sec === 30) {
-                    const ex = STRETCH_EXERCISES.find(e => e.id === cardId);
+                // Alerta de metade do tempo (troca de perna/braço para exercícios unilaterais)
+                const halfTime = Math.floor(totalSec / 2);
+                if (sec === halfTime) {
                     triggerHaptic([100, 50, 100]);
-                    speakVoice(ex ? ex.voiceSwitch : '30 segundos. Troque o lado suavemente');
+                    if (AppState.pausas.soundEnabled) playBeep(800, 0.15);
+                    const sideBadge = document.getElementById('stretch-active-side-badge');
+                    if (sideBadge) {
+                        sideBadge.innerText = ex.sides > 1 ? 'Lado 2' : 'Fase Final';
+                        sideBadge.className = 'text-[10px] font-bold text-teal-300 bg-teal-500/20 px-1.5 py-0.5 rounded border border-teal-500/30';
+                    }
+                    if (AppState.pausas.voiceGuideEnabled) {
+                        speakVoice(ex ? ex.voiceSwitch : 'Metade do tempo! Troque o lado suavemente');
+                    }
                 }
 
                 if (sec <= 0) {
@@ -4137,14 +4815,16 @@
                         bar.className = 'bg-emerald-400 h-full w-full';
                     }
 
-                    playTibetanChime();
+                    if (AppState.pausas.soundEnabled) playTibetanChime();
                     triggerHaptic([200, 100, 300]);
 
                     if (AppState.pausas.circuitActive) {
                         if (cardId < 4) {
                             const nextCard = cardId + 1;
                             const nextEx = STRETCH_EXERCISES.find(e => e.id === nextCard);
-                            speakVoice(`Concluído! Próximo: ${nextEx ? nextEx.name : 'alongamento'}`);
+                            if (AppState.pausas.voiceGuideEnabled) {
+                                speakVoice(`Exercício concluído! Próximo: ${nextEx ? nextEx.name : 'alongamento'}`);
+                            }
                             setTimeout(() => {
                                 if (AppState.pausas.circuitActive) {
                                     startStretchCircuitStep(nextCard);
@@ -4154,9 +4834,15 @@
                             finishStretchCircuit();
                         }
                     } else {
-                        speakVoice('Alongamento concluído!');
+                        if (AppState.pausas.voiceGuideEnabled) {
+                            speakVoice('Alongamento concluído com sucesso! Excelente postura.');
+                        }
+                        recordCorpoSession(ex ? ex.name : 'Alongamento na Cadeira', Math.max(1, Math.round(totalSec / 60)));
                         markScheduleDone(5, true);
-                        addMinutesToday(1, 'stretch');
+                        addMinutesToday(Math.max(1, Math.round(totalSec / 60)), 'stretch');
+                        setTimeout(() => {
+                            hideStretchActiveDisplay();
+                        }, 2000);
                     }
                 }
             }, 1000);
@@ -4170,6 +4856,56 @@
             AppState.pausas.activeTimerId = null;
             const icon = document.getElementById('stretch-icon-' + cardId);
             if (icon) icon.className = 'fa-solid fa-play';
+        }
+
+        function showStretchActiveDisplay(stepId, totalSec) {
+            const container = document.getElementById('stretch-active-display');
+            if (!container) return;
+            container.classList.remove('hidden');
+
+            const ex = STRETCH_EXERCISES.find(e => e.id === stepId);
+            const nameEl = document.getElementById('stretch-active-name');
+            const muscleEl = document.getElementById('stretch-active-muscle-badge');
+            const sideEl = document.getElementById('stretch-active-side-badge');
+            const stepEl = document.getElementById('stretch-step-badge');
+            const instEl = document.getElementById('stretch-phase-instruction');
+            const hintEl = document.getElementById('stretch-switch-hint');
+
+            if (nameEl && ex) nameEl.innerText = ex.name;
+            if (muscleEl && ex) muscleEl.innerText = ex.muscle;
+            if (sideEl) {
+                sideEl.innerText = ex.sides > 1 ? 'Lado 1' : 'Contínuo';
+                sideEl.className = 'text-[10px] font-bold text-slate-300 bg-slate-800/90 px-1.5 py-0.5 rounded';
+            }
+            if (stepEl) stepEl.innerText = `${stepId}/4`;
+            if (instEl && ex) instEl.innerText = ex.instruction;
+            if (hintEl) hintEl.innerText = `Troca aos ${Math.floor(totalSec / 2)}s`;
+        }
+
+        function hideStretchActiveDisplay() {
+            const container = document.getElementById('stretch-active-display');
+            if (container) container.classList.add('hidden');
+        }
+
+        function updateStretchActiveDisplayUI(stepId, secLeft, totalSec) {
+            const timeEl = document.getElementById('stretch-active-time-left');
+            const secBig = document.getElementById('stretch-seconds-big');
+            const arc = document.getElementById('stretch-progress-arc');
+
+            const m = Math.floor(secLeft / 60);
+            const s = secLeft % 60;
+            const timeStr = `${m}:${String(s).padStart(2, '0')}`;
+
+            if (timeEl) timeEl.innerText = timeStr;
+            if (secBig) secBig.innerText = secLeft;
+
+            if (arc && totalSec > 0) {
+                const circumference = 301.6;
+                const elapsed = totalSec - secLeft;
+                const fraction = Math.min(1, Math.max(0, elapsed / totalSec));
+                const offset = circumference * (1 - fraction);
+                arc.style.strokeDashoffset = offset;
+            }
         }
 
         function startFullStretchCircuit() {
@@ -4200,20 +4936,11 @@
             const btnLabel = document.getElementById('circuit-corpo-label');
             const btnIcon = document.getElementById('circuit-corpo-icon');
             const cancelBtn = document.getElementById('btn-cancel-circuit');
-            const progressContainer = document.getElementById('circuit-overall-progress');
 
             if (btnLabel) btnLabel.innerText = `Pausar Circuito (${stepId}/4)`;
             if (btnIcon) btnIcon.className = 'fa-solid fa-pause';
             if (cancelBtn) cancelBtn.classList.remove('hidden');
-            if (progressContainer) progressContainer.classList.remove('hidden');
 
-            const ex = STRETCH_EXERCISES.find(e => e.id === stepId);
-            const stepInfo = document.getElementById('circuit-step-info');
-            if (stepInfo && ex) {
-                stepInfo.innerText = `Exercício ${stepId}/4: ${ex.name}`;
-            }
-
-            speakVoice(`Exercício ${stepId} de 4: ${ex ? ex.name : ''}`);
             startStretchTimer(stepId, true);
         }
 
@@ -4226,51 +4953,116 @@
 
             const btnLabel = document.getElementById('circuit-corpo-label');
             const btnIcon = document.getElementById('circuit-corpo-icon');
+            const pauseBtnLabel = document.getElementById('label-pause-stretch-ctrl');
+            const pauseBtnIcon = document.getElementById('icon-pause-stretch-ctrl');
             const step = AppState.pausas.circuitStep || 1;
 
             if (btnLabel) btnLabel.innerText = `Continuar Circuito (${step}/4)`;
             if (btnIcon) btnIcon.className = 'fa-solid fa-play';
+            if (pauseBtnLabel) pauseBtnLabel.innerText = 'Continuar';
+            if (pauseBtnIcon) pauseBtnIcon.className = 'fa-solid fa-play text-xs';
 
             const activeCard = AppState.pausas.activeTimerId;
             if (activeCard) {
                 const icon = document.getElementById('stretch-icon-' + activeCard);
                 if (icon) icon.className = 'fa-solid fa-play';
             }
+            triggerHaptic([30]);
         }
 
         function resumeStretchCircuit() {
+            startSoftResumeCorpo();
+        }
+
+        function startSoftResumeCorpo() {
+            const overlay = document.getElementById('stretch-resume-overlay');
+            const countEl = document.getElementById('stretch-resume-count');
+            if (overlay) overlay.classList.remove('hidden');
+
+            AppState.pausas.isResuming = true;
+            AppState.pausas.resumeCountdownSec = 3;
+            if (countEl) countEl.innerText = '3';
+            triggerHaptic([30]);
+
+            AppState.pausas.resumeTimerId = setInterval(() => {
+                AppState.pausas.resumeCountdownSec--;
+                const c = AppState.pausas.resumeCountdownSec;
+                if (countEl) countEl.innerText = c;
+                if (c > 0) {
+                    triggerHaptic([30]);
+                    playBeep(600, 0.08);
+                } else {
+                    clearInterval(AppState.pausas.resumeTimerId);
+                    AppState.pausas.resumeTimerId = null;
+                    AppState.pausas.isResuming = false;
+                    if (overlay) overlay.classList.add('hidden');
+                    executeResumeStretchCircuit();
+                }
+            }, 1000);
+        }
+
+        function cancelSoftResumeCorpo() {
+            if (AppState.pausas.resumeTimerId) {
+                clearInterval(AppState.pausas.resumeTimerId);
+                AppState.pausas.resumeTimerId = null;
+            }
+            AppState.pausas.isResuming = false;
+            const overlay = document.getElementById('stretch-resume-overlay');
+            if (overlay) overlay.classList.add('hidden');
+        }
+
+        function executeResumeStretchCircuit() {
             AppState.pausas.circuitPaused = false;
             const step = AppState.pausas.circuitStep || 1;
 
             const btnLabel = document.getElementById('circuit-corpo-label');
             const btnIcon = document.getElementById('circuit-corpo-icon');
+            const pauseBtnLabel = document.getElementById('label-pause-stretch-ctrl');
+            const pauseBtnIcon = document.getElementById('icon-pause-stretch-ctrl');
+
             if (btnLabel) btnLabel.innerText = `Pausar Circuito (${step}/4)`;
             if (btnIcon) btnIcon.className = 'fa-solid fa-pause';
+            if (pauseBtnLabel) pauseBtnLabel.innerText = 'Pausar';
+            if (pauseBtnIcon) pauseBtnIcon.className = 'fa-solid fa-pause text-xs';
 
             const activeCard = AppState.pausas.activeTimerId || step;
             AppState.pausas.activeTimerId = activeCard;
 
-            const icon = document.getElementById('stretch-icon-' + activeCard);
-            if (icon) icon.className = 'fa-solid fa-pause';
-
-            const label = document.getElementById('stretch-label-' + activeCard);
-            const disp = document.getElementById('stretch-timer-display-' + activeCard);
-            const bar = document.getElementById('stretch-bar-' + activeCard);
+            const totalSec = AppState.pausas.totalCardSec || 60;
+            const ex = STRETCH_EXERCISES.find(e => e.id === activeCard);
 
             AppState.pausas.intervalId = setInterval(() => {
                 AppState.pausas.remainingSec--;
                 const sec = AppState.pausas.remainingSec;
+                const progressPct = ((totalSec - sec) / totalSec) * 100;
 
-                if (label) label.innerText = `0:${String(sec).padStart(2, '0')}`;
+                const m = Math.floor(sec / 60);
+                const s = sec % 60;
+                const timeStr = `${m}:${String(s).padStart(2, '0')}`;
+
+                const label = document.getElementById('stretch-label-' + activeCard);
+                const disp = document.getElementById('stretch-timer-display-' + activeCard);
+                const bar = document.getElementById('stretch-bar-' + activeCard);
+
+                if (label) label.innerText = timeStr;
                 if (disp) disp.innerText = `${sec}s`;
-                if (bar) bar.style.width = `${((60 - sec) / 60) * 100}%`;
+                if (bar) bar.style.width = `${progressPct}%`;
 
-                updateCircuitOverallUI(sec);
+                updateStretchActiveDisplayUI(activeCard, sec, totalSec);
+                updateCircuitOverallUI(sec, totalSec);
 
-                if (sec === 30) {
-                    const ex = STRETCH_EXERCISES.find(e => e.id === activeCard);
+                const halfTime = Math.floor(totalSec / 2);
+                if (sec === halfTime) {
                     triggerHaptic([100, 50, 100]);
-                    speakVoice(ex ? ex.voiceSwitch : '30 segundos. Troque o lado suavemente');
+                    if (AppState.pausas.soundEnabled) playBeep(800, 0.15);
+                    const sideBadge = document.getElementById('stretch-active-side-badge');
+                    if (sideBadge) {
+                        sideBadge.innerText = ex.sides > 1 ? 'Lado 2' : 'Fase Final';
+                        sideBadge.className = 'text-[10px] font-bold text-teal-300 bg-teal-500/20 px-1.5 py-0.5 rounded border border-teal-500/30';
+                    }
+                    if (AppState.pausas.voiceGuideEnabled) {
+                        speakVoice(ex ? ex.voiceSwitch : 'Metade do tempo! Troque o lado suavemente');
+                    }
                 }
 
                 if (sec <= 0) {
@@ -4278,21 +5070,20 @@
                     AppState.pausas.intervalId = null;
                     AppState.pausas.activeTimerId = null;
 
+                    const icon = document.getElementById('stretch-icon-' + activeCard);
                     if (icon) icon.className = 'fa-solid fa-check';
                     if (label) label.innerText = 'Feito!';
                     if (disp) disp.innerText = '✓ Concluído';
-                    if (bar) {
-                        bar.style.width = '100%';
-                        bar.className = 'bg-emerald-400 h-full w-full';
-                    }
 
-                    playTibetanChime();
+                    if (AppState.pausas.soundEnabled) playTibetanChime();
                     triggerHaptic([200, 100, 300]);
 
                     if (activeCard < 4) {
                         const nextCard = activeCard + 1;
                         const nextEx = STRETCH_EXERCISES.find(e => e.id === nextCard);
-                        speakVoice(`Concluído! Próximo: ${nextEx ? nextEx.name : 'alongamento'}`);
+                        if (AppState.pausas.voiceGuideEnabled) {
+                            speakVoice(`Concluído! Próximo: ${nextEx ? nextEx.name : 'alongamento'}`);
+                        }
                         setTimeout(() => {
                             if (AppState.pausas.circuitActive) {
                                 startStretchCircuitStep(nextCard);
@@ -4305,18 +5096,58 @@
             }, 1000);
         }
 
-        function updateCircuitOverallUI(currentCardSec) {
+        function toggleStretchCircuitPause() {
+            if (AppState.pausas.circuitPaused) {
+                resumeStretchCircuit();
+            } else {
+                pauseStretchCircuit();
+            }
+        }
+
+        function skipStretchStep() {
+            if (AppState.pausas.intervalId) {
+                clearInterval(AppState.pausas.intervalId);
+                AppState.pausas.intervalId = null;
+            }
             const currentStep = AppState.pausas.circuitStep || 1;
-            const elapsedTotal = ((currentStep - 1) * 60) + (60 - currentCardSec);
-            const totalSec = 240;
+            if (currentStep < 4) {
+                startStretchCircuitStep(currentStep + 1);
+            } else {
+                finishStretchCircuit();
+            }
+            triggerHaptic([40]);
+        }
+
+        function prevStretchStep() {
+            if (AppState.pausas.intervalId) {
+                clearInterval(AppState.pausas.intervalId);
+                AppState.pausas.intervalId = null;
+            }
+            const currentStep = AppState.pausas.circuitStep || 1;
+            if (currentStep > 1) {
+                startStretchCircuitStep(currentStep - 1);
+            } else {
+                startStretchCircuitStep(1);
+            }
+            triggerHaptic([40]);
+        }
+
+        function updateCircuitOverallUI(currentCardSec, cardTotalSec) {
+            const currentStep = AppState.pausas.circuitStep || 1;
+            const perCard = cardTotalSec || 60;
+            const elapsedTotal = ((currentStep - 1) * perCard) + (perCard - currentCardSec);
+            const totalSec = perCard * 4;
             const remainingTotal = Math.max(0, totalSec - elapsedTotal);
 
             const m = Math.floor(remainingTotal / 60);
             const s = remainingTotal % 60;
-            const timeElem = document.getElementById('circuit-time-left');
-            if (timeElem) timeElem.innerText = `${m}:${String(s).padStart(2, '0')}`;
+            const timeElem = document.getElementById('stretch-circuit-total-time');
+            if (timeElem) timeElem.innerText = `Circuito: ${m}:${String(s).padStart(2, '0')} min`;
 
-            const barElem = document.getElementById('circuit-progress-bar');
+            const infoElem = document.getElementById('stretch-circuit-info-realtime');
+            if (infoElem) infoElem.innerText = `Exercício ${currentStep} de 4`;
+
+            const barElem = document.getElementById('stretch-circuit-progress-bar');
             if (barElem) {
                 const pct = Math.min(100, (elapsedTotal / totalSec) * 100);
                 barElem.style.width = `${pct}%`;
@@ -4342,18 +5173,22 @@
                 } catch(e) {}
             }
 
+            const totalMin = Math.max(1, Math.round(((AppState.pausas.selectedDuration || 60) * 4) / 60));
+            recordCorpoSession('Circuito Completo Ergonômico (4 exercícios)', totalMin);
             markScheduleDone(5, true);
-            addMinutesToday(4, 'stretch');
+            addMinutesToday(totalMin, 'stretch');
 
             const btnLabel = document.getElementById('circuit-corpo-label');
             const btnIcon = document.getElementById('circuit-corpo-icon');
             const cancelBtn = document.getElementById('btn-cancel-circuit');
-            const progressContainer = document.getElementById('circuit-overall-progress');
 
-            if (btnLabel) btnLabel.innerText = 'Executar Circuito Completo (4 Minutos)';
+            if (btnLabel) btnLabel.innerText = 'Executar Circuito Completo';
             if (btnIcon) btnIcon.className = 'fa-solid fa-circle-play text-base';
             if (cancelBtn) cancelBtn.classList.add('hidden');
-            if (progressContainer) progressContainer.classList.add('hidden');
+
+            setTimeout(() => {
+                hideStretchActiveDisplay();
+            }, 3000);
         }
 
         function cancelStretchCircuit(announce = true) {
@@ -4369,12 +5204,12 @@
             const btnLabel = document.getElementById('circuit-corpo-label');
             const btnIcon = document.getElementById('circuit-corpo-icon');
             const cancelBtn = document.getElementById('btn-cancel-circuit');
-            const progressContainer = document.getElementById('circuit-overall-progress');
 
-            if (btnLabel) btnLabel.innerText = 'Executar Circuito Completo (4 Minutos)';
+            if (btnLabel) btnLabel.innerText = 'Executar Circuito Completo';
             if (btnIcon) btnIcon.className = 'fa-solid fa-circle-play text-base';
             if (cancelBtn) cancelBtn.classList.add('hidden');
-            if (progressContainer) progressContainer.classList.add('hidden');
+
+            hideStretchActiveDisplay();
 
             for (let i = 1; i <= 4; i++) {
                 const icon = document.getElementById('stretch-icon-' + i);
@@ -4388,7 +5223,121 @@
             }
         }
 
-        /* -------------------------------------------------------------
+        // 6. HISTÓRICO & MÉTRICAS DE MOBILIDADE (CORPO)
+        function recordCorpoSession(title, durationMin) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+
+            const sessionItem = {
+                id: 'corpo_' + Date.now(),
+                title: title,
+                durationMin: durationMin,
+                dateStr: dateStr,
+                intensity: AppState.pausas.selectedIntensity || 'padrao'
+            };
+
+            if (!AppState.pausas.history) AppState.pausas.history = [];
+            AppState.pausas.history.unshift(sessionItem);
+            if (AppState.pausas.history.length > 50) AppState.pausas.history.pop();
+
+            try {
+                localStorage.setItem('coreflow_corpo_history', JSON.stringify(AppState.pausas.history));
+            } catch(e) {}
+
+            renderCorpoHistory();
+            updateWeeklyMobilityMetrics();
+        }
+
+        function renderCorpoHistory() {
+            const listEl = document.getElementById('corpo-history-list');
+            const badgeEl = document.getElementById('corpo-history-count-badge');
+            if (!listEl) return;
+
+            const history = AppState.pausas.history || [];
+            if (badgeEl) badgeEl.innerText = `${history.length} sessões`;
+
+            if (history.length === 0) {
+                listEl.innerHTML = `
+                    <div class="text-center py-4 text-slate-500 text-xs">
+                        <i class="fa-solid fa-child-reaching text-slate-600 text-base mb-1 block"></i>
+                        Nenhum alongamento registrado ainda.<br>Faça seu primeiro circuito ergonômico acima!
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = history.slice(0, 10).map(item => {
+                return `
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between text-xs">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-child-reaching text-xs"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <span class="font-bold text-white">${item.title}</span>
+                                    <span class="text-[9px] bg-slate-800 text-emerald-400 px-1 rounded font-mono font-bold">${item.intensity}</span>
+                                </div>
+                                <span class="text-[10px] text-slate-500">${item.dateStr}</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-mono font-bold text-emerald-400 block">${item.durationMin} min</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleCorpoHistory() {
+            const content = document.getElementById('corpo-history-content');
+            const chevron = document.getElementById('corpo-history-chevron');
+            if (!content) return;
+            const isHidden = content.classList.contains('hidden');
+            if (isHidden) {
+                content.classList.remove('hidden');
+                if (chevron) chevron.style.transform = 'rotate(180deg)';
+                renderCorpoHistory();
+            } else {
+                content.classList.add('hidden');
+                if (chevron) chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function clearCorpoHistory() {
+            if (confirm('Deseja limpar todo o histórico de alongamentos do Corpo?')) {
+                AppState.pausas.history = [];
+                try {
+                    localStorage.removeItem('coreflow_corpo_history');
+                } catch(e) {}
+                renderCorpoHistory();
+                updateWeeklyMobilityMetrics();
+                triggerHaptic([30]);
+            }
+        }
+
+        function updateWeeklyMobilityMetrics() {
+            const history = AppState.pausas.history || [];
+            const totalMonthlyMin = history.reduce((acc, item) => acc + (item.durationMin || 0), 0);
+
+            const badgeEl = document.getElementById('corpo-monthly-badge');
+            if (badgeEl) badgeEl.innerText = `${totalMonthlyMin} min de postura`;
+
+            const weeklyCount = history.length;
+            const goal = AppState.pausas.weeklyGoal || 5;
+            const pct = Math.min(100, Math.round((weeklyCount / goal) * 100));
+
+            const labelEl = document.getElementById('corpo-weekly-goal-label');
+            const pctEl = document.getElementById('corpo-weekly-goal-pct');
+            const barEl = document.getElementById('corpo-weekly-goal-bar');
+
+            if (labelEl) labelEl.innerText = `🌱 Meta Semanal: ${weeklyCount} de ${goal} pausas ativas`;
+            if (pctEl) pctEl.innerText = `${pct}%`;
+            if (barEl) barEl.style.width = `${pct}%`;
+        }
+
+
+/* -------------------------------------------------------------
            ABA 3: PAUSAS ATIVAS & RESPIRAÇÃO (BLOCO MENTE)
         ------------------------------------------------------------- */
         const BREATH_CONFIGS = {
