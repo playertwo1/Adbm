@@ -15,7 +15,7 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, postura, re
 
 ## Versão atual
 
-`1.1.15` (`versionCode 15`) — adiciona o programa completo de Mindfulness em 8 Semanas, player dedicado e reprodução em segundo plano.
+`1.1.30` (`versionCode 30`) — adiciona o programa completo de Mindfulness em 8 Semanas, player dedicado e reprodução em segundo plano.
 
 O APK assinado está disponível na página de [Releases](https://github.com/playertwo1/Adbm/releases).
 
