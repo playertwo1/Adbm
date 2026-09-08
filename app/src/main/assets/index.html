@@ -187,6 +187,10 @@
             <button id="hapticToggleBtn" onclick="toggleHaptics()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
                 <i id="hapticIcon" class="fa-solid fa-mobile-screen-button text-cyan-400"></i>
             </button>
+            <!-- Galaxy Watch vibration toggle -->
+            <button id="watchHapticToggleBtn" onclick="toggleWatchHaptics()" title="Vibrar também no Galaxy Watch" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
+                <i id="watchHapticIcon" class="fa-solid fa-clock text-emerald-400"></i>
+            </button>
         </div>
     </header>
 
@@ -2674,6 +2678,7 @@
             activeTab: 'vacuo',
             voiceEnabled: true,
             hapticsEnabled: true,
+            watchHapticsEnabled: true,
             streak: 0,
             totalMinutesToday: 0,
             dailyGoal: 30,
@@ -8275,6 +8280,32 @@
             return `${String(Math.floor(safe / 60)).padStart(2, '0')}:${String(safe % 60).padStart(2, '0')}`;
         }
 
+        function syncWatchHapticsSetting() {
+            try {
+                if (window.AndroidBridge?.isWatchHapticsEnabled) {
+                    AppState.watchHapticsEnabled = window.AndroidBridge.isWatchHapticsEnabled();
+                }
+            } catch(e) {}
+            const icon = document.getElementById('watchHapticIcon');
+            const button = document.getElementById('watchHapticToggleBtn');
+            if (!icon || !button) return;
+            icon.className = AppState.watchHapticsEnabled
+                ? 'fa-solid fa-clock text-emerald-400'
+                : 'fa-solid fa-clock text-slate-500';
+            button.title = AppState.watchHapticsEnabled
+                ? 'Galaxy Watch: vibração ativada'
+                : 'Galaxy Watch: vibração desativada';
+        }
+
+        function toggleWatchHaptics() {
+            AppState.watchHapticsEnabled = !AppState.watchHapticsEnabled;
+            try {
+                window.AndroidBridge?.setWatchHapticsEnabled?.(AppState.watchHapticsEnabled);
+            } catch(e) {}
+            syncWatchHapticsSetting();
+            if (AppState.watchHapticsEnabled) triggerHaptic([100]);
+        }
+
         function mindfulnessTrackMeta(trackNumber) {
             const titles = { 1: 'Meditação do Corpo e da Respiração', 2: 'Escaneamento Corporal', 3: 'Movimento Consciente', 4: 'Respiração e Movimento Estendido', 5: 'Sons e Pensamentos', 6: 'Explorando a Dificuldade', 7: 'Amizade e Gentileza', 8: 'Espaço de Respiração (3 min)' };
             return { path: `audio/mindfulness/${trackNumber}track.mp3`, title: titles[trackNumber] || `Faixa ${trackNumber}` };
@@ -10272,6 +10303,7 @@
         // Initialize on load
         window.addEventListener('DOMContentLoaded', () => {
             loadSavedState();
+            syncWatchHapticsSetting();
             syncNativeWorkoutState();
             setPosture('deitado', 10);
             updateBracingLoad(25);

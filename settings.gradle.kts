@@ -25,3 +25,4 @@ dependencyResolutionManagement {
 rootProject.name = "Core Ativo"
 
 include(":app")
+include(":wear")

@@ -1,3 +1,22 @@
+# Próxima etapa: vibração dos exercícios no Galaxy Watch
+
+**Status:** implementação concluída em 08/09/2026; validação física pendente por não haver dispositivo ADB conectado.
+**Objetivo:** cada sinal de vibração do exercício no celular também gerar um sinal no relógio, com o menor atraso possível.
+
+1. **Compatibilidade adotada:** Galaxy Watch4 ou mais recente com Wear OS. Relógios Tizen exigem outra implementação.
+2. **Mapear eventos existentes:** revisar `MainActivity.kt` (bridge `vibrate`/`vibratePattern` e outros efeitos), `WorkoutForegroundService.kt` e o HTML. Centralizar os sinais dos exercícios para cobrir início, transições e término sem duplicações.
+3. **Criar módulo Wear OS:** aplicativo mínimo instalado no relógio, com permissão `VIBRATE`, mesmo applicationId e certificado de assinatura do app do celular. Receber comandos via Wearable Data Layer (`MessageClient`/`WearableListenerService`) e executar padrões compatíveis com o hardware.
+4. **Conectar os dispositivos:** descobrir o relógio com o app instalado usando `CapabilityClient`. Enviar eventos com versão do protocolo, sessão, identificador, padrão e prazo curto de validade. Descartar duplicados e eventos atrasados; não reproduzir uma fila antiga ao reconectar. O celular continua funcionando sem relógio.
+5. **Adicionar configuração:** opção “Vibrar também no relógio”, estado da conexão e botão de teste. Respeitar a preferência de vibração do usuário; definir e validar o comportamento com Não Perturbe. Pausar/encerrar deve cancelar padrões pendentes em ambos os dispositivos.
+6. **Validar em aparelhos reais:** telas apagadas, app em segundo plano, treino completo, desconexão/reconexão, bateria e cancelamento. Medir o atraso entre celular e relógio: meta inicial de até 300 ms em 95% dos sinais com conexão local estável, a confirmar nos testes; não prometer simultaneidade exata.
+7. **Entregar depois:** gerar APKs release versionados para celular e relógio, preservar assinatura e dados do celular e documentar instalação, pareamento e teste. Publicar quando a implementação estiver concluída.
+
+**Aceite automatizado concluído:** módulos celular e Wear compilam, usam o mesmo applicationId, versão e certificado; envio é opcional, não bloqueia o treino, descarta mensagens com mais de 5 segundos e elimina duplicações. **Pendente:** confirmar vibração e latência em um Galaxy Watch real.
+
+**Referências:** [Data Layer e requisitos de assinatura](https://developer.android.com/training/wearables/data/overview), [tipos de cliente](https://developer.android.com/training/wearables/data/client-types). Não presumir que o espelhamento de notificações replica os comandos de vibração dos exercícios.
+
+---
+
 # ROADMAP DE IMPLEMENTAÇÃO: PROGRAMA DE 8 SEMANAS DE MINDFULNESS (ATENÇÃO PLENA)
 **Projeto:** CoreFlow Android App (`C:\Users\fael\Downloads\Adbm`)  
 **Módulo:** Programas de Treinamento (`#tab-programas`) & Player de Áudio Guiado  

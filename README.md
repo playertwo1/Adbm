@@ -12,10 +12,11 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, postura, re
 - Reprodução durante o bloqueio da tela com serviço Android em primeiro plano.
 - Lembretes, acompanhamento diário, metas semanais, streak e histórico local.
 - Exercícios respiratórios, pausas ativas, hápticos e relatório de desempenho.
+- Vibração sincronizada dos exercícios em Galaxy Watch com Wear OS.
 
 ## Versão atual
 
-`1.1.30` (`versionCode 30`) — adiciona o programa completo de Mindfulness em 8 Semanas, player dedicado e reprodução em segundo plano.
+`1.1.31` (`versionCode 31`) — adiciona vibração dos exercícios no Galaxy Watch com Wear OS, mantendo o celular funcional quando o relógio estiver desconectado.
 
 O APK assinado está disponível na página de [Releases](https://github.com/playertwo1/Adbm/releases).
 
@@ -25,6 +26,7 @@ O APK assinado está disponível na página de [Releases](https://github.com/pla
 - Android SDK 36.
 - Gradle 9.3.1.
 - Android 7.0/API 24 ou superior.
+- Para vibração no relógio: Galaxy Watch4 ou mais recente com Wear OS e o APK `CoreFlow-Watch` instalado.
 
 ## Compilação
 
@@ -40,7 +42,11 @@ Para gerar uma release assinada, configure as variáveis `KEYSTORE_PATH`, `KEYST
 .\gradlew.bat testDebugUnitTest assembleRelease
 ```
 
-O arquivo será criado em `app/build/outputs/apk/release/app-release.apk`.
+Os arquivos serão criados em `app/build/outputs/apk/release/app-release.apk` e `wear/build/outputs/apk/release/wear-release.apk`.
+
+## Galaxy Watch
+
+Instale o APK principal no celular e o APK `CoreFlow-Watch` no relógio. Ambos usam o mesmo identificador e certificado, como exigido pelo Wear OS. No CoreFlow, o botão com ícone de relógio ativa ou desativa o envio das vibrações. O relógio precisa estar pareado e conectado; a ausência dele não interrompe o exercício no celular.
 
 ## Estrutura principal
 
@@ -48,6 +54,7 @@ O arquivo será criado em `app/build/outputs/apk/release/app-release.apk`.
 - `app/src/main/assets/index.html`: interface embarcada no APK.
 - `app/src/main/assets/audio/mindfulness/`: oito faixas do programa de atenção plena.
 - `app/src/main/java/com/example/`: integração WebView, hápticos, notificações e serviço de áudio.
+- `wear/`: aplicativo complementar Wear OS que recebe e reproduz os padrões de vibração.
 - `ROADMAP.md`: especificação do programa de Mindfulness.
 
 ## Assinatura e segurança

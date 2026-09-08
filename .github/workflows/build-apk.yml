@@ -78,35 +78,43 @@ jobs:
         if: github.event_name == 'pull_request'
         run: gradle --no-daemon assembleDebug
 
-      - name: Upload signed release APK
+      - name: Upload signed release APKs
         if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: CoreFlow-release-${{ github.run_number }}
-          path: app/build/outputs/apk/release/*.apk
+          path: |
+            app/build/outputs/apk/release/*.apk
+            wear/build/outputs/apk/release/*.apk
           if-no-files-found: error
 
-      - name: Publish APK in GitHub Releases
+      - name: Publish phone and watch APKs in GitHub Releases
         if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: v1.1.${{ github.run_number }}
         run: |
           shopt -s nullglob
-          apks=(app/build/outputs/apk/release/*.apk)
-          if [ "${#apks[@]}" -ne 1 ]; then
-            echo "Esperado exatamente um APK release; encontrados: ${#apks[@]}"
+          phone_apks=(app/build/outputs/apk/release/*.apk)
+          watch_apks=(wear/build/outputs/apk/release/*.apk)
+          if [ "${#phone_apks[@]}" -ne 1 ] || [ "${#watch_apks[@]}" -ne 1 ]; then
+            echo "Esperado um APK do celular e um APK do relógio."
             exit 1
           fi
 
-          asset_name="CoreFlow-${RELEASE_TAG}.apk"
+          phone_asset="CoreFlow-${RELEASE_TAG}.apk"
+          watch_asset="CoreFlow-Watch-${RELEASE_TAG}.apk"
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            gh release upload "$RELEASE_TAG" "${apks[0]}#${asset_name}" --clobber
+            gh release upload "$RELEASE_TAG" \
+              "${phone_apks[0]}#${phone_asset}" \
+              "${watch_apks[0]}#${watch_asset}" --clobber
           else
-            gh release create "$RELEASE_TAG" "${apks[0]}#${asset_name}" \
+            gh release create "$RELEASE_TAG" \
+              "${phone_apks[0]}#${phone_asset}" \
+              "${watch_apks[0]}#${watch_asset}" \
               --target "$GITHUB_SHA" \
               --title "CoreFlow ${RELEASE_TAG}" \
-              --notes "APK release assinado. Pode ser instalado sobre uma versão anterior assinada com a mesma chave."
+              --notes "APKs release assinados para celular e Galaxy Watch com Wear OS. O APK do celular pode atualizar uma versão anterior assinada com a mesma chave."
           fi
 
       - name: Upload debug APK for pull request
