@@ -16,7 +16,7 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, postura, re
 
 ## Versão atual
 
-`1.1.31` (`versionCode 31`) — adiciona vibração dos exercícios no Galaxy Watch com Wear OS, mantendo o celular funcional quando o relógio estiver desconectado.
+`1.1.34` (`versionCode 34`) — adiciona a Pausa de Resposta de 3 Minutos, com três etapas visuais, modo silencioso, retomada segura, escolha do próximo passo e histórico local opcional.
 
 O APK assinado está disponível na página de [Releases](https://github.com/playertwo1/Adbm/releases).
 

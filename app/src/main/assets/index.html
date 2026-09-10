@@ -1153,6 +1153,44 @@
                 </div>
             </div>
 
+            <!-- PAUSA DE RESPOSTA: acesso rápido mesmo com o bloco Mente recolhido -->
+            <div class="bg-gradient-to-br from-violet-950/90 via-slate-900 to-cyan-950/70 border border-violet-500/40 rounded-2xl md:rounded-3xl p-4 shadow-xl shadow-violet-950/20">
+                <div class="flex items-start gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-violet-500/20 border border-violet-400/30 flex items-center justify-center text-violet-300 flex-shrink-0">
+                        <i class="fa-solid fa-hand"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h3 class="font-heading text-base font-extrabold text-white">Pausa de Resposta</h3>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-400/30 text-violet-200">3 MIN · SILENCIOSA</span>
+                        </div>
+                        <p class="mt-1 text-xs leading-relaxed text-slate-300">Para e-mails ríspidos, cobranças e reuniões tensas: reconheça a reação, ancore a atenção e escolha o próximo passo.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-1.5 mt-3 text-[10px] font-bold text-center" aria-label="Etapas da pausa">
+                    <div class="rounded-lg bg-violet-500/15 border border-violet-500/25 px-1 py-2 text-violet-200">1 · Reconhecer</div>
+                    <div class="rounded-lg bg-cyan-500/10 border border-cyan-500/20 px-1 py-2 text-cyan-200">2 · Ancorar</div>
+                    <div class="rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-1 py-2 text-emerald-200">3 · Escolher</div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-3">
+                    <button onclick="openResponsivePauseGuide()" class="min-h-12 rounded-xl bg-slate-800/80 border border-slate-600 text-slate-200 font-bold text-xs active:scale-95 transition">
+                        <i class="fa-solid fa-list-check mr-1.5"></i>Ver roteiro
+                    </button>
+                    <button onclick="startResponsivePause()" class="min-h-12 rounded-xl bg-gradient-to-r from-violet-500 to-cyan-500 text-white font-black text-xs shadow-lg shadow-violet-950/30 active:scale-95 transition">
+                        <i class="fa-solid fa-play mr-1.5"></i>Começar 3 min
+                    </button>
+                </div>
+                <div class="mt-3 pt-3 border-t border-white/10">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="text-[11px] text-slate-400">Histórico local opcional</span>
+                        <button id="responsive-history-toggle" onclick="toggleResponsivePauseHistory()" role="switch" aria-checked="false" class="px-2.5 py-1.5 rounded-lg border border-slate-600 bg-slate-800 text-[10px] font-bold text-slate-300">Desativado</button>
+                    </div>
+                    <div id="responsive-pause-summary" class="mt-2 text-[11px] text-slate-400">O registro está desativado.</div>
+                    <div id="responsive-pause-history" class="hidden mt-2 space-y-1.5"></div>
+                    <button id="responsive-history-clear" onclick="clearResponsivePauseHistory()" class="hidden mt-2 text-[10px] text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash-can mr-1"></i>Apagar histórico</button>
+                </div>
+            </div>
+
             <!-- BLOCO COLAPSÁVEL: MENTE -->
             <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl md:rounded-3xl shadow-xl overflow-hidden transition-all duration-300">
                 <!-- Cabeçalho Colapsável -->
@@ -2619,6 +2657,65 @@
     </div>
 
     <!-- ============================================================ -->
+    <!-- PAUSA DE RESPOSTA DE 3 MINUTOS -->
+    <div id="responsivePauseModal" class="hidden fixed inset-0 z-[100] bg-slate-950/95">
+        <div class="h-full max-w-xl mx-auto flex flex-col px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] overflow-y-auto">
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-violet-300">Pausa · silenciosa</p>
+                    <h2 id="responsive-pause-title" class="font-heading text-xl font-extrabold text-white">Pausa de Resposta</h2>
+                </div>
+                <button onclick="endResponsivePause(false)" aria-label="Fechar pausa" class="w-12 h-12 rounded-xl border border-slate-700 bg-slate-900 text-slate-300"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div id="responsive-pause-stagebar" class="grid grid-cols-3 gap-1.5 mt-5" aria-label="Progresso das etapas">
+                <div id="responsive-stage-0" class="rounded-xl border px-1 py-2 text-center text-[10px] font-bold">1 · Reconhecer</div>
+                <div id="responsive-stage-1" class="rounded-xl border px-1 py-2 text-center text-[10px] font-bold">2 · Ancorar</div>
+                <div id="responsive-stage-2" class="rounded-xl border px-1 py-2 text-center text-[10px] font-bold">3 · Escolher</div>
+            </div>
+            <div id="responsive-pause-progress-track" class="w-full h-1.5 rounded-full bg-slate-800 mt-3 overflow-hidden"><div id="responsive-pause-progress" class="h-full bg-gradient-to-r from-violet-500 via-cyan-400 to-emerald-400 transition-all duration-300" style="width:0%"></div></div>
+
+            <div id="responsive-pause-session" class="flex-1 flex flex-col items-center justify-center text-center py-6">
+                <div id="responsive-pause-total" class="font-mono text-4xl font-black text-white tabular-nums">03:00</div>
+                <div id="responsive-pause-stage-time" class="text-xs text-slate-400 mt-1">Etapa 1 de 3 · 01:00</div>
+                <div id="responsive-breath-orb" class="mt-7 w-32 h-32 rounded-full border-2 border-violet-400/50 bg-violet-500/10 shadow-[0_0_45px_rgba(139,92,246,0.18)] flex items-center justify-center transition-transform ease-in-out">
+                    <i id="responsive-pause-icon" class="fa-solid fa-hand text-3xl text-violet-300"></i>
+                </div>
+                <h3 id="responsive-pause-instruction" class="mt-6 text-xl leading-snug font-extrabold text-white max-w-md">Pare por um instante. A resposta pode esperar esta pausa.</h3>
+                <p id="responsive-pause-support" class="mt-2 text-sm leading-relaxed text-slate-300 max-w-md">Tire as mãos do teclado e mantenha os olhos abertos em foco suave.</p>
+
+                <div id="responsive-breath-controls" class="hidden w-full mt-5 space-y-2">
+                    <div class="grid grid-cols-3 gap-2">
+                        <button id="responsive-mode-natural" onclick="setResponsiveBreathMode('natural')" class="min-h-12 rounded-xl border text-xs font-bold">Natural</button>
+                        <button id="responsive-mode-3-4" onclick="setResponsiveBreathMode('3-4')" class="min-h-12 rounded-xl border text-xs font-bold">Guia 3/4</button>
+                        <button id="responsive-mode-3-5" onclick="setResponsiveBreathMode('3-5')" class="min-h-12 rounded-xl border text-xs font-bold">Guia 3/5</button>
+                    </div>
+                    <button onclick="setResponsivePauseAnchor('feet')" class="w-full min-h-12 rounded-xl border border-slate-700 bg-slate-900 text-xs font-bold text-slate-300"><i class="fa-solid fa-shoe-prints mr-1.5"></i>Focar nos pés</button>
+                </div>
+            </div>
+
+            <div id="responsive-guide-panel" class="hidden mb-4 rounded-2xl border border-violet-500/30 bg-slate-900 p-4 text-sm text-slate-300 space-y-3">
+                <div class="flex justify-between gap-3"><h3 class="font-bold text-white">Roteiro rápido</h3><button onclick="closeResponsivePauseGuide()" class="text-violet-300 font-bold">Fechar</button></div>
+                <p><strong class="text-violet-300">1 · Reconhecer:</strong> pare de digitar. Note o pensamento com “Estou tendo o pensamento de que…”. Nomeie a emoção e perceba onde o corpo está tenso.</p>
+                <p><strong class="text-cyan-300">2 · Ancorar:</strong> apoie os pés, ajuste uma postura confortável e observe o abdômen se mover. Respire naturalmente ou use 3/4 ou 3/5, sem forçar.</p>
+                <p><strong class="text-emerald-300">3 · Escolher:</strong> perceba o corpo inteiro, solte mãos, ombros e rosto. Pergunte: “Qual é o próximo passo mais sensato e construtivo?”</p>
+                <p class="text-xs text-slate-400">Se observar a respiração incomodar, volte ao ritmo natural e sinta os pés ou o contato com a cadeira.</p>
+            </div>
+
+            <div id="responsive-pause-actions" class="grid grid-cols-3 gap-2">
+                <button id="responsive-pause-toggle" onclick="toggleResponsivePause()" class="min-h-12 rounded-xl bg-violet-500 text-white font-black"><i class="fa-solid fa-pause mr-1.5"></i>Pausar sessão</button>
+                <button onclick="openResponsivePauseGuide(true)" class="min-h-12 rounded-xl border border-slate-700 bg-slate-900 text-slate-200 font-bold text-xs">Orientação</button>
+                <button onclick="endResponsivePause(false)" class="min-h-12 rounded-xl border border-rose-900/60 bg-rose-950/30 text-rose-300 font-bold text-xs">Encerrar</button>
+            </div>
+
+            <div id="responsive-pause-completion" class="hidden py-6">
+                <div class="text-center"><i class="fa-solid fa-circle-check text-4xl text-emerald-400"></i><h3 class="mt-3 text-xl font-extrabold text-white">A pausa terminou</h3><p class="mt-1 text-sm text-slate-300">Escolha um próximo passo, se isso ajudar.</p></div>
+                <div id="responsive-next-actions" class="grid grid-cols-2 gap-2 mt-5"></div>
+                <button onclick="finishResponsivePause()" class="w-full min-h-12 mt-4 rounded-xl bg-emerald-500 text-slate-950 font-black">Voltar ao trabalho</button>
+            </div>
+        </div>
+    </div>
+
     <!-- BOTTOM NAVIGATION BAR (MATERIAL DESIGN 3 / ANDROID TABS) -->
     <!-- ============================================================ -->
     <nav class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-1 py-2 no-print">
@@ -3118,6 +3215,12 @@
            ANDROID HARDWARE BACK BUTTON NAVIGATION HANDLER
         ------------------------------------------------------------- */
         window.handleAndroidBack = function() {
+            const responsiveModal = document.getElementById('responsivePauseModal');
+            if (responsiveModal && !responsiveModal.classList.contains('hidden')) {
+                endResponsivePause(false);
+                return true;
+            }
+
             // 0. Overlays Mente Prioritários (OLED, Descompressão e Retomada)
             const oledOverlay = document.getElementById('breath-oled-overlay');
             if (oledOverlay && !oledOverlay.classList.contains('hidden')) {
@@ -10300,9 +10403,379 @@
             }
         }
 
+        /* -------------------------------------------------------------
+           PAUSA DE RESPOSTA DE 3 MINUTOS (SILENCIOSA)
+        ------------------------------------------------------------- */
+        const RESPONSIVE_PAUSE_KEY = 'coreflow_responsive_pause_v1';
+        const RESPONSIVE_PAUSE_STAGES = [
+            {
+                name: 'Reconhecer', icon: 'fa-hand',
+                cues: [
+                    [10, 'Pare por um instante. A resposta pode esperar esta pausa.', 'Tire as mãos do teclado e mantenha os olhos abertos em foco suave.'],
+                    [30, 'Que pensamento apareceu?', 'Experimente: “Estou tendo o pensamento de que…” — sem discutir com ele.'],
+                    [45, 'Dê um nome ao que sente.', 'Irritação, urgência, ansiedade, medo ou apenas “há desconforto aqui”.'],
+                    [60, 'Onde o corpo está tenso?', 'Observe mandíbula, ombros, peito, barriga e a respiração.']
+                ]
+            },
+            {
+                name: 'Ancorar', icon: 'fa-shoe-prints',
+                cues: [[60, 'Sinta o abdômen subir e descer.', 'Pés apoiados, coluna confortável e mandíbula solta. Sem forçar a respiração.']]
+            },
+            {
+                name: 'Escolher', icon: 'fa-compass',
+                cues: [
+                    [20, 'Perceba o corpo inteiro.', 'Amplie a atenção para pés, pernas, tronco, mãos e rosto.'],
+                    [40, 'Solte mãos, ombros e rosto.', 'Não é preciso estar totalmente relaxado para seguir.'],
+                    [60, 'Qual é o próximo passo mais sensato e construtivo?', 'Você pode responder, pedir prazo, esclarecer, adiar ou pedir apoio.']
+                ]
+            }
+        ];
+        const RESPONSIVE_NEXT_ACTIONS = [
+            ['respond', 'Responder com calma'], ['request_time', 'Pedir prazo'],
+            ['clarify', 'Esclarecer prioridade'], ['defer', 'Adiar a decisão'],
+            ['support', 'Pedir apoio'], ['later', 'Decidir depois']
+        ];
+        let responsivePause = {
+            status: 'idle', elapsedMs: 0, startedTick: null, intervalId: null,
+            breathMode: 'natural', anchor: 'abdomen', historyEnabled: false,
+            history: [], sessionId: null, nextAction: null, guideOnly: false
+        };
+
+        function loadResponsivePauseState() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(RESPONSIVE_PAUSE_KEY) || '{}');
+                responsivePause.historyEnabled = saved.historyEnabled === true;
+                responsivePause.history = Array.isArray(saved.history) ? saved.history.filter(item => item && item.id).slice(0, 100) : [];
+                if (saved.active && ['running', 'paused'].includes(saved.active.status)) {
+                    responsivePause.status = 'paused';
+                    responsivePause.elapsedMs = Math.min(179999, Math.max(0, Number(saved.active.elapsedMs) || 0));
+                    responsivePause.breathMode = ['natural', '3-4', '3-5'].includes(saved.active.breathMode) ? saved.active.breathMode : 'natural';
+                    responsivePause.anchor = saved.active.anchor === 'feet' ? 'feet' : 'abdomen';
+                    responsivePause.sessionId = saved.active.sessionId || Date.now();
+                }
+            } catch (e) {}
+            renderResponsivePauseHistory();
+        }
+
+        function persistResponsivePause() {
+            const cutoff = Date.now() - (90 * 24 * 60 * 60 * 1000);
+            responsivePause.history = responsivePause.history.filter(item => Number(item.id) >= cutoff).slice(0, 100);
+            const active = ['running', 'paused'].includes(responsivePause.status) ? {
+                status: 'paused', elapsedMs: getResponsiveElapsedMs(), breathMode: responsivePause.breathMode,
+                anchor: responsivePause.anchor, sessionId: responsivePause.sessionId
+            } : null;
+            try {
+                localStorage.setItem(RESPONSIVE_PAUSE_KEY, JSON.stringify({
+                    version: 1, historyEnabled: responsivePause.historyEnabled,
+                    history: responsivePause.history, active
+                }));
+            } catch (e) {}
+        }
+
+        function getResponsiveElapsedMs() {
+            const live = responsivePause.status === 'running' && responsivePause.startedTick !== null
+                ? performance.now() - responsivePause.startedTick : 0;
+            return Math.min(180000, responsivePause.elapsedMs + live);
+        }
+
+        function openResponsivePauseModal() {
+            const modal = document.getElementById('responsivePauseModal');
+            modal?.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function startResponsivePause() {
+            if (AppState.mente?.isRunning || AppState.pausas?.isRunning || AppState.dailyExecution?.isRunning) {
+                showInlineToast('Há outra sessão em andamento. Encerre-a antes de iniciar esta pausa.');
+                return;
+            }
+            if (responsivePause.status === 'paused' && responsivePause.sessionId) {
+                openResponsivePauseModal();
+                responsivePause.guideOnly = false;
+                document.getElementById('responsive-pause-stagebar')?.classList.remove('hidden');
+                document.getElementById('responsive-pause-progress-track')?.classList.remove('hidden');
+                document.getElementById('responsive-pause-session')?.classList.remove('hidden');
+                document.getElementById('responsive-pause-actions')?.classList.remove('hidden');
+                document.getElementById('responsive-pause-completion')?.classList.add('hidden');
+                document.getElementById('responsive-guide-panel')?.classList.add('hidden');
+                clearInterval(responsivePause.intervalId);
+                responsivePause.intervalId = setInterval(updateResponsivePauseUI, 250);
+                updateResponsivePauseUI();
+                return;
+            }
+            clearInterval(responsivePause.intervalId);
+            responsivePause = {
+                ...responsivePause, status: 'running', elapsedMs: 0, startedTick: performance.now(),
+                intervalId: null, breathMode: 'natural', anchor: 'abdomen', sessionId: Date.now(),
+                nextAction: null, guideOnly: false
+            };
+            openResponsivePauseModal();
+            document.getElementById('responsive-pause-stagebar')?.classList.remove('hidden');
+            document.getElementById('responsive-pause-progress-track')?.classList.remove('hidden');
+            document.getElementById('responsive-pause-session')?.classList.remove('hidden');
+            document.getElementById('responsive-pause-actions')?.classList.remove('hidden');
+            document.getElementById('responsive-pause-completion')?.classList.add('hidden');
+            document.getElementById('responsive-guide-panel')?.classList.add('hidden');
+            responsivePause.intervalId = setInterval(updateResponsivePauseUI, 250);
+            updateResponsivePauseUI();
+            persistResponsivePause();
+        }
+
+        function openResponsivePauseGuide(fromSession = false) {
+            openResponsivePauseModal();
+            const panel = document.getElementById('responsive-guide-panel');
+            panel?.classList.remove('hidden');
+            if (fromSession && responsivePause.status === 'running') pauseResponsivePause();
+            responsivePause.guideOnly = !fromSession && !['running', 'paused'].includes(responsivePause.status);
+            if (responsivePause.guideOnly) {
+                document.getElementById('responsive-pause-session')?.classList.add('hidden');
+                document.getElementById('responsive-pause-actions')?.classList.add('hidden');
+                document.getElementById('responsive-pause-completion')?.classList.add('hidden');
+                document.getElementById('responsive-pause-stagebar')?.classList.add('hidden');
+                document.getElementById('responsive-pause-progress-track')?.classList.add('hidden');
+            }
+        }
+
+        function closeResponsivePauseGuide() {
+            document.getElementById('responsive-guide-panel')?.classList.add('hidden');
+            if (responsivePause.guideOnly) {
+                closeResponsivePauseModal();
+            } else {
+                document.getElementById('responsive-pause-stagebar')?.classList.remove('hidden');
+                document.getElementById('responsive-pause-progress-track')?.classList.remove('hidden');
+            }
+        }
+
+        function closeResponsivePauseModal() {
+            document.getElementById('responsivePauseModal')?.classList.add('hidden');
+            document.body.style.overflow = '';
+            responsivePause.guideOnly = false;
+        }
+
+        function toggleResponsivePause() {
+            if (responsivePause.status === 'running') pauseResponsivePause();
+            else if (responsivePause.status === 'paused') resumeResponsivePause();
+        }
+
+        function pauseResponsivePause() {
+            if (responsivePause.status !== 'running') return;
+            responsivePause.elapsedMs = getResponsiveElapsedMs();
+            responsivePause.startedTick = null;
+            responsivePause.status = 'paused';
+            updateResponsivePauseUI();
+            persistResponsivePause();
+        }
+
+        function resumeResponsivePause() {
+            if (responsivePause.status !== 'paused') return;
+            responsivePause.status = 'running';
+            responsivePause.startedTick = performance.now();
+            updateResponsivePauseUI();
+            persistResponsivePause();
+        }
+
+        function setResponsiveBreathMode(mode) {
+            if (!['natural', '3-4', '3-5'].includes(mode)) return;
+            responsivePause.breathMode = mode;
+            responsivePause.anchor = 'abdomen';
+            updateResponsivePauseUI();
+            persistResponsivePause();
+        }
+
+        function setResponsivePauseAnchor(anchor) {
+            responsivePause.anchor = anchor === 'feet' ? 'feet' : 'abdomen';
+            updateResponsivePauseUI();
+            persistResponsivePause();
+        }
+
+        function formatResponsiveTime(seconds) {
+            const safe = Math.max(0, Math.ceil(seconds));
+            return `${String(Math.floor(safe / 60)).padStart(2, '0')}:${String(safe % 60).padStart(2, '0')}`;
+        }
+
+        function updateResponsiveBreathGuide(stageElapsedSec) {
+            const orb = document.getElementById('responsive-breath-orb');
+            const instruction = document.getElementById('responsive-pause-instruction');
+            const support = document.getElementById('responsive-pause-support');
+            if (responsivePause.anchor === 'feet') {
+                orb.style.transform = 'scale(0.8)';
+                orb.style.transitionDuration = '500ms';
+                instruction.innerText = 'Sinta os pés apoiados no chão.';
+                support.innerText = 'Deixe a respiração seguir naturalmente e perceba o contato com o chão.';
+                return;
+            }
+            if (responsivePause.breathMode === 'natural') {
+                orb.style.transform = 'scale(0.85)';
+                orb.style.transitionDuration = '500ms';
+                instruction.innerText = 'Observe a respiração natural.';
+                support.innerText = 'Sinta o abdômen se mover. Sem forçar nem controlar.';
+                return;
+            }
+            const outSec = responsivePause.breathMode === '3-5' ? 5 : 4;
+            const cycle = 3 + outSec;
+            const cyclePos = stageElapsedSec % cycle;
+            const inhaling = cyclePos < 3;
+            orb.style.transitionDuration = `${inhaling ? 3 : outSec}s`;
+            orb.style.transform = inhaling ? 'scale(1.12)' : 'scale(0.72)';
+            instruction.innerText = inhaling ? 'Inspire suavemente' : 'Expire suavemente';
+            support.innerText = `Guia 3/${outSec} · se a contagem atrapalhar, volte ao ritmo natural.`;
+        }
+
+        function updateResponsivePauseUI() {
+            if (!['running', 'paused'].includes(responsivePause.status)) return;
+            const elapsed = getResponsiveElapsedMs();
+            if (elapsed >= 180000) return completeResponsivePause();
+            const elapsedSec = elapsed / 1000;
+            const stageIndex = Math.min(2, Math.floor(elapsedSec / 60));
+            const stageElapsed = elapsedSec - (stageIndex * 60);
+            const stage = RESPONSIVE_PAUSE_STAGES[stageIndex];
+            document.getElementById('responsive-pause-total').innerText = formatResponsiveTime(180 - elapsedSec);
+            document.getElementById('responsive-pause-stage-time').innerText = `Etapa ${stageIndex + 1} de 3 · ${formatResponsiveTime(60 - stageElapsed)}`;
+            document.getElementById('responsive-pause-progress').style.width = `${(elapsed / 180000) * 100}%`;
+            document.getElementById('responsive-pause-icon').className = `fa-solid ${stage.icon} text-3xl text-violet-300`;
+            for (let i = 0; i < 3; i++) {
+                const el = document.getElementById(`responsive-stage-${i}`);
+                el.className = i === stageIndex
+                    ? 'rounded-xl border border-violet-400 bg-violet-500/20 px-1 py-2 text-center text-[10px] font-bold text-white'
+                    : i < stageIndex
+                        ? 'rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-1 py-2 text-center text-[10px] font-bold text-emerald-300'
+                        : 'rounded-xl border border-slate-700 bg-slate-900 px-1 py-2 text-center text-[10px] font-bold text-slate-500';
+            }
+            const breathControls = document.getElementById('responsive-breath-controls');
+            breathControls?.classList.toggle('hidden', stageIndex !== 1);
+            if (stageIndex === 1) {
+                updateResponsiveBreathGuide(stageElapsed);
+            } else {
+                const cue = stage.cues.find(item => stageElapsed < item[0]) || stage.cues[stage.cues.length - 1];
+                document.getElementById('responsive-pause-instruction').innerText = cue[1];
+                document.getElementById('responsive-pause-support').innerText = cue[2];
+                const orb = document.getElementById('responsive-breath-orb');
+                orb.style.transform = 'scale(0.85)';
+                orb.style.transitionDuration = '500ms';
+            }
+            ['natural', '3-4', '3-5'].forEach(mode => {
+                const btn = document.getElementById(`responsive-mode-${mode}`);
+                btn.className = mode === responsivePause.breathMode
+                    ? 'min-h-12 rounded-xl border border-cyan-400 bg-cyan-500/20 text-xs font-bold text-cyan-200'
+                    : 'min-h-12 rounded-xl border border-slate-700 bg-slate-900 text-xs font-bold text-slate-400';
+            });
+            const toggle = document.getElementById('responsive-pause-toggle');
+            toggle.innerHTML = responsivePause.status === 'paused'
+                ? '<i class="fa-solid fa-play mr-1.5"></i>Continuar'
+                : '<i class="fa-solid fa-pause mr-1.5"></i>Pausar sessão';
+        }
+
+        function endResponsivePause(completed = false) {
+            if (responsivePause.guideOnly) return closeResponsivePauseModal();
+            if (!['running', 'paused'].includes(responsivePause.status)) return closeResponsivePauseModal();
+            const durationSec = Math.floor(getResponsiveElapsedMs() / 1000);
+            responsivePause.elapsedMs = durationSec * 1000;
+            responsivePause.startedTick = null;
+            responsivePause.status = completed ? 'completed' : 'interrupted';
+            clearInterval(responsivePause.intervalId);
+            responsivePause.intervalId = null;
+            if (responsivePause.historyEnabled && durationSec > 0) saveResponsivePauseRecord(durationSec, completed);
+            persistResponsivePause();
+            closeResponsivePauseModal();
+            renderResponsivePauseHistory();
+        }
+
+        function completeResponsivePause() {
+            if (responsivePause.status === 'completed') return;
+            responsivePause.elapsedMs = 180000;
+            responsivePause.startedTick = null;
+            responsivePause.status = 'completed';
+            clearInterval(responsivePause.intervalId);
+            responsivePause.intervalId = null;
+            document.getElementById('responsive-pause-session')?.classList.add('hidden');
+            document.getElementById('responsive-pause-actions')?.classList.add('hidden');
+            document.getElementById('responsive-pause-completion')?.classList.remove('hidden');
+            const actions = document.getElementById('responsive-next-actions');
+            actions.innerHTML = RESPONSIVE_NEXT_ACTIONS.map(([key, label]) => `<button onclick="selectResponsiveNextAction('${key}')" id="responsive-action-${key}" class="min-h-12 rounded-xl border border-slate-700 bg-slate-900 px-2 text-xs font-bold text-slate-300">${label}</button>`).join('');
+            if (responsivePause.historyEnabled) saveResponsivePauseRecord(180, true);
+            persistResponsivePause();
+        }
+
+        function selectResponsiveNextAction(action) {
+            responsivePause.nextAction = action;
+            RESPONSIVE_NEXT_ACTIONS.forEach(([key]) => {
+                const btn = document.getElementById(`responsive-action-${key}`);
+                btn.className = key === action
+                    ? 'min-h-12 rounded-xl border border-emerald-400 bg-emerald-500/20 px-2 text-xs font-bold text-emerald-200'
+                    : 'min-h-12 rounded-xl border border-slate-700 bg-slate-900 px-2 text-xs font-bold text-slate-400';
+            });
+        }
+
+        function finishResponsivePause() {
+            if (responsivePause.historyEnabled) saveResponsivePauseRecord(180, true);
+            responsivePause.status = 'idle';
+            persistResponsivePause();
+            closeResponsivePauseModal();
+            renderResponsivePauseHistory();
+            showInlineToast('Pausa concluída. Escolha seu próximo passo com calma.');
+        }
+
+        function saveResponsivePauseRecord(durationSec, completed) {
+            if (responsivePause.history.some(item => item.sessionId === responsivePause.sessionId)) {
+                const current = responsivePause.history.find(item => item.sessionId === responsivePause.sessionId);
+                if (responsivePause.nextAction) current.nextAction = responsivePause.nextAction;
+                return;
+            }
+            responsivePause.history.unshift({
+                id: Date.now(), sessionId: responsivePause.sessionId, durationSec,
+                completed, breathMode: responsivePause.breathMode,
+                anchor: responsivePause.anchor, nextAction: responsivePause.nextAction
+            });
+        }
+
+        function toggleResponsivePauseHistory() {
+            responsivePause.historyEnabled = !responsivePause.historyEnabled;
+            persistResponsivePause();
+            renderResponsivePauseHistory();
+        }
+
+        function clearResponsivePauseHistory() {
+            if (!responsivePause.history.length) return;
+            if (!confirm('Apagar todo o histórico da Pausa de Resposta?')) return;
+            responsivePause.history = [];
+            persistResponsivePause();
+            renderResponsivePauseHistory();
+        }
+
+        function renderResponsivePauseHistory() {
+            const toggle = document.getElementById('responsive-history-toggle');
+            if (!toggle) return;
+            toggle.innerText = responsivePause.historyEnabled ? 'Ativado' : 'Desativado';
+            toggle.setAttribute('aria-checked', String(responsivePause.historyEnabled));
+            toggle.className = responsivePause.historyEnabled
+                ? 'px-2.5 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/15 text-[10px] font-bold text-emerald-300'
+                : 'px-2.5 py-1.5 rounded-lg border border-slate-600 bg-slate-800 text-[10px] font-bold text-slate-300';
+            const summary = document.getElementById('responsive-pause-summary');
+            const list = document.getElementById('responsive-pause-history');
+            const clearButton = document.getElementById('responsive-history-clear');
+            if (!responsivePause.historyEnabled) {
+                summary.innerText = 'O registro está desativado.';
+                list.classList.add('hidden');
+                clearButton?.classList.toggle('hidden', responsivePause.history.length === 0);
+                return;
+            }
+            const completed = responsivePause.history.filter(item => item.completed).length;
+            const interrupted = responsivePause.history.length - completed;
+            const totalSec = responsivePause.history.reduce((sum, item) => sum + (Number(item.durationSec) || 0), 0);
+            summary.innerText = `${completed} concluída${completed === 1 ? '' : 's'} · ${interrupted} interrompida${interrupted === 1 ? '' : 's'} · ${Math.floor(totalSec / 60)} min ${totalSec % 60}s`;
+            list.classList.toggle('hidden', responsivePause.history.length === 0);
+            clearButton?.classList.toggle('hidden', responsivePause.history.length === 0);
+            list.innerHTML = responsivePause.history.slice(0, 5).map(item => {
+                const date = new Date(item.id).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+                const state = item.completed ? 'Concluída' : 'Interrompida';
+                return `<div class="flex items-center justify-between gap-2 rounded-lg bg-slate-950/60 border border-slate-800 px-2.5 py-2"><span class="text-[10px] text-slate-400">${date} · ${formatResponsiveTime(item.durationSec)}</span><span class="text-[10px] font-bold ${item.completed ? 'text-emerald-400' : 'text-amber-400'}">${state}</span></div>`;
+            }).join('');
+        }
+
         // Initialize on load
         window.addEventListener('DOMContentLoaded', () => {
             loadSavedState();
+            loadResponsivePauseState();
             syncWatchHapticsSetting();
             syncNativeWorkoutState();
             setPosture('deitado', 10);
@@ -10313,6 +10786,7 @@
         });
 
         document.addEventListener('visibilitychange', () => {
+            if (document.hidden && responsivePause.status === 'running') pauseResponsivePause();
             if (!document.hidden) syncNativeWorkoutState();
         });
     </script>

@@ -1,4 +1,10 @@
-# Próxima etapa: vibração dos exercícios no Galaxy Watch
+# ROADMAP — CoreFlow
+
+**Atualizado em:** 10/09/2026.
+
+**Nova entrega:** [Pausa de Resposta — Espaço de Respiração de 3 Minutos](#10-pausas--pausa-de-resposta-de-3-minutos), com roteiro para uso no banco, acompanhamento visual e histórico local opcional. **Implementação funcional concluída; validação física em aparelho pendente.**
+
+## Vibração dos exercícios no Galaxy Watch
 
 **Status:** implementação concluída em 08/09/2026; validação física pendente por não haver dispositivo ADB conectado.
 **Objetivo:** cada sinal de vibração do exercício no celular também gerar um sinal no relógio, com o menor atraso possível.
@@ -380,3 +386,303 @@ O modal de execução para treinos de mindfulness deve ser otimizado para audiç
 - [ ] Migração de versão (`CORE_DATA_VERSION = 3`) preserva os dados existentes sem resetar treinos anteriores.
 - [ ] Build Gradle (`assembleRelease`) conclui com sucesso com exit code 0.
 - [ ] APK release gerado e pronto para sincronização.
+
+---
+
+## 10. Pausas — Pausa de Resposta de 3 Minutos
+
+**Status:** card, roteiro, sessão visual, modo discreto, escolha final e histórico local implementados em 10/09/2026. Build debug concluído; validação física em aparelho pendente.
+
+**Destino:** aba **Pausas** (`#tab-pausas`), junto ao bloco **Mente**, com acesso rápido mesmo quando esse bloco estiver recolhido.
+
+**Nome no card:** “Pausa de Resposta · 3 min”.
+
+**Objetivo:** criar um intervalo entre o gatilho de estresse e a ação, ajudando a reconhecer pensamentos, emoções e sensações, estabilizar a atenção e escolher uma resposta construtiva no trabalho.
+
+“Responsiva” significa aqui uma prática acionada quando o estresse aparece. A interface também deverá se adaptar a diferentes tamanhos de tela. A sessão pode ser útil diante da vontade de responder agressivamente, do travamento ou da pressa para agir por impulso; não exige eliminar a emoção para ser concluída.
+
+### 10.1 Quando usar e como acessar no banco
+
+| Situação | Sinal para iniciar | Primeiro gesto possível |
+| :--- | :--- | :--- |
+| E-mail ou mensagem ríspida | Vontade de responder imediatamente ou justificar tudo | Tirar as mãos do teclado por um instante e deixar a resposta para depois da pausa |
+| Cobrança inesperada ou prazo apertado | Pensamento “Não vai dar tempo”, urgência e respiração curta | Parar antes de prometer um prazo e sentir os pés no chão |
+| Reunião tensa ou discordância | Mandíbula cerrada, irritação, interrupções ou travamento | Soltar as mãos, manter os olhos abertos e reconhecer a reação |
+| Atendimento difícil ou acúmulo de demandas | Impulso de encerrar a conversa, ceder sem avaliar ou agir no automático | Usar um intervalo viável entre atendimentos ou pedir um breve momento |
+
+**À mesa:** sentado, olhos abertos, olhar suave na tela, no papel ou em um ponto neutro; mãos em repouso. Não é necessário fechar os olhos, colocar fones ou fazer movimentos chamativos.
+
+**Com privacidade:** se for viável, fazer uma breve ida ao banheiro ou a outro local reservado; iniciar a prática quando estiver parado e acomodado. A leitura do celular não é necessária durante o deslocamento.
+
+**Acesso proposto:** abrir Pausas → tocar **“Começar 3 min”**. O cronômetro começa diretamente, sem cadastro, seleção obrigatória de gatilho ou avaliação inicial. Disponível desde o primeiro uso, independentemente da semana do programa de mindfulness.
+
+O card oferece também **“Ver roteiro”**, para aprender os passos sem iniciar nem registrar uma sessão. Um atalho opcional na tela inicial poderá abrir a mesma prática, sem criar uma segunda implementação.
+
+### 10.2 Roteiro completo para praticar e para orientar a interface
+
+Os três minutos são períodos de atenção, não metas de desempenho. O modo guiado usa três etapas de 60 segundos; o roteiro de consulta pode ser acompanhado no próprio ritmo. Os intervalos abaixo organizam as mensagens da interface e não exigem executar cada gesto exatamente no segundo indicado.
+
+#### Minuto 1 — Pausar e reconhecer a reação (00:00–01:00)
+
+**Intenção:** perceber o que já está acontecendo antes de responder.
+
+| Tempo decorrido | Instrução principal na tela | Orientação completa disponível em “Ver orientação” |
+| :--- | :--- | :--- |
+| 00:00–00:10 | **Pare por um instante. A resposta pode esperar esta pausa.** | Interrompa a digitação, não envie a mensagem e adie a decisão imediata quando houver espaço para isso. Mantenha os olhos abertos em foco suave. |
+| 00:10–00:30 | **Que pensamento apareceu?** | Perceba a narrativa automática: “Isso é injusto”, “Não vai dar tempo”, “Estou sendo atacado”. Use “Estou tendo o pensamento de que…” ou “Estou tendo pensamentos de frustração/medo”. Não precisa discutir com o pensamento nem tomá-lo como fato. |
+| 00:30–00:45 | **Dê um nome ao que sente.** | Reconheça irritação, urgência, ansiedade, medo ou frustração. Se não conseguir nomear, “Há desconforto aqui” é suficiente. Não é necessário digitar ou escolher uma opção. |
+| 00:45–01:00 | **Onde o corpo está tenso?** | Observe mandíbula, ombros, peito, barriga e respiração. Note mandíbula cerrada, ombros levantados, aperto ou respiração curta, sem precisar corrigir tudo agora. |
+
+**Lembrete fixo discreto:** “Pensamentos · Emoções · Corpo”. A sequência ajuda a observar; não vira um formulário ou checklist obrigatório durante a prática.
+
+**Frase de apoio:** “Posso notar esta reação antes de escolher o que fazer.”
+
+#### Minuto 2 — Ancorar e estabilizar o foco (01:00–02:00)
+
+**Intenção:** reunir a atenção em uma sensação concreta do presente.
+
+1. Apoie os dois pés no chão, com uma posição firme e confortável. Alinhe a coluna sem rigidez; pode desencostar um pouco as costas se isso ajudar, ou manter o apoio da cadeira se for mais confortável.
+2. Relaxe a mandíbula e mantenha a boca suavemente fechada se respirar pelo nariz for confortável; não force a passagem do ar nem a postura.
+3. Leve a atenção ao movimento do abdômen: expandindo na inspiração e recolhendo na expiração, sem contrair o abdômen como em um exercício de core.
+4. Observe inicialmente a respiração natural. Se ajudar, acompanhe uma inspiração suave contando até **3** e uma expiração contando até **4**. A opção **3/5** prolonga um pouco mais a saída do ar, apenas enquanto confortável.
+5. Quando surgir outro pensamento, reconheça a distração e volte ao próximo movimento da respiração, sem reiniciar o minuto.
+
+**Texto principal:** “Sinta o abdômen subir e descer.”
+
+**Texto de apoio:** “Sem forçar. Se a contagem atrapalhar, siga seu ritmo.”
+
+**Decisão de produto:** padrão inicial **“Natural”**, com **“Guia 3/4”** e **“Guia 3/5”** opcionais. O ritmo contado é uma adaptação desta proposta, não uma exigência do Espaço de Respiração nem uma garantia de efeito. A orientação de respirar com conforto, sem forçar a profundidade ou a contagem, segue o [guia de respiração do NHS](https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/breathing-exercises-for-stress/).
+
+**Comportamento do guia visual:** no modo natural, um ponto estático com a palavra “Observe”; nos modos contados, círculo que cresce em 3 segundos e diminui em 4 ou 5 segundos, com os rótulos “Inspire suavemente” e “Expire suavemente”. Não inserir retenções, apneia ou suspiro duplo neste protocolo. Ao mudar de ritmo, iniciar uma nova indicação de inspiração, sem reiniciar o minuto.
+
+Nos primeiros segundos, mostrar “Pés apoiados · Coluna confortável · Mandíbula solta”; depois, dar destaque ao abdômen. O guia pode funcionar desde o início do minuto, mas não exige que a pessoa o acompanhe enquanto ajusta a postura.
+
+**Transição aos 02:00:** encerrar a animação sem sinal de corte ou comando para interromper a respiração; mostrar “Continue respirando no seu ritmo”. Não alongar a sessão para completar um ciclo artificial.
+
+**Alternativa sempre acessível:** “Focar nos pés”. Caso observar ou contar a respiração aumente o desconforto, voltar à respiração espontânea e sentir os pés ou o contato com a cadeira; também é possível encerrar. A prática deve oferecer escolha, não insistência para cumprir o ritmo.
+
+#### Minuto 3 — Expandir e escolher a resposta (02:00–03:00)
+
+**Intenção:** ampliar a percepção e transformar a pausa em uma ação deliberada.
+
+| Tempo decorrido | Instrução principal na tela | Orientação completa |
+| :--- | :--- | :--- |
+| 02:00–02:20 | **Perceba o corpo inteiro.** | Amplie a atenção do abdômen para os pés, pernas, tronco, mãos e rosto. Sinta o apoio e a postura confortável. |
+| 02:20–02:40 | **Solte mãos, ombros e rosto.** | Note as mãos sobre a mesa ou o colo, deixe os ombros baixarem se possível e suavize a expressão. Não é preciso estar totalmente relaxado. |
+| 02:40–03:00 | **Qual é o próximo passo mais sensato e construtivo a dar agora?** | Considere responder com firmeza e calma, pedir prazo, esclarecer o que falta ou adiar uma decisão até entender melhor a situação. Escolha mentalmente; os botões de registro aparecem ao terminar. |
+
+**Frase de encerramento:** “A pausa terminou. Você pode escolher o próximo passo.”
+
+Não exibir “Agora você está calmo”, “perigo encerrado” ou “córtex pré-frontal ativado”. O objetivo observável é dar espaço à escolha; o app não mede ativação cerebral ou do sistema parassimpático. A proposta de reconhecer pensamentos, emoções e impulsos antes de agir é coerente com a orientação de [Oxford Mindfulness sobre perceber e responder à experiência](https://oxfordmindfulness.org/why-mindfulness-begins-with-noticing-and-how-that-leads-to-real-change).
+
+### 10.3 Acompanhamento visual durante os três minutos
+
+**Conceito:** três segmentos de progresso com nomes fixos — **1 Reconhecer → 2 Ancorar → 3 Escolher**. A etapa atual é destacada com número, texto e contorno; as anteriores recebem um símbolo de conclusão temporal. A cor é um apoio, sem representar diagnóstico ou intensidade emocional.
+
+```mermaid
+flowchart LR
+    A[Percebi um gatilho] --> B[Começar 3 min]
+    B --> C[1 · Reconhecer\nPensamentos, emoções e corpo\n60 s]
+    C --> D[2 · Ancorar\nRespiração ou pés\n60 s]
+    D --> E[3 · Escolher\nCorpo inteiro e próximo passo\n60 s]
+    E --> F[Retomar com uma ação escolhida]
+```
+
+**Esboço da tela compacta — exemplo durante o segundo minuto:**
+
+```text
+┌────────────────────────────────────────┐
+│ Pausa                      Silencioso  │
+│ ✓ 1 Reconhecer · ● 2 Ancorar · 3 Escolher│
+│                                        │
+│           01:24 restantes              │
+│           Etapa 2 de 3 · 00:24          │
+│                                        │
+│                  ◯                     │
+│          Expire suavemente             │
+│          Sinta o abdômen se mover       │
+│                                        │
+│ [Natural]  [3/4 selecionado]  [3/5]      │
+│ [Focar nos pés]  [Ver orientação]       │
+│                                        │
+│ [Pausar sessão]        [Encerrar]       │
+└────────────────────────────────────────┘
+```
+
+O desenho é uma especificação visual, sem indicar uma tela já implementada. Neste exemplo, decorreram 01:36: faltam 01:24 no total e 00:24 na etapa. O texto sobre a respiração muda conforme o ritmo escolhido.
+
+**Hierarquia e adaptação de tela:**
+
+- Exibir uma instrução principal por vez; preservar título, etapa e controles em posições estáveis para facilitar uma olhada rápida.
+- Cronômetro principal com tempo total restante; tempo da etapa menor, com rótulo claro. Não confundir a contagem respiratória com os segundos restantes da prática.
+- “Ver orientação” pausa o cronômetro e o guia enquanto o texto detalhado está aberto; fechar o painel mantém a sessão pausada até tocar “Continuar”.
+- Em telas estreitas, empilhar os nomes das etapas e permitir rolagem das orientações sem esconder os controles. Em telas maiores, manter a prática em um painel central de leitura curta.
+- Propor texto principal de pelo menos 18 px e alvos de toque de pelo menos 48 × 48 px; verificar legibilidade com texto ampliado a 200% e largura de 320 px, sem rolagem horizontal.
+- Usar contraste legível em ambiente claro e escuro. Não depender exclusivamente de cores; incluir números, rótulos e estados visíveis.
+- Respeitar preferência por movimento reduzido: substituir expansão/contração por rótulo estático da fase; nenhuma animação pulsante de alerta.
+- Para leitor de tela, anunciar mudança de etapa e estado de pausa/conclusão; não anunciar cada segundo automaticamente. Controles com nomes completos e ordem de foco previsível.
+
+### 10.4 Modo discreto, interrupções e conclusão
+
+**Padrão ao começar no banco:** sem voz, música, sino, confete, vibração no celular ou no relógio. Não herdar automaticamente som ligado de outra técnica. Mostrar o estado “Silencioso” antes e durante a prática.
+
+**Discrição visual:** título neutro “Pausa” no modo compacto e em eventual notificação. Ao trocar de aplicativo, ocultar o conteúdo da prática na prévia de aplicativos recentes, se suportado pela integração nativa. Nenhuma notificação exibe gatilho, emoção, nota de tensão ou ação escolhida.
+
+**Hápticos opcionais, em entrega posterior:** um pulso curto por transição de minuto e um sinal final discreto, com escolha explícita de celular/relógio e botão de teste. Não vibrar a cada respiração por padrão. Depende da validação física do Galaxy Watch descrita no início deste documento; desconexão não interrompe a prática e reconexão não reproduz sinais antigos.
+
+**Comportamento da sessão:**
+
+| Evento | Resultado esperado |
+| :--- | :--- |
+| Tocar “Pausar sessão” | Congelar tempo e progresso, parar animação e cancelar qualquer sinal pendente; mostrar “Continuar” |
+| Tocar “Continuar” | Retomar o tempo restante da mesma etapa; se houver guia contado, começar uma nova inspiração sem tentar compensar ciclos perdidos |
+| Trocar de aba, bloquear a tela ou colocar o app em segundo plano | Na primeira entrega visual, pausar automaticamente e persistir o ponto de retorno; ao voltar, exigir “Continuar” |
+| Fechar e reabrir o app com sessão interrompida | Oferecer “Retomar pausa” ou “Descartar”; não retomar sinais nem registrar conclusão automática |
+| Tocar “Encerrar” antes dos 03:00 | Parar imediatamente; mostrar duração realizada e permitir voltar ao trabalho sem confirmação adicional |
+| Chegar aos 03:00 de prática ativa | Concluir uma única vez, parar o guia e abrir a escolha opcional de próximo passo |
+| Tentar iniciar enquanto outro treino/áudio estiver ativo | Informar a sessão em andamento e oferecer acesso a ela ou sua interrupção explícita; nunca sobrepor guias |
+
+Uma versão futura com tela apagada precisa de temporização nativa e orientação suficiente por áudio/hápticos. Até essa entrega ser validada, a interface não oferece “continuar com tela apagada” para este protocolo. O tempo da prática exclui os períodos pausados e a leitura das orientações.
+
+**Tela final:** manter disponíveis **“Voltar ao trabalho”**, **“Escolher próximo passo”** e **“Como estou agora? (opcional)”**. A pessoa pode sair sem preencher nada. Se ainda houver tensão, oferecer consultar o roteiro, iniciar outra pausa por decisão própria ou procurar apoio; nenhuma repetição automática e nenhuma exigência de melhorar a nota.
+
+### 10.5 Escolha do próximo passo: exemplos práticos para o banco
+
+Ao final, apresentar opções curtas; tocar em uma mostra um exemplo editável apenas mentalmente, sem abrir e-mail nem enviar mensagens. O objetivo é facilitar uma ação concreta depois de fechar o app.
+
+| Opção | Quando considerar | Exemplo de resposta ou gesto |
+| :--- | :--- | :--- |
+| **Responder com calma e firmeza** | Tenho os fatos e consigo formular uma resposta útil | “Entendi a solicitação. Posso fazer X; para Y, preciso de Z.” |
+| **Pedir prazo** | Preciso conferir informações antes de me comprometer | “Vou verificar os dados e te retorno até [horário viável].” |
+| **Esclarecer a prioridade** | Duas demandas competem ou a cobrança está ambígua | “Para priorizar corretamente, qual entrega precisa vir primeiro?” |
+| **Adiar a decisão** | Faltam informações ou ainda estou prestes a agir por impulso | “Prefiro revisar este ponto antes de confirmar. Retomamos em [momento combinado]?” |
+| **Pedir apoio** | Preciso de outra pessoa para tratar a situação | Procurar um colega ou responsável e explicar objetivamente o que precisa ser resolvido |
+| **Decidir depois** | Ainda não sei qual caminho seguir | Voltar sem registrar uma escolha; a prática continua válida |
+
+Se escolher adiar, sugerir combinar quando retomar para evitar um adiamento indefinido. Isso não cria lembrete automaticamente. A pausa pode ajudar a responder com mais intenção; não exige concordar com uma cobrança ou aceitar tratamento inadequado.
+
+### 10.6 Histórico pessoal e acompanhamento ao longo dos dias
+
+**Primeira entrega:** registro local opcional, desativado por padrão, com escolha **“Guardar minhas pausas neste aparelho”** em configurações. A prática funciona integralmente sem histórico. Sem contas, nomes de clientes, conteúdo de mensagens ou detalhes de operações bancárias.
+
+**Dados propostos, se o histórico estiver ligado:** data/hora, duração ativa em segundos, estado concluído/interrompido, modo respiratório, âncora utilizada e próximo passo, se escolhido. Gatilho é opcional e categórico: “Mensagem”, “Cobrança”, “Reunião”, “Atendimento”, “Outro”; não solicitar texto livre.
+
+**Avaliação opcional:** tensão percebida de 0 (“nenhuma tensão percebida”) a 10 (“tensão muito intensa”). A nota inicial pode ser registrada antes de começar pelo detalhe do card, sem bloquear o acesso rápido; a final aparece após a prática. Ausência de nota é `null`, nunca zero. Não pedir para inventar uma nota anterior depois da sessão.
+
+**Painel proposto — dados abaixo apenas ilustrativos:**
+
+```text
+MINHAS PAUSAS · ÚLTIMOS 7 DIAS
+4 concluídas · 1 interrompida · 13 min 20 s praticados
+
+Seg  ●●     Ter  —     Qua  ●     Qui  ◐     Sex  ●
+● concluída    ◐ interrompida    — sem registro
+
+Hoje 14:20 · Reunião · 3 min · Concluída
+Tensão percebida: 7 → 5     Próximo passo: pedir prazo
+
+Hoje 10:10 · 1 min 20 s · Interrompida
+Tensão: não informada
+```
+
+Os números do resumo e as linhas são exemplos de componentes, não uma coleta real. Na implementação, o resumo deve sempre corresponder aos registros do intervalo selecionado.
+
+**Regras de leitura do painel:**
+
+- Mostrar lista cronológica e seletor “Hoje / 7 dias / 30 dias”; exibir estados vazios com linguagem neutra.
+- Totalizar a duração real das sessões concluídas e interrompidas; separar suas contagens. Não arredondar uma prática interrompida para três minutos.
+- Mostrar a comparação antes/depois somente quando ambas as notas existirem. Uma eventual média usa apenas pares completos e informa quantas sessões entraram no cálculo.
+- “Igual”, “menor” ou “maior tensão” são autorrelatos, não comprovação de alteração fisiológica, eficácia clínica ou produtividade.
+- Não criar ranking, meta obrigatória, alerta por não usar ou streak que pressione a fazer pausas quando não precisar. Mais pausas não significam piora nem melhor desempenho por si só.
+- Oferecer apagar um registro e apagar todo o histórico desta prática, com confirmação para essas exclusões. Desligar novos registros não apaga automaticamente os anteriores; explicar isso no controle.
+- Sem lembretes por padrão. Em entrega posterior, permitir horários voluntários para ensaiar a prática em momentos tranquilos, com texto neutro e desligamento simples.
+
+### 10.7 Integração com o projeto e decisões técnicas
+
+**Base inspecionada:** commit `984b003`. Existem `#tab-pausas`, `AppState.mente`, `BREATH_CONFIGS`, histórico de respiração e player do áudio `8track.mp3`; o protocolo visual de três etapas ainda precisa ser criado. `index.html` e `app/src/main/assets/index.html` têm conteúdo idêntico nesta revisão e devem permanecer sincronizados na implementação.
+
+| Ponto atual | Trabalho necessário |
+| :--- | :--- |
+| `index.html` e `app/src/main/assets/index.html` | Adicionar card, roteiro, tela de três etapas, estados da sessão e painel local; manter as duas cópias equivalentes |
+| `startSosBreath()` | Há uma inconsistência existente: texto/voz citam suspiro duplo, mas a função inicia `caixa`. Revisar a coerência do SOS ao integrar o novo card; não reutilizar esse caminho como se fosse o protocolo de três minutos |
+| `BREATH_CONFIGS` | Reutilizar componentes visuais quando compatíveis; a nova prática é uma sequência de atenção, não 180 segundos de respiração em caixa |
+| `completeBreathSessionRecord()` | O fluxo atual dispara voz/confete, registra minutos como `stretch` e marca a agenda de alongamento. Criar conclusão própria para esta prática, evitando esses efeitos e a marcação indevida |
+| Player de mindfulness / `8track.mp3` | Manter a prática em áudio disponível; a nova sessão visual funciona sem MP3 e não presume que a gravação tenha transições exatamente aos 60/120 segundos |
+| `MainActivity.kt` e `WorkoutForegroundService.kt` | Avaliar ciclo de vida, exclusividade de sessão, privacidade da prévia e limpeza de sinais; temporização nativa em segundo plano pertence a uma etapa posterior |
+| Integração Wear OS | Reutilizar o transporte de eventos apenas após validar o fluxo discreto e a conexão real |
+
+**Modelo proposto:** estado próprio `AppState.responsivePause`, sem substituir o objeto `mente` nem alterar os treinos salvos. Nomes abaixo são contrato de implementação proposto, não APIs já existentes.
+
+```text
+sessionId: identificador único criado ao iniciar
+protocolVersion: 1
+status: idle | running | paused | completed | interrupted
+stage: recognize | anchor | choose
+activeElapsedMs: tempo ativo acumulado, limitado a 180000
+breathMode: natural | 3-4 | 3-5
+anchor: abdomen | feet
+soundEnabled: false
+hapticsEnabled: false
+historyEnabled: false
+trigger: null | message | demand | meeting | service | other
+tensionBefore / tensionAfter: null ou inteiro de 0 a 10
+nextAction: null | respond | request_time | clarify | defer | support | later
+startedAt / endedAt: datas e horas em formato ISO, com endedAt inicialmente null
+```
+
+**Persistência e temporização:**
+
+1. Usar armazenamento dedicado e versionado, por exemplo `coreflow_responsive_pause_v1`, com configurações, sessão em andamento e histórico separados logicamente. A versão atual do esquema geral já é `3`; não executar novamente o incremento histórico indicado nas seções anteriores. Incrementar o esquema geral somente se a implementação realmente alterar esse contrato, com migração que preserve os dados existentes.
+2. Medir tempo ativo por diferença de relógio monotônico; usar o callback de atualização apenas para redesenhar. Persistir tempo acumulado ao pausar, trocar de etapa ou sair da tela. Ao restaurar, abrir pausado e não adicionar o intervalo em que o app ficou fechado.
+3. Definir etapas por limites claros: `[0, 60)`, `[60, 120)` e `[120, 180)` segundos ativos; aos 180, concluir uma vez. Separar a fase respiratória da etapa da prática.
+4. Usar `sessionId` para impedir registro duplo por toque repetido, retorno do app ou callback duplicado. A conclusão não depende da seleção de humor ou próximo passo.
+5. Se o histórico estiver desativado, persistir apenas preferências e estado mínimo necessário para retomar; não persistir gatilho, avaliações ou ação escolhida. Apagar o estado temporário ao encerrar/concluir/descartar. Se ativado, guardar os dados opcionais somente quando preenchidos.
+6. Tratar dados ausentes, inválidos ou de versão desconhecida sem zerar os outros módulos; validar notas, enums e duração. Falha de armazenamento não interrompe a prática: informar de forma discreta que o registro não foi salvo.
+7. Não enviar esses registros a analytics, notificações ou sincronização. Armazenamento local não equivale a criptografia; revisar a política de backup do Android antes da entrega para manter a promessa “neste aparelho”, excluindo o armazenamento desta prática do backup ou ajustando sua implementação.
+8. Definir retenção local de até 90 dias, informada na configuração; remover registros mais antigos de forma consistente com essa política. O painel usa a data local para os agrupamentos e os timestamps para ordenar, inclusive após mudança de fuso.
+
+**Integração de progresso:** a prática tem categoria própria de pausa consciente. Não marca alongamento, Kegel, bracing ou prática formal como feitos. Na primeira entrega, também não incrementa automaticamente as metas do programa de mindfulness; eventual contagem futura como prática complementar deve ser explícita e impedir duplicações entre áudio e guia visual.
+
+### 10.8 Ordem de implementação e acompanhamento da entrega
+
+| Etapa | Entrega verificável | Dependências | Status |
+| :--- | :--- | :--- | :--- |
+| P1 — Acesso e roteiro | Card na aba Pausas; roteiro completo consultável; abertura em um toque dentro da aba | Conteúdo da seção 10.2 | [x] Concluído em 10/09/2026 |
+| P2 — Sessão visual | Três minutos, instruções temporizadas, progresso, modo natural e guias 3/4 e 3/5, alternativa nos pés | P1 | [x] Concluído em 10/09/2026 |
+| P3 — Uso discreto | Silêncio efetivo, pausar/continuar/encerrar, interrupções e retorno seguro | P2; revisão dos efeitos atuais | [x] Concluído em 10/09/2026 |
+| P4 — Próximo passo e histórico | Tela final, opções práticas, registro opcional e painel com exclusão | P2–P3; persistência local | [x] Concluído em 10/09/2026 |
+| P5 — Validação e entrega Android | Acessibilidade, testes funcionais, APK e verificação em aparelho | P1–P4 | [~] Build debug e verificações estáticas concluídos; aparelho pendente |
+| P6 — Relógio e tela apagada | Hápticos opcionais e continuidade nativa, após validação real | P5; validação Galaxy Watch | [ ] Futuro |
+
+**Primeira entrega utilizável:** P1 a P5. O relógio não é requisito para usar a pausa à mesa. Atualizar esta tabela com data, resultado e evidência a cada etapa concluída; não marcar como pronta uma funcionalidade apenas descrita no roadmap.
+
+### 10.9 Critérios de aceite e cenários de validação
+
+- [ ] O usuário encontra “Pausa de Resposta · 3 min” em Pausas com Mente aberta ou recolhida e inicia sem formulários obrigatórios.
+- [ ] O roteiro preserva reconhecimento de pensamentos, emoções e corpo; ancoragem; expansão; pergunta e escolha final.
+- [ ] As etapas mudam aos 60 e 120 segundos de prática ativa e a sessão termina aos 180; validar os limites imediatamente antes e depois de cada transição.
+- [ ] O guia natural não impõe ritmo; 3/4 e 3/5 não incluem retenção. Trocar de guia, escolher os pés ou atingir o fim do minuto não reinicia o cronômetro nem manda prender o ar.
+- [ ] Pausar por 30 segundos não consome tempo de prática. Abrir orientações e colocar o app em segundo plano pausam e exigem retomada explícita.
+- [ ] Encerrar no meio, tocar duas vezes em concluir e reabrir o app não geram sessão concluída fictícia nem registro duplicado.
+- [ ] Com som e vibração gerais ligados em outro módulo, a nova prática ainda inicia silenciosa, inclusive no Galaxy Watch; conclusão não toca voz, sino ou confete.
+- [ ] O conteúdo funciona sem internet e sem áudios baixados; estilos, ícones essenciais e roteiro ficam disponíveis localmente.
+- [ ] A interface funciona com texto a 200%, largura de 320 px, leitor de tela e movimento reduzido, mantendo todos os controles acessíveis.
+- [ ] Simular à mesa: e-mail ríspido → prática completa → pedir prazo → voltar ao trabalho, sem digitar informações da situação.
+- [ ] Simular interrupção por atendimento: pausar no minuto 2 → bloquear/desbloquear → continuar no ponto salvo → encerrar antes do fim; conferir duração real e estado interrompido.
+- [ ] Sem histórico habilitado, encerrar não deixa registro pessoal permanente. Com ele habilitado, verificar notas ausentes, ambas preenchidas e nota final maior, sem mensagens de julgamento.
+- [ ] Totais e dias do painel correspondem aos registros; interrupções não contam como conclusões; apagar um item atualiza resumo e comparações.
+- [ ] Revisar backup, prévia de aplicativos recentes e eventual notificação para garantir o comportamento de privacidade especificado.
+- [ ] Programas anteriores, SOS existente e áudio 8 continuam acessíveis; a nova prática não marca a agenda de alongamento nem avança a prática formal.
+- [ ] Na implementação, validar temporização e persistência com testes focados; conferir equivalência dos dois HTMLs e executar `testDebugUnitTest assembleDebug`. Validar interação e ciclo de vida em aparelho Android.
+- [ ] Gerar release apenas na etapa de entrega, preservando assinatura e dados; marcar testes físicos de relógio separadamente dos testes de software.
+
+### 10.10 Cartão de consulta rápida — para lembrar sem abrir o guia
+
+| 1 · Reconhecer | 2 · Ancorar | 3 · Escolher |
+| :--- | :--- | :--- |
+| Pare de digitar por um instante. | Pés no chão, coluna confortável. | Perceba o corpo inteiro. |
+| “Estou tendo o pensamento de que…” | Sinta o abdômen se mover. | Solte mãos, ombros e rosto. |
+| Nomeie a emoção. | Respire no seu ritmo; 3/4 ou 3/5 se ajudar. | “Qual é o próximo passo mais sensato e construtivo?” |
+| Note onde o corpo está tenso. | Se necessário, use os pés como âncora. | Responder, pedir prazo, esclarecer, adiar ou pedir apoio. |
+
+**Lembrete central:** “Não preciso resolver tudo nestes três minutos. Posso criar espaço para escolher o próximo passo.”
