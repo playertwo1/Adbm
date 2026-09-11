@@ -194,6 +194,8 @@
         </div>
     </header>
 
+    <button id="core-persistence-status" onclick="retryProgressPersistence()" class="hidden mx-auto mt-3 w-[calc(100%_-_2rem)] max-w-md text-left" aria-live="polite"></button>
+
     <!-- Main Container -->
     <main class="max-w-md mx-auto px-4 pt-3 pb-6 space-y-4">
 
@@ -8376,7 +8378,7 @@
             }
         }
 
-        let mindfulnessPlayer = { programId: '4', phaseIndex: 0, trackType: 'formal', completed: false, wakeLock: null };
+        let mindfulnessPlayer = { programId: '4', phaseIndex: 0, trackType: 'formal', completed: false, wakeLock: null, sessionId: null };
 
         function formatMindfulnessTime(seconds) {
             const safe = Math.max(0, Math.floor(Number(seconds) || 0));
@@ -8420,7 +8422,7 @@
             const idx = phaseIndex === null ? (prog.currentPhaseIndex || 0) : phaseIndex;
             const phase = prog.phases[idx];
             if (!phase) return;
-            mindfulnessPlayer = { programId, phaseIndex: idx, trackType, completed: false, wakeLock: null };
+            mindfulnessPlayer = { programId, phaseIndex: idx, trackType, completed: false, wakeLock: null, sessionId: `mindfulness-${programId}-${idx}-${trackType}-${Date.now()}` };
             const isSecondary = trackType === 'secondary';
             const trackPath = isSecondary ? phase.secondaryTrack : phase.formalTrack;
             const title = isSecondary ? phase.secondaryTrackTitle : phase.formalTrackTitle;
@@ -8494,6 +8496,7 @@
 
         function completeMindfulnessAudio() {
             if (mindfulnessPlayer.completed) return;
+            if (CorePersistence.completedSessionIds.includes(mindfulnessPlayer.sessionId)) return;
             mindfulnessPlayer.completed = true;
             const prog = AppState.programs.find(p => p.id === mindfulnessPlayer.programId);
             const phase = prog?.phases[mindfulnessPlayer.phaseIndex];
@@ -8512,8 +8515,11 @@
                         }
                     }
                 }
-                addMinutesToday(Math.max(1, Math.round((audio.currentTime || phase.formalTrackDuration || 60) / 60)), 'mindfulness');
-                saveState();
+                addMinutesToday(Math.max(1, Math.round((audio.currentTime || phase.formalTrackDuration || 60) / 60)), 'mindfulness', [], true);
+                CorePersistence.completedSessionIds.push(mindfulnessPlayer.sessionId);
+                CorePersistence.completedSessionIds = CorePersistence.completedSessionIds.slice(-200);
+                const mindfulnessSaved = saveState();
+                if (!mindfulnessSaved) showInlineToast('Sessão concluída, mas ainda não foi salva.');
             }
             playTibetanChime?.();
             triggerHaptic([60, 100, 160]);
@@ -8847,6 +8853,7 @@
             AppState.dailyExecution.phaseIndex = pIdx;
             AppState.dailyExecution.programTitle = prog.title;
             AppState.dailyExecution.phaseTitle = phase.title;
+            AppState.dailyExecution.sessionId = `program-${prog.id}-${pIdx}-${Date.now()}`;
             AppState.dailyExecution.steps = steps;
             AppState.dailyExecution.currentStepIndex = 0;
             AppState.dailyExecution.sessionNumber = Math.min((prog.sessionsToday || 0) + 1, prog.dailyTarget || 2);
@@ -8985,6 +8992,7 @@
             const execution = AppState.dailyExecution;
             return JSON.stringify({
                 programId: execution.programId,
+                sessionId: execution.sessionId,
                 phaseIndex: execution.phaseIndex,
                 programTitle: execution.programTitle,
                 phaseTitle: execution.phaseTitle,
@@ -9034,6 +9042,7 @@
                 AppState.dailyExecution.steps = state.steps;
             }
             AppState.dailyExecution.programId = session.programId ?? AppState.dailyExecution.programId;
+            AppState.dailyExecution.sessionId = session.sessionId ?? AppState.dailyExecution.sessionId;
             AppState.dailyExecution.phaseIndex = session.phaseIndex ?? AppState.dailyExecution.phaseIndex;
             AppState.dailyExecution.programTitle = session.programTitle ?? AppState.dailyExecution.programTitle;
             AppState.dailyExecution.phaseTitle = session.phaseTitle ?? AppState.dailyExecution.phaseTitle;
@@ -9269,6 +9278,8 @@
         }
         
         function finishDailySession(fromNativeService = false) {
+            const completionId = AppState.dailyExecution.sessionId || `legacy-${AppState.dailyExecution.programId}-${Date.now()}`;
+            if (CorePersistence.completedSessionIds.includes(completionId)) return;
             clearInterval(AppState.dailyExecution.intervalId);
             AppState.dailyExecution.intervalId = null;
             AppState.dailyExecution.isRunning = false;
@@ -9290,7 +9301,7 @@
             // Adiciona os minutos ao total do dia
             const trainedMinutes = Math.max(1, Math.ceil(AppState.dailyExecution.totalSessionElapsed / 60));
             const completedProgramId = AppState.dailyExecution.programId;
-            addMinutesToday(trainedMinutes, 'program', completedProgramId === '3' ? ['vacuum'] : []);
+            addMinutesToday(trainedMinutes, 'program', completedProgramId === '3' ? ['vacuum'] : [], true);
             AppState.dailyExecution.sessionsCompletedToday = (AppState.dailyExecution.sessionsCompletedToday || 0) + 1;
 
             // Atualiza o progresso do programa específico
@@ -9322,7 +9333,9 @@
                 }
             }
             
-            saveState();
+            CorePersistence.completedSessionIds.push(completionId);
+            CorePersistence.completedSessionIds = CorePersistence.completedSessionIds.slice(-200);
+            const progressSaved = saveState();
             renderDailyExecutionUI();
             renderProgramsList();
             
@@ -9337,13 +9350,14 @@
                     sessions,
                     daysDone,
                     trainedMinutes,
+                    progressSaved,
                     targetSessions,
                     targetDays
                 });
             }, 500);
         }
 
-        function showProgramCompletionScreen({ title, sessions, daysDone, trainedMinutes, targetSessions = 2, targetDays = 7 }) {
+        function showProgramCompletionScreen({ title, sessions, daysDone, trainedMinutes, progressSaved = true, targetSessions = 2, targetDays = 7 }) {
             document.getElementById('programCompletionScreen')?.remove();
             const dailyGoalReached = sessions >= targetSessions;
             const overlay = document.createElement('div');
@@ -9356,7 +9370,7 @@
                     </div>
                     <p class="mt-5 text-xs font-black uppercase tracking-[0.2em] text-emerald-300">Sessão concluída</p>
                     <h2 class="mt-2 text-xl font-black text-white">${title}</h2>
-                    <p class="mt-2 text-sm text-slate-300">${trainedMinutes} min adicionados ao seu histórico real.</p>
+                    <p class="mt-2 text-sm ${progressSaved ? 'text-slate-300' : 'text-amber-300'}">${progressSaved ? `${trainedMinutes} min adicionados ao seu histórico.` : 'Sessão concluída, mas ainda não foi salva. Toque no aviso do topo para tentar novamente.'}</p>
                     <div class="mt-5 rounded-2xl border border-slate-700/70 bg-slate-900/70 p-4">
                         <p class="text-lg font-extrabold text-white">Sessão ${sessions}/${targetSessions} de hoje</p>
                         <p class="mt-1 text-sm ${dailyGoalReached ? 'text-emerald-300' : 'text-slate-400'}">
@@ -10056,7 +10070,7 @@
             }
         }
 
-        function addMinutesToday(mins, source = 'general', additionalSources = []) {
+        function addMinutesToday(mins, source = 'general', additionalSources = [], deferSave = false) {
             const safeMinutes = Math.max(1, Math.round(Number(mins) || 0));
             const previousMins = AppState.totalMinutesToday;
             const todayKey = localDateKey();
@@ -10072,7 +10086,7 @@
 
             syncDerivedStats();
 
-            saveState();
+            if (!deferSave) saveState();
             updateHeaderStats();
             renderWeeklyChart();
             renderWeeklyTimeSummary();
@@ -10770,6 +10784,378 @@
                 const state = item.completed ? 'Concluída' : 'Interrompida';
                 return `<div class="flex items-center justify-between gap-2 rounded-lg bg-slate-950/60 border border-slate-800 px-2.5 py-2"><span class="text-[10px] text-slate-400">${date} · ${formatResponsiveTime(item.durationSec)}</span><span class="text-[10px] font-bold ${item.completed ? 'text-emerald-400' : 'text-amber-400'}">${state}</span></div>`;
             }).join('');
+        }
+
+        /* -------------------------------------------------------------
+           PERSISTÊNCIA SEGURA DO PROGRESSO (v4)
+           Um snapshot completo é a fonte principal. A cópia anterior permite
+           recuperar uma gravação interrompida. Dados legados inválidos nunca
+           são substituídos automaticamente por valores iniciais.
+        ------------------------------------------------------------- */
+        const CORE_PROGRESS_SNAPSHOT_KEY = 'coreflow_progress_snapshot_v4';
+        const CORE_PROGRESS_BACKUP_KEY = 'coreflow_progress_snapshot_v4_backup';
+        const CorePersistence = { status: 'loading', revision: 0, lastSavedAt: null, message: '', completedSessionIds: [] };
+
+        function parseStoredJson(key, fallback, validator, errors) {
+            let raw;
+            try { raw = localStorage.getItem(key); }
+            catch (error) { errors.push(`${key}:read`); return fallback; }
+            if (raw === null) return fallback;
+            try {
+                const value = JSON.parse(raw);
+                if (validator && !validator(value)) throw new Error('formato inválido');
+                return value;
+            } catch (error) {
+                errors.push(`${key}:invalid`);
+                return fallback;
+            }
+        }
+
+        function validateProgressSnapshot(value) {
+            return !!value && value.schemaVersion === 4 && Number.isFinite(value.revision) &&
+                value.data && Array.isArray(value.data.programs) && Array.isArray(value.data.schedule) &&
+                value.data.activityLog && typeof value.data.activityLog === 'object' && !Array.isArray(value.data.activityLog);
+        }
+
+        function readProgressSnapshot(key, errors = null) {
+            const candidates = [];
+            if (typeof window !== 'undefined' && window.AndroidBridge) {
+                try {
+                    if (key === CORE_PROGRESS_SNAPSHOT_KEY && window.AndroidBridge.getProgressSnapshot) {
+                        candidates.push(['native', window.AndroidBridge.getProgressSnapshot() || '']);
+                    } else if (key === CORE_PROGRESS_BACKUP_KEY && window.AndroidBridge.getProgressBackup) {
+                        candidates.push(['native', window.AndroidBridge.getProgressBackup() || '']);
+                    }
+                } catch (error) {
+                    errors?.push(`${key}:native-read`);
+                }
+            }
+            try {
+                candidates.push(['local', localStorage.getItem(key) || '']);
+            } catch (error) {
+                errors?.push(`${key}:local-read`);
+            }
+            for (const [source, raw] of candidates) {
+                if (!raw) continue;
+                try {
+                    const parsed = JSON.parse(raw);
+                    if (validateProgressSnapshot(parsed)) return parsed;
+                    errors?.push(`${key}:${source}-invalid`);
+                } catch (error) {
+                    errors?.push(`${key}:${source}-invalid`);
+                }
+            }
+            return null;
+        }
+
+        function mergeLoadedPrograms(loaded, todayStr, isNewDay) {
+            if (!Array.isArray(loaded)) return;
+            AppState.programs.forEach(defaultProg => {
+                const saved = loaded.find(program => program && String(program.id) === String(defaultProg.id));
+                if (!saved) return;
+                if (saved.title && saved.title !== 'Kegel: Assoalho Pélvico (8 Semanas)') defaultProg.title = saved.title;
+                if (typeof saved.expanded === 'boolean') defaultProg.expanded = saved.expanded;
+                const maxPhase = Math.max(0, defaultProg.phases.length - 1);
+                defaultProg.currentPhaseIndex = Math.min(maxPhase, Math.max(0, Number(saved.currentPhaseIndex) || 0));
+                defaultProg.daysCompletedInPhase = Math.max(0, Number(saved.daysCompletedInPhase) || 0);
+                defaultProg.sessionsToday = isNewDay ? 0 : Math.max(0, Number(saved.sessionsToday) || 0);
+                if (Array.isArray(saved.reminderTimes)) defaultProg.reminderTimes = saved.reminderTimes.filter(value => typeof value === 'string');
+                if (typeof saved.remindersEnabled === 'boolean') defaultProg.remindersEnabled = saved.remindersEnabled;
+                if (defaultProg.type === 'mindfulness') {
+                    defaultProg.informalCompletedDate = saved.informalCompletedDate || null;
+                    defaultProg.informalCompletedToday = defaultProg.informalCompletedDate === todayStr;
+                }
+                if (Array.isArray(saved.phases)) {
+                    defaultProg.phases.forEach((phase, index) => {
+                        if (saved.phases[index]) phase.completed = saved.phases[index].completed === true;
+                    });
+                }
+                const target = defaultProg.phases[defaultProg.currentPhaseIndex]?.weeklyTargetDays || 7;
+                defaultProg.daysCompletedInPhase = Math.min(defaultProg.daysCompletedInPhase, target);
+                defaultProg.currentDayInWeek = Math.min(defaultProg.daysCompletedInPhase + 1, target);
+            });
+        }
+
+        function applyProgressData(data) {
+            const todayStr = localDateKey();
+            const savedDate = typeof data.dailyDate === 'string' ? data.dailyDate : null;
+            const isNewDay = savedDate !== todayStr;
+            if (Array.isArray(data.schedule)) AppState.schedule = data.schedule;
+            if (isNewDay) AppState.schedule.forEach(item => { item.completed = false; });
+            AppState.activityLog = data.activityLog && typeof data.activityLog === 'object' && !Array.isArray(data.activityLog) ? data.activityLog : {};
+            AppState.unlockedAchievements = Array.isArray(data.achievements) ? data.achievements : [];
+            mergeLoadedPrograms(data.programs, todayStr, isNewDay);
+            AppState.dailyExecution.sessionsCompletedToday = isNewDay ? 0 : Math.max(0, Number(data.dailyCount) || 0);
+            AppState.mente.history = Array.isArray(data.menteHistory) ? data.menteHistory : [];
+            AppState.pausas.history = Array.isArray(data.corpoHistory) ? data.corpoHistory : [];
+            AppState.mente.customPresets = Array.isArray(data.customPresets) ? data.customPresets : AppState.mente.customPresets;
+            AppState.pushNotificationsEnabled = data.pushEnabled === true || AppState.programs.some(program => program.remindersEnabled === true);
+            CorePersistence.completedSessionIds = Array.isArray(data.completedSessionIds) ? data.completedSessionIds.filter(value => typeof value === 'string').slice(-200) : [];
+        }
+
+        function readLegacyProgress() {
+            const errors = [];
+            let versionRaw = null;
+            let dailyDate = null;
+            let pushRaw = null;
+            try {
+                versionRaw = localStorage.getItem('coreflow_data_version');
+                dailyDate = localStorage.getItem('coreflow_daily_date');
+                pushRaw = localStorage.getItem('coreflow_push_enabled');
+            } catch (error) { errors.push('metadata:read'); }
+            const programs = parseStoredJson('coreflow_programs', null, Array.isArray, errors);
+            const schedule = parseStoredJson('coreflow_schedule', null, Array.isArray, errors);
+            const activityLog = parseStoredJson('coreflow_activity_log', null, value => value && typeof value === 'object' && !Array.isArray(value), errors);
+            const achievements = parseStoredJson('coreflow_achievements', [], Array.isArray, errors);
+            const menteHistory = parseStoredJson('coreflow_mente_history', [], Array.isArray, errors);
+            const corpoHistory = parseStoredJson('coreflow_corpo_history', [], Array.isArray, errors);
+            const customPresets = parseStoredJson('coreflow_mente_custom_presets', [], Array.isArray, errors);
+            const reminderSettings = parseStoredJson('coreflow_reminder_settings', {}, value => value && typeof value === 'object' && !Array.isArray(value), errors);
+            let dailyCount = 0;
+            try { dailyCount = Math.max(0, Number(localStorage.getItem('coreflow_daily_count')) || 0); }
+            catch (error) { errors.push('coreflow_daily_count:read'); }
+            const hasAnyProgress = programs !== null || schedule !== null || activityLog !== null || versionRaw !== null;
+            if (!hasAnyProgress && errors.length === 0) return { firstUse: true, errors, data: null };
+            if (programs === null) errors.push('coreflow_programs:missing');
+            if (schedule === null) errors.push('coreflow_schedule:missing');
+            if (activityLog === null) errors.push('coreflow_activity_log:missing');
+            const version = Number(versionRaw);
+            if (versionRaw !== null && (!Number.isInteger(version) || version > CORE_DATA_VERSION)) errors.push('coreflow_data_version:unsupported');
+            if (programs) {
+                programs.forEach(program => {
+                    const setting = reminderSettings[String(program.id)];
+                    if (setting) {
+                        if (Array.isArray(setting.times)) program.reminderTimes = setting.times;
+                        if (typeof setting.enabled === 'boolean') program.remindersEnabled = setting.enabled;
+                    }
+                });
+            }
+            return { firstUse: false, errors, data: {
+                programs, schedule, activityLog, achievements, menteHistory, corpoHistory,
+                customPresets, dailyDate, dailyCount, pushEnabled: pushRaw === 'true'
+            }};
+        }
+
+        function collectProgressData() {
+            return {
+                programs: AppState.programs,
+                schedule: AppState.schedule,
+                activityLog: AppState.activityLog,
+                achievements: AppState.unlockedAchievements,
+                menteHistory: AppState.mente?.history || [],
+                corpoHistory: AppState.pausas?.history || [],
+                customPresets: AppState.mente?.customPresets || [],
+                pushEnabled: AppState.pushNotificationsEnabled === true,
+                dailyCount: AppState.dailyExecution.sessionsCompletedToday || 0,
+                dailyDate: localDateKey(),
+                completedSessionIds: CorePersistence.completedSessionIds
+            };
+        }
+
+        function setPersistenceStatus(status, message = '') {
+            CorePersistence.status = status;
+            CorePersistence.message = message;
+            const badge = document.getElementById('core-persistence-status');
+            if (!badge) return;
+            badge.classList.remove('hidden');
+            badge.innerText = message;
+            badge.className = `mx-auto mt-3 w-[calc(100%_-_2rem)] max-w-md text-left rounded-xl border px-3 py-2 text-[11px] ${status === 'ready' ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-amber-500/40 bg-amber-500/10 text-amber-200'}`;
+        }
+
+        function saveState() {
+            if (CorePersistence.status !== 'ready') {
+                console.log('Progress save blocked', CorePersistence.status);
+                return false;
+            }
+            const previous = readProgressSnapshot(CORE_PROGRESS_SNAPSHOT_KEY);
+            const snapshot = {
+                schemaVersion: 4,
+                revision: Math.max(CorePersistence.revision, previous?.revision || 0) + 1,
+                savedAt: new Date().toISOString(),
+                data: collectProgressData()
+            };
+            try {
+                const serialized = JSON.stringify(snapshot);
+                const hasNativeStore = typeof window !== 'undefined' && !!window.AndroidBridge?.saveProgressSnapshot;
+                const nativeSaved = hasNativeStore ? window.AndroidBridge.saveProgressSnapshot(serialized) === true : false;
+                try {
+                    if (previous) localStorage.setItem(CORE_PROGRESS_BACKUP_KEY, JSON.stringify(previous));
+                } catch (backupError) { console.log('WebView backup save error', backupError); }
+                let localSaved = false;
+                try {
+                    localStorage.setItem(CORE_PROGRESS_SNAPSHOT_KEY, serialized);
+                    localSaved = readProgressSnapshot(CORE_PROGRESS_SNAPSHOT_KEY)?.revision === snapshot.revision;
+                } catch (localError) { console.log('WebView snapshot save error', localError); }
+                if (hasNativeStore && !nativeSaved) throw new Error('snapshot nativo não confirmado');
+                if (!hasNativeStore && !localSaved) throw new Error('snapshot local não confirmado');
+                const verified = readProgressSnapshot(CORE_PROGRESS_SNAPSHOT_KEY);
+                if (!verified || verified.revision !== snapshot.revision) throw new Error('snapshot não confirmado');
+                CorePersistence.revision = snapshot.revision;
+                CorePersistence.lastSavedAt = snapshot.savedAt;
+                // Espelho legado temporário. Falha aqui não invalida o snapshot já confirmado.
+                try {
+                    localStorage.setItem('coreflow_data_version', String(CORE_DATA_VERSION));
+                    localStorage.setItem('coreflow_schedule', JSON.stringify(AppState.schedule));
+                    localStorage.setItem('coreflow_programs', JSON.stringify(AppState.programs));
+                    localStorage.setItem('coreflow_activity_log', JSON.stringify(AppState.activityLog));
+                    localStorage.setItem('coreflow_achievements', JSON.stringify(AppState.unlockedAchievements));
+                    localStorage.setItem('coreflow_mente_history', JSON.stringify(AppState.mente?.history || []));
+                    localStorage.setItem('coreflow_corpo_history', JSON.stringify(AppState.pausas?.history || []));
+                    localStorage.setItem('coreflow_daily_count', String(AppState.dailyExecution.sessionsCompletedToday || 0));
+                    localStorage.setItem('coreflow_daily_date', localDateKey());
+                } catch (legacyError) { console.log('Legacy mirror save error', legacyError); }
+                setPersistenceStatus('ready', `Progresso salvo · ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`);
+                return true;
+            } catch (error) {
+                setPersistenceStatus('writeFailed', 'Esta sessão ainda não foi salva. Toque para tentar novamente.');
+                console.log('Storage save error', error);
+                return false;
+            }
+        }
+
+        function retryProgressPersistence() {
+            if (CorePersistence.status === 'writeFailed') {
+                CorePersistence.status = 'ready';
+                saveState();
+            } else if (CorePersistence.status === 'recoveryRequired') {
+                loadSavedState();
+            } else {
+                openProgressProtection();
+            }
+        }
+
+        function openProgressProtection() {
+            document.getElementById('progressProtectionModal')?.remove();
+            const backup = readProgressSnapshot(CORE_PROGRESS_BACKUP_KEY);
+            const modal = document.createElement('div');
+            modal.id = 'progressProtectionModal';
+            modal.className = 'fixed inset-0 z-[120] flex items-end justify-center bg-slate-950/80 p-4 backdrop-blur-sm';
+            modal.innerHTML = `
+                <div class="w-full max-w-md rounded-3xl border border-slate-700 bg-slate-900 p-5 shadow-2xl">
+                    <div class="flex items-start justify-between gap-4">
+                        <div><p class="text-xs font-black uppercase tracking-widest text-emerald-300">Proteção do progresso</p><h2 class="mt-1 text-lg font-black text-white">Cópias e recuperação</h2></div>
+                        <button onclick="closeProgressProtection()" class="h-9 w-9 rounded-full bg-slate-800 text-slate-300" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="mt-4 rounded-2xl border border-slate-700 bg-slate-950/60 p-4 text-sm text-slate-300">
+                        <p>${CorePersistence.lastSavedAt ? `Última gravação confirmada: ${new Date(CorePersistence.lastSavedAt).toLocaleString('pt-BR')}` : 'Ainda não há horário de gravação confirmado.'}</p>
+                        <p class="mt-1 text-xs text-slate-500">Revisão ${CorePersistence.revision}${backup ? ` · cópia anterior ${backup.revision}` : ' · sem cópia anterior disponível'}</p>
+                    </div>
+                    <button onclick="exportProgressCopy()" class="mt-4 w-full rounded-2xl bg-emerald-500 px-4 py-3 font-black text-slate-950"><i class="fa-solid fa-file-export mr-2"></i>Exportar cópia JSON</button>
+                    <button onclick="restorePreviousProgress()" ${backup ? '' : 'disabled'} class="mt-3 w-full rounded-2xl border border-slate-700 px-4 py-3 font-bold ${backup ? 'text-white' : 'cursor-not-allowed text-slate-600'}"><i class="fa-solid fa-clock-rotate-left mr-2"></i>Restaurar cópia anterior</button>
+                    <p id="progressProtectionMessage" class="mt-3 min-h-5 text-center text-xs text-slate-400"></p>
+                </div>`;
+            modal.addEventListener('click', event => { if (event.target === modal) closeProgressProtection(); });
+            document.body.appendChild(modal);
+        }
+
+        function closeProgressProtection() {
+            document.getElementById('progressProtectionModal')?.remove();
+        }
+
+        function exportProgressCopy() {
+            const snapshot = readProgressSnapshot(CORE_PROGRESS_SNAPSHOT_KEY);
+            const message = document.getElementById('progressProtectionMessage');
+            if (!snapshot) {
+                if (message) message.innerText = 'Nenhuma cópia íntegra está disponível para exportar.';
+                return;
+            }
+            const serialized = JSON.stringify(snapshot, null, 2);
+            if (window.AndroidBridge?.exportProgressSnapshot) {
+                const result = window.AndroidBridge.exportProgressSnapshot(serialized);
+                if (message) message.innerText = result || 'Cópia exportada.';
+                return;
+            }
+            const blob = new Blob([serialized], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `coreflow-progresso-${localDateKey()}.json`;
+            link.click();
+            setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+            if (message) message.innerText = 'Cópia exportada.';
+        }
+
+        function restorePreviousProgress() {
+            const backup = readProgressSnapshot(CORE_PROGRESS_BACKUP_KEY);
+            if (!backup) return;
+            if (!confirm(`Restaurar a revisão ${backup.revision}? O estado atual continuará disponível como cópia anterior.`)) return;
+            applyProgressData(backup.data);
+            CorePersistence.status = 'ready';
+            renderAfterProgressLoad();
+            const restored = saveState();
+            setPersistenceStatus(restored ? 'ready' : 'writeFailed', restored ? 'Cópia anterior restaurada e salva.' : 'A cópia foi carregada, mas ainda não foi salva.');
+            closeProgressProtection();
+        }
+
+        function renderAfterProgressLoad() {
+            syncDerivedStats();
+            evaluateAchievements(false);
+            updateHeaderStats();
+            renderScheduleList();
+            renderProgramsList();
+            renderMonthlyBars();
+            renderWeeklyChart();
+            renderSmartSuggestionCard();
+            renderWeeklyTimeSummary();
+            renderAchievements();
+            renderMenteHistory();
+            renderCorpoHistory();
+            updateTimeOfDayStretchRecommendation();
+            updateWeeklyMobilityMetrics();
+            updateStretchDurationUI();
+            loadCustomPresets();
+            updateBreathDurationUI();
+            updateBreathLevelUI();
+            updateTimeOfDayRecommendation();
+            updateWeeklyCalmMetrics();
+            updatePushNotificationButton();
+            syncAllNativeReminders();
+        }
+
+        function loadSavedState() {
+            CorePersistence.status = 'loading';
+            const snapshotErrors = [];
+            let snapshot = readProgressSnapshot(CORE_PROGRESS_SNAPSHOT_KEY, snapshotErrors);
+            let recoveredBackup = false;
+            if (!snapshot) {
+                snapshot = readProgressSnapshot(CORE_PROGRESS_BACKUP_KEY, snapshotErrors);
+                recoveredBackup = !!snapshot;
+            }
+            if (snapshot) {
+                applyProgressData(snapshot.data);
+                CorePersistence.revision = snapshot.revision;
+                CorePersistence.lastSavedAt = snapshot.savedAt;
+                CorePersistence.status = 'ready';
+                renderAfterProgressLoad();
+                if (recoveredBackup) {
+                    setPersistenceStatus('ready', 'Cópia anterior recuperada e preservada.');
+                    saveState();
+                } else {
+                    setPersistenceStatus('ready', `Progresso carregado · revisão ${snapshot.revision}`);
+                    // Salva somente quando a virada diária exige persistir os contadores reiniciados.
+                    if (snapshot.data.dailyDate !== localDateKey()) saveState();
+                }
+                return true;
+            }
+
+            const legacy = readLegacyProgress();
+            legacy.errors.push(...snapshotErrors);
+            if (legacy.firstUse) {
+                CorePersistence.status = 'ready';
+                renderAfterProgressLoad();
+                saveState();
+                return true;
+            }
+            if (legacy.data) applyProgressData(legacy.data);
+            renderAfterProgressLoad();
+            if (legacy.errors.length) {
+                CorePersistence.status = 'recoveryRequired';
+                setPersistenceStatus('recoveryRequired', 'Não foi possível carregar parte do progresso. Os dados existentes foram preservados.');
+                console.log('Progress recovery required', legacy.errors);
+                return false;
+            }
+            CorePersistence.status = 'ready';
+            saveState(); // migração legada validada para snapshot v4
+            return true;
         }
 
         // Initialize on load

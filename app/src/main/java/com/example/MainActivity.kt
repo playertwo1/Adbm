@@ -1,10 +1,13 @@
 package com.example
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
 import android.content.BroadcastReceiver
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -462,6 +465,54 @@ class AndroidBridge(
     fun getWorkoutState(): String = WorkoutForegroundService.readStoredState(context)
 
     @JavascriptInterface
+    fun getProgressSnapshot(): String = context
+        .getSharedPreferences(PROGRESS_PREFS, Context.MODE_PRIVATE)
+        .getString(PROGRESS_CURRENT, null)
+        .orEmpty()
+
+    @JavascriptInterface
+    fun getProgressBackup(): String = context
+        .getSharedPreferences(PROGRESS_PREFS, Context.MODE_PRIVATE)
+        .getString(PROGRESS_BACKUP, null)
+        .orEmpty()
+
+    @JavascriptInterface
+    fun saveProgressSnapshot(snapshotJson: String): Boolean = runCatching {
+        require(snapshotJson.length <= MAX_PROGRESS_SNAPSHOT_CHARS)
+        val parsed = JSONObject(snapshotJson)
+        require(parsed.optInt("schemaVersion") == 4)
+        require(parsed.optLong("revision") > 0L)
+        require(parsed.optJSONObject("data") != null)
+        val prefs = context.getSharedPreferences(PROGRESS_PREFS, Context.MODE_PRIVATE)
+        val previous = prefs.getString(PROGRESS_CURRENT, null)
+        val editor = prefs.edit()
+        if (!previous.isNullOrBlank()) editor.putString(PROGRESS_BACKUP, previous)
+        editor.putString(PROGRESS_CURRENT, snapshotJson).commit()
+    }.getOrDefault(false)
+
+    @JavascriptInterface
+    fun exportProgressSnapshot(snapshotJson: String): String = runCatching {
+        require(snapshotJson.length <= MAX_PROGRESS_SNAPSHOT_CHARS)
+        require(JSONObject(snapshotJson).optInt("schemaVersion") == 4)
+        val fileName = "coreflow-progresso-${System.currentTimeMillis()}.json"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val values = ContentValues().apply {
+                put(MediaStore.Downloads.DISPLAY_NAME, fileName)
+                put(MediaStore.Downloads.MIME_TYPE, "application/json")
+                put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+            }
+            val uri = requireNotNull(context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values))
+            context.contentResolver.openOutputStream(uri)?.use { it.write(snapshotJson.toByteArray()) }
+                ?: error("Não foi possível abrir o arquivo")
+        } else {
+            val folder = requireNotNull(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS))
+            folder.mkdirs()
+            java.io.File(folder, fileName).writeText(snapshotJson)
+        }
+        "Cópia salva em Downloads: $fileName"
+    }.getOrElse { "Não foi possível exportar a cópia." }
+
+    @JavascriptInterface
     fun acknowledgeWorkoutState() {
         WorkoutForegroundService.clearStoredState(context)
     }
@@ -719,6 +770,13 @@ class AndroidBridge(
         ) {
             activity.requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)
         }
+    }
+
+    private companion object {
+        const val PROGRESS_PREFS = "coreflow_progress_store"
+        const val PROGRESS_CURRENT = "current_snapshot"
+        const val PROGRESS_BACKUP = "previous_snapshot"
+        const val MAX_PROGRESS_SNAPSHOT_CHARS = 5_000_000
     }
 }
 

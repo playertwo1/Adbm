@@ -1,6 +1,8 @@
 # ROADMAP — CoreFlow
 
-**Atualizado em:** 10/09/2026.
+**Atualizado em:** 11/09/2026.
+
+**Prioridade crítica:** [investigação e correção da perda de progresso](#11-incidente-de-perda-de-progresso--diagnóstico-e-plano-de-correção). Correção preventiva implementada e validada em build debug em 11/09/2026; a causa inicial e a recuperação do histórico já sobrescrito no aparelho ainda dependem da inspeção do dispositivo.
 
 **Nova entrega:** [Pausa de Resposta — Espaço de Respiração de 3 Minutos](#10-pausas--pausa-de-resposta-de-3-minutos), com roteiro para uso no banco, acompanhamento visual e histórico local opcional. **Implementação funcional concluída; validação física em aparelho pendente.**
 
@@ -686,3 +688,154 @@ startedAt / endedAt: datas e horas em formato ISO, com endedAt inicialmente null
 | Note onde o corpo está tenso. | Se necessário, use os pés como âncora. | Responder, pedir prazo, esclarecer, adiar ou pedir apoio. |
 
 **Lembrete central:** “Não preciso resolver tudo nestes três minutos. Posso criar espaço para escolher o próximo passo.”
+
+---
+
+## 11. Incidente de perda de progresso — diagnóstico e plano de correção
+
+**Registrado em:** 11/09/2026.
+
+**Prioridade:** crítica — preservar os registros antes de novas funcionalidades.
+
+**Base analisada:** `v1.1.34`, commit `2ccd3b6`, com os dois HTMLs equivalentes.
+
+**Escopo executado:** diagnóstico, reprodução isolada, armazenamento protegido, recuperação automática, cópia anterior, exportação e validação automatizada. Nenhum dado do aparelho foi modificado e ainda não houve nova publicação.
+
+### 11.1 Relato, foto e limites do diagnóstico
+
+O usuário relata que utilizou o aplicativo normalmente e, ao voltar à tarde, o progresso dos programas e a evolução acumulada tinham desaparecido. A foto mostra **1 dia de sequência**, **1/7 dias ativos**, **5 minutos na sexta-feira** e os cinco itens do cronograma desmarcados. Ela não mostra a tela dos programas, a versão instalada, os registros anteriores ou uma mensagem de erro.
+
+Esses indicadores confirmam o estado visível naquele momento, mas não provam que os dados foram apagados fisicamente. Também não indicam, por si só, se os cinco minutos foram registrados antes ou depois do incidente. Pode haver dados presentes que não foram carregados, dados sobrescritos ou um armazenamento diferente daquele usado anteriormente.
+
+**Conclusão técnica:** há um defeito reproduzível capaz de transformar uma falha de carregamento em sobrescrita de progresso válido. É uma explicação compatível com parte do relato, porém **não está confirmado que foi o gatilho deste incidente**. A inspeção ADB não encontrou dispositivos conectados; não houve acesso a logs, armazenamento ou backup do celular.
+
+### 11.2 Defeitos encontrados no código
+
+| ID / prioridade | Evidência | Efeito e alcance |
+| :--- | :--- | :--- |
+| D1 / P0 | `loadSavedState()` envolve várias leituras em um único `try`; após `catch`, chama `syncDerivedStats()`, `evaluateAchievements(false)` e `saveState()` | Falha antes de carregar programas/diário mantém seus padrões iniciais. O salvamento posterior substitui dados ainda íntegros. Uma falha em um domínio contamina outros. |
+| D2 / P0 | O `catch` específico de `coreflow_programs` apenas escreve no console | Programas ilegíveis ficam com os valores iniciais e são salvos sobre o conteúdo anterior. A evidência bruta do problema se perde. |
+| D3 / P0 | `hasRealStats = storedVersion >= 2`; versão ausente, inválida ou menor que 2 entra no ramo que zera diário, conquistas e parte da agenda | A ausência de uma chave de metadados é tratada como autorização para ignorar dados históricos existentes. Preserva fase/dias dos programas legíveis, mas zera sessões diárias e evolução do painel. |
+| D4 / P1 | `saveState()` grava versão, programas, diário, agenda e data em várias chamadas independentes; erro é tratado apenas no console | Não existe transação do conjunto, cópia anterior ou confirmação de persistência para a interface. Uma falha entre escritas pode deixar domínios de momentos diferentes. Não presumir que uma escrita individual de JSON seja truncada; o problema aqui é consistência entre chaves. |
+| D5 / P1 | `savedDailyDate !== todayStr` controla o reset diário; o marcador é atualizado durante o carregamento | Data ausente/divergente também zera os marcadores de hoje. A virada de dia correta não deveria apagar fase, dias acumulados ou diário. O comportamento precisa de testes para data/fuso e gravações parciais. |
+| D6 / P1 | `finishDailySession()` chama `addMinutesToday()` (que salva) antes de atualizar o programa e salvar novamente | Há uma janela na qual minutos podem estar persistidos e avanço do programa ainda não. Interrupção nesse intervalo explica inconsistência de uma sessão, mas não comprova perda total. |
+
+**Referências locais para implementação:** `index.html`, funções `loadSavedState`, `saveState`, `syncDerivedStats`, `addMinutesToday` e `finishDailySession`; aplicar as mesmas mudanças a `app/src/main/assets/index.html`. Revisar também `completeMindfulnessAudio`, os callbacks nativos e todas as demais chamadas de `saveState`.
+
+**Cadeia de falha reproduzida:**
+
+```text
+Reabrir o app
+    ↓
+Erro ao ler uma chave inicial (ex.: cronograma)
+    ↓
+O carregamento restante é abandonado
+    ↓
+Programas e diário continuam com os valores iniciais
+    ↓
+O app chama saveState() mesmo assim
+    ↓
+Os valores iniciais substituem os dados salvos
+```
+
+Uma nova atividade depois desse caminho pode deixar somente o registro recente no painel. Isso é uma possibilidade compatível com a foto, não uma reconstrução comprovada do ocorrido.
+
+### 11.3 Reprodução com dados fictícios
+
+Executar `node diagnostics/progress-loss-repro.cjs`. O script extrai as funções reais e o estado inicial do HTML e os executa em uma VM Node, com armazenamento em memória e interface simulada. Não acessa dados do usuário nem executa a WebView. Por isso comprova o caminho lógico, não a origem de uma falha de armazenamento no Android.
+
+**Dados de entrada:** quatro programas na fase de índice 2 (terceira fase), três dias acumulados e uma sessão no dia; diário com dois dias; cinco itens da agenda concluídos. Asserções executadas em 11/09/2026:
+
+| Cenário | Programas após reabrir | Dias presentes no diário | Agenda concluída | Resultado |
+| :--- | :--- | :--- | :--- | :--- |
+| Reabertura normal no mesmo dia | Fase 3, três dias e uma sessão preservados | 2 | 5 | Controle íntegro |
+| JSON inválido apenas no cronograma | Voltam à fase 1, zero dias e zero sessões | 0 | 0 | Reproduz sobrescrita ampla |
+| JSON inválido apenas no diário | Voltam à fase 1, zero dias e zero sessões | 0 | 5 | Reproduz perda de diário e programas; agenda foi carregada antes do erro |
+| Primeira leitura falha uma vez; escritas posteriores funcionam | Voltam à fase 1, zero dias e zero sessões | 0 | 0 | Reproduz sobrescrita ampla sem corromper o conteúdo inicial |
+| JSON inválido apenas nos programas | Voltam à fase 1, zero dias e zero sessões | 2 | 5 | Reproduz perda isolada de programas |
+| Chave de versão ausente, demais dados válidos | Fase 3 e três dias preservados; zero sessões diárias | 0 | 0 | Reproduz descarte indevido de evolução por metadado ausente |
+| Virada normal de dia | Fase 3 e três dias preservados; zero sessões diárias | 2 | 0 | Reset diário esperado; não explica perda histórica completa |
+
+**Importante para os testes futuros:** as asserções deste script descrevem o defeito atual. O sucesso do script significa que os cenários foram reproduzidos, não que o aplicativo está corrigido. Após implementar a correção, converter as expectativas destrutivas em exigências de preservação e manter a versão original da reprodução no histórico Git.
+
+### 11.4 Hipóteses ainda abertas e o que verificar no aparelho
+
+| Hipótese | Evidência disponível | Próxima verificação |
+| :--- | :--- | :--- |
+| Falha de leitura ou conteúdo inválido seguido de D1/D2 | Caminho reproduzido; nenhum log do aparelho | Procurar dados brutos e mensagem `Storage load fallback` / `Error parsing saved programs`, se ainda houver logs acessíveis |
+| Chave de versão ausente ou restaurada de forma incoerente | D3 reproduzido | Comparar versão de esquema, diário, programas e data diária antes de qualquer gravação |
+| Apenas virada de dia/fuso | Reset diário previsto no código | Conferir data/fuso, períodos do gráfico e campos cumulativos dos programas; isso isoladamente não apaga histórico |
+| Reinstalação, limpeza de dados ou uso de outra instalação | Não demonstrado pela foto | Confirmar versão, identificador, datas de instalação/atualização e se houve desinstalação ou limpeza entre manhã e tarde |
+| Mudança de origem da WebView | Código atual usa `file:///android_asset/index.html` e `domStorageEnabled = true` | Conferir se a versão realmente instalada usa a mesma origem e diretório de dados; não foi encontrada limpeza explícita global de localStorage no código analisado |
+| Restauração de backup antigo ou incompleto | Manifesto permite backup; regras XML ainda são modelos sem uma política específica | Verificar se houve restauração e quais arquivos estão incluídos; configuração de backup não prova existência de cópia recuperável |
+
+O novo módulo de Pausa de Resposta usa `coreflow_responsive_pause_v1` e não foi encontrado removendo as chaves centrais. A publicação de ontem não basta para atribuir a perda ao novo card. O defeito de carregamento está no fluxo geral do aplicativo.
+
+### 11.5 Preservação e recuperação — executar antes de testar correções no celular
+
+1. **Preservar o estado atual:** evitar desinstalar, limpar dados ou usar o APK debug como tentativa de reparo. O debug tem assinatura diferente do release e não serve como atualização da instalação distribuída. Não orientar desinstalação para contornar erro de assinatura.
+2. **Confirmar a instalação:** registrar versão instalada, pacote, horário aproximado da última sessão íntegra, da perda e de eventual atualização. Coletar apenas os dados necessários ao diagnóstico.
+3. **Obter uma cópia, se tecnicamente acessível:** capturar as chaves brutas de versão, programas, diário, conquistas, cronograma, data diária e históricos; conferir também o estado da última sessão no serviço nativo. Usar exportação ou ferramenta disponível no aparelho, sem presumir acesso a arquivos privados em release e sem exigir root.
+4. **Se não houver acesso de diagnóstico:** preparar uma atualização assinada com a chave existente, cujo primeiro passo seja preservar os dados brutos e bloquear salvamento automático antes da inicialização antiga. Essa proteção precisa estar pronta antes de pedir que o usuário atualize e reabra.
+5. **Distinguir dados ilegíveis de ausentes:** tentar recuperação em uma cópia. Não fazer reparo por substituição de texto diretamente no armazenamento original. Se existir snapshot anterior válido, comparar data/revisão, programas e sessões e oferecer prévia antes de restaurar.
+6. **Consolidar fontes sem duplicar:** históricos de corpo/mente ou estado de sessão nativa podem conter pistas, mas não substituem automaticamente a evolução dos programas. Só reconstruir minutos, datas e avanços quando houver evidência suficiente. Uma sessão nativa isolada não é um backup de todos os treinos.
+7. **Se houver sobrescrita sem backup:** informar que não existe recuperação automática garantida. Oferecer reposição manual de fase/dias com confirmação do usuário e marcar os ajustes como reconstruídos; não inventar minutos, dias ou sequência.
+
+**Critério de conclusão da recuperação:** dados preservados, fonte e confiabilidade registradas, comparação antes/depois e nenhuma duplicação. A correção impede perdas futuras, mas não recria sozinha o que já foi sobrescrito.
+
+### 11.6 Plano de correção em ordem de prioridade
+
+| Etapa | Trabalho concreto | Critério de aceite | Estado |
+| :--- | :--- | :--- | :--- |
+| R0 — Diagnóstico | Inspecionar código, foto e reproduzir falhas em dados fictícios | Sete cenários registrados; limites do diagnóstico explícitos | Concluído em 11/09/2026 |
+| R1 — Bloquear sobrescrita após falha | Introduzir estado de carregamento `loading / ready / recoveryRequired`; validar antes de atribuir ao estado ativo; bloquear todo salvamento enquanto houver falha não resolvida | Uma falha de leitura não altera nenhuma chave existente; callbacks tardios também não conseguem salvar padrões iniciais | Concluído — 11/09/2026 |
+| R2 — Carregar e migrar com preservação | Ler e validar cada domínio isoladamente; distinguir ausência inicial, JSON inválido, formato incompatível e falha de API; manter cópia bruta; remover reset baseado só em versão | Programas válidos sobrevivem a erro no cronograma; versão ausente não apaga diário; migração repetida produz o mesmo resultado | Concluído — 11/09/2026 |
+| R3 — Persistência consistente e recuperação | Centralizar gravações num repositório de dados; adotar snapshot versionado com revisão, validação e última cópia válida em armazenamento nativo com transação/gravação atômica | Falha no meio da operação mantém uma versão íntegra e recuperável; confirmação de gravação volta à interface | Concluído — snapshot v4 nativo e web |
+| R4 — Sessões e virada diária | Registrar conclusão com identificador único e data própria; atualizar evento, minutos e programa como uma operação; derivar contadores diários por data | Conclusão duplicada conta uma vez; meia-noite e reabertura não apagam dias acumulados | Concluído — identificador e gravação única |
+| R5 — Recuperação visível e backup | Tela de recuperação, exportação/importação validada, cópias rotativas e diagnóstico mínimo; rever backup Android | Usuário consegue identificar falha de leitura, exportar cópia e restaurar com prévia | Parcial — aviso, exportação e restauração concluídos; importação de arquivo fica para evolução futura |
+| R6 — Validar e entregar | Testes de regressão, falhas induzidas e atualização real assinada preservando dados | Matriz abaixo passa; APK testado com atualização sobre release anterior, sem desinstalação | Parcial — testes e APK debug passam; atualização física e release pendentes |
+
+**Detalhamento de R1/R2:** nunca transformar silenciosamente dados inválidos em zero e salvá-los. Um domínio ilegível deve ser exibido como “não carregado” e preservado para recuperação. Se os domínios válidos puderem ser mostrados, não apresentar o estado incompleto como recuperação concluída. Dados inexistentes só autorizam inicialização vazia quando for identificado um primeiro uso real; versão de esquema futura deve abrir em modo protegido, sem tentar downgrade.
+
+**Detalhamento de R3:** escolher uma implementação nativa única, com API de leitura/gravação e confirmação. Manter a ponte compatível com a versão web, sem criar duas fontes concorrentes. Migrar o legado somente depois de ler, validar e copiar todas as chaves; atualizar o marcador de migração apenas após commit bem-sucedido. Em uma solução temporária por snapshots no localStorage, documentar que não existe transação entre chaves e garantir seleção da última revisão válida após interrupção. Backup no mesmo aparelho protege contra sobrescrita lógica, mas não contra desinstalação/limpeza completa.
+
+**Detalhamento de R4:** registrar cada sessão antes de exibir “salvo”, incluindo programa/fase e data efetiva de conclusão. Não usar o horário global do último `saveState()` para decidir a que dia pertencem todas as sessões. Tratar callback nativo, áudio e interface como potenciais notificadores do mesmo evento, com deduplicação persistente. Não arredondar/recontar registros históricos durante restauração.
+
+### 11.7 Acompanhamento visual e mensagens no app
+
+Propor um indicador simples no painel Evolução e na tela dos programas:
+
+| Estado | Texto visível | Ações |
+| :--- | :--- | :--- |
+| Carregando | “Carregando seu progresso…” | Impedir novos registros até terminar |
+| Persistência confirmada | “Progresso salvo · hoje às 14:32” | Ver backup / exportar |
+| Gravação falhou | “Esta sessão ainda não foi salva.” | Tentar novamente / preservar cópia disponível |
+| Carregamento falhou | “Não foi possível carregar parte do seu progresso. Seus dados existentes foram preservados.” | Tentar leitura novamente / exportar diagnóstico / ver recuperação |
+| Backup disponível | “Cópia de 11/09 às 10:15 encontrada.” | Comparar e restaurar após confirmação |
+| Sem fonte recuperável | “Não encontramos uma cópia válida para recuperar automaticamente.” | Ajustar progresso manualmente |
+
+As mensagens de preservação e salvamento só podem aparecer quando a implementação confirmar esses fatos. A tela de comparação mostra, por programa, fase/dias antes e na cópia, além de minutos e datas disponíveis. A restauração deve manter uma cópia do estado anterior à ação. O diagnóstico exportado não inclui mensagens, clientes ou informações bancárias.
+
+### 11.8 Matriz de testes obrigatórios
+
+- [ ] Reabrir no mesmo dia mantém sessões, agenda, fase, dias, conquistas, minutos e sequência.
+- [ ] Reabrir no dia seguinte reinicia somente os marcadores diários; histórico e evolução acumulada permanecem.
+- [ ] Permanecer com o app aberto durante a meia-noite e concluir nova sessão atribui o evento à data correta sem reaproveitar contagens do dia anterior.
+- [ ] Alterar data/fuso e voltar não apaga registros nem duplica conclusões.
+- [ ] JSON inválido, `null`, tipo errado ou campo fora dos limites em cada domínio dispara recuperação sem sobrescrever conteúdo bruto ou domínios válidos.
+- [ ] Falha transitória de `getItem` com escrita disponível não dispara `saveState` destrutivo; falha persistente de leitura mantém a proteção.
+- [ ] Versão ausente, inválida, antiga e futura com dados existentes não autoriza reset; primeira instalação vazia funciona.
+- [ ] Falha/quota esgotada em cada etapa de gravação conserva a última revisão válida e informa que a sessão não foi persistida.
+- [ ] Encerrar o processo entre registrar minutos e atualizar o programa não deixa uma sessão parcialmente aplicada.
+- [ ] Callback duplicado, reabertura e conclusão em segundo plano contabilizam a sessão uma única vez.
+- [ ] Migração executada duas vezes não duplica dados nem perde lembretes, práticas informais, agenda ou históricos dos demais módulos.
+- [ ] Importar backup válido permite prévia e restauração; backup inválido é recusado sem alterar estado; cópia anterior permanece disponível.
+- [ ] Comparar os dois HTMLs e executar testes JavaScript voltados à persistência real, não só verificação de sintaxe.
+- [ ] Executar testes Android com JDK compatível: a execução local anterior de Robolectric em SDK 36 falhou por Java 17, exigindo Java 21 conforme o erro observado. Não interpretar build APK bem-sucedido como aprovação desses testes.
+- [ ] Atualizar da versão release anterior para a corrigida, com a mesma assinatura e identificador, sobre dados fictícios conhecidos e comparar antes/depois; testar bloqueio de tela, retorno à tarde e encerramento do processo.
+
+**Porta de saída:** não publicar a correção como resolvida apenas porque compilou. Exigir provas de preservação sob falha, recuperação testada em cópia e atualização assinada sem reset. Registrar separadamente testes automatizados, emulador e aparelho físico, com versão e resultado.
+
+### 11.9 Estado ao encerrar esta investigação
+
+O defeito de sobrescrita após falha está confirmado no código e em reprodução isolada. O disparador no aparelho e a possibilidade de recuperar o histórico real permanecem desconhecidos. R1–R4 foram implementados; R5 inclui aviso de estado, tentativa manual, exportação JSON e restauração da cópia anterior. A regressão está em `diagnostics/progress-persistence.test.cjs`, com nove cenários de preservação aprovados. O build debug e os testes unitários Android passaram; ainda faltam instalar a atualização sobre a versão anterior em um aparelho real e publicar um release.
