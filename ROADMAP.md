@@ -2,7 +2,7 @@
 
 **Atualizado em:** 12/09/2026.
 
-**Solicitação atual:** [semana/sessão correta, ampliação do Bracing e backup na Evolução](#12-semanas-sessões-bracing-e-backup-na-evolução). Correção da navegação e ampliação do programa planejadas; exportação/importação implementadas localmente, com testes automatizados e build debug aprovados.
+**Solicitação atual:** [semana/sessão correta, ampliação do Bracing e backup na Evolução](#12-semanas-sessões-bracing-e-backup-na-evolução). Semana/sessão, ajuste manual, Bracing de oito semanas e backup/importação implementados localmente; testes automatizados aprovados e validação Android em andamento.
 
 **Prioridade crítica:** [investigação e correção da perda de progresso](#11-incidente-de-perda-de-progresso--diagnóstico-e-plano-de-correção). Correção preventiva implementada e validada em build debug em 11/09/2026; a causa inicial e a recuperação do histórico já sobrescrito no aparelho ainda dependem da inspeção do dispositivo.
 
@@ -866,12 +866,12 @@ Conclusão atualiza programa e evolução em uma gravação
 
 | Etapa | Implementação planejada | Aceite verificável | Estado |
 | :--- | :--- | :--- | :--- |
-| S1 | Centralizar resolução da semana ativa a partir da primeira semana não concluída em sequência; executar após marcação manual, carregamento, importação e conclusão | Checks 1 e 2 levam à semana 3 em todas as entradas | Planejado |
-| S2 | Separar data da sessão, semana e dia; preservar sessão comprovadamente feita hoje ao ajustar a semana, sem zerar contagem ou inventar atividade | Semana 3, dia 1, uma sessão hoje → botão e player indicam sessão 2/2 | Planejado |
-| S3 | Criar ajuste de progresso com prévia de semana, dia e sessões de hoje para casos em que o histórico perdido não comprova a posição | Usuário pode informar semana 3/dia 1/uma sessão; ajuste é identificado como manual, sem fabricar minutos ou sequência | Planejado |
-| S4 | Alinhar card, faixa do player, lembretes e estado nativo; retomada de sessão antiga deve mostrar sua origem e oferecer encerrar/continuar | Não reabrir silenciosamente semana 1 quando o programa está na 3 | Planejado |
-| S5 | Definir desmarcação, semanas fora de sequência e término das oito semanas; cópia anterior antes de migrar posições inconsistentes | Desmarcar semana 2 reabre a 2; marcar só a 5 não pula pendências; oito concluídas mostram programa concluído | Planejado |
-| S6 | Testes funcionais, reabertura, importação, meia-noite, callback repetido e atualização sobre versão existente | Nenhum reset de histórico, nenhuma contagem duplicada; cenário das fotos reproduzido e corrigido | Planejado |
+| S1 | Centralizar resolução da semana ativa a partir da primeira semana não concluída em sequência; executar após marcação manual, carregamento, importação e conclusão | Checks 1 e 2 levam à semana 3 em todas as entradas | Concluído localmente |
+| S2 | Separar data da sessão, semana e dia; preservar sessão comprovadamente feita hoje ao ajustar a semana, sem zerar contagem ou inventar atividade | Semana 3, dia 1, uma sessão hoje → botão e player indicam sessão 2/2 | Concluído localmente |
+| S3 | Criar ajuste de progresso com prévia de semana, dia e sessões de hoje para casos em que o histórico perdido não comprova a posição | Usuário pode informar semana 3/dia 1/uma sessão; ajuste é identificado como manual, sem fabricar minutos ou sequência | Concluído localmente |
+| S4 | Alinhar card, faixa do player, lembretes e estado nativo; retomada de sessão antiga deve mostrar sua origem e oferecer encerrar/continuar | Não reabrir silenciosamente semana 1 quando o programa está na 3 | Concluído localmente; aparelho pendente |
+| S5 | Definir desmarcação, semanas fora de sequência e término das oito semanas; cópia anterior antes de migrar posições inconsistentes | Desmarcar semana 2 reabre a 2; marcar só a 5 não pula pendências; oito concluídas mostram programa concluído | Concluído localmente |
+| S6 | Testes funcionais, reabertura, importação, meia-noite, callback repetido e atualização sobre versão existente | Nenhum reset de histórico, nenhuma contagem duplicada; cenário das fotos reproduzido e corrigido | Parcial — automação aprovada; aparelho pendente |
 
 Não inferir a sessão feita hoje apenas pelo gráfico agregado de minutos. A marcação de semana também não deve criar retroativamente quatorze dias de exercício. Se a sessão existente estiver associada a outra semana, apresentar essa informação no ajuste em vez de alterar o histórico silenciosamente.
 
@@ -889,13 +889,13 @@ Não inferir a sessão feita hoje apenas pelo gráfico agregado de minutos. A ma
 
 Tarefas detalhadas:
 
-- [ ] Revisar o conteúdo existente, inclusive instruções de manter contração por minutos e respiração curta; definir orientações coerentes para cada exercício.
-- [ ] Definir sessões A/B com preparação, prática principal, recuperação e encerramento; exibir objetivo, posição, execução, erros comuns e alternativas.
-- [ ] Substituir o timer avulso por sequência de preparação/execução/descanso, com pausar, retomar, pular e concluir; registrar execução real.
-- [ ] Criar critérios de avanço baseados em qualidade e tolerância, com repetir/regredir; “avançado” não significa aumentar indiscriminadamente intensidade.
-- [ ] Planejar migração das três fases antigas agrupadas para a nova organização semanal, preservando progresso e sem escolher silenciosamente uma semana que os dados antigos não permitem distinguir.
-- [ ] Integrar Bracing à mesma resolução de semana, dia e sessão implementada em S1–S6.
-- [ ] Mostrar semana atual, sessões A/B, metas, histórico e resumo final na Evolução; testar legibilidade, áudio opcional e modo discreto.
+- [x] Revisar o conteúdo existente e remover orientação de contração por minutos/respiração curta; usar esforço moderado, respiração livre e relaxamento entre séries.
+- [x] Definir sessões A/B com preparação, três séries, recuperação e encerramento, variando a tarefa em cada semana.
+- [x] Substituir o timer isolado do programa por sequência de preparação/execução/descanso, com pausar, retomar, pular e concluir no player compartilhado.
+- [x] Incluir checagem de qualidade e orientação para repetir com menor esforço quando houver perda de respiração, postura ou conforto.
+- [x] Migrar as três fases antigas agrupadas para oito semanas: cada fase concluída preenche seu par correspondente; posição, dias e sessões são preservados.
+- [x] Integrar Bracing à mesma resolução de semana, dia e sessão implementada em S1–S6.
+- [~] Mostrar semana atual, sessões A/B, metas e resumo final; legibilidade, áudio e modo discreto ainda dependem de validação no aparelho.
 
 ### 12.4 Backup e importação na aba Evolução — implementação desta entrega
 
@@ -915,6 +915,6 @@ Tarefas detalhadas:
 ### 12.5 Ordem e estado de entrega
 
 1. Backup/importação visíveis para preservar o estado antes dos próximos ajustes — implementados localmente; testes automatizados e build aprovados, validação física pendente.
-2. Corrigir semana/sessão conforme as fotos (S1–S6) — planejado.
-3. Ampliar Bracing e revisar conteúdo/fluxos — planejado.
-4. Validar migração e atualização assinada antes de distribuir a próxima mudança — pendente.
+2. Corrigir semana/sessão conforme as fotos (S1–S6) — implementado localmente; teste do cenário aprovado.
+3. Ampliar Bracing e revisar conteúdo/fluxos — implementado em oito semanas com sessões A/B guiadas e migração coberta por teste.
+4. Validar migração e atualização assinada antes de distribuir a próxima mudança — testes unitários e build debug aprovados em 12/09/2026; atualização assinada e aparelho físico ainda pendentes.

@@ -1910,7 +1910,7 @@
 
     </main>
 
-    <!-- Modal: Programa de Bracing (6 Semanas) -->
+    <!-- Modal: Programa de Bracing (8 Semanas) -->
     <div id="bracingProgramModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300 flex flex-col justify-end">
         <div id="bracingProgramModalContent" class="bg-slate-900 rounded-t-3xl border-t border-slate-700/80 w-full max-h-[90vh] overflow-y-auto transform translate-y-full transition-transform duration-300 p-5 shadow-2xl flex flex-col no-scrollbar">
             
@@ -2937,8 +2937,8 @@
             programs: [
                 {
                     id: '1',
-                    title: 'Bracing: Automação (6 Semanas)',
-                    description: 'Foco em manter o abdômen firme no escritório e corrigir postura.',
+                    title: 'Bracing: Controle e Automação (8 Semanas)',
+                    description: 'Sessões A/B guiadas para controle, estabilidade, movimento e aplicação discreta no trabalho.',
                     expanded: false,
                     currentPhaseIndex: 0,
                     currentDayInWeek: 1,
@@ -2948,9 +2948,14 @@
                     reminderTimes: ['09:00', '15:00'],
                     remindersEnabled: false,
                     phases: [
-                        { title: 'Semana 1 e 2: Base', details: 'Deitado (Casa) + Sentado (Trabalho)', completed: false },
-                        { title: 'Semana 3 e 4: Resistência', details: '4 Apoios (Casa) + Em Pé (Trabalho)', completed: false },
-                        { title: 'Semana 5 e 6: Avançado', details: 'Dinâmico (Casa) + Digitando 30% (Trabalho)', completed: false }
+                        { title: 'Semana 1: Consciência e Respiração', details: 'Sessão A: deitado e respiração 360° | Sessão B: sentado e relaxamento completo', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 2: Controle em Posições', details: 'Sessão A: deitado e sentado | Sessão B: em pé com apoio e trocas de tarefa', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 3: Estabilidade em 4 Apoios', details: 'Sessão A: apoio estável | Sessão B: transferência de peso sem perder a respiração', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 4: Antimovimento', details: 'Sessão A: alcance alternado | Sessão B: em pé contra perturbações leves', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 5: Movimento Funcional', details: 'Sessão A: sentar e levantar | Sessão B: dobradiça de quadril e alcance', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 6: Coordenação e Resistência', details: 'Sessão A: marcha controlada | Sessão B: circuito de postura no trabalho', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 7: Automação no Cotidiano', details: 'Sessão A: transições | Sessão B: tarefa real com ativação moderada e soltura', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 8: Consolidação', details: 'Sessão A: circuito integrado | Sessão B: teste técnico e plano de manutenção', weeklyTargetDays: 5, completed: false }
                     ]
                 },
                 {
@@ -4260,30 +4265,17 @@
         }
 
         /* -------------------------------------------------------------
-           MODAL: PROGRAMA DE BRACING DE 6 SEMANAS
+           MODAL: PROGRAMA DE BRACING DE 8 SEMANAS
         ------------------------------------------------------------- */
         const BRACING_PHASES = [
-            {
-                title: "Semanas 1 e 2: Base e Consciência",
-                focus: "Aprender a ativar o músculo e manter a respiração curta sem perder a rigidez.",
-                home: { pos: "Deitado, joelhos dobrados", inst: "Expire, feche as costelas e endureça o abdômen ('soco na barriga').", vol: "3 séries x 8 reps (10s de contração)" },
-                work: { pos: "Sentado, coluna alinhada", inst: "Ativar o bracing toda vez que beber água ou mudar de tarefa.", vol: "Ativações rápidas de 5 a 10s" },
-                time: 10
-            },
-            {
-                title: "Semanas 3 e 4: Resistência",
-                focus: "Desafiar o abdômen contra a gravidade e aumentar o tempo sob tensão.",
-                home: { pos: "Quatro apoios (mãos e joelhos)", inst: "Empurre o chão, não deixe a barriga despencar.", vol: "4 séries x 5 reps (20s de contração)" },
-                work: { pos: "Em Pé", inst: "Ativar ao ir ao banheiro, tirar cópias ou no café.", vol: "3 ativações de 15s ao longo do dia" },
-                time: 20
-            },
-            {
-                title: "Semanas 5 e 6: Automação",
-                focus: "Tornar o bracing automático para proteger a coluna em qualquer movimento.",
-                home: { pos: "Em Pé (Funcional)", inst: "Mantenha a barriga dura e faça movimentos lentos (ex: agachar).", vol: "3 séries (30 a 45s contínuos)" },
-                work: { pos: "Sentado ou em Pé", inst: "Ativar força leve (30%) enquanto digita, analisa crédito.", vol: "Manter por 2 a 3 min seguidos" },
-                time: 45
-            }
+            { title: 'Semana 1: Consciência e Respiração', focus: 'Reconhecer firmeza moderada sem prender o ar.', home: { pos: 'Deitado', inst: 'Respiração 360° e ativação suave durante a expiração.', vol: 'Sessão A • 3 séries guiadas' }, work: { pos: 'Sentado', inst: 'Pés apoiados; firme e solte completamente entre tentativas.', vol: 'Sessão B • 3 séries guiadas' }, time: 35 },
+            { title: 'Semana 2: Controle em Posições', focus: 'Levar o controle de deitado para sentado e em pé.', home: { pos: 'Deitado e sentado', inst: 'Mude a posição sem elevar os ombros ou alterar a respiração.', vol: 'Sessão A • 3 séries' }, work: { pos: 'Em pé com apoio', inst: 'Use a mesa e mantenha joelhos destravados.', vol: 'Sessão B • 3 séries' }, time: 40 },
+            { title: 'Semana 3: Estabilidade em 4 Apoios', focus: 'Manter coluna neutra contra pequenas mudanças de carga.', home: { pos: 'Quatro apoios', inst: 'Firme o tronco sem arredondar ou afundar a lombar.', vol: 'Sessão A • estabilidade' }, work: { pos: 'Quatro apoios', inst: 'Transfira o peso lentamente para frente e para trás.', vol: 'Sessão B • transferência' }, time: 45 },
+            { title: 'Semana 4: Alcance sem Rotação', focus: 'Preservar o alinhamento enquanto braços se movem.', home: { pos: 'Quatro apoios', inst: 'Deslize uma mão à frente e alterne os lados.', vol: 'Sessão A • alcance alternado' }, work: { pos: 'Em pé', inst: 'Alcance objetos leves sem girar o tronco.', vol: 'Sessão B • alcance funcional' }, time: 45 },
+            { title: 'Semana 5: Dobradiça e Cadeira', focus: 'Aplicar estabilidade ao sentar, levantar e inclinar.', home: { pos: 'Cadeira', inst: 'Sente e levante devagar mantendo a respiração livre.', vol: 'Sessão A • 3 séries' }, work: { pos: 'Em pé', inst: 'Leve o quadril para trás com coluna neutra.', vol: 'Sessão B • dobradiça' }, time: 50 },
+            { title: 'Semana 6: Movimento Controlado', focus: 'Controlar o tronco durante marcha e tarefas leves.', home: { pos: 'Em pé', inst: 'Marche devagar sem inclinar o corpo.', vol: 'Sessão A • marcha' }, work: { pos: 'Mesa e cadeira', inst: 'Alterne sentar, levantar e alcançar.', vol: 'Sessão B • circuito discreto' }, time: 55 },
+            { title: 'Semana 7: Transições Cotidianas', focus: 'Usar firmeza só durante o esforço e relaxar depois.', home: { pos: 'Funcional', inst: 'Pratique transições com movimento fluido.', vol: 'Sessão A • transições' }, work: { pos: 'Sentado ou em pé', inst: 'Faça uma tarefa leve e solte totalmente ao terminar.', vol: 'Sessão B • tarefa real' }, time: 60 },
+            { title: 'Semana 8: Consolidação', focus: 'Integrar técnica e escolher uma rotina sustentável.', home: { pos: 'Circuito', inst: 'Combine marcha, cadeira e alcance com qualidade.', vol: 'Sessão A • circuito' }, work: { pos: 'Livre', inst: 'Teste duas tarefas e planeje a manutenção.', vol: 'Sessão B • teste técnico' }, time: 60 }
         ];
 
         let bracingPhaseInterval = null;
@@ -8357,35 +8349,28 @@
                     }
                 }
                 return steps;
-            } else { // Program 1: Bracing (6 Semanas)
-                switch (phaseIdx) {
-                    case 0: // Semana 1 e 2: Base
-                        return [
-                            { title: 'Bracing Deitado 20% (60s)', instruction: 'Deite-se com joelhos dobrados, ative 20% do abdômen expandindo as costelas.', duration: 60, isRest: false, voice: 'Bracing deitado: 60 segundos', badge: 'DEITADO (20%)' },
-                            { title: 'Descanso (15s)', instruction: 'Respire normalmente e solte a musculatura.', duration: 15, isRest: true, voice: 'Descanse 15 segundos', badge: 'DESCANSO' },
-                            { title: 'Bracing Sentado 20% (60s)', instruction: 'Sente-se com a coluna ereta, pés apoiados e ative 20% de bracing.', duration: 60, isRest: false, voice: 'Bracing sentado: 60 segundos', badge: 'SENTADO (20%)' },
-                            { title: 'Descanso (15s)', instruction: 'Respire.', duration: 15, isRest: true, badge: 'DESCANSO' },
-                            { title: 'Bracing com Respiração Costal (60s)', instruction: 'Mantenha o tronco firme enquanto faz trocas curtas de ar pelo peito.', duration: 60, isRest: false, voice: 'Respiração costal com abdômen firme', badge: 'COSTAL 360°' }
-                        ];
-                    case 1: // Semana 3 e 4: Resistência
-                        return [
-                            { title: 'Bracing 4 Apoios (60s)', instruction: 'Posição de 4 apoios com coluna neutra e abdômen blindado.', duration: 60, isRest: false, voice: 'Bracing em 4 apoios: 60 segundos', badge: '4 APOIOS' },
-                            { title: 'Descanso (15s)', instruction: 'Respire.', duration: 15, isRest: true, badge: 'DESCANSO' },
-                            { title: 'Bracing Em Pé (60s)', instruction: 'Em pé, alinhe os ombros e ative 25% de bracing postural.', duration: 60, isRest: false, voice: 'Bracing em pé: 60 segundos', badge: 'EM PÉ (25%)' },
-                            { title: 'Descanso (15s)', instruction: 'Respire.', duration: 15, isRest: true, badge: 'DESCANSO' },
-                            { title: 'Bracing Isométrico Contínuo (60s)', instruction: 'Mantenha 25% de firmeza contínua com postura impecável.', duration: 60, isRest: false, voice: 'Bracing isométrico contínuo', badge: 'ISOMETRIA' }
-                        ];
-                    case 2: // Semana 5 e 6: Avançado
-                        return [
-                            { title: 'Bracing Dinâmico (60s)', instruction: 'Ativação do abdômen com pequenos movimentos suaves de braços e pernas.', duration: 60, isRest: false, voice: 'Bracing dinâmico: 60 segundos', badge: 'DINÂMICO' },
-                            { title: 'Descanso (15s)', instruction: 'Respire.', duration: 15, isRest: true, badge: 'DESCANSO' },
-                            { title: 'Bracing Digitando 30% (90s)', instruction: 'Mantenha 30% de firmeza abdominal enquanto trabalha e digita no teclado.', duration: 90, isRest: false, voice: 'Bracing no trabalho: 90 segundos', badge: 'DIGITANDO (30%)' },
-                            { title: 'Descanso (15s)', instruction: 'Respire.', duration: 15, isRest: true, badge: 'DESCANSO' },
-                            { title: 'Bracing Funcional Final (60s)', instruction: 'Fechamento da sessão com estabilização lombar total.', duration: 60, isRest: false, voice: 'Bracing funcional final', badge: 'FUNCIONAL' }
-                        ];
-                    default:
-                        return [{ title: 'Bracing Funcional', instruction: 'Ativação postural de 60 segundos.', duration: 60, isRest: false }];
+            } else { // Program 1: Bracing guiado em 8 semanas
+                const program = AppState.programs.find(program => program.id === '1');
+                const sessionNumber = Math.min((program?.sessionsToday || 0) + 1, program?.dailyTarget || 2);
+                const plans = [
+                    [['Respiração 360° deitado', 'Deite com joelhos dobrados. Inspire expandindo costelas, laterais e costas; expire sem prender o ar.', 40], ['Ativação suave deitado', 'Ao expirar, firme o tronco como se fosse receber um toque leve. Continue respirando e não encolha a barriga.', 35]],
+                    [['Bracing sentado', 'Pés no chão e coluna confortável. Crie firmeza moderada sem elevar ombros nem travar a respiração.', 40], ['Bracing em pé com apoio', 'Mãos na mesa, joelhos soltos e tronco estável. Faça respirações tranquilas mantendo a posição.', 40]],
+                    [['Quatro apoios estável', 'Mãos sob ombros e joelhos sob quadris. Mantenha coluna neutra e pressão abdominal suave.', 40], ['Transferência de peso', 'Em quatro apoios, leve o peso lentamente para frente e para trás sem mudar a coluna.', 45]],
+                    [['Alcance alternado', 'Em quatro apoios, deslize uma mão à frente e retorne. Alterne sem girar o tronco.', 45], ['Em pé com alcance', 'Mantenha o tronco estável enquanto alcança objetos leves em direções diferentes.', 45]],
+                    [['Sentar e levantar', 'Incline o tronco pelos quadris, levante e sente devagar mantendo respiração e alinhamento.', 50], ['Dobradiça de quadril', 'Leve o quadril para trás com coluna neutra e retorne, mantendo firmeza moderada.', 50]],
+                    [['Marcha controlada', 'Em pé, eleve um pé de cada vez sem inclinar o tronco. Use apoio se necessário.', 50], ['Circuito no trabalho', 'Alterne postura sentada, levantar e alcançar a mesa sem perder o controle do tronco.', 55]],
+                    [['Transições cotidianas', 'Pratique sentar, levantar e virar com movimento fluido e firmeza apenas durante o esforço.', 55], ['Tarefa real discreta', 'Execute uma tarefa leve do trabalho com postura estável; solte o abdômen completamente ao terminar.', 60]],
+                    [['Circuito integrado', 'Combine marcha, sentar e levantar e alcance. Priorize qualidade, respiração e controle.', 60], ['Teste técnico e manutenção', 'Escolha duas tarefas do cotidiano. Estabilize durante o esforço e relaxe entre elas.', 60]]
+                ];
+                const selected = plans[Math.min(Math.max(phaseIdx, 0), plans.length - 1)][sessionNumber - 1];
+                const [name, instruction, workSeconds] = selected;
+                const steps = [{ title: `Sessão ${sessionNumber === 1 ? 'A' : 'B'}: Preparação`, instruction: 'Ajuste a posição. Respire duas vezes sem esforço. A sessão deve permanecer confortável e sem dor.', duration: 15, isRest: true, voice: 'Ajuste a postura e respire sem esforço.', badge: 'PREPARAÇÃO' }];
+                for (let set = 1; set <= 3; set++) {
+                    steps.push({ title: `${name} • Série ${set}/3`, instruction, duration: workSeconds, isRest: false, voice: set === 1 ? name : `Série ${set}`, badge: `CONTROLE • ${set}/3` });
+                    if (set < 3) steps.push({ title: `Recuperação • Série ${set}/3`, instruction: 'Solte totalmente a tensão, respire normalmente e confira mandíbula, ombros e lombar.', duration: 20, isRest: true, voice: 'Relaxe completamente.', badge: 'RECUPERAÇÃO' });
                 }
+                steps.push({ title: 'Encerramento e checagem', instruction: 'Solte o abdômen. Confirme: respirou livremente, manteve a postura e terminou sem dor. Se não, repita esta semana com menor esforço.', duration: 20, isRest: true, voice: 'Relaxe e confira a qualidade da prática.', badge: 'QUALIDADE' });
+                return steps;
             }
         }
 
@@ -8579,6 +8564,26 @@
             return `<div class="overflow-hidden rounded-3xl border border-violet-400/30 bg-gradient-to-br from-violet-950/80 via-slate-900 to-slate-950 shadow-2xl shadow-violet-950/30"><div class="p-5"><div class="flex items-start gap-3"><div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/20 text-xl text-violet-300"><i class="fa-solid fa-brain"></i></div><div class="flex-1"><span class="rounded-full bg-violet-500/15 px-2 py-1 text-[9px] font-black uppercase tracking-wider text-violet-300">Mindfulness & Mente</span><h3 class="mt-2 text-lg font-black text-white">${prog.title}</h3><p class="text-xs text-slate-400">${phase.title}</p></div></div><div class="mt-4"><div class="mb-1 flex justify-between text-[11px] text-slate-400"><span>Progresso semanal</span><strong class="text-violet-300">${days}/6 dias</strong></div><div class="h-2 overflow-hidden rounded-full bg-slate-800"><div class="h-full bg-gradient-to-r from-violet-600 to-fuchsia-400" style="width:${Math.min(100, days / 6 * 100)}%"></div></div></div><div class="mt-4 rounded-2xl border border-violet-400/20 bg-slate-950/50 p-4"><div class="flex gap-3"><i class="fa-solid fa-leaf mt-1 text-emerald-400"></i><div class="flex-1"><strong class="text-xs text-white">${phase.informalTitle}</strong><p class="mt-1 text-[11px] leading-relaxed text-slate-400">${phase.informalDescription}</p></div></div><button onclick="toggleMindfulnessInformal()" class="mt-3 w-full rounded-xl py-2 text-xs font-bold ${informalDone ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-300'}"><i class="fa-solid ${informalDone ? 'fa-circle-check' : 'fa-circle'} mr-2"></i>${informalDone ? 'Prática informal concluída hoje' : 'Marcar prática informal de hoje'}</button></div><div class="mt-4 space-y-2"><button onclick="openMindfulnessAudioModal('4', ${phaseIdx}, 'formal')" class="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-700 py-3.5 text-xs font-black text-white"><i class="fa-solid fa-headphones mr-2"></i>Iniciar Prática Formal (${sessions}/${prog.dailyTarget})</button>${secondaryButton}</div><button onclick="toggleProgramExpand(${pIdx})" class="mt-4 w-full text-xs font-bold text-violet-300">${prog.expanded ? 'Ocultar semanas' : 'Ver as 8 semanas'} <i class="fa-solid fa-chevron-${prog.expanded ? 'up' : 'down'} ml-1"></i></button></div><div class="${prog.expanded ? 'block' : 'hidden'} border-t border-violet-400/20 bg-black/15 px-5 pb-3">${weeks}</div></div>`;
         }
 
+        function synchronizeProgramProgress(program) {
+            if (!program?.phases?.length) return program;
+            let completedPrefix = 0;
+            while (completedPrefix < program.phases.length && program.phases[completedPrefix].completed === true) completedPrefix++;
+            const hasCompletion = program.phases.some(phase => phase.completed === true);
+            const nextPhase = completedPrefix === program.phases.length
+                ? program.phases.length - 1
+                : (hasCompletion ? completedPrefix : Math.min(program.phases.length - 1, Math.max(0, Number(program.currentPhaseIndex) || 0)));
+            if (program.currentPhaseIndex !== nextPhase) {
+                program.currentPhaseIndex = nextPhase;
+                program.daysCompletedInPhase = 0;
+            }
+            const target = program.phases[nextPhase].weeklyTargetDays || 7;
+            program.daysCompletedInPhase = Math.min(target, Math.max(0, Number(program.daysCompletedInPhase) || 0));
+            program.currentDayInWeek = Math.min(program.daysCompletedInPhase + 1, target);
+            program.programCompleted = completedPrefix === program.phases.length;
+            if (program.type === 'mindfulness') program.dailyTarget = program.phases[nextPhase].targetSessionsPerDay || 1;
+            return program;
+        }
+
         function renderProgramsList() {
             const container = document.getElementById('programsListContainer');
             if (!container) return;
@@ -8587,6 +8592,7 @@
             // Update Hero Banner with Active Program Info
             const mainProg = AppState.programs.find(p => p.id === '2') || AppState.programs[0];
             if (mainProg) {
+                synchronizeProgramProgress(mainProg);
                 const activePh = mainProg.phases[mainProg.currentPhaseIndex || 0] || mainProg.phases[0];
                 const sToday = mainProg.sessionsToday || 0;
                 const currentDay = mainProg.currentDayInWeek || Math.min((mainProg.daysCompletedInPhase || 0) + 1, 7);
@@ -8604,13 +8610,15 @@
                     heroBadge.className = `text-xs font-black px-2.5 py-0.5 rounded-full border ${sToday >= 2 ? 'text-emerald-300 bg-emerald-950/80 border-emerald-400/40' : 'text-amber-300 bg-black/40 border-amber-400/30'}`;
                 }
                 if (heroBtn) {
-                    if (sToday === 0) heroBtn.innerText = `Iniciar Sessão 1/2 (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
+                    if (mainProg.programCompleted) heroBtn.innerText = 'Programa de 8 semanas concluído ✓ • Repetir sessão final';
+                    else if (sToday === 0) heroBtn.innerText = `Iniciar Sessão 1/2 (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
                     else if (sToday === 1) heroBtn.innerText = `Iniciar Sessão 2/2 (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
                     else heroBtn.innerText = `Meta Diária Concluída (2/2) ✓ - Repetir Treino`;
                 }
             }
             
             AppState.programs.forEach((prog, pIdx) => {
+                synchronizeProgramProgress(prog);
                 if (prog.type === 'mindfulness') {
                     container.innerHTML += renderMindfulnessProgramCard(prog, pIdx);
                     return;
@@ -8678,7 +8686,11 @@
                 let sessionBtnIcon = 'fa-play';
                 let sessionBtnBg = 'bg-gradient-to-r from-indigo-500 to-sky-500 hover:from-indigo-600 hover:to-sky-600';
                 
-                if (sessionsToday < targetSessions) {
+                if (prog.programCompleted) {
+                    sessionBtnText = `Programa concluído (${prog.phases.length}/${prog.phases.length} semanas) ✓ • Repetir sessão final`;
+                    sessionBtnIcon = 'fa-trophy';
+                    sessionBtnBg = 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white';
+                } else if (sessionsToday < targetSessions) {
                     sessionBtnText = `Iniciar Sessão ${sessionsToday + 1} de ${targetSessions} (${activePhase.title.split(':')[0]} • Dia ${currentDay})`;
                     if (sessionsToday > 0) {
                         sessionBtnBg = 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950';
@@ -8782,7 +8794,7 @@
                         
                         <!-- Collapsible Weeks List -->
                         <div class="${isExpanded ? 'block' : 'hidden'} px-5 pb-5 border-t border-slate-800/80 pt-3 bg-slate-900/40">
-                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Trilha de Evolução:</span>
+                            <div class="mb-2 flex items-center justify-between gap-2"><span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Trilha de Evolução:</span><button onclick="openProgramProgressAdjustment('${prog.id}')" class="text-[10px] font-bold text-sky-300 underline">Ajustar progresso</button></div>
                             ${phasesHtml}
                         </div>
                     </div>
@@ -8798,9 +8810,72 @@
 
         function toggleProgramPhase(pIdx, phaseIdx) {
             triggerHaptic([10]);
-            AppState.programs[pIdx].phases[phaseIdx].completed = !AppState.programs[pIdx].phases[phaseIdx].completed;
+            const program = AppState.programs[pIdx];
+            const markCompleted = program.phases[phaseIdx].completed !== true;
+            if (markCompleted) {
+                program.phases.forEach((phase, index) => { if (index <= phaseIdx) phase.completed = true; });
+            } else {
+                program.phases.forEach((phase, index) => { if (index >= phaseIdx) phase.completed = false; });
+            }
+            synchronizeProgramProgress(program);
             saveState();
             renderProgramsList();
+        }
+
+        function openProgramProgressAdjustment(programId) {
+            const program = AppState.programs.find(item => item.id === programId);
+            if (!program) return;
+            const safeTitle = program.title.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+            document.getElementById('programProgressAdjustment')?.remove();
+            const target = program.phases[program.currentPhaseIndex]?.weeklyTargetDays || 7;
+            const modal = document.createElement('div');
+            modal.id = 'programProgressAdjustment';
+            modal.className = 'fixed inset-0 z-[125] flex items-end justify-center bg-slate-950/85 p-4 backdrop-blur-sm';
+            modal.innerHTML = `<div role="dialog" aria-label="Ajustar progresso" class="w-full max-w-md rounded-3xl border border-sky-500/30 bg-slate-900 p-5"><div class="flex justify-between"><div><p class="text-xs font-black uppercase tracking-wider text-sky-300">Ajuste manual</p><h2 class="text-lg font-black text-white">${safeTitle}</h2></div><button onclick="closeProgramProgressAdjustment()" class="h-9 w-9 rounded-full bg-slate-800 text-slate-300"><i class="fa-solid fa-xmark"></i></button></div><p class="mt-3 text-xs text-slate-400">Use apenas para reconstruir uma posição conhecida. O ajuste não cria minutos nem sequência.</p><div class="mt-4 grid grid-cols-3 gap-2"><label class="text-xs text-slate-300">Semana<select id="adjustProgramWeek" onchange="previewProgramProgressAdjustment('${program.id}')" class="mt-1 w-full rounded-xl bg-slate-800 p-2 text-white">${program.phases.map((_, i) => `<option value="${i}" ${i === program.currentPhaseIndex ? 'selected' : ''}>${i + 1}</option>`).join('')}</select></label><label class="text-xs text-slate-300">Dia<input id="adjustProgramDay" type="number" min="1" max="${target}" value="${Math.min(target, (program.daysCompletedInPhase || 0) + 1)}" oninput="previewProgramProgressAdjustment('${program.id}')" class="mt-1 w-full rounded-xl bg-slate-800 p-2 text-white"></label><label class="text-xs text-slate-300">Sessões hoje<input id="adjustProgramSessions" type="number" min="0" max="${program.dailyTarget || 2}" value="${program.sessionsToday || 0}" oninput="previewProgramProgressAdjustment('${program.id}')" class="mt-1 w-full rounded-xl bg-slate-800 p-2 text-white"></label></div><div id="adjustProgramPreview" class="mt-4 rounded-xl bg-slate-950/60 p-3 text-xs text-slate-300"></div><button onclick="confirmProgramProgressAdjustment('${program.id}')" class="mt-4 w-full rounded-xl bg-sky-500 p-3 font-bold text-slate-950">Salvar ajuste</button></div>`;
+            document.body.appendChild(modal);
+            previewProgramProgressAdjustment(program.id);
+        }
+
+        function closeProgramProgressAdjustment() { document.getElementById('programProgressAdjustment')?.remove(); }
+
+        function previewProgramProgressAdjustment(programId) {
+            const program = AppState.programs.find(item => item.id === programId);
+            const week = Number(document.getElementById('adjustProgramWeek')?.value || 0);
+            const maxDays = program?.phases[week]?.weeklyTargetDays || 7;
+            const dayInput = document.getElementById('adjustProgramDay');
+            if (dayInput) { dayInput.max = maxDays; dayInput.value = Math.min(maxDays, Math.max(1, Number(dayInput.value) || 1)); }
+            const sessions = Math.min(program?.dailyTarget || 2, Math.max(0, Number(document.getElementById('adjustProgramSessions')?.value) || 0));
+            const preview = document.getElementById('adjustProgramPreview');
+            if (preview) preview.textContent = `Atual: semana ${(program.currentPhaseIndex || 0) + 1}, dia ${(program.daysCompletedInPhase || 0) + 1}, ${program.sessionsToday || 0} sessão(ões). Depois: semana ${week + 1}, dia ${dayInput?.value || 1}, ${sessions} sessão(ões) hoje.`;
+        }
+
+        function applyProgramProgressAdjustment(program, week, day, sessions) {
+            const safeWeek = Math.min(program.phases.length - 1, Math.max(0, Number(week) || 0));
+            const maxDays = program.phases[safeWeek].weeklyTargetDays || 7;
+            const safeDay = Math.min(maxDays, Math.max(1, Number(day) || 1));
+            const safeSessions = Math.min(program.dailyTarget || 2, Math.max(0, Number(sessions) || 0));
+            program.phases.forEach((phase, index) => { phase.completed = index < safeWeek; });
+            program.currentPhaseIndex = safeWeek;
+            program.daysCompletedInPhase = safeDay - 1;
+            program.currentDayInWeek = safeDay;
+            program.sessionsToday = safeSessions;
+            program.programCompleted = false;
+            program.lastManualAdjustment = { at: new Date().toISOString(), week: safeWeek + 1, day: safeDay, sessionsToday: safeSessions };
+            return program;
+        }
+
+        function confirmProgramProgressAdjustment(programId) {
+            const program = AppState.programs.find(item => item.id === programId);
+            if (!program || AppState.dailyExecution.isRunning || AppState.dailyExecution.isPaused) return showInlineToast('Encerre a sessão em andamento antes de ajustar.');
+            const week = Math.min(program.phases.length - 1, Math.max(0, Number(document.getElementById('adjustProgramWeek')?.value) || 0));
+            const day = Number(document.getElementById('adjustProgramDay')?.value) || 1;
+            const sessions = Math.min(program.dailyTarget || 2, Math.max(0, Number(document.getElementById('adjustProgramSessions')?.value) || 0));
+            applyProgramProgressAdjustment(program, week, day, sessions);
+            if (!saveState()) return showInlineToast('Não foi possível salvar o ajuste.');
+            closeProgramProgressAdjustment();
+            renderProgramsList();
+            syncAllNativeReminders();
+            showInlineToast('Progresso ajustado sem alterar minutos ou sequência.');
         }
 
         let editingProgramIdx = null;
@@ -8850,6 +8925,7 @@
             }
             
             const prog = AppState.programs.find(p => p.id === programId) || AppState.programs[1] || AppState.programs[0];
+            synchronizeProgramProgress(prog);
             let pIdx = phaseIndex;
             if (pIdx === null || typeof pIdx === 'undefined') {
                 pIdx = prog.currentPhaseIndex || 0;
@@ -8869,6 +8945,8 @@
             AppState.dailyExecution.currentStepIndex = 0;
             AppState.dailyExecution.sessionNumber = Math.min((prog.sessionsToday || 0) + 1, prog.dailyTarget || 2);
             AppState.dailyExecution.targetSessions = prog.dailyTarget || 2;
+            AppState.dailyExecution.currentDay = currentDay;
+            AppState.dailyExecution.targetDays = targetDays;
             AppState.dailyExecution.stepTimeLeft = steps[0].duration;
             AppState.dailyExecution.isRunning = false;
             AppState.dailyExecution.isPaused = false;
@@ -9009,6 +9087,8 @@
                 phaseTitle: execution.phaseTitle,
                 sessionNumber: execution.sessionNumber,
                 targetSessions: execution.targetSessions,
+                currentDay: execution.currentDay,
+                targetDays: execution.targetDays,
                 currentStepIndex: execution.currentStepIndex,
                 stepTimeLeft: execution.stepTimeLeft,
                 totalSessionElapsed: execution.totalSessionElapsed,
@@ -9059,6 +9139,8 @@
             AppState.dailyExecution.phaseTitle = session.phaseTitle ?? AppState.dailyExecution.phaseTitle;
             AppState.dailyExecution.sessionNumber = session.sessionNumber ?? AppState.dailyExecution.sessionNumber;
             AppState.dailyExecution.targetSessions = session.targetSessions ?? AppState.dailyExecution.targetSessions;
+            AppState.dailyExecution.currentDay = session.currentDay ?? AppState.dailyExecution.currentDay;
+            AppState.dailyExecution.targetDays = session.targetDays ?? AppState.dailyExecution.targetDays;
             AppState.dailyExecution.currentStepIndex = state.currentStepIndex || 0;
             AppState.dailyExecution.stepTimeLeft = Math.max(0, state.stepTimeLeft || 0);
             AppState.dailyExecution.totalSessionElapsed = Math.max(0, state.totalSessionElapsed || 0);
@@ -9070,6 +9152,8 @@
             const phaseTitle = document.getElementById('dailyExecutionPhaseTitle');
             if (title && AppState.dailyExecution.programTitle) title.innerText = AppState.dailyExecution.programTitle;
             if (phaseTitle && AppState.dailyExecution.phaseTitle) phaseTitle.innerText = AppState.dailyExecution.phaseTitle;
+            const sessionTag = document.getElementById('dailyExecutionSessionTag');
+            if (sessionTag) sessionTag.innerText = `Semana ${(AppState.dailyExecution.phaseIndex || 0) + 1} • Dia ${AppState.dailyExecution.currentDay || 1}/${AppState.dailyExecution.targetDays || 7} (Sessão ${AppState.dailyExecution.sessionNumber || 1}/${AppState.dailyExecution.targetSessions || 2})`;
 
             if (state.status === 'completed') {
                 if (document.hidden || nativeCompletionHandled) return;
@@ -9342,6 +9426,7 @@
                     prog.currentDayInWeek = Math.min((prog.daysCompletedInPhase || 0) + 1, nextWeeklyTarget);
                     celebrateDailyGoal();
                 }
+                synchronizeProgramProgress(prog);
             }
             
             CorePersistence.completedSessionIds.push(completionId);
@@ -10867,26 +10952,32 @@
             AppState.programs.forEach(defaultProg => {
                 const saved = loaded.find(program => program && String(program.id) === String(defaultProg.id));
                 if (!saved) return;
-                if (saved.title && saved.title !== 'Kegel: Assoalho Pélvico (8 Semanas)') defaultProg.title = saved.title;
+                const oldDefaultBracingTitle = defaultProg.id === '1' && saved.title === 'Bracing: Automação (6 Semanas)';
+                if (saved.title && saved.title !== 'Kegel: Assoalho Pélvico (8 Semanas)' && !oldDefaultBracingTitle) defaultProg.title = saved.title;
                 if (typeof saved.expanded === 'boolean') defaultProg.expanded = saved.expanded;
                 const maxPhase = Math.max(0, defaultProg.phases.length - 1);
-                defaultProg.currentPhaseIndex = Math.min(maxPhase, Math.max(0, Number(saved.currentPhaseIndex) || 0));
+                const isLegacyBracing = defaultProg.id === '1' && Array.isArray(saved.phases) && saved.phases.length === 3 && defaultProg.phases.length === 8;
+                defaultProg.currentPhaseIndex = Math.min(maxPhase, Math.max(0, isLegacyBracing ? (Number(saved.currentPhaseIndex) || 0) * 2 : Number(saved.currentPhaseIndex) || 0));
                 defaultProg.daysCompletedInPhase = Math.max(0, Number(saved.daysCompletedInPhase) || 0);
                 defaultProg.sessionsToday = isNewDay ? 0 : Math.max(0, Number(saved.sessionsToday) || 0);
                 if (Array.isArray(saved.reminderTimes)) defaultProg.reminderTimes = saved.reminderTimes.filter(value => typeof value === 'string');
                 if (typeof saved.remindersEnabled === 'boolean') defaultProg.remindersEnabled = saved.remindersEnabled;
+                if (saved.lastManualAdjustment && typeof saved.lastManualAdjustment === 'object') defaultProg.lastManualAdjustment = saved.lastManualAdjustment;
                 if (defaultProg.type === 'mindfulness') {
                     defaultProg.informalCompletedDate = saved.informalCompletedDate || null;
                     defaultProg.informalCompletedToday = defaultProg.informalCompletedDate === todayStr;
                 }
                 if (Array.isArray(saved.phases)) {
-                    defaultProg.phases.forEach((phase, index) => {
+                    if (isLegacyBracing) {
+                        saved.phases.forEach((phase, index) => {
+                            defaultProg.phases[index * 2].completed = phase.completed === true;
+                            defaultProg.phases[index * 2 + 1].completed = phase.completed === true;
+                        });
+                    } else defaultProg.phases.forEach((phase, index) => {
                         if (saved.phases[index]) phase.completed = saved.phases[index].completed === true;
                     });
                 }
-                const target = defaultProg.phases[defaultProg.currentPhaseIndex]?.weeklyTargetDays || 7;
-                defaultProg.daysCompletedInPhase = Math.min(defaultProg.daysCompletedInPhase, target);
-                defaultProg.currentDayInWeek = Math.min(defaultProg.daysCompletedInPhase + 1, target);
+                synchronizeProgramProgress(defaultProg);
             });
         }
 

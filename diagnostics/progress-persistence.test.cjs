@@ -22,6 +22,8 @@ const source = [
     appState,
     'const CORE_DATA_VERSION = 3;',
     extractFunction('localDateKey'), extractFunction('weekDateKeys'), extractFunction('syncDerivedStats'),
+    extractFunction('synchronizeProgramProgress'),
+    extractFunction('applyProgramProgressAdjustment'),
     html.slice(persistenceStart, persistenceEnd)
 ].join('\n');
 const noopNames = [
@@ -230,3 +232,61 @@ console.log('Backup/importação: arquivo válido, 10 rejeições, prévia sem g
     assert.equal(result(env).minutes, 30, 'o diário mantém suas datas próprias');
 }
 console.log('Cancelamento e importação com data anterior: passaram.');
+{
+    const env = setup(); seedLegacy(env);
+    env.programs[1].currentPhaseIndex = 0;
+    env.programs[1].daysCompletedInPhase = 4;
+    env.programs[1].sessionsToday = 1;
+    env.programs[1].phases[0].completed = true;
+    env.programs[1].phases[1].completed = true;
+    env.values.set('coreflow_programs', JSON.stringify(env.programs));
+    assert.equal(vm.runInContext('loadSavedState()', env.context), true);
+    const kegel = vm.runInContext('AppState.programs.find(p => p.id === "2")', env.context);
+    assert.equal(kegel.currentPhaseIndex, 2);
+    assert.equal(kegel.currentDayInWeek, 1);
+    assert.equal(kegel.daysCompletedInPhase, 0);
+    assert.equal(kegel.sessionsToday, 1, 'sessão feita hoje deve sobreviver à correção da semana');
+}
+{
+    const env = setup(); seedLegacy(env);
+    const legacy = env.programs[0];
+    legacy.title = 'Bracing: Automação (6 Semanas)';
+    legacy.phases = legacy.phases.slice(0, 3);
+    legacy.phases[0].completed = true;
+    legacy.currentPhaseIndex = 1;
+    legacy.daysCompletedInPhase = 2;
+    legacy.sessionsToday = 1;
+    env.values.set('coreflow_programs', JSON.stringify(env.programs));
+    assert.equal(vm.runInContext('loadSavedState()', env.context), true);
+    const bracing = vm.runInContext('AppState.programs.find(p => p.id === "1")', env.context);
+    assert.equal(bracing.phases.length, 8);
+    assert.equal(bracing.phases[0].completed, true);
+    assert.equal(bracing.phases[1].completed, true);
+    assert.equal(bracing.currentPhaseIndex, 2);
+    assert.equal(bracing.daysCompletedInPhase, 2);
+    assert.equal(bracing.sessionsToday, 1);
+}
+{
+    const env = setup();
+    vm.runInContext(extractFunction('getProgramSteps'), env.context);
+    const first = vm.runInContext('AppState.programs[0].sessionsToday = 0; getProgramSteps("1", 2)', env.context);
+    const second = vm.runInContext('AppState.programs[0].sessionsToday = 1; getProgramSteps("1", 2)', env.context);
+    assert.ok(first.length >= 7 && second.length >= 7);
+    assert.notEqual(first[1].title, second[1].title, 'sessões A e B de Bracing precisam ter práticas diferentes');
+    assert.match(first.at(-1).title, /Encerramento/);
+}
+console.log('Semana/sessão e migração/variedade do Bracing: passaram.');
+{
+    const env = setup();
+    const adjusted = vm.runInContext('applyProgramProgressAdjustment(AppState.programs[1], 2, 1, 1)', env.context);
+    assert.equal(adjusted.currentPhaseIndex, 2);
+    assert.equal(adjusted.currentDayInWeek, 1);
+    assert.equal(adjusted.daysCompletedInPhase, 0);
+    assert.equal(adjusted.sessionsToday, 1);
+    assert.deepEqual(Array.from(adjusted.phases, phase => phase.completed), [true, true, false, false, false, false, false, false]);
+    assert.equal(adjusted.lastManualAdjustment.week, 3);
+    assert.equal(vm.runInContext('synchronizeProgramProgress(AppState.programs[1]).currentPhaseIndex', env.context), 2);
+    vm.runInContext('AppState.programs[1].phases.forEach(p => p.completed = true)', env.context);
+    assert.equal(vm.runInContext('synchronizeProgramProgress(AppState.programs[1]).programCompleted', env.context), true);
+}
+console.log('Ajuste manual e conclusão das oito semanas: passaram.');
