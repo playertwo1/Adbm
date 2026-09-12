@@ -23,6 +23,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.Activity
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -46,7 +47,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
@@ -65,37 +65,49 @@ import com.example.ui.theme.MyApplicationTheme
 import java.util.Locale
 import org.json.JSONObject
 
+private const val PROGRESS_IMPORT_REQUEST = 4201
+
 class MainActivity : ComponentActivity() {
 
     private var tts: TextToSpeech? = null
     private var webView: WebView? = null
-    private val progressImportPicker = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        if (uri != null) {
-            Thread {
-                val raw = runCatching {
-                    contentResolver.openInputStream(uri)?.use { input ->
-                        val output = java.io.ByteArrayOutputStream()
-                        val buffer = ByteArray(8192)
-                        var count = input.read(buffer)
-                        while (count != -1) {
-                            require(output.size() + count <= 5_000_000) { "Arquivo acima de 5 MB" }
-                            output.write(buffer, 0, count)
-                            count = input.read(buffer)
-                        }
-                        output.toString(Charsets.UTF_8.name())
-                    } ?: error("Arquivo indisponível")
-                }.getOrNull()
-                runOnUiThread {
-                    webView?.evaluateJavascript(
-                        "window.receiveProgressImport && window.receiveProgressImport(${raw?.let(JSONObject::quote) ?: "null"});", null
-                    )
-                }
-            }.start()
+    fun selectProgressBackup() {
+        runOnUiThread {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "application/json"
+                putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/json", "text/*", "application/octet-stream"))
+            }
+            @Suppress("DEPRECATION")
+            startActivityForResult(intent, PROGRESS_IMPORT_REQUEST)
         }
     }
 
-    fun selectProgressBackup() {
-        runOnUiThread { progressImportPicker.launch(arrayOf("application/json", "text/*", "application/octet-stream")) }
+    @Deprecated("Required for compatibility with the Activity version used by this project")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode != PROGRESS_IMPORT_REQUEST || resultCode != Activity.RESULT_OK) return
+        val uri = data?.data ?: return
+        Thread {
+            val raw = runCatching {
+                contentResolver.openInputStream(uri)?.use { input ->
+                    val output = java.io.ByteArrayOutputStream()
+                    val buffer = ByteArray(8192)
+                    var count = input.read(buffer)
+                    while (count != -1) {
+                        require(output.size() + count <= 5_000_000) { "Arquivo acima de 5 MB" }
+                        output.write(buffer, 0, count)
+                        count = input.read(buffer)
+                    }
+                    output.toString(Charsets.UTF_8.name())
+                } ?: error("Arquivo indisponível")
+            }.getOrNull()
+            runOnUiThread {
+                webView?.evaluateJavascript(
+                    "window.receiveProgressImport && window.receiveProgressImport(${raw?.let(JSONObject::quote) ?: "null"});", null
+                )
+            }
+        }.start()
     }
     private var pendingReminderProgramId: String? = null
     private var pendingReminderSession: Int = 1
