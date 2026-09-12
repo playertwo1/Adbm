@@ -1810,6 +1810,15 @@
         <!-- ABA 4: CRONOGRAMA & DASHBOARD -->
         <!-- ============================================================ -->
         <section id="tab-dashboard" class="tab-content space-y-6">
+            <div class="rounded-2xl border border-emerald-500/30 bg-slate-800/90 p-4 space-y-3">
+                <h3 class="text-lg font-heading font-extrabold text-white"><i class="fa-solid fa-shield-halved text-emerald-400 mr-2"></i>Backup dos meus dados</h3>
+                <p class="text-xs text-slate-300">Guarde seus programas, evolução, agenda e históricos em um arquivo. Ao importar, confira os dados antes de substituir o progresso atual.</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="openProgressProtection(); exportProgressCopy()" class="rounded-xl bg-emerald-500 px-3 py-3 text-sm font-bold text-slate-950">Exportar backup</button>
+                    <button onclick="openProgressProtection(); chooseProgressImport()" class="rounded-xl border border-sky-400/40 bg-sky-500/10 px-3 py-3 text-sm font-bold text-sky-200">Importar backup</button>
+                </div>
+                <button onclick="openProgressProtection()" class="text-xs text-emerald-300 underline">Ver última gravação e cópia anterior</button>
+            </div>
             
             <!-- 0. RESUMO DE TEMPO DA SEMANA (NOVO) -->
             <div id="weeklyTimeSummaryCardContainer"></div>
@@ -5924,6 +5933,7 @@
                 localStorage.setItem('coreflow_mente_custom_presets', JSON.stringify(AppState.mente.customPresets));
             } catch(e) {}
 
+            saveState();
             if (input) input.value = '';
             renderCustomPresetsList();
             triggerHaptic([30]);
@@ -5961,6 +5971,7 @@
             try {
                 localStorage.setItem('coreflow_mente_custom_presets', JSON.stringify(AppState.mente.customPresets));
             } catch(e) {}
+            saveState();
             renderCustomPresetsList();
             triggerHaptic([20]);
         }
@@ -10457,7 +10468,9 @@
 
         function loadResponsivePauseState() {
             try {
-                const saved = JSON.parse(localStorage.getItem(RESPONSIVE_PAUSE_KEY) || '{}');
+                const raw = localStorage.getItem(RESPONSIVE_PAUSE_KEY);
+                if (!raw) { renderResponsivePauseHistory(); return; }
+                const saved = JSON.parse(raw);
                 responsivePause.historyEnabled = saved.historyEnabled === true;
                 responsivePause.history = Array.isArray(saved.history) ? saved.history.filter(item => item && item.id).slice(0, 100) : [];
                 if (saved.active && ['running', 'paused'].includes(saved.active.status)) {
@@ -10471,7 +10484,7 @@
             renderResponsivePauseHistory();
         }
 
-        function persistResponsivePause() {
+        function persistResponsivePause(deferSave = false) {
             const cutoff = Date.now() - (90 * 24 * 60 * 60 * 1000);
             responsivePause.history = responsivePause.history.filter(item => Number(item.id) >= cutoff).slice(0, 100);
             const active = ['running', 'paused'].includes(responsivePause.status) ? {
@@ -10484,6 +10497,7 @@
                     history: responsivePause.history, active
                 }));
             } catch (e) {}
+            if (!deferSave && CorePersistence.status === 'ready') saveState();
         }
 
         function getResponsiveElapsedMs() {
@@ -10891,6 +10905,10 @@
             AppState.mente.customPresets = Array.isArray(data.customPresets) ? data.customPresets : AppState.mente.customPresets;
             AppState.pushNotificationsEnabled = data.pushEnabled === true || AppState.programs.some(program => program.remindersEnabled === true);
             CorePersistence.completedSessionIds = Array.isArray(data.completedSessionIds) ? data.completedSessionIds.filter(value => typeof value === 'string').slice(-200) : [];
+            if (data.responsivePause && typeof responsivePause !== 'undefined') {
+                responsivePause.history = data.responsivePause.history || [];
+                responsivePause.historyEnabled = data.responsivePause.historyEnabled === true;
+            }
         }
 
         function readLegacyProgress() {
@@ -10909,7 +10927,7 @@
             const achievements = parseStoredJson('coreflow_achievements', [], Array.isArray, errors);
             const menteHistory = parseStoredJson('coreflow_mente_history', [], Array.isArray, errors);
             const corpoHistory = parseStoredJson('coreflow_corpo_history', [], Array.isArray, errors);
-            const customPresets = parseStoredJson('coreflow_mente_custom_presets', [], Array.isArray, errors);
+            const customPresets = parseStoredJson('coreflow_mente_custom_presets', typeof DEFAULT_CUSTOM_PRESETS !== 'undefined' ? [...DEFAULT_CUSTOM_PRESETS] : [], Array.isArray, errors);
             const reminderSettings = parseStoredJson('coreflow_reminder_settings', {}, value => value && typeof value === 'object' && !Array.isArray(value), errors);
             let dailyCount = 0;
             try { dailyCount = Math.max(0, Number(localStorage.getItem('coreflow_daily_count')) || 0); }
@@ -10948,7 +10966,10 @@
                 pushEnabled: AppState.pushNotificationsEnabled === true,
                 dailyCount: AppState.dailyExecution.sessionsCompletedToday || 0,
                 dailyDate: localDateKey(),
-                completedSessionIds: CorePersistence.completedSessionIds
+                completedSessionIds: CorePersistence.completedSessionIds,
+                responsivePause: typeof responsivePause !== 'undefined' ? {
+                    history: responsivePause.history, historyEnabled: responsivePause.historyEnabled
+                } : undefined
             };
         }
 
@@ -10978,15 +10999,18 @@
                 const serialized = JSON.stringify(snapshot);
                 const hasNativeStore = typeof window !== 'undefined' && !!window.AndroidBridge?.saveProgressSnapshot;
                 const nativeSaved = hasNativeStore ? window.AndroidBridge.saveProgressSnapshot(serialized) === true : false;
+                if (hasNativeStore && !nativeSaved) throw new Error('snapshot nativo não confirmado');
                 try {
                     if (previous) localStorage.setItem(CORE_PROGRESS_BACKUP_KEY, JSON.stringify(previous));
-                } catch (backupError) { console.log('WebView backup save error', backupError); }
+                } catch (backupError) {
+                    if (!hasNativeStore) throw backupError;
+                    console.log('WebView backup save error', backupError);
+                }
                 let localSaved = false;
                 try {
                     localStorage.setItem(CORE_PROGRESS_SNAPSHOT_KEY, serialized);
                     localSaved = readProgressSnapshot(CORE_PROGRESS_SNAPSHOT_KEY)?.revision === snapshot.revision;
                 } catch (localError) { console.log('WebView snapshot save error', localError); }
-                if (hasNativeStore && !nativeSaved) throw new Error('snapshot nativo não confirmado');
                 if (!hasNativeStore && !localSaved) throw new Error('snapshot local não confirmado');
                 const verified = readProgressSnapshot(CORE_PROGRESS_SNAPSHOT_KEY);
                 if (!verified || verified.revision !== snapshot.revision) throw new Error('snapshot não confirmado');
@@ -11024,14 +11048,166 @@
             }
         }
 
+        let pendingProgressImport = null;
+
+        function progressImportMessage(message) {
+            const element = document.getElementById('progressProtectionMessage');
+            if (element) element.textContent = message;
+        }
+
+        function cancelProgressImport() {
+            pendingProgressImport = null;
+            document.getElementById('progressImportPreview')?.classList.add('hidden');
+        }
+
+        function chooseProgressImport() {
+            cancelProgressImport();
+            if (window.AndroidBridge?.importProgressSnapshot) {
+                window.AndroidBridge.importProgressSnapshot();
+            } else {
+                const input = document.getElementById('progressImportFile');
+                input.value = '';
+                input.click();
+            }
+        }
+
+        async function readProgressImportFile(input) {
+            const file = input.files?.[0];
+            if (!file) return;
+            if (file.size > 5000000) return receiveProgressImport(null);
+            try { receiveProgressImport(await file.text()); }
+            catch (error) { receiveProgressImport(null); }
+        }
+
+        function validateImportedProgress(raw) {
+            if (typeof raw !== 'string' || new TextEncoder().encode(raw).length > 5000000) throw new Error('Escolha um arquivo JSON de até 5 MB.');
+            const snapshot = JSON.parse(raw);
+            if (!validateProgressSnapshot(snapshot) || !Number.isInteger(snapshot.revision) || snapshot.revision < 1 || !Number.isFinite(Date.parse(snapshot.savedAt))) {
+                throw new Error('Backup incompatível. Use um arquivo exportado pelo CoreFlow (versão 4).');
+            }
+            const object = value => value && typeof value === 'object' && !Array.isArray(value);
+            const nonnegative = value => Number.isFinite(value) && value >= 0;
+            const day = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && new Date(value + 'T12:00:00Z').toISOString().slice(0, 10) === value;
+            function inspect(value, depth = 0) {
+                if (depth > 20) throw new Error('Estrutura do backup muito profunda.');
+                if (typeof value === 'string' && /[<>]|javascript:|["'`]\s*(?:on\w+\s*=)/i.test(value)) throw new Error('Backup contém conteúdo de marcação não permitido.');
+                if (value && typeof value === 'object') {
+                    for (const [key, item] of Object.entries(value)) {
+                        if (['__proto__', 'constructor', 'prototype'].includes(key)) throw new Error('Backup contém campos não permitidos.');
+                        inspect(item, depth + 1);
+                    }
+                }
+            }
+            inspect(snapshot);
+            const data = snapshot.data;
+            if (!day(data.dailyDate) || !nonnegative(data.dailyCount) || !Number.isInteger(data.dailyCount)) throw new Error('Data ou contagem diária inválida.');
+            if (data.programs.length !== AppState.programs.length || new Set(data.programs.map(p => p?.id)).size !== data.programs.length) throw new Error('Lista de programas incompleta ou duplicada.');
+            data.programs.forEach(program => {
+                const known = AppState.programs.find(item => item.id === program?.id);
+                if (!known || typeof program.title !== 'string' || !Array.isArray(program.phases) || program.phases.length !== known.phases.length) throw new Error('Programa incompatível.');
+                if (!Number.isInteger(program.currentPhaseIndex) || program.currentPhaseIndex < 0 || program.currentPhaseIndex >= known.phases.length) throw new Error('Semana inválida no backup.');
+                for (const key of ['daysCompletedInPhase', 'sessionsToday']) {
+                    if (!Number.isInteger(program[key]) || program[key] < 0 || program[key] > 10000) throw new Error('Progresso de programa inválido.');
+                }
+                if (program.daysCompletedInPhase > (known.phases[program.currentPhaseIndex].weeklyTargetDays || 7)) throw new Error('Dias da semana fora do limite.');
+                if (!program.phases.every(phase => object(phase) && typeof phase.completed === 'boolean')) throw new Error('Semanas inválidas.');
+                if (program.reminderTimes !== undefined && (!Array.isArray(program.reminderTimes) || !program.reminderTimes.every(time => typeof time === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(time)))) throw new Error('Horários de lembrete inválidos.');
+            });
+            if (!data.schedule.every(item => object(item) && typeof item.title === 'string' && typeof item.sub === 'string' && typeof item.time === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(item.time) && typeof item.completed === 'boolean' && Number.isFinite(item.id))) throw new Error('Agenda inválida.');
+            for (const [date, entry] of Object.entries(data.activityLog)) {
+                if (!day(date) || !object(entry) || !nonnegative(entry.minutes) || !nonnegative(entry.sessions) || !object(entry.sources) || !Object.values(entry.sources).every(nonnegative)) throw new Error('Histórico de atividade inválido.');
+            }
+            for (const key of ['menteHistory', 'corpoHistory', 'customPresets']) {
+                if (data[key] !== undefined && (!Array.isArray(data[key]) || !data[key].every(object))) throw new Error('Histórico ou preferências inválidos.');
+            }
+            if (data.menteHistory?.some(item => typeof item.id !== 'string' || typeof item.dateStr !== 'string' || typeof item.patternName !== 'string' || !nonnegative(item.durationMin) || !nonnegative(item.durationSec))) throw new Error('Registro de mente inválido.');
+            if (data.corpoHistory?.some(item => typeof item.id !== 'string' || typeof item.title !== 'string' || typeof item.dateStr !== 'string' || !nonnegative(item.durationMin))) throw new Error('Registro de corpo inválido.');
+            if (data.customPresets?.some(item => typeof item.id !== 'string' || !/^[\w-]+$/.test(item.id) || typeof item.name !== 'string' || !['inspire', 'hold1', 'expire', 'hold2'].every(key => nonnegative(item[key]) && item[key] <= 300) || item.inspire + item.expire <= 0)) throw new Error('Padrão de respiração inválido.');
+            for (const key of ['achievements', 'completedSessionIds']) {
+                if (data[key] !== undefined && (!Array.isArray(data[key]) || !data[key].every(item => typeof item === 'string'))) throw new Error('Identificadores inválidos.');
+            }
+            if (data.responsivePause !== undefined && (!object(data.responsivePause) || !Array.isArray(data.responsivePause.history) || !data.responsivePause.history.every(object) || typeof data.responsivePause.historyEnabled !== 'boolean')) throw new Error('Histórico da pausa inválido.');
+            return snapshot;
+        }
+
+        function receiveProgressImport(raw) {
+            if (!document.getElementById('progressProtectionModal')) openProgressProtection();
+            cancelProgressImport();
+            try {
+                const snapshot = validateImportedProgress(raw);
+                const data = snapshot.data;
+                const lines = [
+                    `Backup de ${new Date(snapshot.savedAt).toLocaleString('pt-BR')}`,
+                    `${Object.keys(data.activityLog).length} dias no histórico · ${data.schedule.length} itens na agenda`,
+                    `Históricos: ${data.menteHistory?.length || 0} de mente · ${data.corpoHistory?.length || 0} de corpo`,
+                    ...data.programs.map(program => {
+                        const current = AppState.programs.find(item => item.id === program.id);
+                        return `${program.title}: semana ${(current.currentPhaseIndex || 0) + 1} → ${program.currentPhaseIndex + 1}; ${current.daysCompletedInPhase || 0} → ${program.daysCompletedInPhase} dias; ${program.sessionsToday} sessão(ões) em ${data.dailyDate}`;
+                    }),
+                    'Sessões de datas anteriores não serão contadas como feitas hoje.'
+                ];
+                document.getElementById('progressImportSummary').textContent = lines.join('\n\n');
+                pendingProgressImport = snapshot;
+                document.getElementById('progressImportPreview').classList.remove('hidden');
+                progressImportMessage('Arquivo validado. Revise os dados e confirme ou cancele.');
+            } catch (error) {
+                progressImportMessage(error instanceof SyntaxError ? 'Arquivo JSON inválido. Nenhum dado foi alterado.' : error.message);
+            }
+        }
+        window.receiveProgressImport = receiveProgressImport;
+
+        function confirmProgressImport() {
+            if (!pendingProgressImport) return false;
+            let original = null;
+            let committed = false;
+            const previousStatus = CorePersistence.status;
+            try {
+                if (previousStatus === 'writeFailed') throw new Error('Salve as alterações pendentes pelo aviso no topo antes de importar.');
+                const native = window.AndroidBridge?.getWorkoutState ? JSON.parse(window.AndroidBridge.getWorkoutState()) : {};
+                if (AppState.dailyExecution.isRunning || AppState.dailyExecution.isPaused || ['running', 'paused', 'completed'].includes(native.status) ||
+                    (typeof document.querySelector === 'function' && document.querySelector('#mindfulnessAudioModal:not(.hidden), #dailyExecutionModal:not(.hidden)')) ||
+                    (typeof responsivePause !== 'undefined' && ['running', 'paused'].includes(responsivePause.status))) throw new Error('Encerre a sessão em andamento antes de importar.');
+                original = JSON.parse(JSON.stringify(collectProgressData()));
+                if (previousStatus === 'ready' && !saveState()) throw new Error('Não foi possível preservar o progresso atual. Tente salvar novamente.');
+                // Preserve raw disk evidence too, including a damaged current snapshot.
+                if (window.AndroidBridge?.preserveProgressBeforeImport) {
+                    if (!window.AndroidBridge.preserveProgressBeforeImport()) throw new Error('Não foi possível preservar a cópia anterior. Importação cancelada.');
+                }
+                const archive = {};
+                for (const key of ['coreflow_progress_snapshot_v4', 'coreflow_progress_snapshot_v4_backup', 'coreflow_programs', 'coreflow_activity_log', 'coreflow_schedule']) archive[key] = localStorage.getItem(key);
+                localStorage.setItem('coreflow_before_import', JSON.stringify(archive));
+                applyProgressData(JSON.parse(JSON.stringify(pendingProgressImport.data)));
+                CorePersistence.status = 'ready';
+                if (!saveState()) throw new Error('Não foi possível salvar a importação. Os dados anteriores foram mantidos.');
+                committed = true;
+                cancelProgressImport();
+                renderAfterProgressLoad();
+                if (typeof persistResponsivePause === 'function') persistResponsivePause(true);
+                if (typeof renderResponsivePauseHistory === 'function') renderResponsivePauseHistory();
+                progressImportMessage('Backup restaurado e salvo.');
+                return true;
+            } catch (error) {
+                if (committed) {
+                    cancelProgressImport();
+                    progressImportMessage('Backup salvo. Reabra o aplicativo para atualizar a exibição.');
+                    return true;
+                }
+                if (original) applyProgressData(original);
+                setPersistenceStatus(previousStatus, 'Importação não concluída. Confira o aviso em Backup dos meus dados.');
+                progressImportMessage(error.message);
+                return false;
+            }
+        }
+
         function openProgressProtection() {
+            pendingProgressImport = null;
             document.getElementById('progressProtectionModal')?.remove();
             const backup = readProgressSnapshot(CORE_PROGRESS_BACKUP_KEY);
             const modal = document.createElement('div');
             modal.id = 'progressProtectionModal';
             modal.className = 'fixed inset-0 z-[120] flex items-end justify-center bg-slate-950/80 p-4 backdrop-blur-sm';
             modal.innerHTML = `
-                <div class="w-full max-w-md rounded-3xl border border-slate-700 bg-slate-900 p-5 shadow-2xl">
+                <div role="dialog" aria-label="Backup dos meus dados" class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-700 bg-slate-900 p-5 shadow-2xl">
                     <div class="flex items-start justify-between gap-4">
                         <div><p class="text-xs font-black uppercase tracking-widest text-emerald-300">Proteção do progresso</p><h2 class="mt-1 text-lg font-black text-white">Cópias e recuperação</h2></div>
                         <button onclick="closeProgressProtection()" class="h-9 w-9 rounded-full bg-slate-800 text-slate-300" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
@@ -11041,6 +11217,15 @@
                         <p class="mt-1 text-xs text-slate-500">Revisão ${CorePersistence.revision}${backup ? ` · cópia anterior ${backup.revision}` : ' · sem cópia anterior disponível'}</p>
                     </div>
                     <button onclick="exportProgressCopy()" class="mt-4 w-full rounded-2xl bg-emerald-500 px-4 py-3 font-black text-slate-950"><i class="fa-solid fa-file-export mr-2"></i>Exportar cópia JSON</button>
+                    <button onclick="chooseProgressImport()" class="mt-3 w-full rounded-2xl border border-sky-500/40 px-4 py-3 font-bold text-sky-200">Importar arquivo de backup</button>
+                    <input id="progressImportFile" type="file" accept=".json,application/json" class="hidden" onchange="readProgressImportFile(this)">
+                    <div id="progressImportPreview" class="hidden mt-4 rounded-2xl border border-amber-500/30 p-3 text-sm text-slate-200">
+                        <h3 class="font-bold">Confira antes de restaurar</h3>
+                        <pre id="progressImportSummary" class="mt-2 whitespace-pre-wrap font-sans text-xs"></pre>
+                        <p class="mt-3 text-xs text-amber-200">Substitui os dados atuais; não soma sessões. Uma cópia do estado atual será preservada antes da importação.</p>
+                        <button onclick="confirmProgressImport()" class="mt-3 w-full rounded-xl bg-amber-400 p-3 font-bold text-slate-950">Confirmar restauração</button>
+                        <button onclick="cancelProgressImport()" class="mt-2 w-full p-2 text-slate-300">Cancelar</button>
+                    </div>
                     <button onclick="restorePreviousProgress()" ${backup ? '' : 'disabled'} class="mt-3 w-full rounded-2xl border border-slate-700 px-4 py-3 font-bold ${backup ? 'text-white' : 'cursor-not-allowed text-slate-600'}"><i class="fa-solid fa-clock-rotate-left mr-2"></i>Restaurar cópia anterior</button>
                     <p id="progressProtectionMessage" class="mt-3 min-h-5 text-center text-xs text-slate-400"></p>
                 </div>`;
@@ -11049,10 +11234,12 @@
         }
 
         function closeProgressProtection() {
+            pendingProgressImport = null;
             document.getElementById('progressProtectionModal')?.remove();
         }
 
         function exportProgressCopy() {
+            if (CorePersistence.status === 'ready' && !saveState()) return;
             const snapshot = readProgressSnapshot(CORE_PROGRESS_SNAPSHOT_KEY);
             const message = document.getElementById('progressProtectionMessage');
             if (!snapshot) {
@@ -11102,7 +11289,7 @@
             updateTimeOfDayStretchRecommendation();
             updateWeeklyMobilityMetrics();
             updateStretchDurationUI();
-            loadCustomPresets();
+            renderCustomPresetsList();
             updateBreathDurationUI();
             updateBreathLevelUI();
             updateTimeOfDayRecommendation();
@@ -11140,6 +11327,7 @@
             const legacy = readLegacyProgress();
             legacy.errors.push(...snapshotErrors);
             if (legacy.firstUse) {
+                if (typeof DEFAULT_CUSTOM_PRESETS !== 'undefined') AppState.mente.customPresets = [...DEFAULT_CUSTOM_PRESETS];
                 CorePersistence.status = 'ready';
                 renderAfterProgressLoad();
                 saveState();

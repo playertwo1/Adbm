@@ -1,6 +1,8 @@
 # ROADMAP — CoreFlow
 
-**Atualizado em:** 11/09/2026.
+**Atualizado em:** 12/09/2026.
+
+**Solicitação atual:** [semana/sessão correta, ampliação do Bracing e backup na Evolução](#12-semanas-sessões-bracing-e-backup-na-evolução). Correção da navegação e ampliação do programa planejadas; exportação/importação implementadas localmente, com testes automatizados e build debug aprovados.
 
 **Prioridade crítica:** [investigação e correção da perda de progresso](#11-incidente-de-perda-de-progresso--diagnóstico-e-plano-de-correção). Correção preventiva implementada e validada em build debug em 11/09/2026; a causa inicial e a recuperação do histórico já sobrescrito no aparelho ainda dependem da inspeção do dispositivo.
 
@@ -839,3 +841,80 @@ As mensagens de preservação e salvamento só podem aparecer quando a implement
 ### 11.9 Estado ao encerrar esta investigação
 
 O defeito de sobrescrita após falha está confirmado no código e em reprodução isolada. O disparador no aparelho e a possibilidade de recuperar o histórico real permanecem desconhecidos. R1–R4 foram implementados; R5 inclui aviso de estado, tentativa manual, exportação JSON e restauração da cópia anterior. A regressão está em `diagnostics/progress-persistence.test.cjs`, com nove cenários de preservação aprovados. O build debug e os testes unitários Android passaram; ainda faltam instalar a atualização sobre a versão anterior em um aparelho real e publicar um release.
+
+## 12. Semanas, sessões, Bracing e backup na Evolução
+
+**Registrado em:** 12/09/2026, a partir das cinco fotos e do relato do usuário. A release v1.1.35 já foi publicada. Esta seção substitui as pendências de exportação/importação descritas em R5 quando sua implementação estiver validada.
+
+### 12.1 Estado observado e resultado esperado
+
+As fotos mostram semanas 1 e 2 marcadas, barra 2/8 e, ao mesmo tempo, semana 1 identificada como ativa. O player mostra sessão 2/2, porém ainda usa os exercícios da semana 1. O usuário informa uma sessão concluída hoje e espera **Semana 3 · Dia 1 · Sessão 2 de 2**. Interpretamos “segundo exercício” como segunda sessão diária; o primeiro passo interno da sessão continua sendo o primeiro exercício previsto para a semana 3.
+
+**Causa confirmada no código:** `toggleProgramPhase()` altera somente `phases[].completed`; `openDailyExecutionModal()` usa `currentPhaseIndex`, que não é recalculado por essa ação. O check e o player, portanto, consultam estados diferentes. A diferença entre 0/2 na foto do card e 2/2 no player exige teste de data/contador e de retomada nativa; as imagens não provam qual evento alterou a contagem.
+
+```text
+Semanas 1 e 2 concluídas + uma sessão comprovada hoje
+                      ↓
+Semana ativa 3 · Dia 1 · Sessão seguinte 2/2
+                      ↓
+Card, player, lembrete e retomada exibem o mesmo destino
+                      ↓
+Conclusão atualiza programa e evolução em uma gravação
+```
+
+### 12.2 Correção de semana e sessão — prioridade P0
+
+| Etapa | Implementação planejada | Aceite verificável | Estado |
+| :--- | :--- | :--- | :--- |
+| S1 | Centralizar resolução da semana ativa a partir da primeira semana não concluída em sequência; executar após marcação manual, carregamento, importação e conclusão | Checks 1 e 2 levam à semana 3 em todas as entradas | Planejado |
+| S2 | Separar data da sessão, semana e dia; preservar sessão comprovadamente feita hoje ao ajustar a semana, sem zerar contagem ou inventar atividade | Semana 3, dia 1, uma sessão hoje → botão e player indicam sessão 2/2 | Planejado |
+| S3 | Criar ajuste de progresso com prévia de semana, dia e sessões de hoje para casos em que o histórico perdido não comprova a posição | Usuário pode informar semana 3/dia 1/uma sessão; ajuste é identificado como manual, sem fabricar minutos ou sequência | Planejado |
+| S4 | Alinhar card, faixa do player, lembretes e estado nativo; retomada de sessão antiga deve mostrar sua origem e oferecer encerrar/continuar | Não reabrir silenciosamente semana 1 quando o programa está na 3 | Planejado |
+| S5 | Definir desmarcação, semanas fora de sequência e término das oito semanas; cópia anterior antes de migrar posições inconsistentes | Desmarcar semana 2 reabre a 2; marcar só a 5 não pula pendências; oito concluídas mostram programa concluído | Planejado |
+| S6 | Testes funcionais, reabertura, importação, meia-noite, callback repetido e atualização sobre versão existente | Nenhum reset de histórico, nenhuma contagem duplicada; cenário das fotos reproduzido e corrigido | Planejado |
+
+Não inferir a sessão feita hoje apenas pelo gráfico agregado de minutos. A marcação de semana também não deve criar retroativamente quatorze dias de exercício. Se a sessão existente estiver associada a outra semana, apresentar essa informação no ajuste em vez de alterar o histórico silenciosamente.
+
+### 12.3 Bracing mais completo — prioridade P1
+
+**Problema atual:** três blocos agrupam seis semanas e oferecem um timer isolado, com pouca diferenciação das sessões e pouco retorno visual. O objetivo é ter um programa guiado com variedade e progressão técnica. Os itens abaixo são planejamento de produto; exercícios, dosagem e critérios de progressão deverão passar por revisão técnica antes da implementação.
+
+| Bloco proposto | Conteúdo a desenvolver | Acompanhamento visual |
+| :--- | :--- | :--- |
+| Semanas 1–2: controle | Instrução de postura e respiração, reconhecimento da ativação, prática inicial e relaxamento; exemplos em casa e no trabalho | Ilustração de posição, preparação e checklist de execução |
+| Semanas 3–4: estabilidade | Variações de apoio e controle durante movimentos simples; alternativas por dificuldade | Sequência guiada, lado atual, séries, pausas e próxima etapa |
+| Semanas 5–6: movimento | Combinar estabilidade com tarefas funcionais e transições; circuitos variados em vez de repetir um único timer | Blocos de sessão, tempo estimado e comparação das práticas A/B |
+| Semanas 7–8: consolidação proposta | Nova etapa avançada, condicionada a técnica e tolerância; ampliar variedade antes de aumentar carga/tempo | Escolha de variação, critérios atendidos e opção de repetir a etapa |
+| Modo trabalho | Práticas breves e discretas, com início e fim definidos, adaptadas à cadeira ou em pé | Cartão “No banco”, instrução resumida e encerramento claro |
+
+Tarefas detalhadas:
+
+- [ ] Revisar o conteúdo existente, inclusive instruções de manter contração por minutos e respiração curta; definir orientações coerentes para cada exercício.
+- [ ] Definir sessões A/B com preparação, prática principal, recuperação e encerramento; exibir objetivo, posição, execução, erros comuns e alternativas.
+- [ ] Substituir o timer avulso por sequência de preparação/execução/descanso, com pausar, retomar, pular e concluir; registrar execução real.
+- [ ] Criar critérios de avanço baseados em qualidade e tolerância, com repetir/regredir; “avançado” não significa aumentar indiscriminadamente intensidade.
+- [ ] Planejar migração das três fases antigas agrupadas para a nova organização semanal, preservando progresso e sem escolher silenciosamente uma semana que os dados antigos não permitem distinguir.
+- [ ] Integrar Bracing à mesma resolução de semana, dia e sessão implementada em S1–S6.
+- [ ] Mostrar semana atual, sessões A/B, metas, histórico e resumo final na Evolução; testar legibilidade, áudio opcional e modo discreto.
+
+### 12.4 Backup e importação na aba Evolução — implementação desta entrega
+
+| Ação | Fluxo | Proteção |
+| :--- | :--- | :--- |
+| Exportar backup | Evolução → Backup dos meus dados → Exportar backup | Salvar o estado carregado antes de exportar; gerar JSON versionado; Android 10+ grava em Downloads |
+| Importar backup | Evolução → Importar backup → escolher JSON no seletor Android ou navegador | Limite de 5 MB, validação de versão, estrutura, programas, datas, valores e conteúdo; nenhum salvamento na prévia |
+| Conferir | Mostrar data do backup, quantidade de dias, agenda, históricos e comparação de semana/dias por programa | Usar texto literal no resumo; explicar substituição e não soma dos dados |
+| Confirmar | Confirmar restauração → preservar estado atual → gravar → atualizar interface | Recusar durante sessão ativa ou alterações sem salvar; preservar evidência bruta anterior; manter cópia válida para desfazer |
+| Cancelar | Cancelar ou fechar a prévia | Nenhuma alteração no progresso |
+| Falha | Exibir erro e permitir nova tentativa | Arquivo rejeitado não altera dados; erro de gravação não deve aparecer como importação concluída |
+
+**Conteúdo do arquivo:** programas e fases, sessões e data diária, agenda, diário de atividades, conquistas, históricos de mente/corpo, padrões personalizados de respiração, histórico/preferência da Pausa de Resposta quando presentes e configurações de lembretes dos programas. Não transfere sessão em execução, permissões Android nem conexão do relógio. Aceita snapshots v4 exportados pela v1.1.35; os campos adicionais de pausa são opcionais nesses arquivos antigos. O destino da exportação em Android 7–9 é a pasta Documents específica do aplicativo, exibida na mensagem.
+
+**Validação em 12/09/2026:** nove cenários de preservação anteriores aprovados, além de exportação compatível, dez tipos de arquivo rejeitado, cópia anterior, reabertura, repetição sem duplicação, bloqueio durante sessão, falha nativa após preservar o estado atual, cancelamento e importação de outra data em `diagnostics/progress-persistence.test.cjs`. Sintaxe JavaScript aprovada; `testDebugUnitTest assembleDebug` passou usando o JDK do Android Studio. Os HTMLs raiz e Android são equivalentes. Não há aparelho ADB conectado nem navegador disponível à automação: inspeção visual e validação física do seletor, Downloads e atualização continuam pendentes. Nenhum release desta mudança foi publicado.
+
+### 12.5 Ordem e estado de entrega
+
+1. Backup/importação visíveis para preservar o estado antes dos próximos ajustes — implementados localmente; testes automatizados e build aprovados, validação física pendente.
+2. Corrigir semana/sessão conforme as fotos (S1–S6) — planejado.
+3. Ampliar Bracing e revisar conteúdo/fluxos — planejado.
+4. Validar migração e atualização assinada antes de distribuir a próxima mudança — pendente.

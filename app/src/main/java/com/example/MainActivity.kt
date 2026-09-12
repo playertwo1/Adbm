@@ -46,6 +46,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
@@ -68,6 +69,34 @@ class MainActivity : ComponentActivity() {
 
     private var tts: TextToSpeech? = null
     private var webView: WebView? = null
+    private val progressImportPicker = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) {
+            Thread {
+                val raw = runCatching {
+                    contentResolver.openInputStream(uri)?.use { input ->
+                        val output = java.io.ByteArrayOutputStream()
+                        val buffer = ByteArray(8192)
+                        var count = input.read(buffer)
+                        while (count != -1) {
+                            require(output.size() + count <= 5_000_000) { "Arquivo acima de 5 MB" }
+                            output.write(buffer, 0, count)
+                            count = input.read(buffer)
+                        }
+                        output.toString(Charsets.UTF_8.name())
+                    } ?: error("Arquivo indisponível")
+                }.getOrNull()
+                runOnUiThread {
+                    webView?.evaluateJavascript(
+                        "window.receiveProgressImport && window.receiveProgressImport(${raw?.let(JSONObject::quote) ?: "null"});", null
+                    )
+                }
+            }.start()
+        }
+    }
+
+    fun selectProgressBackup() {
+        runOnUiThread { progressImportPicker.launch(arrayOf("application/json", "text/*", "application/octet-stream")) }
+    }
     private var pendingReminderProgramId: String? = null
     private var pendingReminderSession: Int = 1
     private var pendingCustomSnooze: Boolean = false
@@ -318,6 +347,11 @@ class AndroidBridge(
 ) {
 
     @JavascriptInterface
+    fun importProgressSnapshot() {
+        (context as? MainActivity)?.selectProgressBackup()
+    }
+
+    @JavascriptInterface
     fun startMindfulnessAudioSession(title: String) {
         val intent = Intent(context, MindfulnessAudioService::class.java).apply {
             action = MindfulnessAudioService.ACTION_START
@@ -477,6 +511,16 @@ class AndroidBridge(
         .orEmpty()
 
     @JavascriptInterface
+    fun preserveProgressBeforeImport(): Boolean = runCatching {
+        val prefs = context.getSharedPreferences(PROGRESS_PREFS, Context.MODE_PRIVATE)
+        val archive = JSONObject().apply {
+            put("current", prefs.getString(PROGRESS_CURRENT, null))
+            put("previous", prefs.getString(PROGRESS_BACKUP, null))
+        }
+        prefs.edit().putString("before_import", archive.toString()).commit()
+    }.getOrDefault(false)
+
+    @JavascriptInterface
     fun saveProgressSnapshot(snapshotJson: String): Boolean = runCatching {
         require(snapshotJson.length <= MAX_PROGRESS_SNAPSHOT_CHARS)
         val parsed = JSONObject(snapshotJson)
@@ -509,7 +553,8 @@ class AndroidBridge(
             folder.mkdirs()
             java.io.File(folder, fileName).writeText(snapshotJson)
         }
-        "Cópia salva em Downloads: $fileName"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) "Cópia salva em Downloads: $fileName"
+        else "Cópia salva em ${context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)}/$fileName"
     }.getOrElse { "Não foi possível exportar a cópia." }
 
     @JavascriptInterface

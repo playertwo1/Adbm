@@ -30,7 +30,7 @@ const noopNames = [
     'renderAchievements', 'renderMenteHistory', 'renderCorpoHistory', 'updateTimeOfDayStretchRecommendation',
     'updateWeeklyMobilityMetrics', 'updateStretchDurationUI', 'loadCustomPresets', 'updateBreathDurationUI',
     'updateBreathLevelUI', 'updateTimeOfDayRecommendation', 'updateWeeklyCalmMetrics',
-    'updatePushNotificationButton', 'syncAllNativeReminders'
+    'updatePushNotificationButton', 'syncAllNativeReminders', 'renderCustomPresetsList'
 ];
 
 function setup({ failReadOnce = false, failSnapshotWrite = false, nativeCurrent = null } = {}) {
@@ -38,6 +38,7 @@ function setup({ failReadOnce = false, failSnapshotWrite = false, nativeCurrent 
     let reads = 0;
     const context = vm.createContext({
         console: { log() {} },
+        TextEncoder,
         document: { getElementById() { return null; } },
         window: nativeCurrent === null ? {} : { AndroidBridge: { getProgressSnapshot() { return nativeCurrent; } } },
         localStorage: {
@@ -139,3 +140,93 @@ for (const damagedKey of ['coreflow_schedule', 'coreflow_programs', 'coreflow_ac
 assert.match(html, /addMinutesToday\(trainedMinutes,[\s\S]{0,120}, true\);/);
 assert.match(html, /addMinutesToday\(Math\.max\(1, Math\.round[\s\S]{0,180}, \[\], true\);/);
 console.log('Persistência segura: 9 cenários passaram.');
+
+function importedFixture(env) {
+    vm.runInContext('loadSavedState()', env.context);
+    return JSON.parse(env.values.get('coreflow_progress_snapshot_v4'));
+}
+function validateImport(env, snapshot) {
+    env.context.rawImport = JSON.stringify(snapshot);
+    return vm.runInContext('validateImportedProgress(rawImport)', env.context);
+}
+{
+    const env = setup(); seedLegacy(env);
+    const snapshot = importedFixture(env);
+    assert.equal(validateImport(env, snapshot).schemaVersion, 4, 'o próprio backup exportado precisa ser aceito');
+    const before = [...env.values];
+    for (const mutate of [
+        data => { data.schemaVersion = 999; },
+        data => { data.data.programs[0].currentPhaseIndex = 999; },
+        data => { data.data.programs.pop(); },
+        data => { data.data.programs[0].title = '<img src=x onerror=alert(1)>'; },
+        data => { data.data.schedule[0].time = '99:99'; },
+        data => { data.data.activityLog[env.today].minutes = -2; },
+        data => { data.data.customPresets = [{ id: 'x', name: 'x', inspire: 'ruim' }]; },
+        data => { data.data.dailyDate = '2026-02-30'; }
+    ]) {
+        const invalid = structuredClone(snapshot); mutate(invalid);
+        assert.throws(() => validateImport(env, invalid));
+        assert.deepEqual([...env.values], before, 'validar um arquivo nunca grava dados');
+    }
+    env.context.rawImport = '{';
+    assert.throws(() => vm.runInContext('validateImportedProgress(rawImport)', env.context));
+    env.context.rawImport = ' '.repeat(5000001);
+    assert.throws(() => vm.runInContext('validateImportedProgress(rawImport)', env.context));
+}
+{
+    const env = setup(); seedLegacy(env);
+    const backup = importedFixture(env);
+    backup.data.programs[0].currentPhaseIndex = 1;
+    backup.data.activityLog[env.today].minutes = 15;
+    validateImport(env, backup);
+    vm.runInContext('pendingProgressImport = validateImportedProgress(rawImport)', env.context);
+    assert.equal(vm.runInContext('confirmProgressImport()', env.context), true);
+    assert.equal(result(env).phase, 1);
+    assert.equal(result(env).minutes, 15);
+    assert.equal(JSON.parse(env.values.get('coreflow_progress_snapshot_v4_backup')).data.activityLog[env.today].minutes, 30);
+    vm.runInContext('loadSavedState()', env.context);
+    assert.equal(result(env).minutes, 15, 'reabertura preserva importação');
+    vm.runInContext('pendingProgressImport = validateImportedProgress(rawImport)', env.context);
+    assert.equal(vm.runInContext('confirmProgressImport()', env.context), true);
+    assert.equal(result(env).minutes, 15, 'importar duas vezes não soma sessões');
+    vm.runInContext('pendingProgressImport = validateImportedProgress(rawImport); AppState.dailyExecution.isRunning = true;', env.context);
+    const before = [...env.values];
+    assert.equal(vm.runInContext('confirmProgressImport()', env.context), false);
+    assert.deepEqual([...env.values], before, 'sessão ativa impede importação');
+}
+{
+    const env = setup(); seedLegacy(env);
+    const backup = importedFixture(env);
+    backup.data.programs[0].currentPhaseIndex = 1;
+    validateImport(env, backup);
+    vm.runInContext('pendingProgressImport = validateImportedProgress(rawImport)', env.context);
+    let nativeSnapshot = env.values.get('coreflow_progress_snapshot_v4');
+    let writes = 0;
+    env.context.window.AndroidBridge = {
+        getProgressSnapshot: () => nativeSnapshot,
+        saveProgressSnapshot: raw => { if (++writes === 1) { nativeSnapshot = raw; return true; } return false; },
+        preserveProgressBeforeImport: () => true
+    };
+    assert.equal(vm.runInContext('confirmProgressImport()', env.context), false);
+    assert.equal(writes, 2, 'simular falha na gravação da importação depois de preservar o estado atual');
+    assert.equal(result(env).phase, 2, 'falha nativa preserva estado em memória');
+    assert.equal(JSON.parse(env.values.get('coreflow_progress_snapshot_v4')).data.programs[0].currentPhaseIndex, 2);
+}
+console.log('Backup/importação: arquivo válido, 10 rejeições, prévia sem gravação, cópia anterior, reabertura, repetição, sessão ativa e falha nativa verificados.');
+{
+    const env = setup(); seedLegacy(env);
+    const backup = importedFixture(env);
+    backup.data.dailyDate = '2020-01-01';
+    validateImport(env, backup);
+    vm.runInContext('pendingProgressImport = validateImportedProgress(rawImport)', env.context);
+    const before = [...env.values];
+    vm.runInContext('cancelProgressImport()', env.context);
+    assert.equal(vm.runInContext('confirmProgressImport()', env.context), false);
+    assert.deepEqual([...env.values], before, 'cancelamento preserva o armazenamento');
+    vm.runInContext('pendingProgressImport = validateImportedProgress(rawImport)', env.context);
+    assert.equal(vm.runInContext('confirmProgressImport()', env.context), true);
+    assert.equal(result(env).sessions, 0, 'sessões de outra data não viram sessões de hoje');
+    assert.equal(result(env).days, 3, 'dias acumulados preservados');
+    assert.equal(result(env).minutes, 30, 'o diário mantém suas datas próprias');
+}
+console.log('Cancelamento e importação com data anterior: passaram.');
