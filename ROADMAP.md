@@ -64,23 +64,23 @@ Aceite: registro com símbolos, comandos, resultados e limitações; nenhuma sup
 
 ### E01 — Correções do vácuo
 Arquivos: HTMLs; serviço/bridge se necessário.
-- [ ] Corrigir chave de estado e chamar o iniciador existente confirmado.
-- [ ] Impedir duas sessões por duplo toque.
-- [ ] Trocar 10 minutos fixos por tempo executado; excluir pausa e duração pulada.
-- [ ] Unificar arredondamento web/nativo e documentar regra.
-- [ ] Deduplicar conclusão por ID; callback repetido não gera novo treino.
-- [ ] Criar regressões específicas e sincronizar HTML embarcado.
+- [x] Corrigir chave de estado e chamar o iniciador existente confirmado.
+- [x] Impedir duas sessões por duplo toque.
+- [x] Trocar 10 minutos fixos por tempo executado; excluir pausa e duração pulada.
+- [x] Unificar arredondamento web/nativo e documentar regra.
+- [x] Deduplicar conclusão por ID; callback repetido não gera novo treino.
+- [x] Criar regressões específicas e sincronizar HTML embarcado.
 Aceite: 125 segundos praticados e 30 pausados contabilizam 125 segundos antes do arredondamento; atalho inicia uma sessão; salto não credita tempo não executado.
 
 ### E02 — Persistência e migração
-- [ ] Mapear campos existentes antes de acrescentar novos.
-- [ ] Definir contrato: ID, versão, programa, etapa, data, estado, séries previstas/feitas, retenção, recuperação, pausa, interrupção e feedback opcional.
-- [ ] Especificar unidades, limites, campos opcionais e fonte de verdade.
-- [ ] Separar concluída/interrompida/cancelada; definir efeitos em minutos, metas, sequência e conquistas.
-- [ ] Preservar histórico e posição; não fabricar métricas ausentes nos dados antigos.
-- [ ] Criar cópia anterior à migração; aceitar backup antigo com campos opcionais ausentes.
-- [ ] Validar importação antes de gravar; cancelamento não altera estado.
-- [ ] Testar migração repetida, gravação falha, restauração, reabertura e callback duplicado.
+- [x] Mapear campos existentes antes de acrescentar novos.
+- [x] Definir contrato: ID, versão, programa, etapa, data, estado, séries previstas/feitas, retenção, recuperação, pausa, interrupção e feedback opcional.
+- [x] Especificar unidades, limites, campos opcionais e fonte de verdade.
+- [x] Separar concluída/interrompida/cancelada; definir efeitos em minutos, metas, sequência e conquistas.
+- [x] Preservar histórico e posição; não fabricar métricas ausentes nos dados antigos.
+- [x] Criar cópia anterior à migração; aceitar backup antigo com campos opcionais ausentes.
+- [x] Validar importação antes de gravar; cancelamento não altera estado.
+- [x] Testar migração repetida, gravação falha, restauração, reabertura e callback duplicado.
 Aceite: migrar duas vezes não muda resultado; erro mantém última cópia válida; posição e sessões anteriores preservadas.
 
 ### E03 — Conteúdo e progressão

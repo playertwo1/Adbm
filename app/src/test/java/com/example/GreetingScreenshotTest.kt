@@ -23,6 +23,6 @@ class GreetingScreenshotTest {
   fun greeting_screenshot() {
     composeTestRule.setContent { MyApplicationTheme { androidx.compose.material3.Text("CoreFlow") } }
 
-    composeTestRule.onRoot().captureRoboImage(filePath = "src/test/screenshots/greeting.png")
+    composeTestRule.onRoot().captureRoboImage(filePath = "build/outputs/roborazzi/greeting.png")
   }
 }

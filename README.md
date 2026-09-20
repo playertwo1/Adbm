@@ -16,7 +16,7 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, postura, re
 
 ## Versão atual
 
-`1.1.34` (`versionCode 34`) — adiciona a Pausa de Resposta de 3 Minutos, com três etapas visuais, modo silencioso, retomada segura, escolha do próximo passo e histórico local opcional.
+`1.1.36` (`versionCode 36`) — adiciona a Pausa de Resposta de 3 Minutos, com três etapas visuais, modo silencioso, retomada segura, escolha do próximo passo e histórico local opcional.
 
 O APK assinado está disponível na página de [Releases](https://github.com/playertwo1/Adbm/releases).
 
@@ -30,17 +30,27 @@ O APK assinado está disponível na página de [Releases](https://github.com/pla
 
 ## Compilação
 
-Para gerar um APK de desenvolvimento:
+Antes de validar ou compilar, configure `JAVA_HOME` para o JDK do Android Studio e `ANDROID_HOME` para o Android SDK. O check reproduzível do projeto é:
 
-```powershell
-.\gradlew.bat assembleDebug
+```bash
+bash scripts/check.sh
 ```
 
-Para gerar uma release assinada, configure as variáveis `KEYSTORE_PATH`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`, `BUILD_VERSION_CODE` e `BUILD_VERSION_NAME`, e execute:
+Ele executa os diagnósticos Node, confirma a equivalência entre os dois HTMLs e gera os APKs debug do celular e do relógio.
+
+Para gerar apenas o APK de desenvolvimento:
 
 ```powershell
-.\gradlew.bat testDebugUnitTest assembleRelease
+.\gradlew.bat :app:assembleDebug :wear:assembleDebug
 ```
+
+Para gerar uma release assinada, configure `KEYSTORE_PATH`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`, `BUILD_VERSION_CODE` e `BUILD_VERSION_NAME`, e execute:
+
+```powershell
+.\gradlew.bat :app:assembleRelease :wear:assembleRelease
+```
+
+A release falha intencionalmente se qualquer credencial de assinatura persistente estiver ausente.
 
 Os arquivos serão criados em `app/build/outputs/apk/release/app-release.apk` e `wear/build/outputs/apk/release/wear-release.apk`.
 
@@ -60,6 +70,8 @@ Instale o APK principal no celular e o APK `CoreFlow-Watch` no relógio. Ambos u
 ## Assinatura e segurança
 
 Arquivos `.env`, keystores e senhas não devem ser enviados ao repositório. Consulte `SIGNING.md` para configurar uma chave persistente. Para atualizar uma instalação existente, todas as versões precisam ser assinadas com o mesmo certificado.
+
+Os dados de progresso usam armazenamento local e podem participar do backup automático do Android; consulte [PRIVACY.md](PRIVACY.md) para o escopo, a retenção e o controle do usuário.
 
 ## Licença
 

@@ -121,6 +121,7 @@ class WorkoutForegroundService : Service() {
                 "phaseIndex",
                 "programTitle",
                 "phaseTitle",
+                "sessionId",
                 "sessionNumber",
                 "targetSessions",
                 "type",

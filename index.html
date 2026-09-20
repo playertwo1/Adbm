@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Core Ativo - Vácuo, Bracing & Postura</title>
     
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Dependências locais: a WebView não executa recursos remotos. -->
+    <script src="vendor/tailwindcss.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -44,22 +44,16 @@
         }
     </script>
     
-    <!-- FontAwesome 6 CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Google Fonts Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css">
     
     <style>
         * {
             -webkit-tap-highlight-color: transparent;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             user-select: none;
         }
         h1, h2, h3, .font-heading {
-            font-family: 'Outfit', sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
         /* Custom smooth scroll and transitions */
         .tab-content {
@@ -2821,6 +2815,7 @@
                 seriesTotal: 5,
                 intervalId: null,
                 totalElapsedSec: 0,
+                sessionId: null,
             },
 
             // Desk mode state
@@ -3635,6 +3630,7 @@
         }
 
         function startVacuo() {
+            if (AppState.vacuo.isRunning) return;
             if (window.AndroidBridge?.getWorkoutState) {
                 try {
                     const activeState = JSON.parse(window.AndroidBridge.getWorkoutState());
@@ -3648,6 +3644,9 @@
                 }
             }
             AppState.vacuo.isRunning = true;
+            if (!AppState.vacuo.sessionId || AppState.vacuo.currentPhase === 'ready') {
+                AppState.vacuo.sessionId = `vacuum-${Date.now()}`;
+            }
             nativeCompletionHandled = false;
             if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
                 window.AndroidBridge.setKeepScreenOn(true);
@@ -3672,6 +3671,7 @@
                 }
                 const payload = JSON.stringify({
                     type: 'vacuum',
+                    sessionId: AppState.vacuo.sessionId,
                     programTitle: 'Vácuo Abdominal',
                     phaseTitle: AppState.vacuo.posture,
                     completionMessage: 'Treino de Vácuo Concluído! Excelente trabalho.',
@@ -3727,6 +3727,7 @@
             AppState.vacuo.timer = 0;
             AppState.vacuo.seriesCurrent = 1;
             AppState.vacuo.totalElapsedSec = 0;
+            AppState.vacuo.sessionId = null;
 
             document.getElementById('vacPlayText').innerText = 'Iniciar';
             document.getElementById('vacPhaseTitle').innerText = 'Pronto para iniciar';
@@ -3902,12 +3903,16 @@
                 triggerHaptic([200, 100, 200, 100, 400]);
 
                 document.getElementById('vacPhaseTitle').innerText = 'Concluído! 🎉';
-                document.getElementById('vacPhaseInstruction').innerText = '5 séries finalizadas com sucesso!';
                 document.getElementById('vacTimerMain').innerText = '✓';
 
+                const completionId = AppState.vacuo.sessionId || `vacuum-${localDateKey()}-${AppState.vacuo.posture}`;
+                if (CorePersistence.completedSessionIds.includes(completionId)) return;
                 // Mark schedule item 1 as completed
                 markScheduleDone(1, true);
-                addMinutesToday(10, 'vacuum');
+                addMinutesToday(Math.max(1, Math.ceil(AppState.vacuo.totalElapsedSec / 60)), 'vacuum');
+                CorePersistence.completedSessionIds.push(completionId);
+                CorePersistence.completedSessionIds = CorePersistence.completedSessionIds.slice(-200);
+                saveState();
             }
         }
 
@@ -9179,6 +9184,7 @@
                 AppState.vacuo.timer = 0;
                 AppState.vacuo.seriesCurrent = 1;
                 AppState.vacuo.totalElapsedSec = 0;
+                AppState.vacuo.sessionId = null;
                 document.getElementById('vacPlayIcon').className = 'fa-solid fa-play';
                 document.getElementById('vacPlayText').innerText = 'Iniciar';
                 document.getElementById('vacPhaseTitle').innerText = 'Pronto para iniciar';
@@ -9199,20 +9205,28 @@
             AppState.vacuo.timer = Math.max(0, state.stepTimeLeft || 0);
             AppState.vacuo.totalElapsedSec = Math.max(0, state.totalSessionElapsed || 0);
             AppState.vacuo.seriesCurrent = step?.series || AppState.vacuo.seriesTotal;
+            AppState.vacuo.sessionId = state.session?.sessionId || AppState.vacuo.sessionId;
 
             if (state.status === 'completed') {
                 if (document.hidden || nativeCompletionHandled) return;
                 nativeCompletionHandled = true;
                 AppState.vacuo.nativeManaged = false;
                 AppState.vacuo.isRunning = false;
+                const completionId = AppState.vacuo.sessionId || `vacuum-${localDateKey()}-${AppState.vacuo.posture}`;
+                if (CorePersistence.completedSessionIds.includes(completionId)) {
+                    window.AndroidBridge?.acknowledgeWorkoutState?.();
+                    return;
+                }
                 window.AndroidBridge?.acknowledgeWorkoutState?.();
                 document.getElementById('vacPlayIcon').className = 'fa-solid fa-play';
                 document.getElementById('vacPlayText').innerText = 'Iniciar';
                 document.getElementById('vacPhaseTitle').innerText = 'Concluído! 🎉';
-                document.getElementById('vacPhaseInstruction').innerText = `${AppState.vacuo.seriesTotal} séries finalizadas com sucesso!`;
                 document.getElementById('vacTimerMain').innerText = '✓';
                 markScheduleDone(1, true);
                 addMinutesToday(Math.max(1, Math.ceil(AppState.vacuo.totalElapsedSec / 60)), 'vacuum');
+                CorePersistence.completedSessionIds.push(completionId);
+                CorePersistence.completedSessionIds = CorePersistence.completedSessionIds.slice(-200);
+                saveState();
                 return;
             }
 
@@ -10416,8 +10430,7 @@
                     if (permission === 'granted') {
                         btnText.innerText = 'Lembretes Ativos ✓';
                         new Notification('CoreFlow Notificações Ativadas', {
-                            body: 'Você receberá avisos para as pausas de vácuo e postura.',
-                            icon: 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png'
+                            body: 'Você receberá avisos para as pausas de vácuo e postura.'
                         });
                     } else {
                         btnText.innerText = 'Ativo (In-App)';
@@ -10489,8 +10502,8 @@
                     switchTab('vacuo');
                     setPosture('deitado', 10);
                     setTimeout(() => {
-                        if (!AppState.vacuum.isRunning) {
-                            startVacuumCycle();
+                        if (!AppState.vacuo.isRunning) {
+                            startVacuo();
                         }
                     }, 250);
                     break;
@@ -10893,7 +10906,59 @@
         ------------------------------------------------------------- */
         const CORE_PROGRESS_SNAPSHOT_KEY = 'coreflow_progress_snapshot_v4';
         const CORE_PROGRESS_BACKUP_KEY = 'coreflow_progress_snapshot_v4_backup';
-        const CorePersistence = { status: 'loading', revision: 0, lastSavedAt: null, message: '', completedSessionIds: [] };
+        const CorePersistence = { status: 'loading', revision: 0, lastSavedAt: null, message: '', completedSessionIds: [], sessionHistory: [] };
+        const SESSION_RECORD_SCHEMA_VERSION = 1;
+        const SESSION_STATUSES = new Set(['completed', 'interrupted', 'cancelled']);
+        const SESSION_FEEDBACK = new Set([null, 'comfortable', 'difficult', 'interrupted']);
+
+        function normalizeSessionRecord(record) {
+            if (!record || typeof record !== 'object' || Array.isArray(record)) throw new Error('registro de sessão inválido');
+            const integer = (value, field) => {
+                if (!Number.isInteger(value) || value < 0) throw new Error(`campo de sessão inválido: ${field}`);
+                return value;
+            };
+            if (typeof record.id !== 'string' || !record.id.trim() || record.id.length > 120) throw new Error('ID de sessão inválido');
+            if (record.schemaVersion !== SESSION_RECORD_SCHEMA_VERSION) throw new Error('versão de sessão incompatível');
+            if (typeof record.programId !== 'string' || !record.programId.trim()) throw new Error('programa de sessão inválido');
+            if (!Number.isInteger(record.phaseIndex) || record.phaseIndex < 0) throw new Error('etapa de sessão inválida');
+            if (typeof record.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(record.date)) throw new Error('data de sessão inválida');
+            if (!SESSION_STATUSES.has(record.status)) throw new Error('estado de sessão inválido');
+            const plannedSeries = integer(record.plannedSeries, 'plannedSeries');
+            const completedSeries = integer(record.completedSeries, 'completedSeries');
+            if (completedSeries > plannedSeries) throw new Error('séries concluídas excedem o previsto');
+            const normalized = {
+                id: record.id.trim(), schemaVersion: SESSION_RECORD_SCHEMA_VERSION,
+                programId: record.programId.trim(), phaseIndex: record.phaseIndex, date: record.date,
+                status: record.status, plannedSeries, completedSeries,
+                retentionSeconds: integer(record.retentionSeconds, 'retentionSeconds'),
+                recoverySeconds: integer(record.recoverySeconds, 'recoverySeconds'),
+                pausedSeconds: integer(record.pausedSeconds, 'pausedSeconds'),
+                interrupted: record.interrupted === true, feedback: record.feedback ?? null
+            };
+            if (!SESSION_FEEDBACK.has(normalized.feedback)) throw new Error('feedback de sessão inválido');
+            return normalized;
+        }
+
+        function normalizeSessionHistory(records) {
+            if (records === undefined) return [];
+            if (!Array.isArray(records)) throw new Error('histórico de sessões inválido');
+            return records.slice(-200).map(normalizeSessionRecord);
+        }
+
+        function upsertSessionRecord(record) {
+            const normalized = normalizeSessionRecord(record);
+            const index = CorePersistence.sessionHistory.findIndex(item => item.id === normalized.id);
+            if (index >= 0 && JSON.stringify(CorePersistence.sessionHistory[index]) === JSON.stringify(normalized)) return false;
+            if (index >= 0) CorePersistence.sessionHistory[index] = normalized;
+            else CorePersistence.sessionHistory.push(normalized);
+            CorePersistence.sessionHistory = CorePersistence.sessionHistory.slice(-200);
+            return true;
+        }
+
+        function isValidSessionRecord(record) {
+            try { normalizeSessionRecord(record); return true; }
+            catch (error) { return false; }
+        }
 
         function parseStoredJson(key, fallback, validator, errors) {
             let raw;
@@ -10913,7 +10978,9 @@
         function validateProgressSnapshot(value) {
             return !!value && value.schemaVersion === 4 && Number.isFinite(value.revision) &&
                 value.data && Array.isArray(value.data.programs) && Array.isArray(value.data.schedule) &&
-                value.data.activityLog && typeof value.data.activityLog === 'object' && !Array.isArray(value.data.activityLog);
+                value.data.activityLog && typeof value.data.activityLog === 'object' && !Array.isArray(value.data.activityLog) &&
+                (!Object.prototype.hasOwnProperty.call(value.data, 'sessionHistory') ||
+                    (Array.isArray(value.data.sessionHistory) && value.data.sessionHistory.length <= 200 && value.data.sessionHistory.every(isValidSessionRecord)));
         }
 
         function readProgressSnapshot(key, errors = null) {
@@ -10996,6 +11063,7 @@
             AppState.mente.customPresets = Array.isArray(data.customPresets) ? data.customPresets : AppState.mente.customPresets;
             AppState.pushNotificationsEnabled = data.pushEnabled === true || AppState.programs.some(program => program.remindersEnabled === true);
             CorePersistence.completedSessionIds = Array.isArray(data.completedSessionIds) ? data.completedSessionIds.filter(value => typeof value === 'string').slice(-200) : [];
+            CorePersistence.sessionHistory = normalizeSessionHistory(data.sessionHistory);
             if (data.responsivePause && typeof responsivePause !== 'undefined') {
                 responsivePause.history = data.responsivePause.history || [];
                 responsivePause.historyEnabled = data.responsivePause.historyEnabled === true;
@@ -11058,6 +11126,7 @@
                 dailyCount: AppState.dailyExecution.sessionsCompletedToday || 0,
                 dailyDate: localDateKey(),
                 completedSessionIds: CorePersistence.completedSessionIds,
+                sessionHistory: CorePersistence.sessionHistory,
                 responsivePause: typeof responsivePause !== 'undefined' ? {
                     history: responsivePause.history, historyEnabled: responsivePause.historyEnabled
                 } : undefined
@@ -11399,6 +11468,7 @@
                 recoveredBackup = !!snapshot;
             }
             if (snapshot) {
+                const needsSessionHistoryMigration = !Object.prototype.hasOwnProperty.call(snapshot.data, 'sessionHistory');
                 applyProgressData(snapshot.data);
                 CorePersistence.revision = snapshot.revision;
                 CorePersistence.lastSavedAt = snapshot.savedAt;
@@ -11409,8 +11479,8 @@
                     saveState();
                 } else {
                     setPersistenceStatus('ready', `Progresso carregado · revisão ${snapshot.revision}`);
-                    // Salva somente quando a virada diária exige persistir os contadores reiniciados.
-                    if (snapshot.data.dailyDate !== localDateKey()) saveState();
+                    // Salva somente quando a virada diária exige persistir os contadores reiniciados ou quando o contrato foi ampliado.
+                    if (snapshot.data.dailyDate !== localDateKey() || needsSessionHistoryMigration) saveState();
                 }
                 return true;
             }

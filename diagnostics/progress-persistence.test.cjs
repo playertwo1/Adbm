@@ -289,4 +289,26 @@ console.log('Semana/sessão e migração/variedade do Bracing: passaram.');
     vm.runInContext('AppState.programs[1].phases.forEach(p => p.completed = true)', env.context);
     assert.equal(vm.runInContext('synchronizeProgramProgress(AppState.programs[1]).programCompleted', env.context), true);
 }
-console.log('Ajuste manual e conclusão das oito semanas: passaram.');
+{
+    const env = setup();
+    assert.equal(vm.runInContext('collectProgressData().sessionHistory.length', env.context), 0, 'novo snapshot precisa iniciar histórico de sessões vazio');
+    const record = {
+        id: 'vacuum-test-1', schemaVersion: 1, programId: '3', phaseIndex: 0,
+        date: env.today, status: 'completed', plannedSeries: 5, completedSeries: 5,
+        retentionSeconds: 50, recoverySeconds: 60, pausedSeconds: 3,
+        interrupted: false, feedback: null
+    };
+    assert.equal(vm.runInContext('normalizeSessionRecord(rawRecord).id', Object.assign(env.context, { rawRecord: record })), record.id);
+    assert.equal(vm.runInContext('upsertSessionRecord(rawRecord)', env.context), true);
+    assert.equal(vm.runInContext('upsertSessionRecord(rawRecord)', env.context), false, 'mesmo ID não pode duplicar histórico');
+    assert.equal(vm.runInContext('CorePersistence.sessionHistory.length', env.context), 1);
+    assert.throws(() => vm.runInContext('normalizeSessionRecord({ id: "x", status: "unknown" })', env.context));
+    const legacy = { schemaVersion: 4, revision: 1, savedAt: new Date().toISOString(), data: { ...JSON.parse(vm.runInContext('JSON.stringify(collectProgressData())', env.context)), sessionHistory: undefined } };
+    delete legacy.data.sessionHistory;
+    env.values.set('coreflow_progress_snapshot_v4', JSON.stringify(legacy));
+    assert.equal(vm.runInContext('loadSavedState()', env.context), true);
+    assert.deepEqual(JSON.parse(env.values.get('coreflow_progress_snapshot_v4')).data.sessionHistory, [], 'migração deve gravar o histórico novo sem fabricar sessões');
+    env.context.rawImport = JSON.stringify(legacy);
+    assert.equal(vm.runInContext('validateImportedProgress(rawImport).schemaVersion', env.context), 4, 'backup anterior sem histórico novo deve continuar aceito');
+}
+console.log('Contrato E02 de sessões: passou');

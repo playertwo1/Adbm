@@ -1,45 +1,61 @@
-name: Build APK
+name: Verify and Release APK
 
 on:
+  push:
+    branches: [main]
+  pull_request:
   workflow_dispatch:
+    inputs:
+      publish_release:
+        description: Publish signed phone and Wear APKs after verification
+        required: true
+        default: false
+        type: boolean
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  build:
+  verify:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-
       - name: Install Android SDK packages
         run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: 9.3.1
-
-      - name: Create .env file for build
-        # The Secrets Gradle Plugin accepts an empty properties file, but an
-        # empty value such as `MAPS_API_KEY=` generates invalid BuildConfig
-        # Java (`public static final String MAPS_API_KEY = ;`). The app does
-        # not currently use Google Maps, so no placeholder key is needed.
+      - name: Create empty local environment file
         run: touch .env
+      - name: Run project check
+        run: bash scripts/check.sh
 
-      - name: Validate release signing secrets
-        if: github.event_name != 'pull_request'
+  release:
+    needs: verify
+    if: github.event_name == 'workflow_dispatch' && inputs.publish_release == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Install Android SDK packages
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - name: Create empty local environment file
+        run: touch .env
+      - name: Validate signing secrets
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -48,19 +64,15 @@ jobs:
         run: |
           for secret_name in KEYSTORE_BASE64 KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
             if [ -z "${!secret_name}" ]; then
-              echo "Secret obrigatório ausente: ${secret_name}"
+              echo "Required secret is absent: ${secret_name}"
               exit 1
             fi
           done
-
       - name: Restore release keystore
-        if: github.event_name != 'pull_request'
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/coreflow-upload.jks"
-
-      - name: Build signed release APK
-        if: github.event_name != 'pull_request'
+      - name: Build signed release APKs
         env:
           KEYSTORE_PATH: ${{ runner.temp }}/coreflow-upload.jks
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -68,14 +80,8 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           BUILD_VERSION_CODE: ${{ github.run_number }}
           BUILD_VERSION_NAME: 1.1.${{ github.run_number }}
-        run: gradle --no-daemon assembleRelease
-
-      - name: Build debug APK for pull request validation
-        if: github.event_name == 'pull_request'
-        run: gradle --no-daemon assembleDebug
-
+        run: ./gradlew --no-daemon :app:assembleRelease :wear:assembleRelease
       - name: Upload signed release APKs
-        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: CoreFlow-release-${{ github.run_number }}
@@ -83,9 +89,7 @@ jobs:
             app/build/outputs/apk/release/*.apk
             wear/build/outputs/apk/release/*.apk
           if-no-files-found: error
-
-      - name: Publish phone and watch APKs in GitHub Releases
-        if: github.event_name != 'pull_request'
+      - name: Publish phone and watch APKs
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: v1.1.${{ github.run_number }}
@@ -94,10 +98,9 @@ jobs:
           phone_apks=(app/build/outputs/apk/release/*.apk)
           watch_apks=(wear/build/outputs/apk/release/*.apk)
           if [ "${#phone_apks[@]}" -ne 1 ] || [ "${#watch_apks[@]}" -ne 1 ]; then
-            echo "Esperado um APK do celular e um APK do relógio."
+            echo "Expected exactly one phone APK and one Wear APK."
             exit 1
           fi
-
           phone_asset="CoreFlow-${RELEASE_TAG}.apk"
           watch_asset="CoreFlow-Watch-${RELEASE_TAG}.apk"
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
@@ -110,13 +113,5 @@ jobs:
               "${watch_apks[0]}#${watch_asset}" \
               --target "$GITHUB_SHA" \
               --title "CoreFlow ${RELEASE_TAG}" \
-              --notes "APKs release assinados para celular e Galaxy Watch com Wear OS. O APK do celular pode atualizar uma versão anterior assinada com a mesma chave."
+              --notes "Signed phone and Wear OS APKs."
           fi
-
-      - name: Upload debug APK for pull request
-        if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
-        with:
-          name: CoreFlow-pr-debug-${{ github.run_number }}
-          path: app/build/outputs/apk/debug/*.apk
-          if-no-files-found: error

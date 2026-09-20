@@ -1,5 +1,21 @@
 import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
 
+val releaseSigningVariables = listOf("KEYSTORE_PATH", "KEYSTORE_PASSWORD", "KEY_ALIAS", "KEY_PASSWORD")
+fun missingReleaseSigningVariables() = releaseSigningVariables.filter { System.getenv(it).isNullOrBlank() }
+val buildVersionCode = System.getenv("BUILD_VERSION_CODE")
+val buildVersionName = System.getenv("BUILD_VERSION_NAME")
+require((buildVersionCode == null) == (buildVersionName == null)) {
+  "BUILD_VERSION_CODE and BUILD_VERSION_NAME must be set together"
+}
+
+gradle.taskGraph.whenReady {
+  if (allTasks.any { it.path.contains("Release") }) {
+    check(missingReleaseSigningVariables().isEmpty()) {
+      "Release requires persistent signing variables: ${missingReleaseSigningVariables().joinToString(", ")}"
+    }
+  }
+}
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
@@ -11,31 +27,24 @@ plugins {
 
 android {
   namespace = "com.example"
-  compileSdk { version = release(36) { minorApiLevel = 1 } }
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.aistudio.coreflow.vdfpkw"
     minSdk = 24
     targetSdk = 36
-    versionCode = providers.environmentVariable("BUILD_VERSION_CODE")
-      .orElse("2")
-      .get()
-      .toInt()
-    versionName = providers.environmentVariable("BUILD_VERSION_NAME")
-      .orElse("1.1")
-      .get()
+    versionCode = (buildVersionCode ?: providers.gradleProperty("CORE_FLOW_VERSION_CODE").get()).toInt()
+    versionName = buildVersionName ?: providers.gradleProperty("CORE_FLOW_VERSION_NAME").get()
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
   signingConfigs {
     create("release") {
-      val keystorePath = System.getenv("KEYSTORE_PATH") ?: "${rootDir}/my-upload-key.jks"
-      val keystoreFile = file(keystorePath)
-      if (keystoreFile.exists()) {
-        storeFile = keystoreFile
+      System.getenv("KEYSTORE_PATH")?.takeIf { it.isNotBlank() }?.let { keystorePath ->
+        storeFile = file(keystorePath)
         storePassword = System.getenv("KEYSTORE_PASSWORD")
-        keyAlias = System.getenv("KEY_ALIAS") ?: "coreflow-upload"
+        keyAlias = System.getenv("KEY_ALIAS")
         keyPassword = System.getenv("KEY_PASSWORD")
       }
     }
@@ -46,12 +55,7 @@ android {
       isCrunchPngs = false
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-      val keystorePath = System.getenv("KEYSTORE_PATH") ?: "${rootDir}/my-upload-key.jks"
-      signingConfig = if (file(keystorePath).exists()) {
-        signingConfigs.getByName("release")
-      } else {
-        signingConfigs.getByName("debug")
-      }
+      signingConfig = signingConfigs.getByName("release")
     }
     // Debug remains useful for local development. Distributed APKs are always
     // release builds signed by the persistent key configured in GitHub.
