@@ -8283,9 +8283,8 @@
                     'Alterne as séries: ímpares em pé ereto e pares sentado ereto.'
                 ];
                 const steps = [];
-                const progressed = (program.daysCompletedInPhase || 0) >= Math.ceil((phase.weeklyTargetDays || 7) / 2);
-                const holdSeconds = progressed ? phase.holdMax : phase.holdMin;
-                const setCount = progressed ? phase.sets : (phase.minSets || phase.sets);
+                const holdSeconds = phase.holdMin;
+                const setCount = phase.minSets || phase.sets;
                 for (let set = 1; set <= setCount; set++) {
                     const alternatingPosition = phaseIdx === 7
                         ? (set % 2 === 1
@@ -8639,6 +8638,10 @@
                 const targetDays = activePhase.weeklyTargetDays || 7;
                 const currentDay = prog.currentDayInWeek || Math.min((prog.daysCompletedInPhase || 0) + 1, targetDays);
                 const daysCompleted = prog.daysCompletedInPhase || 0;
+                const progressionReviewPending = prog.id === '3' && prog.progressionReview?.status === 'pending';
+                const progressionReviewHtml = progressionReviewPending
+                    ? '<div class="mt-3 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-3 text-xs text-amber-100"><strong class="block text-amber-300">Revisão da etapa necessária</strong><span class="mt-1 block text-amber-100/80">A meta foi atingida. A etapa atual será repetida até uma revisão explícita; o calendário não aumenta a carga sozinho.</span></div>'
+                    : '';
 
                 let guideBtnHtml = '';
                 if (prog.id === '2') {
@@ -8735,6 +8738,7 @@
                                 <div class="flex-1 pr-3 cursor-pointer" onclick="toggleProgramExpand(${pIdx})">
                                     <h3 class="text-lg font-bold text-white tracking-tight">${prog.title}</h3>
                                     <p class="text-xs text-slate-400 mt-1 leading-relaxed">${prog.description}</p>
+                                    ${progressionReviewHtml}
                                 </div>
                                 <div class="flex items-center gap-1.5 flex-shrink-0">
                                     ${guideBtnHtml}
@@ -9424,19 +9428,33 @@
                 
                 // Avança o dia somente uma vez, exatamente quando a meta diária é atingida.
                 if (prog.sessionsToday === dailyTarget) {
-                    prog.daysCompletedInPhase = (prog.daysCompletedInPhase || 0) + 1;
-                    
-                    // Se completou os 7 dias da semana (ou meta da fase), conclui a semana atual e avança para a próxima
-                    if (prog.daysCompletedInPhase >= weeklyTargetDays) {
-                        if (phase) phase.completed = true;
-                        
-                        if (AppState.dailyExecution.phaseIndex < prog.phases.length - 1) {
-                            prog.currentPhaseIndex = AppState.dailyExecution.phaseIndex + 1;
-                            prog.daysCompletedInPhase = 0;
+                    const reachedPhaseTarget = (prog.daysCompletedInPhase || 0) + 1 >= weeklyTargetDays;
+                    if (completedProgramId === '3') {
+                        prog.daysCompletedInPhase = Math.min(weeklyTargetDays, (prog.daysCompletedInPhase || 0) + 1);
+                        if (reachedPhaseTarget && phase) {
+                            phase.reviewPending = true;
+                            phase.reviewPendingAt = localDateKey();
+                            phase.reviewReason = 'weekly-target-reached';
+                            prog.progressionReview = {
+                                phaseIndex: AppState.dailyExecution.phaseIndex,
+                                requestedAt: localDateKey(),
+                                status: 'pending',
+                                reason: 'weekly-target-reached'
+                            };
+                        }
+                    } else {
+                        prog.daysCompletedInPhase = (prog.daysCompletedInPhase || 0) + 1;
+                        // Se completou a meta da fase, os programas existentes continuam com o comportamento anterior.
+                        if (prog.daysCompletedInPhase >= weeklyTargetDays) {
+                            if (phase) phase.completed = true;
+                            if (AppState.dailyExecution.phaseIndex < prog.phases.length - 1) {
+                                prog.currentPhaseIndex = AppState.dailyExecution.phaseIndex + 1;
+                                prog.daysCompletedInPhase = 0;
+                            }
                         }
                     }
-                    const nextPhase = prog.phases[prog.currentPhaseIndex || 0];
-                    const nextWeeklyTarget = nextPhase?.weeklyTargetDays || 7;
+                    const activePhase = prog.phases[prog.currentPhaseIndex || 0];
+                    const nextWeeklyTarget = activePhase?.weeklyTargetDays || 7;
                     prog.currentDayInWeek = Math.min((prog.daysCompletedInPhase || 0) + 1, nextWeeklyTarget);
                     celebrateDailyGoal();
                 }

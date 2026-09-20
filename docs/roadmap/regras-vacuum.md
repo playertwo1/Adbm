@@ -62,6 +62,8 @@ Enquanto não houver revisão técnica aprovada para dosagem, o comportamento se
 
 Os critérios numéricos de avanço, limites por postura e incremento de recuperação continuam **não resolvidos** e bloqueiam a implementação de aumento automático de carga. A ausência de decisão clínica não bloqueia correções de persistência, feedback ou interrupção.
 
+Implementação segura entregue nesta etapa: `getProgramSteps()` sempre inicia pela retenção mínima e pelo menor número de séries permitido pela fase; completar a frequência da fase do programa `id: '3'` cria `progressionReview.status = 'pending'` e `phase.reviewPending = true`, sem marcar a fase como concluída nem trocar `currentPhaseIndex`. O card de Programas informa que a revisão é necessária. Repetir a etapa continua disponível.
+
 ## Agenda e calendário
 
 - `weeklyTargetDays` é meta de frequência; não é o mesmo que semana de calendário.
@@ -78,5 +80,7 @@ Os critérios numéricos de avanço, limites por postura e incremento de recuper
 - Revisão do texto de expiração, retenção e saída por responsável técnico.
 - Definição da apresentação de conforto sem inferir qualidade por sensores inexistentes.
 - Data de vigência de qualquer mudança de dosagem.
+
+**Registro da revisão de engenharia (2026-09-20):** fonte primária: `index.html`, asset embarcado equivalente, `ROADMAP.md` e contrato E02. A revisão confirma que o app não deve inferir sucesso sem feedback nem aumentar carga por calendário. Responsável técnico/clínico pela dosagem: **pendente de definição**; não há aprovação clínica registrada neste repositório.
 
 Até essas decisões serem resolvidas, o app pode registrar execução e feedback, mas não deve alegar progressão clínica nem aumentar carga automaticamente.

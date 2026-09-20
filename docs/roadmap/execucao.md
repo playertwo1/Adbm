@@ -66,11 +66,15 @@ Próximo passo:
 - E02: CONCLUÍDA.
 - Próximo passo: iniciar E03 — regras de treino, começando pelo inventário das oito fases e pelos testes das regras antes de alterar conteúdo.
 
-## 2026-09-20 — E03 / EM EXECUÇÃO
+## 2026-09-20 — E03 / CONCLUÍDA
 
-- Diagnóstico RED: `node diagnostics/vacuum-rules.test.cjs` falhou porque `docs/roadmap/regras-vacuum.md` ainda não existia.
-- Inventário registrado: oito fases atuais do programa `id: '3'`, postura/texto, séries, retenção, recuperação e frequência.
-- Regras documentadas: diferença entre Vácuo, Bracing e hipopressivos; tutorial postura → preparação → execução → saída → recuperação; feedback Confortável/Difícil/Interrompi; ausência de feedback sem equivalência a sucesso; manutenção, redução, sugestão de avanço e repetição de etapa.
-- Limites explícitos: critérios numéricos de progressão, incremento por postura e dosagem clínica permanecem pendentes; nenhuma carga automática será implementada sem revisão.
-- Diagnóstico GREEN: `node diagnostics/vacuum-rules.test.cjs` → PASS.
-- Próximo passo: revisar as regras pendentes antes de alterar parâmetros de treino ou implementar progressão automática.
+- Diagnóstico RED: `node diagnostics/vacuum-rules.test.cjs` falhou primeiro pela ausência do contrato e, depois, pela progressão automática existente no código (`holdMax` e avanço por calendário).
+- Contrato concluído em `docs/roadmap/regras-vacuum.md`: inventário das oito fases; vocabulário Vácuo/Bracing/hipopressivos; tutorial postura → preparação → execução → saída → recuperação; feedback Confortável/Difícil/Interrompi/sem resposta; regras de manter, reduzir, repetir e sugerir avanço; agenda, frequência, vigência e decisões pendentes.
+- Correção de progressão: `getProgramSteps()` inicia pelo `holdMin` e por `minSets || sets`; dias cumpridos não elevam a retenção nem o número de séries.
+- Correção de avanço: ao concluir a frequência da fase do programa Vácuo (`id: '3'`), o estado registra `phase.reviewPending` e `program.progressionReview.status = 'pending'`; a fase não é marcada como concluída e `currentPhaseIndex` não avança automaticamente.
+- Feedback visual: o card do programa informa que a revisão é necessária e que a etapa será repetida até uma decisão explícita. O fluxo de repetição continua disponível.
+- Segurança de escopo: os demais programas preservam o comportamento anterior; dosagem clínica, incremento de recuperação e critérios numéricos de avanço permanecem bloqueados até responsável técnico/clínico e data de vigência serem definidos.
+- Diagnóstico GREEN: `node diagnostics/vacuum-rules.test.cjs` → PASS; `cmp -s index.html app/src/main/assets/index.html` → PASS.
+- Revisão de consistência: `docs/roadmap/regras-vacuum.md` confrontado com `index.html`, asset embarcado, `ROADMAP.md` e contrato E02; nenhuma aprovação clínica foi inferida.
+- E03: CONCLUÍDA com pendência clínica explicitamente registrada; aumento automático de carga não foi implementado.
+- Próximo passo: E04 — motor de sessão, começando por registrar sessões parciais/concluídas e feedback associado ao `sessionId`.

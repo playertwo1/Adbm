@@ -85,16 +85,16 @@ Aceite: migrar duas vezes não muda resultado; erro mantém última cópia váli
 
 ### E03 — Conteúdo e progressão
 Saída: criar `docs/roadmap/regras-vacuum.md`.
-- [ ] Inventariar as oito fases atuais: postura, séries, retenção, descanso e frequência.
-- [ ] Revisar diferença entre bracing, vácuo e hipopressivos; alinhar texto, voz e ilustração.
-- [ ] Definir tutorial: postura → preparação → execução → saída → recuperação.
-- [ ] Definir feedback Confortável/Difícil/Interrompi, qualidade relatada e resposta ausente.
-- [ ] Definir critérios revisados de manter/reduzir/sugerir avanço; ausência de feedback não significa sucesso.
-- [ ] Definir incremento de descanso, limites e parâmetros por postura com justificativa técnica; não inventar dosagem.
-- [ ] Permitir repetir etapa; aumento não decorre só do calendário ou recorde.
-- [ ] Definir agenda, recuperação, sequência e data de vigência de alterações.
-- [ ] Registrar responsável/fonte da revisão e decisões não resolvidas.
-Aceite: regras explícitas e revisadas. Dosagem não resolvida bloqueia sua implementação, sem bloquear correções independentes.
+- [x] Inventariar as oito fases atuais: postura, séries, retenção, descanso e frequência.
+- [x] Revisar diferença entre bracing, vácuo e hipopressivos; alinhar texto, voz e ilustração.
+- [x] Definir tutorial: postura → preparação → execução → saída → recuperação.
+- [x] Definir feedback Confortável/Difícil/Interrompi, qualidade relatada e resposta ausente.
+- [x] Definir critérios revisados de manter/reduzir/sugerir avanço; ausência de feedback não significa sucesso.
+- [x] Definir incremento de descanso, limites e parâmetros por postura com justificativa técnica; não inventar dosagem.
+- [x] Permitir repetir etapa; aumento não decorre só do calendário ou recorde.
+- [x] Definir agenda, recuperação, sequência e data de vigência de alterações.
+- [x] Registrar responsável/fonte da revisão e decisões não resolvidas.
+Aceite: regras explícitas e revisadas. Dosagem não resolvida bloqueia sua implementação, sem bloquear correções independentes. A implementação segura usa o mínimo da fase, abre revisão pendente ao atingir a frequência e não avança automaticamente.
 Evidência contextual: [revisão de hipopressivos](https://pubmed.ncbi.nlm.nih.gov/40565470/); não valida automaticamente o protocolo do app.
 
 ### E04 — Motor de sessão
