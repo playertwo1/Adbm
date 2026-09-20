@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 19/09/2026. Status: planejamento; nenhuma etapa abaixo implementada nesta revisão.
+Atualizado: 20/09/2026. Status: E00–E03 concluídas; E04 é a próxima etapa.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -52,14 +52,14 @@ Se documentação histórica divergir do código, registrar e confirmar antes de
 ## 4. Etapas e checklists
 
 ### E00 — Baseline
-- [ ] Conferir Git, versão, instruções locais e alterações pendentes.
-- [ ] Localizar estado, início, pausa, salto, conclusão, persistência e callbacks web/nativos.
-- [ ] Confirmar `AppState.vacuo`, programa ID 3, `triggerQuickAction`, `advanceVacuoSeries`, `handleNativeVacuumState` e `finishDailySession`.
-- [ ] Reproduzir referência incorreta `AppState.vacuum`; verificar existência do iniciador chamado pelo atalho.
-- [ ] Confirmar registro fixo de 10 minutos no vácuo web.
-- [ ] Inventariar programas, fases, dados salvos, backup, áudios e recursos Watch realmente disponíveis.
-- [ ] Executar regressão existente e registrar falhas anteriores.
-- [ ] Verificar Node, JDK, SDK, navegador, ADB e Watch; registrar disponibilidade real.
+- [x] Conferir Git, versão, instruções locais e alterações pendentes.
+- [x] Localizar estado, início, pausa, salto, conclusão, persistência e callbacks web/nativos.
+- [x] Confirmar `AppState.vacuo`, programa ID 3, `triggerQuickAction`, `advanceVacuoSeries`, `handleNativeVacuumState` e `finishDailySession`.
+- [x] Reproduzir referência incorreta `AppState.vacuum`; verificar existência do iniciador chamado pelo atalho.
+- [x] Confirmar registro fixo de 10 minutos no vácuo web.
+- [x] Inventariar programas, fases, dados salvos, backup, áudios e recursos Watch realmente disponíveis.
+- [x] Executar regressão existente e registrar falhas anteriores.
+- [x] Verificar Node, JDK, SDK, navegador, ADB e Watch; registrar disponibilidade real.
 Aceite: registro com símbolos, comandos, resultados e limitações; nenhuma suposição apresentada como teste.
 
 ### E01 — Correções do vácuo

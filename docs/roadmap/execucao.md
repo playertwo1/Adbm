@@ -29,6 +29,7 @@ Próximo passo:
 - Achado reproduzido para E01: fallback web concluía com `addMinutesToday(10, 'vacuum')`; o caminho nativo já usa `totalSessionElapsed` incrementado apenas enquanto não pausado.
 - Alterações anteriores preservadas: hardening WebView, alarmes, assinatura release, contrato de versão, check Gold, CI, backup documentado e screenshot não mutante.
 - Validação: `bash scripts/check.sh` → PASS antes desta etapa; AVD `Pixel_9` online; `:app:installDebug` → PASS; CoreFlow abriu no emulador sem `FATAL EXCEPTION`.
+- Disponibilidade registrada: Node, JDK, Android SDK, navegador local e ADB foram confirmados; Watch físico não estava conectado, portanto a validação Wear física permanece pendente; o módulo Wear e o relay foram apenas auditados no código.
 - Limitações: acessibilidade, Watch físico, atualização de instalação anterior e validação completa de áudio/periféricos permanecem pendentes para E13.
 - Bloqueios: nenhum para E01.
 - Próximo passo: finalizar E01 com regressões de tempo executado, pausa, salto, conclusão idempotente e teste funcional do atalho no emulador.
@@ -78,3 +79,15 @@ Próximo passo:
 - Revisão de consistência: `docs/roadmap/regras-vacuum.md` confrontado com `index.html`, asset embarcado, `ROADMAP.md` e contrato E02; nenhuma aprovação clínica foi inferida.
 - E03: CONCLUÍDA com pendência clínica explicitamente registrada; aumento automático de carga não foi implementado.
 - Próximo passo: E04 — motor de sessão, começando por registrar sessões parciais/concluídas e feedback associado ao `sessionId`.
+
+## 2026-09-20 — Auditoria E00–E03
+
+- Baseline auditado: `78efe3e`; commits locais desta execução incluem `02b11d4`; `origin/main` permanece em `327b7d6`. As alterações locais de E03/auditoria não foram enviadas ao remoto porque não foi feito novo push após a orientação de não usar GitHub Actions.
+- Validação local: `bash scripts/check.sh` → PASS; diagnósticos E00–E03, teste unitário Android, builds debug de `app` e `wear` e equivalência dos HTMLs passaram.
+- Integridade dos HTMLs: SHA-256 idêntico (`256ab5ec...`) em `index.html` e `app/src/main/assets/index.html`; `git diff --check` → PASS.
+- Emulador: `Pixel_9`/`emulator-5554` online; APK debug reinstalado com sucesso; `MainActivity` ficou como atividade retomada; não foram encontrados `ERROR:CONSOLE`, `Uncaught TypeError` ou `FATAL EXCEPTION` no smoke test.
+- Segurança de publicação: nenhum APK, AAB, keystore, `.env`, credencial ou padrão de chave de alto sinal foi encontrado nos arquivos rastreados. Metadados gerados `.idea/` e `gradle/gradle-daemon-jvm.properties` permanecem fora do commit e agora estão ignorados.
+- Cobertura E00–E03: E00, E01, E02 e E03 estão marcadas como concluídas no roadmap e possuem evidências no registro. E02 entrega o contrato/migração; a gravação efetiva de sessões pelo motor segue explicitamente para E04.
+- Limitações abertas: Watch físico, acessibilidade, atualização de instalação anterior, áudio/periféricos e comparação de pixels ainda pertencem a E13; dosagem clínica e critérios de progressão do Vácuo continuam sem responsável técnico/clínico e não foram automatizados.
+- CI remoto: a última execução já disparada falhou no `Run project check` com código 126; nenhuma nova execução foi iniciada ou acompanhada após a orientação do usuário. A validação local é a evidência vigente.
+- Resultado da auditoria: E00–E03 consistentes no código/documentação e aprovadas localmente; próximo trabalho é E04, sem push automático.
