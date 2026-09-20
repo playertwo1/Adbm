@@ -65,3 +65,12 @@ Próximo passo:
 - Limite deliberado: gravação de registros de sessão durante o motor de treino será conectada na E04; E02 entrega o contrato, migração, validação e armazenamento idempotente.
 - E02: CONCLUÍDA.
 - Próximo passo: iniciar E03 — regras de treino, começando pelo inventário das oito fases e pelos testes das regras antes de alterar conteúdo.
+
+## 2026-09-20 — E03 / EM EXECUÇÃO
+
+- Diagnóstico RED: `node diagnostics/vacuum-rules.test.cjs` falhou porque `docs/roadmap/regras-vacuum.md` ainda não existia.
+- Inventário registrado: oito fases atuais do programa `id: '3'`, postura/texto, séries, retenção, recuperação e frequência.
+- Regras documentadas: diferença entre Vácuo, Bracing e hipopressivos; tutorial postura → preparação → execução → saída → recuperação; feedback Confortável/Difícil/Interrompi; ausência de feedback sem equivalência a sucesso; manutenção, redução, sugestão de avanço e repetição de etapa.
+- Limites explícitos: critérios numéricos de progressão, incremento por postura e dosagem clínica permanecem pendentes; nenhuma carga automática será implementada sem revisão.
+- Diagnóstico GREEN: `node diagnostics/vacuum-rules.test.cjs` → PASS.
+- Próximo passo: revisar as regras pendentes antes de alterar parâmetros de treino ou implementar progressão automática.
