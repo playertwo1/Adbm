@@ -149,3 +149,11 @@ Próximo passo:
 - Implementação: `getProgramSteps('2', phaseIdx)` agora aplica metadados `series` explícitos por conjunto lógico; `countWorkoutSeries`/`countCompletedSeries` não usam fallback por índice de passo.
 - Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS; equivalência/hash dos HTMLs e `git diff --check` → PASS.
 - Limitações: auditoria independente do target SHA e validação em aparelho/Watch físico ainda pendentes; “Mais descanso” permanece desativado e sem incremento clínico inventado.
+
+## 2026-09-21 — E04 / saída segura preserva série lógica incompleta
+
+- Regressão RED adicionada antes da implementação: após saída segura/skip no meio da retenção nativa, o avanço para recuperação fazia a interrupção posterior contar a série ativa como concluída.
+- Implementação: `WorkoutForegroundService` persiste `retentionInterruptedSeries` no snapshot e marca a série somente quando a saída ocorre antes do fim da retenção; `countCompletedSeries` exclui essas séries na derivação Web/native, preservando o tempo de retenção efetivamente executado.
+- Validação GREEN: regressão real de `handleNativeVacuumState`, `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS.
+- Validação integrada: HTMLs equivalentes com SHA-256 idêntico, `git diff --check` → PASS e `bash scripts/check.sh` com JDK/SDK exigidos → PASS (`BUILD SUCCESSFUL`).
+- Limitações: auditoria independente do novo target SHA e validação em aparelho/Watch físico ainda pendentes; “Mais descanso” permanece desativado e sem incremento clínico inventado.

@@ -56,6 +56,7 @@ class WorkoutForegroundService : Service() {
     private var stepTimeLeft = 0
     private var totalSessionElapsed = 0
     private var retentionElapsedSeconds = 0
+    private var retentionInterruptedSeries: Set<Int> = emptySet()
     private var paused = false
     private var sessionMetadata = JSONObject()
     private var voiceEnabled = true
@@ -115,6 +116,7 @@ class WorkoutForegroundService : Service() {
             .coerceAtLeast(0)
         totalSessionElapsed = payload.optInt("totalSessionElapsed", 0).coerceAtLeast(0)
         retentionElapsedSeconds = payload.optInt("retentionElapsedSeconds", 0).coerceAtLeast(0)
+        retentionInterruptedSeries = payload.optJSONArray("retentionInterruptedSeries")?.toIntSet().orEmpty()
         voiceEnabled = payload.optBoolean("voiceEnabled", true)
         hapticsEnabled = payload.optBoolean("hapticsEnabled", true)
         paused = false
@@ -166,6 +168,7 @@ class WorkoutForegroundService : Service() {
         stepTimeLeft = state.optInt("stepTimeLeft", steps[currentStepIndex].duration)
         totalSessionElapsed = state.optInt("totalSessionElapsed", 0)
         retentionElapsedSeconds = state.optInt("retentionElapsedSeconds", 0).coerceAtLeast(0)
+        retentionInterruptedSeries = state.optJSONArray("retentionInterruptedSeries")?.toIntSet().orEmpty()
         voiceEnabled = state.optBoolean("voiceEnabled", true)
         hapticsEnabled = state.optBoolean("hapticsEnabled", true)
         paused = status == "paused"
@@ -214,6 +217,7 @@ class WorkoutForegroundService : Service() {
             pauseSession()
             return
         }
+        markRetentionInterrupted()
         if (currentStepIndex >= steps.lastIndex) {
             stopSession(interrupted = true)
             return
@@ -238,6 +242,7 @@ class WorkoutForegroundService : Service() {
 
     private fun advanceStep() {
         if (steps.isEmpty()) return
+        markRetentionInterrupted()
         if (currentStepIndex < steps.lastIndex) {
             currentStepIndex++
             stepTimeLeft = steps[currentStepIndex].duration
@@ -245,6 +250,13 @@ class WorkoutForegroundService : Service() {
             persistAndBroadcast(if (paused) "paused" else "running")
         } else {
             completeSession()
+        }
+    }
+
+    private fun markRetentionInterrupted() {
+        val step = steps.getOrNull(currentStepIndex) ?: return
+        if (step.phase == "vacuo" && stepTimeLeft > 0 && step.series > 0) {
+            retentionInterruptedSeries = retentionInterruptedSeries + step.series
         }
     }
 
@@ -366,6 +378,9 @@ class WorkoutForegroundService : Service() {
         put("stepTimeLeft", stepTimeLeft)
         put("totalSessionElapsed", totalSessionElapsed)
         put("retentionElapsedSeconds", retentionElapsedSeconds)
+        put("retentionInterruptedSeries", JSONArray().apply {
+            retentionInterruptedSeries.sorted().forEach { put(it) }
+        })
         put("voiceEnabled", voiceEnabled)
         put("hapticsEnabled", hapticsEnabled)
         put("session", sessionMetadata)
@@ -468,6 +483,12 @@ class WorkoutForegroundService : Service() {
                     series = item.optInt("series", 0)
                 )
             )
+        }
+    }
+
+    private fun JSONArray.toIntSet(): Set<Int> = buildSet {
+        for (index in 0 until length()) {
+            optInt(index, 0).takeIf { it > 0 }?.let(::add)
         }
     }
 

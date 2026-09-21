@@ -444,6 +444,42 @@ const nativeRetentionExit = vm.runInContext(`deriveNativeVacuumMetrics({
 })`, context);
 assert.equal(nativeRetentionExit.retentionSeconds, 7, 'native safe exit must preserve only executed retention seconds');
 
+// A safe exit/skip advances to recovery, but the retention's logical series
+// must remain incomplete when the later native stop derives metrics.
+assert.equal(vm.runInContext(`countCompletedSeries([
+    { phase: 'inspira', duration: 4, series: 1 },
+    { phase: 'expira', duration: 6, series: 1 },
+    { phase: 'vacuo', duration: 15, series: 1 },
+    { phase: 'descanso', duration: 20, series: 1 }
+], 3, [1])`, context), 0, 'safe-exited retention series must remain incomplete');
+
+vm.runInContext(`
+    AppState.vacuo = {
+        sessionId: 'native-safe-exit',
+        seriesTotal: 1,
+        pausedSeconds: 0,
+        nativeManaged: true,
+        isRunning: true
+    };
+    handleNativeVacuumState({
+        status: 'interrupted',
+        currentStepIndex: 3,
+        stepTimeLeft: 20,
+        retentionElapsedSeconds: 7,
+        retentionInterruptedSeries: [1],
+        session: { sessionId: 'native-safe-exit', type: 'vacuum' },
+        steps: [
+            { phase: 'inspira', duration: 4, series: 1 },
+            { phase: 'expira', duration: 6, series: 1 },
+            { phase: 'vacuo', duration: 15, series: 1 },
+            { phase: 'descanso', duration: 20, series: 1 }
+        ]
+    });
+`, context);
+const nativeSafeExitRecord = vm.runInContext('CorePersistence.sessionHistory.find(record => record.id === "native-safe-exit")', context);
+assert.equal(nativeSafeExitRecord.completedSeries, 0, 'native safe exit must not complete the abandoned logical series');
+assert.equal(nativeSafeExitRecord.retentionSeconds, 7, 'native safe exit must retain only executed hold time');
+
 // Test applyProgressData timer protection (pauses restored sessions)
 vm.runInContext(`
     applyProgressData({
@@ -477,7 +513,7 @@ assert.equal(partialSnapshot.data.vacuo.nativeManaged, false);
 assert.equal(partialSnapshot.data.vacuo.intervalId, null);
 assert.equal(partialSnapshot.data.vacuo.totalElapsedSec, 17);
 assert.equal(partialSnapshot.data.vacuo.timer, 8);
-assert.equal(partialSnapshot.data.sessionHistory.length, 9);
+assert.equal(partialSnapshot.data.sessionHistory.length, 10);
 context.savedPartial = partialSnapshot.data;
 vm.runInContext('applyProgressData(savedPartial)', context);
 assert.equal(vm.runInContext('AppState.vacuo.sessionId', context), 'reopen-partial');
@@ -570,6 +606,7 @@ assert.match(service, /ACTION_STOP -> stopSession\(interrupted = true\)/);
 assert.match(service, /persistAndBroadcast\(if \(interrupted\) "interrupted" else "idle"\)/);
 assert.match(service, /ACTION_SAFE_EXIT_RETENTION -> exitRetentionSafely\(\)/);
 assert.match(service, /retentionElapsedSeconds/);
+assert.match(service, /retentionInterruptedSeries/);
 assert.match(service, /currentStepIndex\+\+.*stepTimeLeft = steps\[currentStepIndex\]\.duration/s);
 assert.match(service, /exitRetentionSafely[\s\S]*persistAndBroadcast\("paused"\)/);
 

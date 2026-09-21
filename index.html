@@ -3632,14 +3632,16 @@
             return groups.size;
         }
 
-        function countCompletedSeries(steps, currentStepIndex = Number.POSITIVE_INFINITY) {
+        function countCompletedSeries(steps, currentStepIndex = Number.POSITIVE_INFINITY, excludedSeries = []) {
             if (!Array.isArray(steps)) return 0;
             const boundary = Math.max(0, Math.min(steps.length, Number(currentStepIndex) || 0));
+            const excluded = new Set((Array.isArray(excludedSeries) ? excludedSeries : []).map(Number));
             const grouped = new Map();
             steps.forEach((step, index) => {
                 if (!step || step.isRest === true) return;
                 const series = Number(step.series);
                 if (!Number.isInteger(series) || series <= 0) return;
+                if (excluded.has(series)) return;
                 const key = `series:${series}`;
                 const group = grouped.get(key) || { total: 0, completed: 0 };
                 group.total++;
@@ -3707,7 +3709,7 @@
             finalizeVacuumPause();
             const metrics = nativeState ? deriveNativeVacuumMetrics(nativeState) : getVacuumSessionMetrics();
             const completedSeries = nativeState
-                ? countCompletedSeries(nativeState.steps, nativeState.currentStepIndex)
+                ? countCompletedSeries(nativeState.steps, nativeState.currentStepIndex, nativeState.retentionInterruptedSeries)
                 : status === 'completed'
                     ? Math.max(0, Number(AppState.vacuo.seriesTotal) || 1)
                     : Math.max(0, Number(AppState.vacuo.completedSeries) || (Number(AppState.vacuo.seriesCurrent) || 1) - 1);
