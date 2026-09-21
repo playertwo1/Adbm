@@ -34,6 +34,9 @@ const source = [
     extractFunction('deriveNativeVacuumMetrics'),
     extractFunction('getVacuumSessionMetrics'),
     extractFunction('finalizeVacuumPause'),
+    extractFunction('enterVacuumRecoveryPause'),
+    extractFunction('pauseVacuo'),
+    extractFunction('startVacuo'),
     extractFunction('recordVacuumSession'),
     extractFunction('finishDailySession'),
     extractFunction('abortDailySession'),
@@ -53,7 +56,7 @@ const context = vm.createContext({
     TextEncoder,
     document: {
         getElementById() {
-            return { classList: { remove(){}, add(){}, contains(){return false;} }, className: '', innerText: '' };
+            return { classList: { remove(){}, add(){}, contains(){return false;} }, className: '', innerText: '', style: {} };
         },
         querySelectorAll() { return []; }
     },
@@ -65,6 +68,7 @@ const context = vm.createContext({
         clear() { for(let k in storage) delete storage[k]; }
     },
     clearInterval() {},
+    setInterval() { return 1; },
     addMinutesToday() {},
     triggerHaptic() {},
     speakVoice() {},
@@ -76,6 +80,7 @@ const context = vm.createContext({
     markScheduleDone() {},
     setTimeout(cb) { cb(); },
     playTibetanChime() {},
+    playRelaxationSignal() {},
     updateCoreAnimation() {},
     setVacProgress() {},
     highlightPhaseCard() {},
@@ -264,6 +269,58 @@ assert.equal(metricsRecord.retentionSeconds, 15, 'retention metric must exclude 
 assert.equal(metricsRecord.recoverySeconds, 60, 'recovery metric must be recorded separately');
 assert.equal(metricsRecord.pausedSeconds, 15, 'pause metric must be recorded separately');
 
+// Pausing during retention must leave the breath hold safely in recovery,
+// never freeze the apnea timer, and resume only from that recovery phase.
+vm.runInContext(`
+    let safeExitCalls = 0;
+    let pauseCalls = 0;
+    let resumeCalls = 0;
+    window.AndroidBridge = {
+        setKeepScreenOn() {},
+        exitRetentionSafely() { safeExitCalls++; },
+        pauseWorkoutSession() { pauseCalls++; },
+        resumeWorkoutSession() { resumeCalls++; },
+        getWorkoutState() { return '{"status":"paused","session":{"type":"vacuum"}}'; },
+        startWorkoutSession() { return true; }
+    };
+    AppState.vacuo = {
+        isRunning: true,
+        nativeManaged: true,
+        currentPhase: 'vacuo',
+        timer: 8,
+        restDuration: 60,
+        seriesCurrent: 1,
+        seriesTotal: 3,
+        intervalId: 42,
+        sessionId: 'safe-exit-vacuum'
+    };
+    pauseVacuo();
+`, context);
+assert.equal(vm.runInContext('AppState.vacuo.currentPhase', context), 'descanso', 'retention pause must enter recovery');
+assert.equal(vm.runInContext('AppState.vacuo.timer', context), 60, 'recovery must start with its own timer');
+assert.equal(vm.runInContext('safeExitCalls', context), 1, 'native retention pause must request safe exit');
+assert.equal(vm.runInContext('pauseCalls', context), 0, 'native retention pause must not freeze apnea with generic pause');
+
+vm.runInContext('startVacuo();', context);
+assert.equal(vm.runInContext('resumeCalls', context), 1, 'resume after safe exit may resume only recovery');
+assert.equal(vm.runInContext('AppState.vacuo.currentPhase', context), 'descanso', 'resume must not return to retention');
+
+vm.runInContext(`
+    window.AndroidBridge = {};
+    AppState.vacuo = {
+        isRunning: true,
+        nativeManaged: false,
+        currentPhase: 'vacuo',
+        timer: 8,
+        restDuration: 60,
+        intervalId: 43
+    };
+    pauseVacuo();
+`, context);
+assert.equal(vm.runInContext('AppState.vacuo.currentPhase', context), 'descanso', 'Web retention pause must enter recovery');
+assert.equal(vm.runInContext('AppState.vacuo.isRunning', context), false, 'Web recovery must remain paused until explicit resume');
+assert.equal(vm.runInContext('AppState.vacuo.intervalId', context), null, 'Web retention pause must not leave a timer running');
+
 // Daily step count is not the same thing as planned/completed series.
 vm.runInContext(`
     AppState.dailyExecution = {
@@ -395,5 +452,8 @@ assert.equal(vm.runInContext('AppState.vacuo.isRunning', context), true);
 // The native notification stop path must emit interrupted, not canceled.
 assert.match(service, /ACTION_STOP -> stopSession\(interrupted = true\)/);
 assert.match(service, /persistAndBroadcast\(if \(interrupted\) "interrupted" else "idle"\)/);
+assert.match(service, /ACTION_SAFE_EXIT_RETENTION -> exitRetentionSafely\(\)/);
+assert.match(service, /currentStepIndex\+\+.*stepTimeLeft = steps\[currentStepIndex\]\.duration/s);
+assert.match(service, /exitRetentionSafely[\s\S]*persistAndBroadcast\("paused"\)/);
 
 console.log("session-engine tests passed!");

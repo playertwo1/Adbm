@@ -3747,6 +3747,29 @@
             }
         }
 
+        function enterVacuumRecoveryPause(announce = true) {
+            AppState.vacuo.currentPhase = 'descanso';
+            AppState.vacuo.timer = AppState.vacuo.restDuration;
+            AppState.vacuo.phaseElapsedSec = 0;
+            clearInterval(AppState.vacuo.intervalId);
+            AppState.vacuo.intervalId = null;
+
+            const title = document.getElementById('vacPhaseTitle');
+            const timer = document.getElementById('vacTimerMain');
+            if (title) {
+                title.innerText = 'Descanse e respire normalmente';
+                title.className = 'text-sm font-heading font-extrabold text-slate-400';
+            }
+            if (timer) timer.innerText = AppState.vacuo.timer;
+            highlightPhaseCard('descanso');
+            updateCoreAnimation('descanso');
+            setVacProgress(0);
+            if (announce) {
+                speakVoice('Descanse e respire normalmente');
+                playRelaxationSignal();
+            }
+        }
+
         function startVacuo() {
             if (AppState.vacuo.isRunning) return;
             finalizeVacuumPause();
@@ -3819,13 +3842,20 @@
         }
 
         function pauseVacuo() {
+            const wasNativeManaged = AppState.vacuo.nativeManaged === true;
+            const exitingRetention = AppState.vacuo.currentPhase === 'vacuo';
             AppState.vacuo.isRunning = false;
             if (!AppState.vacuo.pauseStartedAt) AppState.vacuo.pauseStartedAt = Date.now();
             if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
                 window.AndroidBridge.setKeepScreenOn(false);
             }
             clearInterval(AppState.vacuo.intervalId);
-            if (AppState.vacuo.nativeManaged && window.AndroidBridge?.pauseWorkoutSession) {
+            if (exitingRetention) {
+                if (wasNativeManaged && window.AndroidBridge?.exitRetentionSafely) {
+                    window.AndroidBridge.exitRetentionSafely();
+                }
+                enterVacuumRecoveryPause(!wasNativeManaged);
+            } else if (wasNativeManaged && window.AndroidBridge?.pauseWorkoutSession) {
                 window.AndroidBridge.pauseWorkoutSession();
             }
             document.getElementById('vacPlayIcon').className = 'fa-solid fa-play';

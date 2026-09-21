@@ -79,6 +79,7 @@ class WorkoutForegroundService : Service() {
         when (intent?.action) {
             ACTION_START -> startSession(intent.getStringExtra(EXTRA_SESSION_JSON).orEmpty())
             ACTION_PAUSE -> pauseSession()
+            ACTION_SAFE_EXIT_RETENTION -> exitRetentionSafely()
             ACTION_RESUME -> resumeSession()
             ACTION_SKIP -> advanceStep()
             ACTION_STOP -> stopSession(interrupted = true)
@@ -198,6 +199,26 @@ class WorkoutForegroundService : Service() {
         if (steps.isEmpty()) return
         paused = true
         releaseWakeLock()
+        persistAndBroadcast("paused")
+    }
+
+    private fun exitRetentionSafely() {
+        if (steps.isEmpty()) return
+        if (steps.getOrNull(currentStepIndex)?.phase != "vacuo") {
+            pauseSession()
+            return
+        }
+        if (currentStepIndex >= steps.lastIndex) {
+            stopSession(interrupted = true)
+            return
+        }
+
+        tickerJob?.cancel()
+        currentStepIndex++
+        stepTimeLeft = steps[currentStepIndex].duration
+        paused = true
+        releaseWakeLock()
+        announceCurrentStep(firstStep = false)
         persistAndBroadcast("paused")
     }
 
@@ -448,6 +469,7 @@ class WorkoutForegroundService : Service() {
     companion object {
         const val ACTION_START = "com.example.workout.START"
         const val ACTION_PAUSE = "com.example.workout.PAUSE"
+        const val ACTION_SAFE_EXIT_RETENTION = "com.example.workout.SAFE_EXIT_RETENTION"
         const val ACTION_RESUME = "com.example.workout.RESUME"
         const val ACTION_SKIP = "com.example.workout.SKIP"
         const val ACTION_STOP = "com.example.workout.STOP"

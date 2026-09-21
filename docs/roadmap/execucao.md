@@ -126,3 +126,11 @@ Próximo passo:
 - Regressões: `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` e `node diagnostics/session-engine.test.cjs` passaram; `git diff --check` passou; `bash scripts/check.sh` passou com JDK/SDK exigidos, incluindo equivalência HTML, testes unitários e builds debug phone/Wear.
 - Limitações preservadas: decisão clínica de “Mais descanso” continua bloqueada; aparelho/Watch físico e demais critérios E04 não exercitados. E04 permanece em execução, sem alegação de conclusão integral.
 - Próximo passo: auditoria independente do novo commit/target SHA; não fazer push, merge, Actions, release ou deploy.
+
+## 2026-09-21 — E04 / pausa segura durante retenção
+
+- Regressão RED adicionada antes da implementação: pausa Web/native no meio de `vacuo` exigindo transição para `descanso`, novo contador de recuperação, ausência de timer concorrente e retomada fora da retenção congelada.
+- Implementação: `pauseVacuo()` agora abandona a retenção com orientação visível/voz no fallback Web; o bridge nativo usa `ACTION_SAFE_EXIT_RETENTION`, que avança para o passo de recuperação e mantém a sessão pausada antes de permitir retomada.
+- Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS; `cmp -s index.html app/src/main/assets/index.html` e hashes SHA-256 → PASS; `git diff --check` → PASS.
+- Validação integrada: `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → PASS; compilação Kotlin, testes unitários Android e builds debug phone/Wear concluídos com `BUILD SUCCESSFUL`.
+- Limitações: não houve validação em aparelho/Watch físico; E04 continua aguardando auditoria independente do target SHA. “Mais descanso” permanece desativado e sem incremento clínico inventado.

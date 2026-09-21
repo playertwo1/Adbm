@@ -498,6 +498,11 @@ class AndroidBridge(
     }
 
     @JavascriptInterface
+    fun exitRetentionSafely() {
+        sendWorkoutAction(WorkoutForegroundService.ACTION_SAFE_EXIT_RETENTION)
+    }
+
+    @JavascriptInterface
     fun resumeWorkoutSession() {
         sendWorkoutAction(WorkoutForegroundService.ACTION_RESUME)
     }
