@@ -11,6 +11,7 @@ object WearHapticsRelay {
     private const val TAG = "WearHapticsRelay"
     private const val PREFS = "coreflow_wear"
     private const val KEY_ENABLED = "haptics_enabled"
+    private const val KEY_GENERATION = "haptic_generation"
     const val MESSAGE_PATH = "/coreflow/haptic/v1"
 
     fun isEnabled(context: Context): Boolean =
@@ -27,11 +28,36 @@ object WearHapticsRelay {
         if (!isEnabled(context)) return
         val pattern = normalize(rawPattern)
         val payload = JSONObject()
+            .put("type", "pattern")
             .put("id", UUID.randomUUID().toString())
             .put("sentAt", System.currentTimeMillis())
+            .put("generation", nextGeneration(context))
             .put("pattern", JSONArray(pattern.toList()))
             .toString()
             .toByteArray(Charsets.UTF_8)
+
+        sendPayload(context, payload)
+    }
+
+    fun cancel(context: Context) {
+        val payload = JSONObject()
+            .put("type", "cancel")
+            .put("sentAt", System.currentTimeMillis())
+            .put("generation", nextGeneration(context))
+            .toString()
+            .toByteArray(Charsets.UTF_8)
+
+        sendPayload(context, payload)
+    }
+
+    private fun nextGeneration(context: Context): Long {
+        val preferences = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val generation = preferences.getLong(KEY_GENERATION, 0L) + 1L
+        preferences.edit().putLong(KEY_GENERATION, generation).apply()
+        return generation
+    }
+
+    private fun sendPayload(context: Context, payload: ByteArray) {
 
         val appContext = context.applicationContext
         Wearable.getNodeClient(appContext).connectedNodes

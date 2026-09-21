@@ -3414,6 +3414,18 @@
             }
         }
 
+        function cancelPendingSignals() {
+            if (window.AndroidBridge?.cancelHaptics) {
+                window.AndroidBridge.cancelHaptics();
+            }
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            if ('vibrate' in navigator) {
+                try { navigator.vibrate(0); } catch(e) {}
+            }
+        }
+
         // Trigger vibration using Advanced Haptics Bridge
         function triggerHaptic(pattern = [60]) {
             if (!AppState.hapticsEnabled) return;
@@ -3899,6 +3911,7 @@
             if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
                 window.AndroidBridge.setKeepScreenOn(false);
             }
+            cancelPendingSignals();
             clearInterval(AppState.vacuo.intervalId);
             if (exitingRetention) {
                 if (Number(AppState.vacuo.timer) > 0) {
@@ -3921,6 +3934,7 @@
         }
 
         function resetVacuo(isInterrupted = true) {
+            cancelPendingSignals();
             if (AppState.vacuo.totalElapsedSec > 0 && AppState.vacuo.currentPhase !== 'ready') {
                 if (!AppState.vacuo.sessionId) {
                     AppState.vacuo.sessionId = `vacuum-abort-${Date.now()}`;
@@ -3972,6 +3986,7 @@
 
         function skipVacuoPhase() {
             if (!AppState.vacuo.isRunning) return;
+            cancelPendingSignals();
             if (AppState.vacuo.nativeManaged && window.AndroidBridge?.skipWorkoutStep) {
                 window.AndroidBridge.skipWorkoutStep();
                 return;
@@ -3998,6 +4013,7 @@
         }
 
         function transitionVacuoPhase(phase, nativeState = null) {
+            cancelPendingSignals();
             AppState.vacuo.currentPhase = phase;
             AppState.vacuo.phaseElapsedSec = 0;
             clearInterval(AppState.vacuo.intervalId);

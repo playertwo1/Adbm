@@ -96,6 +96,7 @@ class WorkoutForegroundService : Service() {
     override fun onDestroy() {
         tickerJob?.cancel()
         releaseWakeLock()
+        cancelPendingSignals()
         tts?.stop()
         tts?.shutdown()
         scope.cancel()
@@ -139,6 +140,7 @@ class WorkoutForegroundService : Service() {
 
         startForeground(NOTIFICATION_ID, buildNotification())
         acquireWakeLock()
+        cancelPendingSignals()
         announceCurrentStep(firstStep = true)
         persistAndBroadcast("running")
         startTicker()
@@ -207,6 +209,7 @@ class WorkoutForegroundService : Service() {
     private fun pauseSession() {
         if (steps.isEmpty()) return
         paused = true
+        cancelPendingSignals()
         releaseWakeLock()
         persistAndBroadcast("paused")
     }
@@ -218,6 +221,7 @@ class WorkoutForegroundService : Service() {
             return
         }
         markRetentionInterrupted()
+        cancelPendingSignals()
         if (currentStepIndex >= steps.lastIndex) {
             stopSession(interrupted = true)
             return
@@ -243,6 +247,7 @@ class WorkoutForegroundService : Service() {
     private fun advanceStep() {
         if (steps.isEmpty()) return
         markRetentionInterrupted()
+        cancelPendingSignals()
         if (currentStepIndex < steps.lastIndex) {
             currentStepIndex++
             stepTimeLeft = steps[currentStepIndex].duration
@@ -262,6 +267,7 @@ class WorkoutForegroundService : Service() {
 
     private fun completeSession() {
         tickerJob?.cancel()
+        cancelPendingSignals()
         releaseWakeLock()
         if (hapticsEnabled) AdvancedHapticsManager.playSuccessPattern(this)
         if (voiceEnabled) {
@@ -284,6 +290,7 @@ class WorkoutForegroundService : Service() {
 
     private fun stopSession(interrupted: Boolean) {
         tickerJob?.cancel()
+        cancelPendingSignals()
         releaseWakeLock()
         persistAndBroadcast(if (interrupted) "interrupted" else "idle")
         stopForeground(STOP_FOREGROUND_REMOVE)
@@ -292,6 +299,7 @@ class WorkoutForegroundService : Service() {
 
     private fun announceCurrentStep(firstStep: Boolean) {
         val step = steps.getOrNull(currentStepIndex) ?: return
+        cancelPendingSignals()
         if (voiceEnabled) {
             val phrase = step.voice.ifBlank {
                 when {
@@ -324,6 +332,12 @@ class WorkoutForegroundService : Service() {
             return
         }
         tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "CoreFlowBackgroundWorkout")
+    }
+
+    private fun cancelPendingSignals() {
+        pendingSpeech = null
+        tts?.stop()
+        AdvancedHapticsManager.cancel(this)
     }
 
     private fun configureTtsLanguage() {

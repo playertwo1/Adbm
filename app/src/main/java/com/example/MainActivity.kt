@@ -406,6 +406,7 @@ class AndroidBridge(
 
     @JavascriptInterface
     fun vibrate(durationMs: Long) {
+        AdvancedHapticsManager.cancel(context)
         WearHapticsRelay.sendPattern(context, longArrayOf(0L, durationMs.coerceIn(1L, 5_000L)))
         val vibrator = getVibrator(context)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -418,6 +419,7 @@ class AndroidBridge(
 
     @JavascriptInterface
     fun vibratePattern(patternStr: String) {
+        AdvancedHapticsManager.cancel(context)
         val timings = try {
             patternStr.split(",").map { it.trim().toLong() }.toLongArray()
         } catch (e: Exception) {
@@ -478,6 +480,12 @@ class AndroidBridge(
     @JavascriptInterface
     fun setWatchHapticsEnabled(enabled: Boolean) {
         WearHapticsRelay.setEnabled(context, enabled)
+    }
+
+    @JavascriptInterface
+    fun cancelHaptics() {
+        AdvancedHapticsManager.cancel(context)
+        tts?.stop()
     }
 
     @JavascriptInterface
@@ -859,11 +867,17 @@ object AdvancedHapticsManager {
         }
     }
 
+    fun cancel(context: Context) {
+        WearHapticsRelay.cancel(context)
+        getVibrator(context).cancel()
+    }
+
     /**
      * Pulso Leve e Rápido (Tick)
      * Ideal para: Kegel de Velocidade (Metrônomo) e toques em botões.
      */
     fun playLightTick(context: Context) {
+        cancel(context)
         WearHapticsRelay.sendPattern(context, longArrayOf(0, 30))
         val vibrator = getVibrator(context)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -879,6 +893,7 @@ object AdvancedHapticsManager {
      * Ideal para: Início da contração (Bracing e Kegel de Resistência).
      */
     fun playHeavyPulse(context: Context) {
+        cancel(context)
         WearHapticsRelay.sendPattern(context, longArrayOf(0, 220, 70, 220))
         val vibrator = getVibrator(context)
         val timings = longArrayOf(0, 220, 70, 220)
@@ -900,6 +915,7 @@ object AdvancedHapticsManager {
      * Ideal para: Sinalizar a fase de RELAXAMENTO.
      */
     fun playRelaxationSignal(context: Context) {
+        cancel(context)
         WearHapticsRelay.sendPattern(context, longArrayOf(0, 150, 110, 150, 110, 150))
         val vibrator = getVibrator(context)
         val timings = longArrayOf(0, 150, 110, 150, 110, 150)
@@ -927,6 +943,7 @@ object AdvancedHapticsManager {
 
     /** Inspiração: pulsos crescentes e fortes durante quatro segundos. */
     fun playInhaleSignal(context: Context) {
+        cancel(context)
         WearHapticsRelay.sendPattern(context, longArrayOf(0, 500, 140, 600, 140, 700, 140, 780))
         val vibrator = getVibrator(context)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -947,6 +964,7 @@ object AdvancedHapticsManager {
 
     /** Expiração: seis pulsos fortes que diminuem gradualmente. */
     fun playExhaleSignal(context: Context) {
+        cancel(context)
         WearHapticsRelay.sendPattern(context, longArrayOf(0, 650, 160, 600, 160, 550, 160, 500, 160, 450, 160, 400))
         val vibrator = getVibrator(context)
         val timings = longArrayOf(0, 650, 160, 600, 160, 550, 160, 500, 160, 450, 160, 400)
@@ -967,6 +985,7 @@ object AdvancedHapticsManager {
      * Vibração de Sucesso (Completar Série / Bater Meta)
      */
     fun playSuccessPattern(context: Context) {
+        cancel(context)
         WearHapticsRelay.sendPattern(context, longArrayOf(0, 100, 100, 100, 100, 300))
         val vibrator = getVibrator(context)
         val timings = longArrayOf(0, 100, 100, 100, 100, 300)

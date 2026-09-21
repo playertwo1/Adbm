@@ -36,6 +36,7 @@ const source = [
     extractFunction('getVacuumSessionMetrics'),
     extractFunction('finalizeVacuumPause'),
     extractFunction('enterVacuumRecoveryPause'),
+    extractFunction('cancelPendingSignals'),
     extractFunction('pauseVacuo'),
     extractFunction('startVacuo'),
     extractFunction('transitionVacuoPhase'),
@@ -66,6 +67,7 @@ const context = vm.createContext({
         querySelectorAll() { return []; }
     },
     window: {},
+    navigator: {},
     localStorage: {
         setItem(key, value) { storage[key] = value; },
         getItem(key) { return storage[key] || null; },
@@ -672,5 +674,36 @@ assert.match(service, /retentionElapsedSeconds/);
 assert.match(service, /retentionInterruptedSeries/);
 assert.match(service, /currentStepIndex\+\+.*stepTimeLeft = steps\[currentStepIndex\]\.duration/s);
 assert.match(service, /exitRetentionSafely[\s\S]*persistAndBroadcast\("paused"\)/);
+
+// Every session boundary must cancel local, speech, and Wear signals so an
+// already scheduled pattern cannot survive pause/stop or overlap the next one.
+vm.runInContext(`
+    let cancelHapticsCalls = 0;
+    let speechCancelCalls = 0;
+    let browserVibrateCancelCalls = 0;
+    window.AndroidBridge = { cancelHaptics() { cancelHapticsCalls++; } };
+    window.speechSynthesis = { cancel() { speechCancelCalls++; } };
+    navigator.vibrate = value => { if (value === 0) browserVibrateCancelCalls++; };
+    cancelPendingSignals();
+`, context);
+assert.equal(vm.runInContext('cancelHapticsCalls', context), 1, 'Web boundary must cancel native haptics');
+assert.equal(vm.runInContext('speechCancelCalls', context), 1, 'Web boundary must cancel speech');
+assert.equal(vm.runInContext('browserVibrateCancelCalls', context), 1, 'Web boundary must cancel browser vibration');
+
+const mainActivity = fs.readFileSync(path.join(__dirname, '..', 'app/src/main/java/com/example/MainActivity.kt'), 'utf8');
+const relay = fs.readFileSync(path.join(__dirname, '..', 'app/src/main/java/com/example/WearHapticsRelay.kt'), 'utf8');
+const wearListener = fs.readFileSync(path.join(__dirname, '..', 'wear/src/main/java/com/example/wear/HapticListenerService.kt'), 'utf8');
+assert.match(html, /function cancelPendingSignals\(\)/);
+assert.match(html, /pauseVacuo\(\)[\s\S]*cancelPendingSignals\(\)/);
+assert.match(html, /resetVacuo\([\s\S]*cancelPendingSignals\(\)/);
+assert.match(mainActivity, /fun cancelHaptics\(\)/);
+assert.match(mainActivity, /cancelHaptics[\s\S]*AdvancedHapticsManager\.cancel\(context\)/);
+assert.match(service, /cancelPendingSignals\(\)/);
+assert.match(service, /pauseSession\(\)[\s\S]*cancelPendingSignals\(\)/);
+assert.match(service, /stopSession\(interrupted: Boolean\)[\s\S]*cancelPendingSignals\(\)/);
+assert.match(relay, /fun cancel\(context: Context\)/);
+assert.match(relay, /"cancel"/);
+assert.match(wearListener, /message\.optString\("type"\) == "cancel"/);
+assert.match(wearListener, /(?:vibrator\(\)|vibrator)\.cancel\(\)/);
 
 console.log("session-engine tests passed!");

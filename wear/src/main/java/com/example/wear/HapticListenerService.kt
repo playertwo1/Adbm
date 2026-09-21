@@ -14,8 +14,15 @@ class HapticListenerService : WearableListenerService() {
         if (event.path != MESSAGE_PATH) return
         runCatching {
             val message = JSONObject(event.data.toString(Charsets.UTF_8))
+            if (message.optString("type") == "cancel") {
+                cancel(message.optLong("generation", 0L))
+                return
+            }
             val id = message.getString("id")
             val sentAt = message.getLong("sentAt")
+            val generation = message.optLong("generation", 0L)
+            val preferences = getSharedPreferences(PREFS, MODE_PRIVATE)
+            if (generation <= preferences.getLong(KEY_CANCELLED_GENERATION, 0L)) return
             if (System.currentTimeMillis() - sentAt !in 0..MAX_AGE_MS || wasHandled(id)) return
 
             val values = message.getJSONArray("pattern")
@@ -24,17 +31,29 @@ class HapticListenerService : WearableListenerService() {
             }
             if (pattern.isEmpty()) return
             remember(id)
+            preferences.edit().putLong(KEY_ACTIVE_GENERATION, generation).apply()
+            vibrator().cancel()
             vibrate(pattern)
         }
     }
 
+    private fun cancel(generation: Long) {
+        val preferences = getSharedPreferences(PREFS, MODE_PRIVATE)
+        val activeGeneration = preferences.getLong(KEY_ACTIVE_GENERATION, 0L)
+        if (generation < activeGeneration) return
+        preferences.edit().putLong(KEY_CANCELLED_GENERATION, generation).apply()
+        vibrator().cancel()
+    }
+
+    private fun vibrator(): Vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        getSystemService(VibratorManager::class.java).defaultVibrator
+    } else {
+        @Suppress("DEPRECATION")
+        getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    }
+
     private fun vibrate(pattern: LongArray) {
-        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            getSystemService(VibratorManager::class.java).defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        }
+        val vibrator = vibrator()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1))
         } else {
@@ -51,7 +70,9 @@ class HapticListenerService : WearableListenerService() {
         val now = System.currentTimeMillis()
         val editor = prefs.edit().putLong(id, now)
         prefs.all.forEach { (key, value) ->
-            if (value is Long && now - value > DEDUPE_RETENTION_MS) editor.remove(key)
+            if (key != KEY_CANCELLED_GENERATION && key != KEY_ACTIVE_GENERATION &&
+                value is Long && now - value > DEDUPE_RETENTION_MS
+            ) editor.remove(key)
         }
         editor.apply()
     }
@@ -61,5 +82,7 @@ class HapticListenerService : WearableListenerService() {
         private const val MAX_AGE_MS = 5_000L
         private const val DEDUPE_RETENTION_MS = 60_000L
         private const val PREFS = "handled_haptics"
+        private const val KEY_CANCELLED_GENERATION = "cancelled_generation"
+        private const val KEY_ACTIVE_GENERATION = "active_generation"
     }
 }

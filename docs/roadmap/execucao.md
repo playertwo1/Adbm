@@ -172,3 +172,12 @@ Próximo passo:
 - Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS, cobrindo pausa → retomada fora da apneia → registro com `completedSeries: 1` e `retentionSeconds: 5` em duas séries.
 - Validação integrada: `cmp -s index.html app/src/main/assets/index.html`, hashes SHA-256 idênticos, `git diff --check` e `bash scripts/check.sh` com JDK/SDK exigidos → PASS (`BUILD SUCCESSFUL`).
 - Limitações: auditoria independente do novo target SHA e validação em aparelho/Watch físico ainda pendentes; “Mais descanso” permanece desativado e sem incremento clínico inventado.
+
+## 2026-09-21 — E04 / cancelamento de sinais pendentes e vibração duplicada
+
+- Diagnóstico RED adicionado antes da implementação: a WebView, o serviço nativo, o relay Wear e o listener não tinham cancelamento explícito de vibração/speech nem invalidação de mensagens pendentes.
+- Implementação: `cancelPendingSignals()` interrompe voz, cancela vibração Web/native e é chamado em pausa, reset, skip, saída segura e troca de fase; `AdvancedHapticsManager` cancela a vibração local antes de cada novo padrão; o serviço cancela sinais ao pausar, encerrar, trocar etapa, concluir e destruir.
+- Relay Wear: mensagens carregam geração monotônica; cancelamentos propagam mensagem `type: cancel`; o listener invalida gerações antigas, cancela a vibração ativa e impede sobreposição/duplicação.
+- Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS; `cmp -s index.html app/src/main/assets/index.html` e SHA-256 idênticos; `git diff --check` → PASS.
+- Validação integrada: `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → PASS (`BUILD SUCCESSFUL`), incluindo compilação Kotlin, testes unitários Android e builds debug phone/Wear.
+- Limitações: não houve validação em aparelho/Watch físico; auditoria independente do novo target SHA permanece pendente; “Mais descanso” continua desativado e sem incremento clínico inventado.
