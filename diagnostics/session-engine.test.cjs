@@ -84,6 +84,7 @@ const context = vm.createContext({
     showProgramCompletionScreen() {},
     markScheduleDone() {},
     setTimeout(cb) { cb(); },
+    getAudioContext() {},
     playTibetanChime() {},
     playInhaleSignal() {},
     playExhaleSignal() {},
@@ -512,6 +513,36 @@ assert.deepEqual(Array.from(vm.runInContext('AppState.vacuo.retentionInterrupted
 assert.equal(webSafeExitRecord.completedSeries, 0, 'Web safe exit must not complete the abandoned logical series');
 assert.equal(webSafeExitRecord.retentionSeconds, 5, 'Web safe exit must retain only executed hold time');
 
+// Web pause during retention must persist the abandoned logical series before
+// resuming in recovery and completing a later series.
+vm.runInContext(`
+    AppState.vacuo = {
+        sessionId: 'web-paused-retention',
+        seriesTotal: 2,
+        seriesCurrent: 1,
+        currentPhase: 'vacuo',
+        isRunning: true,
+        nativeManaged: false,
+        timer: 8,
+        restDuration: 60,
+        totalElapsedSec: 20,
+        retentionElapsedSec: 5,
+        recoveryElapsedSec: 0,
+        pausedSeconds: 0,
+        intervalId: 100
+    };
+    pauseVacuo();
+    startVacuo();
+    AppState.vacuo.currentPhase = 'descanso';
+    AppState.vacuo.seriesCurrent = 2;
+    AppState.vacuo.isRunning = true;
+    advanceVacuoSeries();
+`, context);
+const webPausedRetention = vm.runInContext('CorePersistence.sessionHistory.find(record => record.id === "web-paused-retention")', context);
+assert.deepEqual(Array.from(vm.runInContext('AppState.vacuo.retentionInterruptedSeries', context)), [1], 'Web retention pause must mark the abandoned series');
+assert.equal(webPausedRetention.completedSeries, 1, 'Web completion after retention pause must exclude the abandoned series');
+assert.equal(webPausedRetention.retentionSeconds, 5, 'Web retention pause must preserve only executed hold time');
+
 // Test applyProgressData timer protection (pauses restored sessions)
 vm.runInContext(`
     applyProgressData({
@@ -545,7 +576,7 @@ assert.equal(partialSnapshot.data.vacuo.nativeManaged, false);
 assert.equal(partialSnapshot.data.vacuo.intervalId, null);
 assert.equal(partialSnapshot.data.vacuo.totalElapsedSec, 17);
 assert.equal(partialSnapshot.data.vacuo.timer, 8);
-assert.equal(partialSnapshot.data.sessionHistory.length, 11);
+assert.equal(partialSnapshot.data.sessionHistory.length, 12);
 context.savedPartial = partialSnapshot.data;
 vm.runInContext('applyProgressData(savedPartial)', context);
 assert.equal(vm.runInContext('AppState.vacuo.sessionId', context), 'reopen-partial');

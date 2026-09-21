@@ -164,3 +164,11 @@ Próximo passo:
 - Implementação: o estado Web mantém `retentionInterruptedSeries`, o skip no meio da retenção marca a série atual e `recordVacuumSession()` exclui séries abandonadas da métrica Web, inclusive quando o encerramento chega após avançar para outra série; o reset/estado terminal limpa o marcador.
 - Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS, cobrindo marcador, `completedSeries: 0` e `retentionSeconds: 5` no fluxo Web.
 - Limitações: auditoria independente do novo target SHA e validação em aparelho/Watch físico ainda pendentes; “Mais descanso” permanece desativado e sem incremento clínico inventado.
+
+## 2026-09-21 — E04 / pausa Web preserva série lógica incompleta
+
+- Diagnóstico RED: pausa Web no meio de `vacuo`, seguida de retomada em recuperação e conclusão posterior, não registrava `retentionInterruptedSeries`; a sessão podia persistir a série abandonada como concluída.
+- Implementação: `pauseVacuo()` agora marca a série atual quando a retenção é abandonada com tempo restante, antes da transição segura para `descanso`; a mesma métrica permanece aplicada por `recordVacuumSession()` sem alterar o caminho nativo.
+- Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS, cobrindo pausa → retomada fora da apneia → registro com `completedSeries: 1` e `retentionSeconds: 5` em duas séries.
+- Validação integrada: `cmp -s index.html app/src/main/assets/index.html`, hashes SHA-256 idênticos, `git diff --check` e `bash scripts/check.sh` com JDK/SDK exigidos → PASS (`BUILD SUCCESSFUL`).
+- Limitações: auditoria independente do novo target SHA e validação em aparelho/Watch físico ainda pendentes; “Mais descanso” permanece desativado e sem incremento clínico inventado.

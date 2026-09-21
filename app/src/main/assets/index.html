@@ -3901,6 +3901,14 @@
             }
             clearInterval(AppState.vacuo.intervalId);
             if (exitingRetention) {
+                if (Number(AppState.vacuo.timer) > 0) {
+                    const interruptedSeries = Number(AppState.vacuo.seriesCurrent) || 1;
+                    const series = Array.isArray(AppState.vacuo.retentionInterruptedSeries)
+                        ? AppState.vacuo.retentionInterruptedSeries
+                        : [];
+                    if (!series.includes(interruptedSeries)) series.push(interruptedSeries);
+                    AppState.vacuo.retentionInterruptedSeries = series;
+                }
                 if (wasNativeManaged && window.AndroidBridge?.exitRetentionSafely) {
                     window.AndroidBridge.exitRetentionSafely();
                 }
