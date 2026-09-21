@@ -38,6 +38,7 @@ const source = [
     extractFunction('pauseVacuo'),
     extractFunction('startVacuo'),
     extractFunction('recordVacuumSession'),
+    extractFunction('advanceVacuoSeries'),
     extractFunction('finishDailySession'),
     extractFunction('abortDailySession'),
     extractFunction('handleNativeVacuumState'),
@@ -367,6 +368,29 @@ assert.equal(completedDailyVacuum.plannedSeries, 2, 'completed daily vacuum must
 assert.equal(completedDailyVacuum.completedSeries, 2, 'completed daily vacuum must complete every logical set');
 assert.equal(completedDailyVacuum.retentionSeconds, 30, 'completed daily vacuum retention must exclude breathing and recovery');
 
+// The real Web vacuum player must count the final logical series on completion.
+vm.runInContext(`
+    AppState.vacuo = {
+        sessionId: 'test-web-vacuum-complete',
+        isRunning: true,
+        nativeManaged: false,
+        currentPhase: 'descanso',
+        timer: 0,
+        seriesCurrent: 5,
+        seriesTotal: 5,
+        totalElapsedSec: 420,
+        retentionElapsedSec: 75,
+        recoveryElapsedSec: 300,
+        pausedSeconds: 0,
+        intervalId: null
+    };
+    advanceVacuoSeries();
+`, context);
+const completedWebVacuum = vm.runInContext('CorePersistence.sessionHistory.find(record => record.id === "test-web-vacuum-complete")', context);
+assert.equal(completedWebVacuum.status, 'completed', 'Web vacuum completion must persist completed status');
+assert.equal(completedWebVacuum.plannedSeries, 5, 'Web vacuum completion must preserve planned logical series');
+assert.equal(completedWebVacuum.completedSeries, 5, 'Web vacuum completion must count the final logical series');
+
 vm.runInContext(`
     AppState.dailyExecution = {
         sessionId: 'test-daily-vacuum-interrupted',
@@ -423,7 +447,7 @@ assert.equal(partialSnapshot.data.vacuo.nativeManaged, false);
 assert.equal(partialSnapshot.data.vacuo.intervalId, null);
 assert.equal(partialSnapshot.data.vacuo.totalElapsedSec, 17);
 assert.equal(partialSnapshot.data.vacuo.timer, 8);
-assert.equal(partialSnapshot.data.sessionHistory.length, 8);
+assert.equal(partialSnapshot.data.sessionHistory.length, 9);
 context.savedPartial = partialSnapshot.data;
 vm.runInContext('applyProgressData(savedPartial)', context);
 assert.equal(vm.runInContext('AppState.vacuo.sessionId', context), 'reopen-partial');

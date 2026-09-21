@@ -3666,7 +3666,9 @@
             const metrics = nativeState ? deriveNativeVacuumMetrics(nativeState) : getVacuumSessionMetrics();
             const completedSeries = nativeState
                 ? countCompletedSeries(nativeState.steps, nativeState.currentStepIndex)
-                : Math.max(0, Number(AppState.vacuo.completedSeries) || (Number(AppState.vacuo.seriesCurrent) || 1) - 1);
+                : status === 'completed'
+                    ? Math.max(0, Number(AppState.vacuo.seriesTotal) || 1)
+                    : Math.max(0, Number(AppState.vacuo.completedSeries) || (Number(AppState.vacuo.seriesCurrent) || 1) - 1);
             upsertSessionRecord({
                 id: AppState.vacuo.sessionId,
                 schemaVersion: 1,

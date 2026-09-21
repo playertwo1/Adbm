@@ -134,3 +134,11 @@ Próximo passo:
 - Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS; `cmp -s index.html app/src/main/assets/index.html` e hashes SHA-256 → PASS; `git diff --check` → PASS.
 - Validação integrada: `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → PASS; compilação Kotlin, testes unitários Android e builds debug phone/Wear concluídos com `BUILD SUCCESSFUL`.
 - Limitações: não houve validação em aparelho/Watch físico; E04 continua aguardando auditoria independente do target SHA. “Mais descanso” permanece desativado e sem incremento clínico inventado.
+
+## 2026-09-21 — E04 / conclusão Web contabiliza a última série lógica
+
+- Regressão RED adicionada antes da implementação: o caminho real `advanceVacuoSeries()` concluía uma sessão Web de cinco séries, mas persistia `completedSeries: 4`.
+- Implementação: `recordVacuumSession('completed')` agora registra todas as séries planejadas no caminho Web concluído; interrupções continuam derivando apenas séries integralmente executadas.
+- Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS; `cmp -s index.html app/src/main/assets/index.html`, hashes SHA-256 e `git diff --check` → PASS.
+- Validação integrada: `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → PASS; BUILD SUCCESSFUL para phone/Wear.
+- Limitações: auditoria independente do target SHA e validação em aparelho/Watch físico ainda pendentes; “Mais descanso” permanece desativado e sem incremento clínico inventado.
