@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Core Ativo - Vácuo, Bracing & Postura</title>
-    
+
     <!-- Dependências locais: a WebView não executa recursos remotos. -->
     <script src="vendor/tailwindcss.js"></script>
     <script>
@@ -43,9 +43,9 @@
             }
         }
     </script>
-    
+
     <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css">
-    
+
     <style>
         * {
             -webkit-tap-highlight-color: transparent;
@@ -215,7 +215,7 @@
                     <button onclick="triggerHaptic([30]); switchTab('programas')" class="flex-shrink-0 px-3 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 active:scale-95 border border-indigo-500/30 hover:border-indigo-500/60 rounded-xl text-xs font-bold text-indigo-400 transition shadow-sm flex items-center gap-1.5">
                         <span class="text-indigo-400 font-bold">📅</span> Meus Programas
                     </button>
-                    
+
                     <button onclick="triggerQuickAction('bracing_2min')" class="flex-shrink-0 px-3 py-2 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 hover:border-emerald-500/50 rounded-xl text-xs font-semibold text-slate-200 hover:text-emerald-300 transition shadow-sm flex items-center gap-1.5">
                         <span class="text-emerald-400 font-bold">⚡</span> Bracing 2min
                     </button>
@@ -236,7 +236,7 @@
         <!-- ABA 1: PLAYER DE VÁCUO ABDOMINAL (RESPIRAÇÃO & LPF) -->
         <!-- ============================================================ -->
         <section id="tab-vacuo" class="tab-content active space-y-5">
-            
+
             <!-- Posture & Setting Header -->
             <div class="bg-slate-800/80 rounded-2xl p-3.5 border border-slate-700/60 shadow-lg">
                 <div class="flex items-center justify-between mb-2.5">
@@ -263,7 +263,7 @@
                         <span class="text-[10px] text-slate-400 font-mono">(Avançado)</span>
                     </button>
                 </div>
-                
+
                 <!-- Quick Duration override pills -->
                 <div class="mt-3 pt-3 border-t border-slate-700/50 flex items-center justify-between">
                     <span class="text-[11px] text-slate-400 font-medium">Tempo do Vácuo / Apneia:</span>
@@ -278,10 +278,10 @@
 
             <!-- Central Animated Vacuum Ring & Breathing Player -->
             <div class="bg-gradient-to-b from-slate-800 to-slate-850 rounded-3xl p-6 border border-slate-700/70 shadow-2xl relative overflow-hidden flex flex-col items-center justify-center min-h-[360px]">
-                
+
                 <!-- Background decorative glow -->
                 <div id="ringGlowBg" class="absolute w-48 h-48 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none transition-all duration-700"></div>
-                
+
                 <!-- Series Counter Top Header -->
                 <div class="w-full flex items-center justify-between mb-4 z-10">
                     <div class="flex items-center gap-2">
@@ -375,7 +375,7 @@
         <!-- ABA 2: MODO DISCRETO (ESCRITÓRIO & BANCO) -->
         <!-- ============================================================ -->
         <section id="tab-discreto" class="tab-content space-y-5">
-            
+
             <!-- Silent / Desk Mode Banner & Toggle -->
             <div class="bg-gradient-to-r from-slate-800 via-slate-850 to-slate-800 rounded-2xl p-4 border border-slate-700/80 shadow-lg flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -483,7 +483,7 @@
 
             <!-- SUB-VIEW 3: MEDIDOR E GUIA VISUAL DE BRACING ABDOMINAL (20% a 30%) -->
             <div id="desk-view-bracing" class="hidden space-y-4 transition-all duration-300 transform opacity-0 translate-y-4">
-                
+
                 <!-- 1. Painel Visual de Ativação 360° -->
                 <div class="bg-slate-800/90 rounded-3xl p-6 border border-slate-700 text-center relative shadow-xl overflow-hidden">
                     <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
@@ -672,7 +672,7 @@
 
                 <!-- Conteúdo do Bloco (Colapsável) -->
                 <div id="corpo-content" class="px-4 pb-4 space-y-4 border-t border-slate-700/60 pt-4">
-                    
+
                     <!-- BANNER SOS POSTURA & SUGESTÃO CONTEXTUAL DE HORÁRIO -->
                     <div class="space-y-2.5">
                         <!-- Botão de Ação Imediata: SOS Coluna & Postura (1 Min) -->
@@ -786,7 +786,7 @@
 
                     <!-- Painel da Sessão Guiada de Alongamento -->
                     <div class="bg-slate-900/60 border border-emerald-500/30 rounded-2xl p-3.5 space-y-3.5">
-                        
+
                         <!-- Cabeçalho do Painel + Controles de Duração, Intensidade e Som -->
                         <div class="space-y-2.5">
                             <div class="flex items-center justify-between">
@@ -916,7 +916,7 @@
                                 <div class="relative w-36 h-36 flex items-center justify-center">
                                     <!-- Círculo de pulso neon com aura esmeralda -->
                                     <div id="stretch-visual-glow" class="absolute inset-0 rounded-full bg-emerald-500/20 blur-xl transition-all duration-1000 transform scale-90"></div>
-                                    
+
                                     <svg class="w-36 h-36 relative z-10" viewBox="0 0 120 120">
                                         <!-- Anel orbital de fundo -->
                                         <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(51, 65, 85, 0.4)" stroke-width="4" />
@@ -1210,7 +1210,7 @@
 
                 <!-- Conteúdo do Bloco (Colapsável) -->
                 <div id="mente-content" class="px-4 pb-4 space-y-4 border-t border-slate-700/60 pt-4">
-                    
+
                     <!-- BANNER SOS ANSIEDADE & SUGESTÃO CONTEXTUAL DE HORÁRIO -->
                     <div class="space-y-2.5">
                         <!-- Botão de Ação Imediata: SOS Ansiedade (1 Min) -->
@@ -1324,7 +1324,7 @@
 
                     <!-- Painel da Sessão de Respiração Guiada -->
                     <div class="bg-slate-900/60 border border-cyan-500/30 rounded-2xl p-3.5 space-y-3.5">
-                        
+
                         <!-- Cabeçalho do Painel + Controles de Duração, Nível e Som -->
                         <div class="space-y-2.5">
                             <div class="flex items-center justify-between">
@@ -1463,7 +1463,7 @@
 
                             <!-- ÁREA DE METÁFORAS VISUAIS DEDICADAS -->
                             <div class="py-3 text-center relative flex flex-col items-center justify-center min-h-[170px]">
-                                
+
                                 <!-- 1. Metáfora Visual: EM CAIXA (Traço contínuo percorrendo os 4 lados de um quadrado geométrico) -->
                                 <div id="visual-container-caixa" class="visual-breath-container relative w-36 h-36 flex items-center justify-center">
                                     <svg class="w-36 h-36" viewBox="0 0 120 120">
@@ -1768,11 +1768,11 @@
                     </span>
                 </div>
             </div>
-            
+
             <!-- Hero Banner: Treino do Dia Ativo -->
             <div id="todayWorkoutHeroBanner" class="bg-gradient-to-br from-indigo-600 via-indigo-700 to-slate-900 rounded-3xl p-5 shadow-2xl border border-indigo-400/30 relative overflow-hidden">
                 <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-indigo-400/20 rounded-full blur-2xl pointer-events-none"></div>
-                
+
                 <div class="relative z-10 space-y-3">
                     <div class="flex items-center justify-between">
                         <span class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-200 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-400/20 flex items-center gap-1.5">
@@ -1794,7 +1794,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div id="programsListContainer" class="space-y-4 pb-12">
                 <!-- Preenchido via JS -->
             </div>
@@ -1813,7 +1813,7 @@
                 </div>
                 <button onclick="openProgressProtection()" class="text-xs text-emerald-300 underline">Ver última gravação e cópia anterior</button>
             </div>
-            
+
             <!-- 0. RESUMO DE TEMPO DA SEMANA (NOVO) -->
             <div id="weeklyTimeSummaryCardContainer"></div>
 
@@ -1870,7 +1870,7 @@
                         <i class="fa-solid fa-plus text-[10px]"></i> Adicionar
                     </button>
                 </div>
-                
+
                 <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700/80 shadow-xl space-y-2.5">
                     <!-- Schedule List items rendered dynamically -->
                     <div id="scheduleListContainer" class="space-y-2">
@@ -1885,7 +1885,7 @@
                     <i class="fa-solid fa-file-pdf text-sm"></i>
                     <span>Exportar Relatório PDF</span>
                 </button>
-                
+
                 <button onclick="requestPushNotifications()" class="py-3.5 px-3 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 text-slate-200 font-bold rounded-2xl text-xs flex items-center justify-center gap-2 shadow transition">
                     <i class="fa-solid fa-bell text-amber-400 text-sm"></i>
                     <span id="pushNotifBtnText">Lembretes Push</span>
@@ -1907,14 +1907,14 @@
     <!-- Modal: Programa de Bracing (8 Semanas) -->
     <div id="bracingProgramModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300 flex flex-col justify-end">
         <div id="bracingProgramModalContent" class="bg-slate-900 rounded-t-3xl border-t border-slate-700/80 w-full max-h-[90vh] overflow-y-auto transform translate-y-full transition-transform duration-300 p-5 shadow-2xl flex flex-col no-scrollbar">
-            
+
             <div class="flex items-center justify-between mb-2">
                 <h2 class="text-xl font-heading font-extrabold text-white tracking-tight">Programa de Bracing</h2>
                 <button onclick="closeBracingProgramModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center hover:bg-slate-700 hover:text-white transition">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            
+
             <p class="text-[13px] text-slate-400 leading-relaxed mb-4">
                 Diferente do vácuo, a barriga fica firme para <strong class="text-slate-300">FORA</strong> (como se fosse levar um soco). Não prenda a respiração por completo.
             </p>
@@ -1968,7 +1968,7 @@
             <div class="space-y-4 pb-4" id="bracingProgramList">
                 <!-- Cards renderizados via JS -->
             </div>
-            
+
             <!-- Checkpoint Card -->
             <div class="bg-[#451A1A] rounded-2xl p-4 flex gap-3 shadow-lg mb-8 mt-2 border border-[#7f1d1d]/50">
                 <i class="fa-solid fa-triangle-exclamation text-[#FCA5A5] text-lg mt-0.5"></i>
@@ -1988,14 +1988,14 @@
     <!-- Modal: Programa de Kegel (8 Semanas) -->
     <div id="kegelProgramModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300 flex flex-col justify-end">
         <div id="kegelProgramModalContent" class="bg-slate-900 rounded-t-3xl border-t border-slate-700/80 w-full max-h-[90vh] overflow-y-auto transform translate-y-full transition-transform duration-300 p-5 shadow-2xl flex flex-col no-scrollbar">
-            
+
             <div class="flex items-center justify-between mb-2">
                 <h2 class="text-xl font-heading font-extrabold text-white tracking-tight">Programa Avançado</h2>
                 <button onclick="closeKegelProgramModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center hover:bg-slate-700 hover:text-white transition">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            
+
             <p class="text-[13px] text-slate-400 leading-relaxed mb-5">
                 Fortalecimento extremo do assoalho pélvico. Foco em resistência, agilidade reflexa e controle ejaculatório.
             </p>
@@ -2077,7 +2077,7 @@
             <div class="relative w-60 h-60 my-6 flex items-center justify-center">
                 <!-- Outer Ring Glow -->
                 <div id="workoutRingGlow" class="absolute inset-0 rounded-full bg-emerald-500/10 blur-xl transition-all duration-500"></div>
-                
+
                 <div id="workoutCircleBg" class="w-56 h-56 rounded-full bg-slate-900 border-4 border-slate-800 flex flex-col items-center justify-center p-4 transition-all duration-500 shadow-2xl relative z-10">
                     <span id="workoutStepBadge" class="text-[11px] font-extrabold uppercase tracking-widest text-emerald-400 mb-1">EM AÇÃO</span>
                     <span id="dailyExecutionTimer" class="text-6xl font-black text-white font-mono tracking-tighter">00:06</span>
@@ -2209,7 +2209,7 @@
                 <button onclick="startSessionFromReminder()" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition active:scale-95">
                     <i class="fa-solid fa-play"></i> Iniciar Sessão Agora
                 </button>
-                
+
                 <div class="grid grid-cols-2 gap-2">
                     <button onclick="snoozeReminder(5)" class="py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700 text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5">
                         <i class="fa-solid fa-clock-rotate-left text-amber-400"></i> Adiar 5 min
@@ -2244,7 +2244,7 @@
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            
+
             <div class="space-y-3 text-xs">
                 <div>
                     <label class="block text-slate-400 font-medium mb-1">Horário (24h):</label>
@@ -2282,7 +2282,7 @@
             <div>
                 <p id="modalNoteExerciseTitle" class="text-xs font-bold text-emerald-400 mb-1.5">Vácuo Matinal</p>
                 <p class="text-[11px] text-slate-400 mb-2.5">Adicione uma nota sobre as sensações, ativação muscular ou alívio na coluna:</p>
-                
+
                 <!-- Quick feeling tags -->
                 <div class="flex flex-wrap gap-1.5 mb-3">
                     <button type="button" onclick="appendNoteTag('⚡ Mais energia')" class="text-[10px] bg-slate-900 hover:bg-slate-750 text-slate-300 border border-slate-700 px-2 py-1 rounded-lg transition active:scale-95">⚡ Mais energia</button>
@@ -2622,7 +2622,7 @@
             <h1 style="font-size: 24px; font-weight: 800; color: #065f46; margin: 0;">Relatório Diário de Desempenho - CoreFlow</h1>
             <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0;">Treinamento de Vácuo Abdominal, Bracing, Kegel & Ergonomia no Trabalho</p>
         </div>
-        
+
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
             <div style="border: 1px solid #cbd5e1; padding: 10px; border-radius: 8px; text-align: center;">
                 <span style="font-size: 11px; color: #64748b;">Ofensiva Atual</span>
@@ -2725,7 +2725,7 @@
     <!-- ============================================================ -->
     <nav class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-1 py-2 no-print">
         <div class="max-w-md mx-auto grid grid-cols-5 gap-1">
-            
+
             <!-- Tab 1: Vácuo -->
             <button onclick="switchTab('vacuo')" id="nav-btn-vacuo" class="nav-item active flex flex-col items-center justify-center py-1.5 px-0.5 rounded-2xl transition text-emerald-400">
                 <div class="nav-icon-box w-10 h-7 flex items-center justify-center rounded-full bg-emerald-500/15 mb-0.5 transition">
@@ -2789,7 +2789,7 @@
             activityLog: {},
             unlockedAchievements: [],
             pushNotificationsEnabled: false,
-            
+
             dailyExecution: {
                 isRunning: false,
                 targetSessions: 2,
@@ -2799,7 +2799,7 @@
                 intervalId: null,
                 currentProgram: "Bracing Avançado"
             },
-            
+
             // Vacuo player state
             vacuo: {
                 isRunning: false,
@@ -2815,6 +2815,11 @@
                 seriesTotal: 5,
                 intervalId: null,
                 totalElapsedSec: 0,
+                retentionElapsedSec: 0,
+                recoveryElapsedSec: 0,
+                pausedSeconds: 0,
+                pauseStartedAt: null,
+                phaseElapsedSec: 0,
                 sessionId: null,
             },
 
@@ -3132,7 +3137,7 @@
                                         defaultProg.informalCompletedDate = matchingLoaded.informalCompletedDate || null;
                                         defaultProg.informalCompletedToday = defaultProg.informalCompletedDate === todayStr;
                                     }
-                                    
+
                                     // Daily session count resets on new day
                                     if (hasRealStats && !isNewDay && typeof matchingLoaded.sessionsToday !== 'undefined') {
                                         defaultProg.sessionsToday = matchingLoaded.sessionsToday;
@@ -3327,7 +3332,7 @@
                         enabled: program.remindersEnabled === true
                     }]))
                 ));
-                
+
                 localStorage.setItem('coreflow_daily_count', AppState.dailyExecution.sessionsCompletedToday);
                 const todayStr = localDateKey();
                 localStorage.setItem('coreflow_daily_date', todayStr);
@@ -3570,6 +3575,92 @@
         ------------------------------------------------------------- */
         const VAC_CIRCUMFERENCE = 603; // 2 * PI * 96
 
+        function getVacuumSessionMetrics() {
+            const state = AppState.vacuo || {};
+            return {
+                retentionSeconds: Math.max(0, Number(state.retentionElapsedSec) || 0),
+                recoverySeconds: Math.max(0, Number(state.recoveryElapsedSec) || 0),
+                pausedSeconds: Math.max(0, Number(state.pausedSeconds) || 0)
+            };
+        }
+
+        function countWorkoutSeries(steps, endExclusive = Number.POSITIVE_INFINITY) {
+            if (!Array.isArray(steps)) return 0;
+            return steps.slice(0, endExclusive).filter(step => step && step.isRest !== true).length;
+        }
+
+        function countCompletedSeries(steps, currentStepIndex = Number.POSITIVE_INFINITY) {
+            if (!Array.isArray(steps)) return 0;
+            const boundary = Math.max(0, Math.min(steps.length, Number(currentStepIndex) || 0));
+            const grouped = new Map();
+            steps.forEach((step, index) => {
+                if (!step || step.isRest === true) return;
+                const series = Number(step.series);
+                const key = Number.isInteger(series) && series > 0 ? `series:${series}` : `step:${index}`;
+                const group = grouped.get(key) || { total: 0, completed: 0 };
+                group.total++;
+                if (index < boundary) group.completed++;
+                grouped.set(key, group);
+            });
+            let completedSeries = 0;
+            grouped.forEach(group => {
+                if (group.completed >= group.total) completedSeries++;
+            });
+            return completedSeries;
+        }
+
+        function finalizeVacuumPause() {
+            const startedAt = AppState.vacuo.pauseStartedAt;
+            if (startedAt) {
+                AppState.vacuo.pausedSeconds = (Number(AppState.vacuo.pausedSeconds) || 0) +
+                    Math.max(0, Math.ceil((Date.now() - startedAt) / 1000));
+                AppState.vacuo.pauseStartedAt = null;
+            }
+        }
+
+        function deriveNativeVacuumMetrics(state) {
+            const steps = Array.isArray(state?.steps) ? state.steps : [];
+            const currentIndex = Math.max(0, Number(state?.currentStepIndex) || 0);
+            const currentRemaining = Math.max(0, Number(state?.stepTimeLeft) || 0);
+            let retentionSeconds = 0;
+            let recoverySeconds = 0;
+            steps.forEach((step, index) => {
+                const duration = Math.max(0, Number(step?.duration) || 0);
+                const elapsed = index < currentIndex ? duration : index === currentIndex ? Math.max(0, duration - currentRemaining) : 0;
+                if (step?.phase === 'vacuo') retentionSeconds += elapsed;
+                if (step?.phase === 'descanso') recoverySeconds += elapsed;
+            });
+            return {
+                retentionSeconds,
+                recoverySeconds,
+                pausedSeconds: Math.max(0, Number(state?.pausedSeconds) || 0)
+            };
+        }
+
+        function recordVacuumSession(status, interrupted = false, nativeState = null) {
+            if (!AppState.vacuo.sessionId) AppState.vacuo.sessionId = `vacuum-abort-${Date.now()}`;
+            finalizeVacuumPause();
+            const metrics = nativeState ? deriveNativeVacuumMetrics(nativeState) : getVacuumSessionMetrics();
+            const completedSeries = nativeState
+                ? countCompletedSeries(nativeState.steps, nativeState.currentStepIndex)
+                : Math.max(0, Number(AppState.vacuo.completedSeries) || (Number(AppState.vacuo.seriesCurrent) || 1) - 1);
+            upsertSessionRecord({
+                id: AppState.vacuo.sessionId,
+                schemaVersion: 1,
+                programId: '3',
+                phaseIndex: 0,
+                date: localDateKey(),
+                status,
+                plannedSeries: AppState.vacuo.seriesTotal || 1,
+                completedSeries: Math.min(completedSeries, AppState.vacuo.seriesTotal || 1),
+                retentionSeconds: metrics.retentionSeconds,
+                recoverySeconds: metrics.recoverySeconds,
+                pausedSeconds: metrics.pausedSeconds,
+                interrupted,
+                feedback: null
+            });
+        }
+
         function setPosture(posture, vacSec) {
             AppState.vacuo.posture = posture;
             AppState.vacuo.vacDuration = vacSec;
@@ -3631,6 +3722,7 @@
 
         function startVacuo() {
             if (AppState.vacuo.isRunning) return;
+            finalizeVacuumPause();
             if (window.AndroidBridge?.getWorkoutState) {
                 try {
                     const activeState = JSON.parse(window.AndroidBridge.getWorkoutState());
@@ -3701,6 +3793,7 @@
 
         function pauseVacuo() {
             AppState.vacuo.isRunning = false;
+            if (!AppState.vacuo.pauseStartedAt) AppState.vacuo.pauseStartedAt = Date.now();
             if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
                 window.AndroidBridge.setKeepScreenOn(false);
             }
@@ -3712,7 +3805,16 @@
             document.getElementById('vacPlayText').innerText = 'Continuar';
         }
 
-        function resetVacuo() {
+        function resetVacuo(isInterrupted = true) {
+            if (AppState.vacuo.totalElapsedSec > 0 && AppState.vacuo.currentPhase !== 'ready') {
+                if (!AppState.vacuo.sessionId) {
+                    AppState.vacuo.sessionId = `vacuum-abort-${Date.now()}`;
+                }
+                try {
+                    recordVacuumSession(isInterrupted ? 'interrupted' : 'cancelled', isInterrupted);
+                    saveState();
+                } catch(e) {}
+            }
             if (AppState.vacuo.nativeManaged && window.AndroidBridge?.stopWorkoutSession) {
                 window.AndroidBridge.stopWorkoutSession();
             }
@@ -3727,6 +3829,11 @@
             AppState.vacuo.timer = 0;
             AppState.vacuo.seriesCurrent = 1;
             AppState.vacuo.totalElapsedSec = 0;
+            AppState.vacuo.retentionElapsedSec = 0;
+            AppState.vacuo.recoveryElapsedSec = 0;
+            AppState.vacuo.pausedSeconds = 0;
+            AppState.vacuo.pauseStartedAt = null;
+            AppState.vacuo.phaseElapsedSec = 0;
             AppState.vacuo.sessionId = null;
 
             document.getElementById('vacPlayText').innerText = 'Iniciar';
@@ -3754,7 +3861,7 @@
                 return;
             }
             clearInterval(AppState.vacuo.intervalId);
-            
+
             if (AppState.vacuo.currentPhase === 'inspira') {
                 transitionVacuoPhase('expira');
             } else if (AppState.vacuo.currentPhase === 'expira') {
@@ -3768,6 +3875,7 @@
 
         function transitionVacuoPhase(phase, nativeState = null) {
             AppState.vacuo.currentPhase = phase;
+            AppState.vacuo.phaseElapsedSec = 0;
             clearInterval(AppState.vacuo.intervalId);
 
             const title = document.getElementById('vacPhaseTitle');
@@ -3856,7 +3964,10 @@
 
                 AppState.vacuo.timer--;
                 AppState.vacuo.totalElapsedSec++;
-                
+                AppState.vacuo.phaseElapsedSec++;
+                if (AppState.vacuo.currentPhase === 'vacuo') AppState.vacuo.retentionElapsedSec++;
+                if (AppState.vacuo.currentPhase === 'descanso') AppState.vacuo.recoveryElapsedSec++;
+
                 // Update total elapsed
                 const mins = String(Math.floor(AppState.vacuo.totalElapsedSec / 60)).padStart(2, '0');
                 const secs = String(AppState.vacuo.totalElapsedSec % 60).padStart(2, '0');
@@ -3907,6 +4018,11 @@
 
                 const completionId = AppState.vacuo.sessionId || `vacuum-${localDateKey()}-${AppState.vacuo.posture}`;
                 if (CorePersistence.completedSessionIds.includes(completionId)) return;
+                AppState.vacuo.sessionId = completionId;
+                try {
+                    recordVacuumSession('completed', false);
+                    saveState();
+                } catch(e) { console.error(e); }
                 // Mark schedule item 1 as completed
                 markScheduleDone(1, true);
                 addMinutesToday(Math.max(1, Math.ceil(AppState.vacuo.totalElapsedSec / 60)), 'vacuum');
@@ -3969,7 +4085,7 @@
 
             // Animações de saída (fade out & slide down)
             const views = ['desk-view-resistencia', 'desk-view-velocidade', 'desk-view-bracing'];
-            
+
             views.forEach(viewId => {
                 const el = document.getElementById(viewId);
                 if (!el.classList.contains('hidden')) {
@@ -3992,7 +4108,7 @@
                 if (targetId) {
                     const targetEl = document.getElementById(targetId);
                     targetEl.classList.remove('hidden');
-                    
+
                     // Força um reflow para garantir que a classe hidden foi processada
                     void targetEl.offsetWidth;
 
@@ -4053,7 +4169,7 @@
 
                 AppState.desk.res.timer--;
                 document.getElementById('kegelResTimer').innerText = AppState.desk.res.timer;
-                
+
                 const ratio = (10 - AppState.desk.res.timer) / 10;
                 setKegelResRing(ratio);
 
@@ -4197,7 +4313,7 @@
         function updateBracingLoad(val) {
             AppState.desk.bracing.loadPercent = parseInt(val, 10);
             document.getElementById('bracingPercentDisplay').innerText = val + '%';
-            
+
             const ring = document.getElementById('bracingLoadRing');
             const ratio = val / 100;
             const offset = BRACING_CIRCUMFERENCE - (ratio * BRACING_CIRCUMFERENCE);
@@ -4288,7 +4404,7 @@
         function renderBracingProgram() {
             const container = document.getElementById('bracingProgramList');
             container.innerHTML = '';
-            
+
             BRACING_PHASES.forEach((phase, idx) => {
                 if (typeof phase.expanded === 'undefined') phase.expanded = false;
                 if (typeof phase.timeLeft === 'undefined') phase.timeLeft = phase.time;
@@ -4296,7 +4412,7 @@
 
                 const isExpanded = phase.expanded;
                 const isRunning = phase.isRunning;
-                
+
                 container.innerHTML += `
                     <div class="bg-slate-800 rounded-2xl overflow-hidden border ${isRunning ? 'border-emerald-500/50 shadow-emerald-500/10' : 'border-slate-700/80'} shadow-lg transition-all duration-300">
                         <div class="p-4 flex items-center justify-between cursor-pointer active:bg-slate-700/50 transition" onclick="toggleBracingPhase(${idx})">
@@ -4308,9 +4424,9 @@
                                 <i class="fa-solid ${isExpanded ? 'fa-chevron-up text-emerald-400' : 'fa-chevron-down text-slate-400'} text-xs"></i>
                             </div>
                         </div>
-                        
+
                         <div id="bracing-phase-content-${idx}" class="${isExpanded ? 'block' : 'hidden'} px-4 pb-4 border-t border-slate-700/50 pt-4">
-                            
+
                             <!-- Em Casa -->
                             <div class="flex gap-3 mb-4">
                                 <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-house text-sm"></i></div>
@@ -4357,7 +4473,7 @@
 
         function toggleBracingPhaseTimer(idx) {
             const phase = BRACING_PHASES[idx];
-            
+
             if (phase.isRunning) {
                 // Pausar
                 phase.isRunning = false;
@@ -4367,13 +4483,13 @@
                 // Parar qualquer outro timer ativo
                 BRACING_PHASES.forEach(p => { p.isRunning = false; });
                 clearInterval(bracingPhaseInterval);
-                
+
                 // Iniciar este timer
                 if (phase.timeLeft === 0) phase.timeLeft = phase.time; // Reseta se acabou
                 phase.isRunning = true;
-                
+
                 playHeavyPulse(); // Haptic forte de início
-                
+
                 bracingPhaseInterval = setInterval(() => {
                     phase.timeLeft--;
                     if (phase.timeLeft <= 0) {
@@ -4385,7 +4501,7 @@
                     }
                     renderBracingProgram();
                 }, 1000);
-                
+
                 renderBracingProgram();
             }
         }
@@ -4393,15 +4509,15 @@
         function openBracingProgramModal() {
             const modal = document.getElementById('bracingProgramModal');
             const content = document.getElementById('bracingProgramModalContent');
-            
+
             renderBracingProgram(); // Garante renderização atualizada
-            
+
             modal.classList.remove('hidden');
             void modal.offsetWidth; // Force reflow
-            
+
             modal.classList.remove('opacity-0');
             modal.classList.add('opacity-100');
-            
+
             content.classList.remove('translate-y-full');
             content.classList.add('translate-y-0');
         }
@@ -4409,13 +4525,13 @@
         function closeBracingProgramModal() {
             const modal = document.getElementById('bracingProgramModal');
             const content = document.getElementById('bracingProgramModalContent');
-            
+
             modal.classList.remove('opacity-100');
             modal.classList.add('opacity-0');
-            
+
             content.classList.remove('translate-y-0');
             content.classList.add('translate-y-full');
-            
+
             setTimeout(() => {
                 modal.classList.add('hidden');
                 // Pausar timer ativo ao fechar o modal
@@ -4493,11 +4609,11 @@
         function renderKegelProgram() {
             const container = document.getElementById('kegelProgramList');
             container.innerHTML = '';
-            
+
             KEGEL_PHASES.forEach((phase, idx) => {
                 if (typeof phase.expanded === 'undefined') phase.expanded = false;
                 const isExpanded = phase.expanded;
-                
+
                 let noteHtml = '';
                 if (phase.note) {
                     noteHtml = `
@@ -4517,7 +4633,7 @@
                         </div>
                     </div>
                 `).join('');
-                
+
                 container.innerHTML += `
                     <div class="bg-slate-800 rounded-2xl overflow-hidden border border-slate-700/80 shadow-lg transition-all duration-300">
                         <div class="p-4 flex items-center justify-between cursor-pointer active:bg-slate-700/50 transition" onclick="toggleKegelPhase(${idx})">
@@ -4526,7 +4642,7 @@
                                 <i class="fa-solid ${isExpanded ? 'fa-chevron-up text-amber-400' : 'fa-chevron-down text-slate-400'} text-xs"></i>
                             </div>
                         </div>
-                        
+
                         <div id="kegel-phase-content-${idx}" class="${isExpanded ? 'block' : 'hidden'} px-4 pb-4 border-t border-slate-700/50 pt-4">
                             ${noteHtml}
                             ${exercisesHtml}
@@ -4945,7 +5061,7 @@
                 AppState.pausas.remainingSec--;
                 const sec = AppState.pausas.remainingSec;
                 const progressPct = ((totalSec - sec) / totalSec) * 100;
-                
+
                 const m = Math.floor(sec / 60);
                 const s = sec % 60;
                 const timeStr = `${m}:${String(s).padStart(2, '0')}`;
@@ -7133,7 +7249,7 @@
 
             // Define duração para 1 minuto (60s)
             setBreathDuration(60);
-            
+
             // Suspiro Fisiológico / Caixa para alívio rápido
             startSpecificBreath('caixa');
 
@@ -7145,7 +7261,7 @@
         function setBreathIntentFilter(intentKey) {
             AppState.mente.activeIntentFilter = intentKey;
             const tags = ['all', 'energia', 'foco', 'ansiedade', 'sono'];
-            
+
             tags.forEach(t => {
                 const btn = document.getElementById('tag-intent-' + t);
                 if (!btn) return;
@@ -7524,7 +7640,7 @@
                 const bpm = Math.round(60000 / avgIntervalMs);
                 if (disp) disp.innerText = `${bpm} BPM`;
                 if (feedback) feedback.innerText = `Excelente cadência (${count} toques)`;
-                
+
                 if (AppState.mente.bpmMeasurementTarget === 'pre') {
                     AppState.mente.preBpm = bpm;
                 } else {
@@ -8601,7 +8717,7 @@
                 const sToday = mainProg.sessionsToday || 0;
                 const currentDay = mainProg.currentDayInWeek || Math.min((mainProg.daysCompletedInPhase || 0) + 1, 7);
                 const daysCompleted = mainProg.daysCompletedInPhase || 0;
-                
+
                 const heroTitle = document.getElementById('heroWorkoutProgramTitle');
                 const heroSub = document.getElementById('heroWorkoutPhaseSubtitle');
                 const heroBadge = document.getElementById('heroSessionsTodayBadge');
@@ -8620,7 +8736,7 @@
                     else heroBtn.innerText = `Meta Diária Concluída (2/2) ✓ - Repetir Treino`;
                 }
             }
-            
+
             AppState.programs.forEach((prog, pIdx) => {
                 synchronizeProgramProgress(prog);
                 if (prog.type === 'mindfulness') {
@@ -8693,7 +8809,7 @@
                 let sessionBtnText = '';
                 let sessionBtnIcon = 'fa-play';
                 let sessionBtnBg = 'bg-gradient-to-r from-indigo-500 to-sky-500 hover:from-indigo-600 hover:to-sky-600';
-                
+
                 if (prog.programCompleted) {
                     sessionBtnText = `Programa concluído (${prog.phases.length}/${prog.phases.length} semanas) ✓ • Repetir sessão final`;
                     sessionBtnIcon = 'fa-trophy';
@@ -8791,7 +8907,7 @@
                                     <span>${sessionBtnText}</span>
                                 </button>
                             </div>
-                            
+
                             <!-- Overall Program Progress Bar -->
                             <div class="mt-4 flex items-center gap-3 cursor-pointer" onclick="toggleProgramExpand(${pIdx})">
                                 <div class="flex-1 h-2 bg-slate-700/60 rounded-full overflow-hidden">
@@ -8800,7 +8916,7 @@
                                 <span class="text-xs font-bold text-indigo-400">${completedCount}/${prog.phases.length} sem.</span>
                             </div>
                         </div>
-                        
+
                         <!-- Collapsible Weeks List -->
                         <div class="${isExpanded ? 'block' : 'hidden'} px-5 pb-5 border-t border-slate-800/80 pt-3 bg-slate-900/40">
                             <div class="mb-2 flex items-center justify-between gap-2"><span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Trilha de Evolução:</span><button onclick="openProgramProgressAdjustment('${prog.id}')" class="text-[10px] font-bold text-sky-300 underline">Ajustar progresso</button></div>
@@ -8932,19 +9048,19 @@
                     console.log('Não foi possível recuperar a sessão ativa', error);
                 }
             }
-            
+
             const prog = AppState.programs.find(p => p.id === programId) || AppState.programs[1] || AppState.programs[0];
             synchronizeProgramProgress(prog);
             let pIdx = phaseIndex;
             if (pIdx === null || typeof pIdx === 'undefined') {
                 pIdx = prog.currentPhaseIndex || 0;
             }
-            
+
             const phase = prog.phases[pIdx] || prog.phases[0];
             const steps = getProgramSteps(prog.id, pIdx);
             const targetDays = prog.phases[pIdx]?.weeklyTargetDays || 7;
             const currentDay = prog.currentDayInWeek || Math.min((prog.daysCompletedInPhase || 0) + 1, targetDays);
-            
+
             AppState.dailyExecution.programId = prog.id;
             AppState.dailyExecution.phaseIndex = pIdx;
             AppState.dailyExecution.programTitle = prog.title;
@@ -8972,7 +9088,7 @@
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
-        
+
         function closeDailyExecutionModal() {
             if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
                 window.AndroidBridge.setKeepScreenOn(false);
@@ -8987,13 +9103,13 @@
                 modal.classList.remove('flex');
             }
         }
-        
+
         function formatDailyTime(seconds) {
             const m = Math.floor(seconds / 60).toString().padStart(2, '0');
             const s = (seconds % 60).toString().padStart(2, '0');
             return `${m}:${s}`;
         }
-        
+
         function renderDailyExecutionUI() {
             const { steps, currentStepIndex, stepTimeLeft, isRunning, isPaused } = AppState.dailyExecution;
             const currentStep = steps[currentStepIndex] || { title: 'Treino', instruction: 'Execute as contrações', duration: 60, isRest: false };
@@ -9122,10 +9238,33 @@
                 return;
             }
 
-            if (state.status === 'canceled') {
+            if (state.status === 'interrupted' || state.status === 'canceled') {
                 AppState.dailyExecution.isRunning = false;
                 AppState.dailyExecution.isPaused = false;
                 AppState.dailyExecution.intervalId = null;
+
+                if (!AppState.dailyExecution.sessionId) {
+                    AppState.dailyExecution.sessionId = `legacy-abort-${Date.now()}`;
+                }
+
+                try {
+                    upsertSessionRecord({
+                        id: AppState.dailyExecution.sessionId,
+                        schemaVersion: 1,
+                        programId: AppState.dailyExecution.programId || 'unknown',
+                        phaseIndex: AppState.dailyExecution.phaseIndex || 0,
+                        date: localDateKey(),
+                        status: 'interrupted',
+                        plannedSeries: AppState.dailyExecution.steps ? countWorkoutSeries(AppState.dailyExecution.steps) : 1,
+                        completedSeries: AppState.dailyExecution.steps ? countCompletedSeries(AppState.dailyExecution.steps, AppState.dailyExecution.currentStepIndex) : 0,
+                        retentionSeconds: AppState.dailyExecution.totalSessionElapsed || 0,
+                        recoverySeconds: 0,
+                        pausedSeconds: 0,
+                        interrupted: true,
+                        feedback: null
+                    });
+                    saveState();
+                } catch(e) { console.error(e); }
                 document.getElementById('cancelDailyConfirmModal')?.classList.add('hidden');
                 const modal = document.getElementById('dailyExecutionModal');
                 modal?.classList.add('hidden');
@@ -9181,13 +9320,27 @@
         };
 
         function handleNativeVacuumState(state) {
-            if (state.status === 'canceled') {
+            if (state.status === 'interrupted' || state.status === 'canceled') {
+                const nativeSessionId = state.session?.sessionId;
+                if (nativeSessionId) AppState.vacuo.sessionId = nativeSessionId;
+                if (!AppState.vacuo.sessionId) {
+                    AppState.vacuo.sessionId = `vacuum-abort-${Date.now()}`;
+                }
+                try {
+                    recordVacuumSession('interrupted', true, state);
+                    saveState();
+                } catch(e) {}
                 AppState.vacuo.isRunning = false;
                 AppState.vacuo.nativeManaged = false;
                 AppState.vacuo.currentPhase = 'ready';
                 AppState.vacuo.timer = 0;
                 AppState.vacuo.seriesCurrent = 1;
                 AppState.vacuo.totalElapsedSec = 0;
+                AppState.vacuo.retentionElapsedSec = 0;
+                AppState.vacuo.recoveryElapsedSec = 0;
+                AppState.vacuo.pausedSeconds = 0;
+                AppState.vacuo.pauseStartedAt = null;
+                AppState.vacuo.phaseElapsedSec = 0;
                 AppState.vacuo.sessionId = null;
                 document.getElementById('vacPlayIcon').className = 'fa-solid fa-play';
                 document.getElementById('vacPlayText').innerText = 'Iniciar';
@@ -9210,6 +9363,10 @@
             AppState.vacuo.totalElapsedSec = Math.max(0, state.totalSessionElapsed || 0);
             AppState.vacuo.seriesCurrent = step?.series || AppState.vacuo.seriesTotal;
             AppState.vacuo.sessionId = state.session?.sessionId || AppState.vacuo.sessionId;
+            const nativeMetrics = deriveNativeVacuumMetrics(state);
+            AppState.vacuo.retentionElapsedSec = nativeMetrics.retentionSeconds;
+            AppState.vacuo.recoveryElapsedSec = nativeMetrics.recoverySeconds;
+            AppState.vacuo.pausedSeconds = nativeMetrics.pausedSeconds;
 
             if (state.status === 'completed') {
                 if (document.hidden || nativeCompletionHandled) return;
@@ -9221,6 +9378,10 @@
                     window.AndroidBridge?.acknowledgeWorkoutState?.();
                     return;
                 }
+                try {
+                    recordVacuumSession('completed', false, state);
+                    saveState();
+                } catch(e) { console.error(e); }
                 window.AndroidBridge?.acknowledgeWorkoutState?.();
                 document.getElementById('vacPlayIcon').className = 'fa-solid fa-play';
                 document.getElementById('vacPlayText').innerText = 'Iniciar';
@@ -9251,13 +9412,13 @@
                 console.log('Não foi possível sincronizar o treino nativo', error);
             }
         }
-        
+
         function startDailySession() {
             triggerHaptic([30]);
             AppState.dailyExecution.isRunning = true;
             AppState.dailyExecution.isPaused = false;
             nativeCompletionHandled = false;
-            
+
             if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
                 window.AndroidBridge.setKeepScreenOn(true);
             }
@@ -9294,7 +9455,7 @@
             try { if (navigator.wakeLock) navigator.wakeLock.request('screen'); } catch (e) {}
 
             renderDailyExecutionUI();
-            
+
             AppState.dailyExecution.intervalId = setInterval(() => {
                 if (AppState.dailyExecution.stepTimeLeft > 0) {
                     AppState.dailyExecution.stepTimeLeft--;
@@ -9389,7 +9550,7 @@
                 finishDailySession();
             }
         }
-        
+
         function finishDailySession(fromNativeService = false) {
             const completionId = AppState.dailyExecution.sessionId || `legacy-${AppState.dailyExecution.programId}-${Date.now()}`;
             if (CorePersistence.completedSessionIds.includes(completionId)) return;
@@ -9397,6 +9558,27 @@
             AppState.dailyExecution.intervalId = null;
             AppState.dailyExecution.isRunning = false;
             AppState.dailyExecution.isPaused = false;
+
+            try {
+                upsertSessionRecord({
+                    id: completionId,
+                    schemaVersion: 1,
+                    programId: AppState.dailyExecution.programId || 'unknown',
+                    phaseIndex: AppState.dailyExecution.phaseIndex || 0,
+                    date: localDateKey(),
+                    status: 'completed',
+                    plannedSeries: AppState.dailyExecution.steps ? AppState.dailyExecution.steps.length : 1,
+                    completedSeries: AppState.dailyExecution.steps ? AppState.dailyExecution.steps.length : 1,
+                    retentionSeconds: AppState.dailyExecution.totalSessionElapsed || 0,
+                    recoverySeconds: 0,
+                    pausedSeconds: 0,
+                    interrupted: false,
+                    feedback: null
+                });
+                saveState();
+            } catch (e) {
+                console.error("Erro ao registrar sesso concluda:", e);
+            }
 
             if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
                 window.AndroidBridge.setKeepScreenOn(false);
@@ -9425,7 +9607,7 @@
                 const dailyTarget = prog.dailyTarget || 2;
                 const phase = prog.phases[AppState.dailyExecution.phaseIndex];
                 const weeklyTargetDays = phase?.weeklyTargetDays || 7;
-                
+
                 // Avança o dia somente uma vez, exatamente quando a meta diária é atingida.
                 if (prog.sessionsToday === dailyTarget) {
                     const reachedPhaseTarget = (prog.daysCompletedInPhase || 0) + 1 >= weeklyTargetDays;
@@ -9460,13 +9642,13 @@
                 }
                 synchronizeProgramProgress(prog);
             }
-            
+
             CorePersistence.completedSessionIds.push(completionId);
             CorePersistence.completedSessionIds = CorePersistence.completedSessionIds.slice(-200);
             const progressSaved = saveState();
             renderDailyExecutionUI();
             renderProgramsList();
-            
+
             setTimeout(() => {
                 closeDailyExecutionModal();
                 const daysDone = (prog && prog.daysCompletedInPhase) || 0;
@@ -9516,18 +9698,44 @@
             document.getElementById('programCompletionScreen')?.remove();
             switchTab('programas');
         }
-        
+
         function requestCancelDailySession() {
             triggerHaptic([20, 50, 20]);
             document.getElementById('cancelDailyConfirmModal').classList.remove('hidden');
         }
-        
-        function abortDailySession() {
+
+        function abortDailySession(isInterrupted = true) {
             triggerHaptic([40, 50]);
             clearInterval(AppState.dailyExecution.intervalId);
             AppState.dailyExecution.intervalId = null;
             AppState.dailyExecution.isRunning = false;
             AppState.dailyExecution.isPaused = false;
+
+            // Generate stable ID if missing to prevent collisions
+            if (!AppState.dailyExecution.sessionId) {
+                AppState.dailyExecution.sessionId = `legacy-abort-${Date.now()}`;
+            }
+
+            try {
+                upsertSessionRecord({
+                    id: AppState.dailyExecution.sessionId,
+                    schemaVersion: 1,
+                    programId: AppState.dailyExecution.programId || 'unknown',
+                    phaseIndex: AppState.dailyExecution.phaseIndex || 0,
+                    date: localDateKey(),
+                    status: isInterrupted ? 'interrupted' : 'cancelled',
+                    plannedSeries: AppState.dailyExecution.steps ? countWorkoutSeries(AppState.dailyExecution.steps) : 1,
+                    completedSeries: AppState.dailyExecution.steps ? countCompletedSeries(AppState.dailyExecution.steps, AppState.dailyExecution.currentStepIndex) : 0,
+                    retentionSeconds: AppState.dailyExecution.totalSessionElapsed || 0,
+                    recoverySeconds: 0,
+                    pausedSeconds: 0,
+                    interrupted: isInterrupted,
+                    feedback: null
+                });
+                saveState();
+            } catch(e) {
+                console.error("Erro ao registrar sessao cancelada", e);
+            }
 
             if (window.AndroidBridge?.stopWorkoutSession) {
                 window.AndroidBridge.stopWorkoutSession();
@@ -9536,7 +9744,7 @@
             if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
                 window.AndroidBridge.setKeepScreenOn(false);
             }
-            
+
             document.getElementById('cancelDailyConfirmModal').classList.add('hidden');
             const modal = document.getElementById('dailyExecutionModal');
             modal.classList.add('hidden');
@@ -9604,7 +9812,7 @@
             triggerHaptic([20]);
             activeReminderProgId = progId;
             const prog = AppState.programs.find(p => p.id === progId) || AppState.programs[0];
-            
+
             const targetSessions = prog.dailyTarget || 2;
             document.getElementById('reminderProgramNameSubtitle').innerText = `${prog.title} (${targetSessions}x ao dia)`;
             const times = prog.reminderTimes || ['09:00', '16:00'];
@@ -9656,17 +9864,17 @@
         function triggerReminderAlert(prog, sessionNumber = 1, postNativeNotification = true) {
             triggerHaptic([100, 50, 100]);
             playTibetanChime();
-            
+
             const title = `CoreFlow: ${prog.title}`;
             const targetSessions = prog.dailyTarget || 2;
             const message = `Hora da Sessão ${sessionNumber}/${targetSessions} do dia! Reserve alguns minutos para cuidar da sua saúde.`;
-            
+
             if (postNativeNotification && window.AndroidBridge?.postReminderNotification) {
                 window.AndroidBridge.postReminderNotification(String(prog.id), prog.title, sessionNumber, targetSessions);
             } else if (postNativeNotification && window.AndroidBridge?.postLocalNotification) {
                 window.AndroidBridge.postLocalNotification(title, message);
             }
-            
+
             activeReminderProgId = prog.id;
             activeReminderSessionNumber = sessionNumber;
             document.getElementById('interactiveReminderTitle').innerText = `Hora da Sessão ${sessionNumber}/${targetSessions}!`;
@@ -10178,16 +10386,16 @@
 
             const headerStreak = document.getElementById('headerStreakCount');
             if (headerStreak) headerStreak.innerText = AppState.streak;
-            
+
             const dashStreak = document.getElementById('dashStreakValue');
             if (dashStreak) dashStreak.innerText = AppState.streak + ' dias';
-            
+
             const dashComp = document.getElementById('dashCompletedValue');
             if (dashComp) dashComp.innerText = `${completedCount} / ${totalCount}`;
-            
+
             const dashTotal = document.getElementById('dashTotalTimeValue');
             if (dashTotal) dashTotal.innerText = AppState.totalMinutesToday + ' min';
-            
+
             const dashGoal = document.getElementById('dashGoalTimeValue');
             if (dashGoal) dashGoal.innerText = `${AppState.totalMinutesToday} / ${AppState.dailyGoal}m`;
 
@@ -10220,30 +10428,30 @@
             renderWeeklyTimeSummary();
             renderMonthlyBars();
             evaluateAchievements(true);
-            
+
             if (previousMins < AppState.dailyGoal && AppState.totalMinutesToday >= AppState.dailyGoal) {
                 celebrateDailyGoal();
             }
         }
-        
+
         function celebrateDailyGoal() {
             triggerHaptic([50, 100, 50, 100, 50]);
-            
+
             // Dispara a animação Lottie no nível do Android (Jetpack Compose)
             if (window.AndroidBridge && window.AndroidBridge.playConfetti) {
                 window.AndroidBridge.playConfetti();
             }
-            
+
             const container = document.getElementById('tab-dashboard');
             if (!container) return;
-            
+
             const existing = document.getElementById('dailyGoalCelebration');
             if (existing) existing.remove();
-            
+
             const celebration = document.createElement('div');
             celebration.id = 'dailyGoalCelebration';
             celebration.className = 'absolute inset-0 z-50 pointer-events-none flex flex-col items-center justify-center overflow-hidden';
-            
+
             celebration.innerHTML = `
                 <div class="absolute inset-0 bg-emerald-500/10 backdrop-blur-sm animate-pulse"></div>
                 <div class="relative z-10 flex flex-col items-center animate-bounce">
@@ -10252,10 +10460,10 @@
                     <p class="text-emerald-300 font-bold mt-2 text-lg drop-shadow-md">${AppState.totalMinutesToday} min hoje</p>
                 </div>
             `;
-            
+
             container.style.position = 'relative';
             container.appendChild(celebration);
-            
+
             setTimeout(() => {
                 celebration.classList.add('opacity-0', 'transition-opacity', 'duration-1000');
                 setTimeout(() => celebration.remove(), 1000);
@@ -10282,9 +10490,9 @@
             } else if (currentTotal > 0) {
                 pctDiff = 100;
             }
-            
+
             let diffHtml = '';
-            
+
             if (diff > 0) {
                 diffHtml = `<div class="flex items-center gap-1 text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 text-xs font-bold">
                                 <i class="fa-solid fa-arrow-trend-up"></i>
@@ -10305,7 +10513,7 @@
             container.innerHTML = `
                 <div class="bg-gradient-to-br from-indigo-900/40 to-slate-800/90 rounded-3xl p-5 border border-indigo-500/30 shadow-xl relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
-                    
+
                     <div class="flex items-center justify-between mb-2 relative z-10">
                         <div class="flex items-center gap-2">
                             <div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
@@ -10314,7 +10522,7 @@
                             <span class="text-slate-300 text-sm font-semibold">Tempo Total na Semana</span>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-end justify-between mt-2 relative z-10">
                         <div class="flex items-baseline gap-1">
                             <span class="text-4xl font-black text-white tracking-tight">${timeString}</span>
@@ -10332,9 +10540,9 @@
             const days = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
             // Para não quebrar o layout se os valores forem pequenos, fixa um teto visual mínimo de 60 mins
             const maxMins = Math.max(...AppState.weeklyHistory, 60);
-            
+
             const currentDayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
-            
+
             // Calcular média semanal
             const totalWeekMins = AppState.weeklyHistory.reduce((a, b) => a + b, 0);
             const avgMins = Math.round(totalWeekMins / 7);
@@ -10395,7 +10603,7 @@
         // EXPORT PDF / PRINT PERFORMANCE REPORT
         function exportPerformancePDF() {
             triggerHaptic([60]);
-            
+
             // Populate printable table
             const tbody = document.getElementById('printTableBody');
             tbody.innerHTML = AppState.schedule.map(s => `
@@ -10972,6 +11180,18 @@
             CorePersistence.sessionHistory = CorePersistence.sessionHistory.slice(-200);
             return true;
         }
+        function updateSessionFeedback(sessionId, feedbackValue) {
+            if (!sessionId || !feedbackValue) return false;
+            if (!SESSION_FEEDBACK.has(feedbackValue)) return false;
+
+            const record = CorePersistence.sessionHistory.find(r => r.id === sessionId);
+            if (record) {
+                record.feedback = feedbackValue;
+                saveState();
+                return true;
+            }
+            return false;
+        }
 
         function isValidSessionRecord(record) {
             try { normalizeSessionRecord(record); return true; }
@@ -11086,6 +11306,38 @@
                 responsivePause.history = data.responsivePause.history || [];
                 responsivePause.historyEnabled = data.responsivePause.historyEnabled === true;
             }
+
+            if (data.vacuo) {
+                let nativeVacuumActive = false;
+                if (window.AndroidBridge?.getWorkoutState) {
+                    try {
+                        const nativeState = JSON.parse(window.AndroidBridge.getWorkoutState());
+                        const nativeSessionId = nativeState.session?.sessionId;
+                        nativeVacuumActive =
+                            (nativeState.status === 'running' || nativeState.status === 'paused') &&
+                            nativeState.session?.type === 'vacuum' &&
+                            (!data.vacuo.sessionId || !nativeSessionId || nativeSessionId === data.vacuo.sessionId);
+                    } catch (error) {
+                        nativeVacuumActive = false;
+                    }
+                }
+                if (!nativeVacuumActive) {
+                    Object.assign(AppState.vacuo, data.vacuo);
+                    // The web player represents pause with isRunning=false.
+                    // Timer handles and native ownership cannot survive a reload.
+                    AppState.vacuo.nativeManaged = false;
+                    AppState.vacuo.isRunning = false;
+                    AppState.vacuo.intervalId = null;
+                    AppState.vacuo.isPaused = true;
+                }
+            }
+            if (data.dailyExecution) {
+                Object.assign(AppState.dailyExecution, data.dailyExecution);
+                if (AppState.dailyExecution.isRunning && !AppState.dailyExecution.isPaused) {
+                    AppState.dailyExecution.isPaused = true;
+                    renderDailyExecutionUI();
+                }
+            }
         }
 
         function readLegacyProgress() {
@@ -11147,7 +11399,9 @@
                 sessionHistory: CorePersistence.sessionHistory,
                 responsivePause: typeof responsivePause !== 'undefined' ? {
                     history: responsivePause.history, historyEnabled: responsivePause.historyEnabled
-                } : undefined
+                } : undefined,
+                vacuo: { ...AppState.vacuo, intervalId: null },
+                dailyExecution: { ...AppState.dailyExecution, intervalId: null }
             };
         }
 

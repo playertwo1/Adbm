@@ -81,7 +81,7 @@ class WorkoutForegroundService : Service() {
             ACTION_PAUSE -> pauseSession()
             ACTION_RESUME -> resumeSession()
             ACTION_SKIP -> advanceStep()
-            ACTION_STOP -> stopSession(canceled = true)
+            ACTION_STOP -> stopSession(interrupted = true)
             ACTION_REQUEST_STATE -> broadcastState()
             null -> restoreSession()
         }
@@ -243,10 +243,10 @@ class WorkoutForegroundService : Service() {
         }
     }
 
-    private fun stopSession(canceled: Boolean) {
+    private fun stopSession(interrupted: Boolean) {
         tickerJob?.cancel()
         releaseWakeLock()
-        persistAndBroadcast(if (canceled) "canceled" else "idle")
+        persistAndBroadcast(if (interrupted) "interrupted" else "idle")
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }

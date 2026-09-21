@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 20/09/2026. Status: E00–E03 concluídas; E04 é a próxima etapa.
+Atualizado: 20/09/2026. Status: E00–E03 concluídas; E04 em execução, com aceite integral bloqueado por decisão clínica pendente.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -98,9 +98,10 @@ Aceite: regras explícitas e revisadas. Dosagem não resolvida bloqueia sua impl
 Evidência contextual: [revisão de hipopressivos](https://pubmed.ncbi.nlm.nih.gov/40565470/); não valida automaticamente o protocolo do app.
 
 ### E04 — Motor de sessão
+Estado: EM EXECUÇÃO; aceite integral BLOQUEADO pelo incremento de recuperação não aprovado em E03.
 - [ ] Identificar preparação, inspiração, expiração, retenção, retorno e recuperação.
 - [ ] “Encerrar retenção” registra executado e vai ao retorno/recuperação.
-- [ ] “Mais descanso” aplica incremento de E03 e atualiza tempo/estimativa.
+- [ ] “Mais descanso” aplica incremento de E03 e atualiza tempo/estimativa. **BLOQUEADO:** E03 não define incremento aprovado.
 - [ ] Pausa na retenção orienta sua saída; retomada não exige continuar apneia congelada.
 - [ ] Bloquear alteração silenciosa de carga/postura em série ativa.
 - [ ] Encerrar salva parcial; não conclui automaticamente programa.
@@ -108,6 +109,7 @@ Evidência contextual: [revisão de hipopressivos](https://pubmed.ncbi.nlm.nih.g
 - [ ] Retomar estado do serviço após bloqueio, sem iniciar timer concorrente.
 - [ ] Cancelar sinais pendentes ao encerrar; evitar vibração duplicada.
 Aceite: sequência, tempo e estado iguais nos caminhos web/nativo; interrupção permanece parcial após reabertura.
+Evidência parcial verificada: diagnóstico do motor cobre registros/feedback por ID e restauração do snapshot web de vácuo sem timer/posse nativa obsoletos. Isso não comprova o aceite completo nem substitui validação no aparelho. Marcações anteriores de conclusão foram retiradas por falta de evidência e contradição com o bloqueio de E03.
 
 ### E05 — Sistema visual
 - [ ] Tokens: preto #000000, superfícies #0A0A0B/#111214, texto claro, verde/menta, ciano e alertas.
