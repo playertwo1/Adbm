@@ -199,3 +199,11 @@ Próximo passo:
 - Exercício real no browser local: cinco destinos abriram `tab-hoje`, `tab-programas`, `tab-pausas`, `tab-dashboard` e `tab-perfil`; atalhos abriram Vácuo/Discreto e o modal Mindfulness; `popstate` fechou o modal antes de trocar contexto; toggle de voz alterou `aria-checked`. Em viewport 360×800 e referência 1440×3120, a navegação permaneceu fixa e não houve overflow horizontal.
 - Limitações: TalkBack físico, teclado/rotação e Galaxy Watch físico ainda precisam ser exercitados; não são declarados aprovados nesta etapa e permanecem na validação integrada E13.
 - Próximo passo: auditoria independente do target SHA exato, sem push, merge, release ou deploy.
+
+## 2026-09-21 — E05-FIX / correções pós-auditoria independente
+
+- Diagnóstico RED: `diagnostics/e05-audit-fix.test.cjs` falhou no baseline porque o destino Hoje não existia, os toggles de voz/vibração não tinham nome/estado no botão, os quatro componentes exigidos não eram instanciados e o Back ainda apontava para `rotina`.
+- Implementação: Back agora fecha `closeTopmostOverlay()` primeiro, inclui `mindfulnessAudioModal` no caminho de overlay e retorna à aba `hoje`; toggles superiores anunciam nome e `aria-pressed`; seletores de postura anunciam `aria-pressed`; `cf-icon`, `cf-selector`, `cf-modal` e `cf-error` são instanciados em estados reais.
+- Acessibilidade dinâmica: `ensureAccessibleButtonNames()` nomeia botões icon-only também após renderizações de cronograma/modais, sem substituir rótulos textuais existentes.
+- Validação: `node diagnostics/e05-audit-fix.test.cjs` → PASS; `node diagnostics/e05-visual.test.cjs` → PASS; diagnósticos E00–E03 e políticas → PASS; browser local confirmou zero botões sem nome, componentes cf-icon=1/cf-selector=3/cf-modal=1/cf-error=1, Back em Hoje/Programas/Pausas/Evolução/Perfil e fechamento do Mindfulness sem tela vazia; `cmp -s` e `git diff --check` → PASS.
+- Limitações: `diagnostics/session-engine.test.cjs` não existe neste worktree e não pôde ser executado; scripts/check.sh e build Android permanecem obrigatórios antes do handoff final.

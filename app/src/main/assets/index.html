@@ -226,7 +226,7 @@
     <!-- Top Status Bar & App Header -->
     <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3.5 flex items-center justify-between no-print">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-emerald-900/30">
+            <div class="cf-icon w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-emerald-900/30" aria-hidden="true">
                 <i class="fa-solid fa-lungs text-white text-lg"></i>
             </div>
             <div>
@@ -245,21 +245,21 @@
                 <span id="headerStreakCount">5</span> <span class="text-slate-400 font-normal">dias</span>
             </button>
             <!-- Audio voice toggle -->
-            <button id="voiceToggleBtn" onclick="toggleVoice()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
+            <button id="voiceToggleBtn" type="button" onclick="toggleVoice()" aria-label="Voz ativada" aria-pressed="true" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
                 <i id="voiceIcon" class="fa-solid fa-volume-high text-emerald-400"></i>
             </button>
             <!-- Haptic Vibration toggle -->
-            <button id="hapticToggleBtn" onclick="toggleHaptics()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
+            <button id="hapticToggleBtn" type="button" onclick="toggleHaptics()" aria-label="Vibração ativada" aria-pressed="true" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
                 <i id="hapticIcon" class="fa-solid fa-mobile-screen-button text-cyan-400"></i>
             </button>
             <!-- Galaxy Watch vibration toggle -->
-            <button id="watchHapticToggleBtn" onclick="toggleWatchHaptics()" title="Vibrar também no Galaxy Watch" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
+            <button id="watchHapticToggleBtn" type="button" onclick="toggleWatchHaptics()" title="Galaxy Watch: vibração ativada" aria-label="Galaxy Watch: vibração ativada" aria-pressed="true" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
                 <i id="watchHapticIcon" class="fa-solid fa-clock text-emerald-400"></i>
             </button>
         </div>
     </header>
 
-    <button id="core-persistence-status" onclick="retryProgressPersistence()" class="hidden mx-auto mt-3 w-[calc(100%_-_2rem)] max-w-md text-left" aria-live="polite"></button>
+    <button id="core-persistence-status" type="button" onclick="retryProgressPersistence()" class="cf-error hidden mx-auto mt-3 w-[calc(100%_-_2rem)] max-w-md text-left" aria-live="polite" aria-label="Status de persistência local"></button>
 
     <!-- Main Container -->
     <main class="max-w-md mx-auto px-4 pt-3 pb-6 space-y-4">
@@ -335,17 +335,17 @@
                 </div>
                 <!-- Posture selector buttons (Chips) -->
                 <div class="grid grid-cols-3 gap-2">
-                    <button onclick="setPosture('deitado', 15)" id="posture-deitado" class="posture-btn active py-2.5 px-1.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 bg-emerald-500/15 border-emerald-500 text-emerald-400 shadow-sm">
+                    <button type="button" onclick="setPosture('deitado', 15)" id="posture-deitado" aria-pressed="true" class="cf-selector posture-btn active py-2.5 px-1.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 bg-emerald-500/15 border-emerald-500 text-emerald-400 shadow-sm">
                         <i class="fa-solid fa-bed text-sm"></i>
                         <span class="text-xs font-bold leading-tight">Deitado</span>
                         <span class="text-[10px] text-slate-400 font-mono">(Iniciante)</span>
                     </button>
-                    <button onclick="setPosture('4apoios', 20)" id="posture-4apoios" class="posture-btn py-2.5 px-1.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 bg-slate-900/60 border-slate-700 text-slate-300 hover:border-slate-600">
+                    <button type="button" onclick="setPosture('4apoios', 20)" id="posture-4apoios" aria-pressed="false" class="cf-selector posture-btn py-2.5 px-1.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 bg-slate-900/60 border-slate-700 text-slate-300 hover:border-slate-600">
                         <i class="fa-solid fa-dog text-sm"></i>
                         <span class="text-xs font-bold leading-tight">4 Apoios</span>
                         <span class="text-[10px] text-slate-400 font-mono">(Intermediário)</span>
                     </button>
-                    <button onclick="setPosture('empe', 30)" id="posture-empe" class="posture-btn py-2.5 px-1.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 bg-slate-900/60 border-slate-700 text-slate-300 hover:border-slate-600">
+                    <button type="button" onclick="setPosture('empe', 30)" id="posture-empe" aria-pressed="false" class="cf-selector posture-btn py-2.5 px-1.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 bg-slate-900/60 border-slate-700 text-slate-300 hover:border-slate-600">
                         <i class="fa-solid fa-person-walking text-sm"></i>
                         <span class="text-xs font-bold leading-tight">Em Pé</span>
                         <span class="text-[10px] text-slate-400 font-mono">(Avançado)</span>
@@ -2117,7 +2117,7 @@
     </div>
 
     <!-- Modal for Guided Workout Session Player -->
-    <div id="mindfulnessAudioModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/95 backdrop-blur-xl p-4 no-print">
+    <div id="mindfulnessAudioModal" role="dialog" aria-modal="true" aria-label="Reprodutor de mindfulness" class="cf-modal fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/95 backdrop-blur-xl p-4 no-print">
         <div class="w-full max-w-md overflow-hidden rounded-[2rem] border border-violet-400/30 bg-gradient-to-b from-violet-950 via-slate-900 to-slate-950 shadow-2xl shadow-violet-900/50">
             <div class="relative p-6 text-center">
                 <button onclick="closeMindfulnessAudioModal()" class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-300"><i class="fa-solid fa-xmark"></i></button>
@@ -3294,6 +3294,10 @@
            ANDROID HARDWARE BACK BUTTON NAVIGATION HANDLER
         ------------------------------------------------------------- */
         window.handleAndroidBack = function() {
+            if (typeof closeTopmostOverlay === 'function' && closeTopmostOverlay()) {
+                return true;
+            }
+
             const responsiveModal = document.getElementById('responsivePauseModal');
             if (responsiveModal && !responsiveModal.classList.contains('hidden')) {
                 endResponsivePause(false);
@@ -3368,8 +3372,8 @@
             }
 
             // 4. If not on home tab, return to home tab
-            if (AppState.activeTab && AppState.activeTab !== 'rotina') {
-                switchTab('rotina');
+            if (AppState.activeTab && AppState.activeTab !== 'hoje') {
+                switchTab('hoje');
                 return true;
             }
 
@@ -3583,6 +3587,11 @@
             } else {
                 icon.className = 'fa-solid fa-volume-xmark text-slate-500';
             }
+            const button = document.getElementById('voiceToggleBtn');
+            if (button) {
+                button.setAttribute('aria-pressed', String(AppState.voiceEnabled));
+                button.setAttribute('aria-label', AppState.voiceEnabled ? 'Voz ativada' : 'Voz desativada');
+            }
             const profileToggle = document.getElementById('profileVoiceToggle');
             if (profileToggle) {
                 profileToggle.setAttribute('aria-checked', String(AppState.voiceEnabled));
@@ -3598,6 +3607,11 @@
                 triggerHaptic([100]);
             } else {
                 icon.className = 'fa-solid fa-mobile-screen text-slate-500';
+            }
+            const button = document.getElementById('hapticToggleBtn');
+            if (button) {
+                button.setAttribute('aria-pressed', String(AppState.hapticsEnabled));
+                button.setAttribute('aria-label', AppState.hapticsEnabled ? 'Vibração ativada' : 'Vibração desativada');
             }
             const profileToggle = document.getElementById('profileHapticsToggle');
             if (profileToggle) {
@@ -3658,6 +3672,7 @@
                 renderAchievements();
             }
 
+            ensureAccessibleButtonNames();
             renderSmartSuggestionCard();
             triggerHaptic([30]);
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3863,11 +3878,13 @@
 
             // Update UI posture buttons
             document.querySelectorAll('.posture-btn').forEach(btn => {
-                btn.className = 'posture-btn py-2 px-1.5 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-slate-900/60 border-slate-700 text-slate-300 hover:border-slate-600';
+                btn.className = 'cf-selector posture-btn py-2 px-1.5 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-slate-900/60 border-slate-700 text-slate-300 hover:border-slate-600';
+                btn.setAttribute('aria-pressed', 'false');
             });
             const activeBtn = document.getElementById('posture-' + posture);
             if (activeBtn) {
-                activeBtn.className = 'posture-btn active py-2 px-1.5 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-emerald-500/15 border-emerald-500 text-emerald-400';
+                activeBtn.className = 'cf-selector posture-btn active py-2 px-1.5 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-emerald-500/15 border-emerald-500 text-emerald-400';
+                activeBtn.setAttribute('aria-pressed', 'true');
             }
 
             // Update badge & guide text
@@ -8773,6 +8790,8 @@
             button.title = AppState.watchHapticsEnabled
                 ? 'Galaxy Watch: vibração ativada'
                 : 'Galaxy Watch: vibração desativada';
+            button.setAttribute('aria-pressed', String(AppState.watchHapticsEnabled));
+            button.setAttribute('aria-label', button.title);
             const profileToggle = document.getElementById('profileWatchToggle');
             if (profileToggle) {
                 profileToggle.setAttribute('aria-checked', String(AppState.watchHapticsEnabled));
@@ -11695,7 +11714,7 @@
             if (!badge) return;
             badge.classList.remove('hidden');
             badge.innerText = message;
-            badge.className = `mx-auto mt-3 w-[calc(100%_-_2rem)] max-w-md text-left rounded-xl border px-3 py-2 text-[11px] ${status === 'ready' ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-amber-500/40 bg-amber-500/10 text-amber-200'}`;
+            badge.className = `cf-error mx-auto mt-3 w-[calc(100%_-_2rem)] max-w-md text-left rounded-xl border px-3 py-2 text-[11px] ${status === 'ready' ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-amber-500/40 bg-amber-500/10 text-amber-200'}`;
         }
 
         function saveState() {
@@ -12062,6 +12081,33 @@
             return true;
         }
 
+        function ensureAccessibleButtonNames() {
+            const labels = {
+                resetKegelRes: 'Resetar Kegel de resistência',
+                resetKegelFast: 'Resetar Kegel de velocidade',
+                resetBracingTimer: 'Resetar temporizador de bracing',
+                toggleScheduleItem: 'Marcar item do cronograma',
+                deleteScheduleItem: 'Excluir item do cronograma',
+                closeBracingProgramModal: 'Fechar programa de bracing',
+                closeKegelProgramModal: 'Fechar programa de Kegel',
+                closeEditProgramModal: 'Fechar edição do programa',
+                closeMindfulnessAudioModal: 'Fechar reprodutor de mindfulness',
+                toggleMindfulnessAudio: 'Reproduzir ou pausar mindfulness',
+                requestCancelDailySession: 'Cancelar sessão diária',
+                closeReminderConfigModal: 'Fechar configuração de lembrete',
+                closeScheduleModal: 'Fechar cronograma',
+                closeNoteModal: 'Fechar nota',
+                closeSmartwatchCompanionModal: 'Fechar estado do Watch'
+            };
+            document.querySelectorAll('button').forEach(button => {
+                if ((button.innerText || '').trim() || button.getAttribute('aria-label') || button.getAttribute('title')) return;
+                const onclick = button.getAttribute('onclick') || '';
+                const action = Object.keys(labels).find(name => onclick.includes(`${name}(`));
+                const icon = button.querySelector('i')?.className || '';
+                button.setAttribute('aria-label', labels[action] || `Controle ${button.id || icon.replace(/fa-solid|fa-regular|fa-/g, '').trim() || 'interativo'}`);
+            });
+        }
+
         // Initialize on load
         window.addEventListener('DOMContentLoaded', () => {
             loadSavedState();
@@ -12073,6 +12119,7 @@
             // Set random initial health tip
             currentTipIndex = Math.floor(Math.random() * HEALTH_TIPS.length);
             displayHealthTip(currentTipIndex);
+            ensureAccessibleButtonNames();
         });
 
         document.addEventListener('visibilitychange', () => {
