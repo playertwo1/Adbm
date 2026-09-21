@@ -38,7 +38,10 @@ const source = [
     extractFunction('enterVacuumRecoveryPause'),
     extractFunction('pauseVacuo'),
     extractFunction('startVacuo'),
+    extractFunction('transitionVacuoPhase'),
+    extractFunction('runVacuoTick'),
     extractFunction('recordVacuumSession'),
+    extractFunction('skipVacuoPhase'),
     extractFunction('advanceVacuoSeries'),
     extractFunction('finishDailySession'),
     extractFunction('abortDailySession'),
@@ -82,6 +85,9 @@ const context = vm.createContext({
     markScheduleDone() {},
     setTimeout(cb) { cb(); },
     playTibetanChime() {},
+    playInhaleSignal() {},
+    playExhaleSignal() {},
+    playSuccessPattern() {},
     playRelaxationSignal() {},
     updateCoreAnimation() {},
     setVacProgress() {},
@@ -480,6 +486,32 @@ const nativeSafeExitRecord = vm.runInContext('CorePersistence.sessionHistory.fin
 assert.equal(nativeSafeExitRecord.completedSeries, 0, 'native safe exit must not complete the abandoned logical series');
 assert.equal(nativeSafeExitRecord.retentionSeconds, 7, 'native safe exit must retain only executed hold time');
 
+// Web skip during retention must preserve the abandoned logical series when
+// the player advances and is later interrupted.
+vm.runInContext(`
+    AppState.vacuo = {
+        sessionId: 'web-safe-exit',
+        seriesTotal: 2,
+        seriesCurrent: 1,
+        currentPhase: 'vacuo',
+        isRunning: true,
+        nativeManaged: false,
+        timer: 10,
+        totalElapsedSec: 20,
+        retentionElapsedSec: 5,
+        recoveryElapsedSec: 0,
+        pausedSeconds: 0,
+        intervalId: 99
+    };
+    skipVacuoPhase();
+    advanceVacuoSeries();
+    recordVacuumSession('interrupted', true);
+`, context);
+const webSafeExitRecord = vm.runInContext('CorePersistence.sessionHistory.find(record => record.id === "web-safe-exit")', context);
+assert.deepEqual(Array.from(vm.runInContext('AppState.vacuo.retentionInterruptedSeries', context)), [1], 'Web safe exit must mark the abandoned retention series');
+assert.equal(webSafeExitRecord.completedSeries, 0, 'Web safe exit must not complete the abandoned logical series');
+assert.equal(webSafeExitRecord.retentionSeconds, 5, 'Web safe exit must retain only executed hold time');
+
 // Test applyProgressData timer protection (pauses restored sessions)
 vm.runInContext(`
     applyProgressData({
@@ -513,7 +545,7 @@ assert.equal(partialSnapshot.data.vacuo.nativeManaged, false);
 assert.equal(partialSnapshot.data.vacuo.intervalId, null);
 assert.equal(partialSnapshot.data.vacuo.totalElapsedSec, 17);
 assert.equal(partialSnapshot.data.vacuo.timer, 8);
-assert.equal(partialSnapshot.data.sessionHistory.length, 10);
+assert.equal(partialSnapshot.data.sessionHistory.length, 11);
 context.savedPartial = partialSnapshot.data;
 vm.runInContext('applyProgressData(savedPartial)', context);
 assert.equal(vm.runInContext('AppState.vacuo.sessionId', context), 'reopen-partial');

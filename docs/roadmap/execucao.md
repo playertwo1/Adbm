@@ -157,3 +157,10 @@ Próximo passo:
 - Validação GREEN: regressão real de `handleNativeVacuumState`, `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS.
 - Validação integrada: HTMLs equivalentes com SHA-256 idêntico, `git diff --check` → PASS e `bash scripts/check.sh` com JDK/SDK exigidos → PASS (`BUILD SUCCESSFUL`).
 - Limitações: auditoria independente do novo target SHA e validação em aparelho/Watch físico ainda pendentes; “Mais descanso” permanece desativado e sem incremento clínico inventado.
+
+## 2026-09-21 — E04 / saída segura Web preserva série lógica incompleta
+
+- Diagnóstico RED: o caminho real `skipVacuoPhase()` durante `vacuo`, seguido de avanço e encerramento, não registrava a série abandonada e persistia `completedSeries: 1` em uma sessão de duas séries.
+- Implementação: o estado Web mantém `retentionInterruptedSeries`, o skip no meio da retenção marca a série atual e `recordVacuumSession()` exclui séries abandonadas da métrica Web, inclusive quando o encerramento chega após avançar para outra série; o reset/estado terminal limpa o marcador.
+- Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS, cobrindo marcador, `completedSeries: 0` e `retentionSeconds: 5` no fluxo Web.
+- Limitações: auditoria independente do novo target SHA e validação em aparelho/Watch físico ainda pendentes; “Mais descanso” permanece desativado e sem incremento clínico inventado.

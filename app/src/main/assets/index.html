@@ -2817,6 +2817,7 @@
                 totalElapsedSec: 0,
                 retentionElapsedSec: 0,
                 recoveryElapsedSec: 0,
+                retentionInterruptedSeries: [],
                 pausedSeconds: 0,
                 pauseStartedAt: null,
                 phaseElapsedSec: 0,
@@ -3708,11 +3709,13 @@
             if (!AppState.vacuo.sessionId) AppState.vacuo.sessionId = `vacuum-abort-${Date.now()}`;
             finalizeVacuumPause();
             const metrics = nativeState ? deriveNativeVacuumMetrics(nativeState) : getVacuumSessionMetrics();
+            const interruptedSeries = nativeState?.retentionInterruptedSeries || AppState.vacuo.retentionInterruptedSeries || [];
+            const interruptedCount = new Set(interruptedSeries.map(Number)).size;
             const completedSeries = nativeState
-                ? countCompletedSeries(nativeState.steps, nativeState.currentStepIndex, nativeState.retentionInterruptedSeries)
-                : status === 'completed'
-                    ? Math.max(0, Number(AppState.vacuo.seriesTotal) || 1)
-                    : Math.max(0, Number(AppState.vacuo.completedSeries) || (Number(AppState.vacuo.seriesCurrent) || 1) - 1);
+                ? countCompletedSeries(nativeState.steps, nativeState.currentStepIndex, interruptedSeries)
+                : Math.max(0, (status === 'completed'
+                    ? Number(AppState.vacuo.seriesTotal) || 1
+                    : Number(AppState.vacuo.completedSeries) || (Number(AppState.vacuo.seriesCurrent) || 1) - 1) - interruptedCount);
             upsertSessionRecord({
                 id: AppState.vacuo.sessionId,
                 schemaVersion: 1,
@@ -3935,6 +3938,7 @@
             AppState.vacuo.totalElapsedSec = 0;
             AppState.vacuo.retentionElapsedSec = 0;
             AppState.vacuo.recoveryElapsedSec = 0;
+            AppState.vacuo.retentionInterruptedSeries = [];
             AppState.vacuo.pausedSeconds = 0;
             AppState.vacuo.pauseStartedAt = null;
             AppState.vacuo.phaseElapsedSec = 0;
@@ -3971,6 +3975,14 @@
             } else if (AppState.vacuo.currentPhase === 'expira') {
                 transitionVacuoPhase('vacuo');
             } else if (AppState.vacuo.currentPhase === 'vacuo') {
+                if (Number(AppState.vacuo.timer) > 0) {
+                    const interruptedSeries = Number(AppState.vacuo.seriesCurrent) || 1;
+                    const series = Array.isArray(AppState.vacuo.retentionInterruptedSeries)
+                        ? AppState.vacuo.retentionInterruptedSeries
+                        : [];
+                    if (!series.includes(interruptedSeries)) series.push(interruptedSeries);
+                    AppState.vacuo.retentionInterruptedSeries = series;
+                }
                 transitionVacuoPhase('descanso');
             } else {
                 advanceVacuoSeries();
@@ -9466,6 +9478,7 @@
                 AppState.vacuo.totalElapsedSec = 0;
                 AppState.vacuo.retentionElapsedSec = 0;
                 AppState.vacuo.recoveryElapsedSec = 0;
+                AppState.vacuo.retentionInterruptedSeries = [];
                 AppState.vacuo.pausedSeconds = 0;
                 AppState.vacuo.pauseStartedAt = null;
                 AppState.vacuo.phaseElapsedSec = 0;
