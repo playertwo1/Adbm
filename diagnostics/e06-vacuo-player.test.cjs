@@ -61,7 +61,7 @@ for (const htmlPath of htmlPaths) {
   assert.match(html, /id="vacuumSummaryModal"/, `${relativePath} must expose the session summary overlay`);
   assert.match(html, /id="vacuumFeedbackForm"/, `${relativePath} must expose optional feedback`);
   assert.match(html, /id="vacuumStartError"/, `${relativePath} must expose start failure and retry UI`);
-  assert.match(html, /id="vacuumMoreRestBtn"[^>]*disabled/, `${relativePath} must keep More rest disabled`);
+  assert.doesNotMatch(html, /vacuumMoreRestBtn|Mais descanso/, `${relativePath} must remove the out-of-scope More rest control`);
   assert.match(html, /id="vacuumWatchStatus"/, `${relativePath} must communicate real Watch availability`);
   assert.match(html, /id="vacuumTutorialBtn"[^>]*onclick="openVacuumTutorial\(\)"/, `${relativePath} tutorial must be callable from the player`);
   assert.match(html, /id="vacuumEndRetentionBtn"[^>]*onclick="endVacuumRetention\(\)"/, `${relativePath} must expose safe retention exit`);

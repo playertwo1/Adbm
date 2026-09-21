@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 20/09/2026. Status: E00–E03 concluídas; E04 em execução, com aceite integral bloqueado por decisão clínica pendente.
+Atualizado: 21/09/2026. Status: E00–E03, E05 e E06 concluídas; E04 em execução, com o item "Mais descanso" resolvido por remoção do produto (decisão registrada, sem incremento clínico inventado) — demais itens conforme `docs/roadmap/execucao.md`. SHA integrado: `706c5dafee3224b6b1de240f44401f5b5f427938`. Próxima etapa pendente: E07.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -98,10 +98,10 @@ Aceite: regras explícitas e revisadas. Dosagem não resolvida bloqueia sua impl
 Evidência contextual: [revisão de hipopressivos](https://pubmed.ncbi.nlm.nih.gov/40565470/); não valida automaticamente o protocolo do app.
 
 ### E04 — Motor de sessão
-Estado: EM EXECUÇÃO; aceite integral BLOQUEADO pelo incremento de recuperação não aprovado em E03.
+Estado: EM EXECUÇÃO; item "Mais descanso" resolvido por remoção do produto (decisão de Rafael, 21/09/2026) em vez de permanecer bloqueado aguardando aprovação clínica — nenhum incremento ou dosagem foi definido ou inventado. Demais itens seguem conforme evidências em `docs/roadmap/execucao.md`.
 - [ ] Identificar preparação, inspiração, expiração, retenção, retorno e recuperação.
 - [ ] “Encerrar retenção” registra executado e vai ao retorno/recuperação.
-- [ ] “Mais descanso” aplica incremento de E03 e atualiza tempo/estimativa. **BLOQUEADO:** E03 não define incremento aprovado.
+- [x] “Mais descanso” removido do controle e das referências do produto (HTML, diagnóstico e roadmap) por decisão registrada, em vez de manter o botão desabilitado aguardando incremento clínico não aprovado em E03. Evidência: `docs/roadmap/execucao.md`, SHA integrado `706c5dafee3224b6b1de240f44401f5b5f427938`.
 - [ ] Pausa na retenção orienta sua saída; retomada não exige continuar apneia congelada.
 - [ ] Bloquear alteração silenciosa de carga/postura em série ativa.
 - [ ] Encerrar salva parcial; não conclui automaticamente programa.
@@ -128,13 +128,13 @@ Evidência E05: `docs/roadmap/inventario-controles-e05.md`, `diagnostics/e05-vis
 [Referência](assets/design/coreflow-s25-ultra/03-vacuo-player.png)
 - [x] Mostrar postura, parâmetros, fase, contador, série, próxima etapa e estimativa reais.
 - [x] Seletores configuram a sessão antes do início.
-- [x] Ligar iniciar/pausar/retomar/pular/encerrar retenção/mais descanso/encerrar ao motor E04.
+- [x] Ligar iniciar/pausar/retomar/pular/encerrar retenção/encerrar ao motor E04; "Mais descanso" foi removido do player por decisão registrada e não integra mais o escopo do controle.
 - [x] Voz/hápticos/Watch refletem configurações reais; sem conexão fictícia.
 - [x] Tutorial abre e retorna preservando configuração.
 - [x] Falha ao iniciar não deixa timer animando; oferecer nova tentativa.
 - [x] Resumo mostra executado e solicita feedback.
 Aceite: sessão completa, parcial e pausa durante retenção verificadas; todos os controles do inventário exercitados.
-Evidência E06: `diagnostics/e06-vacuo-player.test.cjs`, equivalência byte a byte dos HTMLs, browser local em viewport padrão com configuração persistida, tutorial, iniciar/pausar/retomar, salto, saída segura da retenção, encerramento parcial e feedback opcional. “Mais descanso” permanece desativado por decisão registrada; Watch sem ponte informa indisponibilidade.
+Evidência E06: `diagnostics/e06-vacuo-player.test.cjs`, equivalência byte a byte dos HTMLs, browser local em viewport padrão com configuração persistida, tutorial, iniciar/pausar/retomar, salto, saída segura da retenção, encerramento parcial e feedback opcional. “Mais descanso” foi removido do produto por decisão registrada (Rafael, 21/09/2026), sem incremento clínico inventado; Watch sem ponte informa indisponibilidade.
 
 ### E07 — Telas 06/07: Programas e detalhe
 [Programas](assets/design/coreflow-s25-ultra/06-programas.png) · [Detalhe](assets/design/coreflow-s25-ultra/07-programa-detalhe.png)
