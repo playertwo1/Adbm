@@ -142,3 +142,10 @@ Próximo passo:
 - Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS; `cmp -s index.html app/src/main/assets/index.html`, hashes SHA-256 e `git diff --check` → PASS.
 - Validação integrada: `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → PASS; BUILD SUCCESSFUL para phone/Wear.
 - Limitações: auditoria independente do target SHA e validação em aparelho/Watch físico ainda pendentes; “Mais descanso” permanece desativado e sem incremento clínico inventado.
+
+## 2026-09-21 — E04 / agrupamento lógico das séries Kegel
+
+- Regressão RED adicionada antes da implementação: as oito fases do programa Kegel precisavam contar conjuntos lógicos, incluir a última série na conclusão Web e excluir a série ativa na interrupção nativa, sem transformar passos individuais em séries.
+- Implementação: `getProgramSteps('2', phaseIdx)` agora aplica metadados `series` explícitos por conjunto lógico; `countWorkoutSeries`/`countCompletedSeries` não usam fallback por índice de passo.
+- Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS; equivalência/hash dos HTMLs e `git diff --check` → PASS.
+- Limitações: auditoria independente do target SHA e validação em aparelho/Watch físico ainda pendentes; “Mais descanso” permanece desativado e sem incremento clínico inventado.

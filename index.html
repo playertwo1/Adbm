@@ -3584,13 +3584,50 @@
             };
         }
 
+        // Kegel phases contain several player steps per logical set. Keep the
+        // grouping explicit so metrics never promote a step or repetition to
+        // a series implicitly, and use the same metadata in Web and native
+        // completion/interruption paths.
+        function assignKegelLogicalSeries(steps, phaseIdx) {
+            if (!Array.isArray(steps)) return [];
+            return steps.map(step => {
+                if (!step || step.isRest === true) return step;
+                const title = String(step.title || '');
+                let series = 1;
+                if (phaseIdx === 0) {
+                    series = title.startsWith('Lento:') ? 1 : title.startsWith('Tiros Rápidos:') ? 2 : 3;
+                } else if (phaseIdx === 1) {
+                    const elevator = title.match(/O Elevador: Rep (\d+)\//);
+                    const quick = title.match(/Tiros Série (\d+):/);
+                    series = elevator ? Number(elevator[1]) : quick ? 6 + Number(quick[1]) : 1;
+                } else if (phaseIdx === 2) {
+                    series = title.startsWith('Isometria:') ? 1 : 2;
+                } else if (phaseIdx === 3) {
+                    const combo = title.match(/Combo (\d+)\/3:/);
+                    series = combo ? 1 + Number(combo[1]) : 1;
+                } else if (phaseIdx === 4) {
+                    const choque = title.match(/Choque (\d+)\/4:/);
+                    series = choque ? Number(choque[1]) : 1;
+                } else if (phaseIdx === 5) {
+                    const elevator = title.match(/Elevador Avançado (\d+)\/5:/);
+                    series = elevator ? Number(elevator[1]) : 1;
+                } else if (phaseIdx === 6) {
+                    const ciclo = title.match(/Ciclo (\d+)\/2:/);
+                    series = ciclo ? Number(ciclo[1]) : 1;
+                } else if (phaseIdx === 7) {
+                    series = title.startsWith('Super Tiros:') ? 3 : title.includes('Longa 2') ? 2 : 1;
+                }
+                return { ...step, series };
+            });
+        }
+
         function countWorkoutSeries(steps, endExclusive = Number.POSITIVE_INFINITY) {
             if (!Array.isArray(steps)) return 0;
             const groups = new Set();
             steps.slice(0, endExclusive).forEach((step, index) => {
                 if (!step || step.isRest === true) return;
                 const series = Number(step.series);
-                groups.add(Number.isInteger(series) && series > 0 ? `series:${series}` : `step:${index}`);
+                if (Number.isInteger(series) && series > 0) groups.add(`series:${series}`);
             });
             return groups.size;
         }
@@ -3602,7 +3639,8 @@
             steps.forEach((step, index) => {
                 if (!step || step.isRest === true) return;
                 const series = Number(step.series);
-                const key = Number.isInteger(series) && series > 0 ? `series:${series}` : `step:${index}`;
+                if (!Number.isInteger(series) || series <= 0) return;
+                const key = `series:${series}`;
                 const group = grouped.get(key) || { total: 0, completed: 0 };
                 group.total++;
                 if (index < boundary) group.completed++;
@@ -8014,7 +8052,7 @@
                             voice: `Pico máximo! Segure firme por 12 segundos!`,
                             badge: `PICO MÁXIMO 100%`
                         });
-                        return steps;
+                        return assignKegelLogicalSeries(steps, phaseIdx);
                     }
 
                     case 1: { // Semana 2: O Elevador Intermediário
@@ -8110,7 +8148,7 @@
                                 badge: `SOLTE`
                             });
                         }
-                        return steps;
+                        return assignKegelLogicalSeries(steps, phaseIdx);
                     }
 
                     case 2: { // Semana 3: Isometria Dinâmica
@@ -8162,7 +8200,7 @@
                                 badge: `SOLTE`
                             });
                         }
-                        return steps;
+                        return assignKegelLogicalSeries(steps, phaseIdx);
                     }
 
                     case 3: { // Semana 4: Simulação de Platô 1
@@ -8222,7 +8260,7 @@
                                 });
                             }
                         }
-                        return steps;
+                        return assignKegelLogicalSeries(steps, phaseIdx);
                     }
 
                     case 4: { // Semana 5: Choque de Fibras (Controle Ejaculatório)
@@ -8265,7 +8303,7 @@
                                 });
                             }
                         }
-                        return steps;
+                        return assignKegelLogicalSeries(steps, phaseIdx);
                     }
 
                     case 5: { // Semana 6: O Elevador Avançado
@@ -8314,7 +8352,7 @@
                                 badge: `BASE 5s`
                             });
                         }
-                        return steps;
+                        return assignKegelLogicalSeries(steps, phaseIdx);
                     }
 
                     case 6: { // Semana 7: Exaustão e Resistência Crítica
@@ -8379,7 +8417,7 @@
                                 badge: `SOLTE`
                             });
                         }
-                        return steps;
+                        return assignKegelLogicalSeries(steps, phaseIdx);
                     }
 
                     case 7: { // Semana 8: Polimento e Agilidade Reflexa
@@ -8436,7 +8474,7 @@
                                 badge: `RELAXAMENTO REFLEXO`
                             });
                         }
-                        return steps;
+                        return assignKegelLogicalSeries(steps, phaseIdx);
                     }
 
                     default:

@@ -28,6 +28,7 @@ const source = [
     extractFunction('localDateKey'),
     extractFunction('synchronizeProgramProgress'),
     extractFunction('getProgramSteps'),
+    extractFunction('assignKegelLogicalSeries'),
     extractFunction('countWorkoutSeries'),
     extractFunction('countCompletedSeries'),
     extractFunction('deriveDailySessionMetrics'),
@@ -126,6 +127,19 @@ assert.equal(history1[0].retentionSeconds, 0, 'daily session retention must not 
 // retention, return, and recovery phases.
 assert.equal(vm.runInContext('countWorkoutSeries(getProgramSteps("3", 0))', context), 3, 'planned series must count logical sets, not phases');
 assert.equal(vm.runInContext('countCompletedSeries(getProgramSteps("3", 0), 4)', context), 1, 'completed series must require every work phase in the set');
+
+// Kegel steps must carry explicit logical-set metadata; individual phases or
+// repetitions must not become implicit series, and Web/native boundaries must
+// agree when the final step is reached or interrupted before it.
+const kegelExpectedSeries = [3, 8, 2, 4, 4, 5, 2, 3];
+kegelExpectedSeries.forEach((expected, phaseIndex) => {
+    const expression = `getProgramSteps("2", ${phaseIndex})`;
+    assert.equal(vm.runInContext(`countWorkoutSeries(${expression})`, context), expected, `Kegel phase ${phaseIndex + 1} planned series must use logical sets`);
+    assert.equal(vm.runInContext(`(${expression}).filter(step => !step.isRest).every(step => Number.isInteger(step.series) && step.series > 0)`, context), true, `Kegel phase ${phaseIndex + 1} work steps need explicit series metadata`);
+    assert.equal(vm.runInContext(`countCompletedSeries(${expression}, (${expression}).length)`, context), expected, `Kegel phase ${phaseIndex + 1} Web completion must include the final logical set`);
+    const finalWorkBoundary = `Math.max(...(${expression}).map((step, index) => step.isRest ? -1 : index))`;
+    assert.equal(vm.runInContext(`countCompletedSeries(${expression}, ${finalWorkBoundary})`, context), expected - 1, `Kegel phase ${phaseIndex + 1} native interruption must exclude the active final set`);
+});
 
 // Active web/native sessions reject silent posture or load changes, including
 // the quick-action shortcut.
@@ -333,9 +347,9 @@ vm.runInContext(`
         isPaused: false,
         totalSessionElapsed: 30,
         steps: [
-            { isRest: false, duration: 10 },
-            { isRest: true, duration: 10 },
-            { isRest: false, duration: 10 }
+            { isRest: false, duration: 10, series: 1 },
+            { isRest: true, duration: 10, series: 1 },
+            { isRest: false, duration: 10, series: 2 }
         ]
     };
     abortDailySession(true);
@@ -472,6 +486,32 @@ vm.runInContext(`
 `, context);
 assert.equal(vm.runInContext('AppState.vacuo.sessionId', context), 'native-owned');
 assert.equal(vm.runInContext('AppState.vacuo.isRunning', context), true);
+
+// Exercise the real daily Web completion/interruption paths with program 2,
+// not only the metric helpers used by the native callback.
+vm.runInContext(`
+    AppState.dailyExecution = (() => {
+        const steps = getProgramSteps('2', 0);
+        return { sessionId: 'test-kegel-web-complete', programId: '2', phaseIndex: 0, currentStepIndex: steps.length, totalSessionElapsed: 1, steps };
+    })();
+    finishDailySession();
+`, context);
+const kegelWebComplete = vm.runInContext('CorePersistence.sessionHistory.find(record => record.id === "test-kegel-web-complete")', context);
+assert.equal(kegelWebComplete.plannedSeries, 3, 'Kegel Web completion must persist logical planned series');
+assert.equal(kegelWebComplete.completedSeries, 3, 'Kegel Web completion must include the final logical series');
+
+vm.runInContext(`
+    AppState.dailyExecution = (() => {
+        const steps = getProgramSteps('2', 0);
+        const finalWorkIndex = Math.max(...steps.map((step, index) => step.isRest ? -1 : index));
+        return { sessionId: 'test-kegel-native-interrupted', programId: '2', phaseIndex: 0, currentStepIndex: finalWorkIndex, totalSessionElapsed: 1, steps };
+    })();
+    abortDailySession(true);
+`, context);
+const kegelNativeInterrupted = vm.runInContext('CorePersistence.sessionHistory.find(record => record.id === "test-kegel-native-interrupted")', context);
+assert.equal(kegelNativeInterrupted.plannedSeries, 3, 'Kegel native interruption must preserve logical planned series');
+assert.equal(kegelNativeInterrupted.completedSeries, 2, 'Kegel native interruption must exclude the active final series');
+assert.equal(kegelNativeInterrupted.interrupted, true, 'Kegel native interruption must persist interrupted=true');
 
 // The native notification stop path must emit interrupted, not canceled.
 assert.match(service, /ACTION_STOP -> stopSession\(interrupted = true\)/);
