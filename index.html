@@ -1898,7 +1898,7 @@
                     </div>
 
                     <div class="pt-1 flex gap-2">
-                        <button onclick="openDailyExecutionModal('2')" class="flex-1 py-3.5 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 active:scale-95 text-slate-950 font-extrabold text-sm rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition">
+                        <button id="heroWorkoutActionBtn" onclick="startHeroWorkout()" class="flex-1 py-3.5 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 active:scale-95 text-slate-950 font-extrabold text-sm rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition">
                             <i class="fa-solid fa-play"></i>
                             <span id="heroWorkoutButtonText">Iniciar Treino Guiado Passo a Passo</span>
                         </button>
@@ -2894,6 +2894,7 @@
             activityLog: {},
             unlockedAchievements: [],
             pushNotificationsEnabled: false,
+            programDetailState: null,
 
             dailyExecution: {
                 isRunning: false,
@@ -9178,7 +9179,7 @@
             const informalDone = prog.informalCompletedDate === localDateKey();
             const secondaryButton = phase.secondaryTrack ? `<button onclick="openMindfulnessAudioModal('4', ${phaseIdx}, 'secondary')" class="w-full rounded-xl border border-violet-400/30 bg-violet-500/10 py-3 text-xs font-bold text-violet-200"><i class="fa-solid fa-wind mr-2"></i>${phase.secondaryTrackTitle}</button>` : '';
             const weeks = prog.phases.map((item, index) => `<button onclick="openMindfulnessAudioModal('4', ${index}, 'formal')" class="flex w-full items-center gap-3 border-t border-slate-700/50 py-3 text-left"><span class="flex h-7 w-7 items-center justify-center rounded-full ${index === phaseIdx ? 'bg-violet-500 text-white' : 'bg-slate-800 text-slate-400'} text-xs font-bold">${index + 1}</span><span class="flex-1"><strong class="block text-xs ${item.completed ? 'text-emerald-400' : 'text-slate-200'}">${item.title}</strong><small class="text-[10px] text-slate-500">${item.formalTrackTitle}</small></span><i class="fa-solid fa-play text-xs text-violet-400"></i></button>`).join('');
-            return `<div class="overflow-hidden rounded-3xl border border-violet-400/30 bg-gradient-to-br from-violet-950/80 via-slate-900 to-slate-950 shadow-2xl shadow-violet-950/30"><div class="p-5"><div class="flex items-start gap-3"><div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/20 text-xl text-violet-300"><i class="fa-solid fa-brain"></i></div><div class="flex-1"><span class="rounded-full bg-violet-500/15 px-2 py-1 text-[9px] font-black uppercase tracking-wider text-violet-300">Mindfulness & Mente</span><h3 class="mt-2 text-lg font-black text-white">${prog.title}</h3><p class="text-xs text-slate-400">${phase.title}</p></div></div><div class="mt-4"><div class="mb-1 flex justify-between text-[11px] text-slate-400"><span>Progresso semanal</span><strong class="text-violet-300">${days}/6 dias</strong></div><div class="h-2 overflow-hidden rounded-full bg-slate-800"><div class="h-full bg-gradient-to-r from-violet-600 to-fuchsia-400" style="width:${Math.min(100, days / 6 * 100)}%"></div></div></div><div class="mt-4 rounded-2xl border border-violet-400/20 bg-slate-950/50 p-4"><div class="flex gap-3"><i class="fa-solid fa-leaf mt-1 text-emerald-400"></i><div class="flex-1"><strong class="text-xs text-white">${phase.informalTitle}</strong><p class="mt-1 text-[11px] leading-relaxed text-slate-400">${phase.informalDescription}</p></div></div><button onclick="toggleMindfulnessInformal()" class="mt-3 w-full rounded-xl py-2 text-xs font-bold ${informalDone ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-300'}"><i class="fa-solid ${informalDone ? 'fa-circle-check' : 'fa-circle'} mr-2"></i>${informalDone ? 'Prática informal concluída hoje' : 'Marcar prática informal de hoje'}</button></div><div class="mt-4 space-y-2"><button onclick="openMindfulnessAudioModal('4', ${phaseIdx}, 'formal')" class="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-700 py-3.5 text-xs font-black text-white"><i class="fa-solid fa-headphones mr-2"></i>Iniciar Prática Formal (${sessions}/${prog.dailyTarget})</button>${secondaryButton}</div><button onclick="toggleProgramExpand(${pIdx})" class="mt-4 w-full text-xs font-bold text-violet-300">${prog.expanded ? 'Ocultar semanas' : 'Ver as 8 semanas'} <i class="fa-solid fa-chevron-${prog.expanded ? 'up' : 'down'} ml-1"></i></button></div><div class="${prog.expanded ? 'block' : 'hidden'} border-t border-violet-400/20 bg-black/15 px-5 pb-3">${weeks}</div></div>`;
+            return `<div data-program-id="${prog.id}" class="overflow-hidden rounded-3xl border border-violet-400/30 bg-gradient-to-br from-violet-950/80 via-slate-900 to-slate-950 shadow-2xl shadow-violet-950/30"><div class="p-5"><div class="flex items-start gap-3"><div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/20 text-xl text-violet-300"><i class="fa-solid fa-brain"></i></div><div class="flex-1"><span class="rounded-full bg-violet-500/15 px-2 py-1 text-[9px] font-black uppercase tracking-wider text-violet-300">Mindfulness & Mente</span><h3 class="mt-2 text-lg font-black text-white">${prog.title}</h3><p class="text-xs text-slate-400">${phase.title}</p></div></div><div class="mt-4"><div class="mb-1 flex justify-between text-[11px] text-slate-400"><span>Progresso semanal</span><strong class="text-violet-300">${days}/6 dias</strong></div><div class="h-2 overflow-hidden rounded-full bg-slate-800"><div class="h-full bg-gradient-to-r from-violet-600 to-fuchsia-400" style="width:${Math.min(100, days / 6 * 100)}%"></div></div></div><div class="mt-4 rounded-2xl border border-violet-400/20 bg-slate-950/50 p-4"><div class="flex gap-3"><i class="fa-solid fa-leaf mt-1 text-emerald-400"></i><div class="flex-1"><strong class="text-xs text-white">${phase.informalTitle}</strong><p class="mt-1 text-[11px] leading-relaxed text-slate-400">${phase.informalDescription}</p></div></div><button onclick="toggleMindfulnessInformal()" class="mt-3 w-full rounded-xl py-2 text-xs font-bold ${informalDone ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-300'}"><i class="fa-solid ${informalDone ? 'fa-circle-check' : 'fa-circle'} mr-2"></i>${informalDone ? 'Prática informal concluída hoje' : 'Marcar prática informal de hoje'}</button></div><div class="mt-4 space-y-2"><button onclick="openMindfulnessAudioModal('4', ${phaseIdx}, 'formal')" class="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-700 py-3.5 text-xs font-black text-white"><i class="fa-solid fa-headphones mr-2"></i>Iniciar Prática Formal (${sessions}/${prog.dailyTarget})</button>${secondaryButton}</div><button onclick="toggleProgramExpand(${pIdx})" class="mt-4 w-full text-xs font-bold text-violet-300">${prog.expanded ? 'Ocultar semanas' : 'Ver as 8 semanas'} <i class="fa-solid fa-chevron-${prog.expanded ? 'up' : 'down'} ml-1"></i></button></div><div class="${prog.expanded ? 'block' : 'hidden'} border-t border-violet-400/20 bg-black/15 px-5 pb-3">${weeks}</div></div>`;
         }
 
         function synchronizeProgramProgress(program) {
@@ -9201,18 +9202,62 @@
             return program;
         }
 
+        let heroActiveProgramId = null;
+
+        function selectHeroProgram() {
+            const detailProgramId = AppState.programDetailState?.programId;
+            const detailProgram = detailProgramId ? AppState.programs.find(p => p.id === detailProgramId && p.type !== 'mindfulness') : null;
+            if (detailProgram) return detailProgram;
+            const inProgress = AppState.programs.find(p => p.type !== 'mindfulness' && !p.programCompleted);
+            if (inProgress) return inProgress;
+            return AppState.programs.find(p => p.type !== 'mindfulness') || null;
+        }
+
+        function renderProgramsListEmptyState(container) {
+            container.innerHTML = `
+                <div id="programsListEmpty" class="rounded-3xl border border-slate-700/60 bg-slate-900/60 p-6 text-center text-sm text-slate-300">
+                    <i class="fa-solid fa-clipboard-list text-2xl text-slate-500 mb-2"></i>
+                    <p class="font-bold text-white">Nenhum programa disponível ainda</p>
+                    <p class="mt-1 text-xs text-slate-400">Não há histórico de sessões nem programas cadastrados neste momento.</p>
+                </div>
+            `;
+        }
+
+        function renderProgramsListErrorState(container) {
+            container.innerHTML = `
+                <div id="programsListError" class="rounded-3xl border border-amber-500/40 bg-amber-500/10 p-6 text-center text-sm text-amber-100">
+                    <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-300 mb-2"></i>
+                    <p class="font-bold text-white">Não foi possível ler seus programas</p>
+                    <p class="mt-1 text-xs text-amber-100/80">${CorePersistence.message || 'Parte do seu progresso não pôde ser carregada. Os dados existentes foram preservados.'}</p>
+                    <button onclick="retryProgressPersistence()" class="mt-4 rounded-xl bg-amber-500 px-4 py-2 text-xs font-bold text-slate-950">Tentar novamente</button>
+                </div>
+            `;
+        }
+
         function renderProgramsList() {
             const container = document.getElementById('programsListContainer');
             if (!container) return;
             container.innerHTML = '';
 
-            // Update Hero Banner with Active Program Info
-            const mainProg = AppState.programs.find(p => p.id === '2') || AppState.programs[0];
+            if (CorePersistence.status === 'recoveryRequired') {
+                renderProgramsListErrorState(container);
+                return;
+            }
+            if (!Array.isArray(AppState.programs) || AppState.programs.length === 0) {
+                renderProgramsListEmptyState(container);
+                return;
+            }
+
+            // Update Hero Banner with the program actually selected/displayed (no fixed ID/meta).
+            const mainProg = selectHeroProgram();
+            heroActiveProgramId = mainProg ? mainProg.id : null;
             if (mainProg) {
                 synchronizeProgramProgress(mainProg);
                 const activePh = mainProg.phases[mainProg.currentPhaseIndex || 0] || mainProg.phases[0];
                 const sToday = mainProg.sessionsToday || 0;
-                const currentDay = mainProg.currentDayInWeek || Math.min((mainProg.daysCompletedInPhase || 0) + 1, 7);
+                const targetSessions = mainProg.dailyTarget || 1;
+                const weeklyTargetDays = activePh.weeklyTargetDays || 7;
+                const currentDay = mainProg.currentDayInWeek || Math.min((mainProg.daysCompletedInPhase || 0) + 1, weeklyTargetDays);
                 const daysCompleted = mainProg.daysCompletedInPhase || 0;
 
                 const heroTitle = document.getElementById('heroWorkoutProgramTitle');
@@ -9221,16 +9266,16 @@
                 const heroBtn = document.getElementById('heroWorkoutButtonText');
 
                 if (heroTitle) heroTitle.innerText = mainProg.title;
-                if (heroSub) heroSub.innerText = `${activePh.title} • Dia ${currentDay} de 7 (${daysCompleted}/7 dias concluídos)`;
+                if (heroSub) heroSub.innerText = `${activePh.title} • Dia ${currentDay} de ${weeklyTargetDays} (${daysCompleted}/${weeklyTargetDays} dias concluídos)`;
                 if (heroBadge) {
-                    heroBadge.innerText = `${sToday}/2 Sessões Hoje`;
-                    heroBadge.className = `text-xs font-black px-2.5 py-0.5 rounded-full border ${sToday >= 2 ? 'text-emerald-300 bg-emerald-950/80 border-emerald-400/40' : 'text-amber-300 bg-black/40 border-amber-400/30'}`;
+                    heroBadge.innerText = `${sToday}/${targetSessions} Sessões Hoje`;
+                    heroBadge.className = `text-xs font-black px-2.5 py-0.5 rounded-full border ${sToday >= targetSessions ? 'text-emerald-300 bg-emerald-950/80 border-emerald-400/40' : 'text-amber-300 bg-black/40 border-amber-400/30'}`;
                 }
                 if (heroBtn) {
                     if (mainProg.programCompleted) heroBtn.innerText = 'Programa de 8 semanas concluído ✓ • Repetir sessão final';
-                    else if (sToday === 0) heroBtn.innerText = `Iniciar Sessão 1/2 (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
-                    else if (sToday === 1) heroBtn.innerText = `Iniciar Sessão 2/2 (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
-                    else heroBtn.innerText = `Meta Diária Concluída (2/2) ✓ - Repetir Treino`;
+                    else if (sToday === 0) heroBtn.innerText = `Iniciar Sessão 1/${targetSessions} (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
+                    else if (sToday < targetSessions) heroBtn.innerText = `Iniciar Sessão ${sToday + 1}/${targetSessions} (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
+                    else heroBtn.innerText = `Meta Diária Concluída (${targetSessions}/${targetSessions}) ✓ - Repetir Treino`;
                 }
             }
 
@@ -9324,6 +9369,11 @@
 
                 let phasesHtml = prog.phases.map((phase, i) => {
                     const isCurrent = i === activePhaseIdx;
+                    const repeatBtnHtml = phase.completed
+                        ? `<button onclick="event.stopPropagation(); repeatProgramPhase('${prog.id}', ${i})" title="Repetir esta etapa sem apagar diário/histórico" class="p-2 text-slate-400 hover:text-amber-400 transition text-xs">
+                                <i class="fa-solid fa-rotate-left"></i>
+                            </button>`
+                        : '';
                     return `
                         <div class="flex items-start gap-3 py-3 border-b border-slate-700/40 last:border-0 transition ${isCurrent ? 'bg-slate-750/30 -mx-2 px-2 rounded-xl' : ''}">
                             <div class="w-6 h-6 rounded-md border flex items-center justify-center transition-all mt-0.5 cursor-pointer ${phase.completed ? 'bg-indigo-500 border-indigo-500 text-white' : 'border-slate-600 bg-slate-800 text-transparent'}" onclick="toggleProgramPhase(${pIdx}, ${i})">
@@ -9336,6 +9386,7 @@
                                 </div>
                                 <p class="text-[11px] ${phase.completed ? 'text-slate-600' : 'text-slate-400'} mt-0.5 leading-relaxed">${phase.details}</p>
                             </div>
+                            ${repeatBtnHtml}
                             <button onclick="event.stopPropagation(); openDailyExecutionModal('${prog.id}', ${i})" title="Treinar esta Fase" class="p-2 text-slate-400 hover:text-indigo-400 transition text-xs">
                                 <i class="fa-solid fa-play"></i>
                             </button>
@@ -9344,11 +9395,11 @@
                 }).join('');
 
                 container.innerHTML += `
-                    <div class="bg-slate-850 rounded-3xl overflow-hidden border border-slate-700/80 shadow-2xl transition-all">
+                    <div data-program-id="${prog.id}" class="bg-slate-850 rounded-3xl overflow-hidden border border-slate-700/80 shadow-2xl transition-all">
                         <div class="p-5">
                             <!-- Card Header -->
                             <div class="flex items-start justify-between">
-                                <div class="flex-1 pr-3 cursor-pointer" onclick="toggleProgramExpand(${pIdx})">
+                                <div class="flex-1 pr-3 cursor-pointer" onclick="openProgramDetail('${prog.id}')">
                                     <h3 class="text-lg font-bold text-white tracking-tight">${prog.title}</h3>
                                     <p class="text-xs text-slate-400 mt-1 leading-relaxed">${prog.description}</p>
                                     ${progressionReviewHtml}
@@ -9428,6 +9479,60 @@
             triggerHaptic([10]);
             AppState.programs[pIdx].expanded = !AppState.programs[pIdx].expanded;
             renderProgramsList();
+        }
+
+        // Rota de detalhe por ID: abre/expande exatamente o programa selecionado e
+        // persiste a posição visitada (programId + fase) para reabertura sem alterar o progresso.
+        function openProgramDetail(programId) {
+            const pIdx = AppState.programs.findIndex(p => p.id === programId);
+            if (pIdx === -1) {
+                console.log('openProgramDetail: ID de programa inválido', programId);
+                showInlineToast('Não foi possível abrir esse programa: ID inválido.');
+                return;
+            }
+            triggerHaptic([10]);
+            const program = AppState.programs[pIdx];
+            program.expanded = true;
+            synchronizeProgramProgress(program);
+            AppState.programDetailState = {
+                programId: program.id,
+                phaseIndex: program.currentPhaseIndex || 0,
+                visitedAt: new Date().toISOString()
+            };
+            saveState();
+            renderProgramsList();
+        }
+
+        function startHeroWorkout() {
+            if (!heroActiveProgramId) return;
+            openDailyExecutionModal(heroActiveProgramId);
+        }
+
+        // Repete uma etapa concluída sem apagar diário/histórico/minutos: apenas
+        // reposiciona a fase ativa para uma etapa conhecida (prévia explícita, sem
+        // gerar sessão nem minutos retroativos).
+        function repeatProgramPhase(programId, phaseIndex) {
+            const program = AppState.programs.find(p => p.id === programId);
+            if (!program || !program.phases[phaseIndex]) return;
+            if (AppState.dailyExecution.isRunning || AppState.dailyExecution.isPaused) {
+                showInlineToast('Encerre a sessão em andamento antes de repetir uma etapa.');
+                return;
+            }
+            triggerHaptic([20]);
+            // Mantém etapas anteriores concluídas e desmarca esta e as seguintes,
+            // para que a posição manual não seja sobrescrita por synchronizeProgramProgress.
+            program.phases.forEach((phase, index) => { if (index >= phaseIndex) phase.completed = false; });
+            program.currentPhaseIndex = phaseIndex;
+            program.daysCompletedInPhase = 0;
+            program.currentDayInWeek = 1;
+            program.sessionsToday = 0;
+            program.programCompleted = false;
+            program.lastManualAdjustment = { at: new Date().toISOString(), week: phaseIndex + 1, day: 1, sessionsToday: 0, reason: 'repeat-phase' };
+            AppState.programDetailState = { programId: program.id, phaseIndex, visitedAt: new Date().toISOString() };
+            if (!saveState()) { showInlineToast('Não foi possível salvar a repetição da etapa.'); return; }
+            renderProgramsList();
+            syncAllNativeReminders();
+            showInlineToast('Etapa reiniciada para revisão, sem apagar diário ou histórico.');
         }
 
         function toggleProgramPhase(pIdx, phaseIdx) {
@@ -9531,7 +9636,7 @@
         /* -------------------------------------------------------------
            WORKOUT SESSION PLAYER ENGINE (COM PAUSA, CONTROLES E CANCELAMENTO)
         ------------------------------------------------------------- */
-        function openDailyExecutionModal(programId = '2', phaseIndex = null) {
+        function openDailyExecutionModal(programId, phaseIndex = null) {
             triggerHaptic([30]);
 
             if (window.AndroidBridge?.getWorkoutState) {
@@ -9546,7 +9651,12 @@
                 }
             }
 
-            const prog = AppState.programs.find(p => p.id === programId) || AppState.programs[1] || AppState.programs[0];
+            const prog = AppState.programs.find(p => p.id === programId);
+            if (!prog) {
+                console.log('openDailyExecutionModal: ID de programa inválido', programId);
+                showInlineToast('Não foi possível abrir esse programa: ID inválido.');
+                return;
+            }
             synchronizeProgramProgress(prog);
             let pIdx = phaseIndex;
             if (pIdx === null || typeof pIdx === 'undefined') {
@@ -11841,6 +11951,10 @@
             AppState.pausas.history = Array.isArray(data.corpoHistory) ? data.corpoHistory : [];
             AppState.mente.customPresets = Array.isArray(data.customPresets) ? data.customPresets : AppState.mente.customPresets;
             AppState.pushNotificationsEnabled = data.pushEnabled === true || AppState.programs.some(program => program.remindersEnabled === true);
+            AppState.programDetailState = (data.programDetailState && typeof data.programDetailState === 'object' && typeof data.programDetailState.programId === 'string'
+                && AppState.programs.some(p => p.id === data.programDetailState.programId))
+                ? data.programDetailState
+                : null;
             CorePersistence.completedSessionIds = Array.isArray(data.completedSessionIds) ? data.completedSessionIds.filter(value => typeof value === 'string').slice(-200) : [];
             CorePersistence.sessionHistory = normalizeSessionHistory(data.sessionHistory);
             if (data.responsivePause && typeof responsivePause !== 'undefined') {
@@ -11942,7 +12056,8 @@
                     history: responsivePause.history, historyEnabled: responsivePause.historyEnabled
                 } : undefined,
                 vacuo: { ...AppState.vacuo, intervalId: null },
-                dailyExecution: { ...AppState.dailyExecution, intervalId: null }
+                dailyExecution: { ...AppState.dailyExecution, intervalId: null },
+                programDetailState: AppState.programDetailState || null
             };
         }
 
