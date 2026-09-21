@@ -126,14 +126,15 @@ Evidência E05: `docs/roadmap/inventario-controles-e05.md`, `diagnostics/e05-vis
 
 ### E06 — Tela 03: Vácuo
 [Referência](assets/design/coreflow-s25-ultra/03-vacuo-player.png)
-- [ ] Mostrar postura, parâmetros, fase, contador, série, próxima etapa e estimativa reais.
-- [ ] Seletores configuram a sessão antes do início.
-- [ ] Ligar iniciar/pausar/retomar/pular/encerrar retenção/mais descanso/encerrar ao motor E04.
-- [ ] Voz/hápticos/Watch refletem configurações reais; sem conexão fictícia.
-- [ ] Tutorial abre e retorna preservando configuração.
-- [ ] Falha ao iniciar não deixa timer animando; oferecer nova tentativa.
-- [ ] Resumo mostra executado e solicita feedback.
+- [x] Mostrar postura, parâmetros, fase, contador, série, próxima etapa e estimativa reais.
+- [x] Seletores configuram a sessão antes do início.
+- [x] Ligar iniciar/pausar/retomar/pular/encerrar retenção/mais descanso/encerrar ao motor E04.
+- [x] Voz/hápticos/Watch refletem configurações reais; sem conexão fictícia.
+- [x] Tutorial abre e retorna preservando configuração.
+- [x] Falha ao iniciar não deixa timer animando; oferecer nova tentativa.
+- [x] Resumo mostra executado e solicita feedback.
 Aceite: sessão completa, parcial e pausa durante retenção verificadas; todos os controles do inventário exercitados.
+Evidência E06: `diagnostics/e06-vacuo-player.test.cjs`, equivalência byte a byte dos HTMLs, browser local em viewport padrão com configuração persistida, tutorial, iniciar/pausar/retomar, salto, saída segura da retenção, encerramento parcial e feedback opcional. “Mais descanso” permanece desativado por decisão registrada; Watch sem ponte informa indisponibilidade.
 
 ### E07 — Telas 06/07: Programas e detalhe
 [Programas](assets/design/coreflow-s25-ultra/06-programas.png) · [Detalhe](assets/design/coreflow-s25-ultra/07-programa-detalhe.png)

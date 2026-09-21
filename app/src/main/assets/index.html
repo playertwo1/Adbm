@@ -362,6 +362,12 @@
                         <button onclick="setVacuumDuration(30)" class="vac-dur-btn px-2 py-0.5 text-xs rounded-lg font-mono font-semibold bg-slate-900 border border-slate-700 text-slate-400" data-dur="30">30s</button>
                     </div>
                 </div>
+                <div class="mt-3 grid grid-cols-2 gap-2 text-[11px]" aria-live="polite">
+                    <div class="rounded-xl border border-slate-700/60 bg-slate-900/60 p-2"><span class="block text-slate-500">Postura</span><strong id="vacPostureValue" class="text-slate-200">Deitado</strong></div>
+                    <div class="rounded-xl border border-slate-700/60 bg-slate-900/60 p-2"><span class="block text-slate-500">Parâmetros</span><strong id="vacParametersValue" class="text-slate-200">4s · 6s · 15s · 60s</strong></div>
+                    <div class="rounded-xl border border-slate-700/60 bg-slate-900/60 p-2"><span class="block text-slate-500">Próxima etapa</span><strong id="vacNextStep" class="text-cyan-200">Inspira</strong></div>
+                    <div class="rounded-xl border border-slate-700/60 bg-slate-900/60 p-2"><span class="block text-slate-500">Estimativa</span><strong id="vacEstimate" class="text-emerald-200">05:00</strong></div>
+                </div>
             </div>
 
             <!-- Central Animated Vacuum Ring & Breathing Player -->
@@ -429,19 +435,37 @@
             </div>
 
             <!-- Player Controls -->
-            <div class="grid grid-cols-3 gap-3">
-                <button onclick="resetVacuo()" class="py-3.5 px-4 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 rounded-2xl text-slate-300 font-bold flex items-center justify-center gap-2 transition shadow-md">
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="resetVacuo()" class="cf-btn py-3.5 px-4 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 rounded-2xl text-slate-300 font-bold flex items-center justify-center gap-2 transition shadow-md">
                     <i class="fa-solid fa-arrows-rotate text-slate-400"></i>
                     <span>Reset</span>
                 </button>
-                <button id="btnPlayVacuo" onclick="togglePlayVacuo()" class="py-3.5 px-4 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-extrabold rounded-full flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition">
+                <button id="btnPlayVacuo" onclick="togglePlayVacuo()" class="cf-btn py-3.5 px-4 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-extrabold rounded-full flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition">
                     <i id="vacPlayIcon" class="fa-solid fa-play"></i>
                     <span id="vacPlayText">Iniciar</span>
                 </button>
-                <button onclick="skipVacuoPhase()" class="py-3.5 px-4 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 rounded-2xl text-slate-300 font-bold flex items-center justify-center gap-2 transition shadow-md">
+                <button onclick="skipVacuoPhase()" class="cf-btn py-3.5 px-4 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 rounded-2xl text-slate-300 font-bold flex items-center justify-center gap-2 transition shadow-md">
                     <span>Pular</span>
                     <i class="fa-solid fa-forward-step text-slate-400"></i>
                 </button>
+                <button id="vacuumEndRetentionBtn" onclick="endVacuumRetention()" class="cf-btn py-3.5 px-4 bg-cyan-500/10 hover:bg-cyan-500/20 active:scale-95 border border-cyan-400/30 rounded-2xl text-cyan-200 font-bold flex items-center justify-center gap-2 transition shadow-md">
+                    <span>Encerrar retenção</span>
+                    <i class="fa-solid fa-person-running text-cyan-300"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <button id="vacuumTutorialBtn" onclick="openVacuumTutorial()" class="cf-btn min-h-12 border border-slate-700 bg-slate-900 text-xs text-slate-200"><i class="fa-solid fa-circle-info"></i><span>Tutorial</span></button>
+                <button id="vacuumMoreRestBtn" type="button" disabled aria-disabled="true" title="Indisponível: incremento de descanso não aprovado" class="cf-btn min-h-12 border border-slate-800 bg-slate-950 text-xs text-slate-600 cursor-not-allowed"><i class="fa-solid fa-bed"></i><span>Mais descanso</span></button>
+                <button onclick="finishVacuumSession(false)" class="cf-btn min-h-12 border border-rose-400/30 bg-rose-500/10 text-xs text-rose-200"><i class="fa-solid fa-stop"></i><span>Encerrar</span></button>
+            </div>
+            <div id="vacuumStartError" class="cf-error hidden rounded-xl p-3 text-xs" role="alert" aria-live="assertive">
+                <strong class="block text-rose-200">Não foi possível iniciar o vácuo.</strong>
+                <span id="vacuumStartErrorText">Verifique o estado da sessão e tente novamente.</span>
+                <button type="button" onclick="retryVacuumStart()" class="mt-2 rounded-lg border border-rose-300/40 px-3 py-2 font-bold text-rose-100">Tentar novamente</button>
+            </div>
+            <div class="rounded-xl border border-slate-700/60 bg-slate-900/60 p-3 text-xs" aria-live="polite">
+                <span class="font-bold text-slate-300">Galaxy Watch:</span>
+                <span id="vacuumWatchStatus" class="text-slate-400">Indisponível — os sinais permanecem no aparelho.</span>
             </div>
 
             <!-- Guia de Postura & Execução Rápida -->
@@ -2704,6 +2728,26 @@
         </div>
     </div>
 
+    <div id="vacuumTutorialModal" class="cf-modal hidden fixed inset-0 z-[125] bg-black/90 backdrop-blur-md p-4" role="dialog" aria-modal="true" aria-labelledby="vacuumTutorialTitle">
+        <div class="mx-auto flex h-full max-w-md flex-col justify-center">
+            <div class="cf-card space-y-4 p-5">
+                <div class="flex items-start justify-between gap-3"><div><p class="text-[10px] font-black uppercase tracking-[.18em] text-cyan-300">Tutorial Vácuo</p><h2 id="vacuumTutorialTitle" class="mt-1 text-xl font-black text-white">Saída segura e recuperação</h2></div><button type="button" onclick="closeVacuumTutorial()" aria-label="Fechar tutorial" class="cf-icon border border-slate-700 bg-slate-900 text-slate-300"><i class="fa-solid fa-xmark"></i></button></div>
+                <ol class="space-y-3 text-sm leading-relaxed text-slate-300"><li><strong class="text-cyan-200">1 · Postura:</strong> escolha uma postura confortável antes de iniciar.</li><li><strong class="text-cyan-200">2 · Preparação:</strong> inspire, expire e só então entre no vácuo.</li><li><strong class="text-cyan-200">3 · Execução:</strong> use “Encerrar retenção” se precisar respirar; o motor segue para recuperação.</li><li><strong class="text-cyan-200">4 · Saída:</strong> respire normalmente no descanso antes de continuar.</li></ol>
+                <button type="button" onclick="closeVacuumTutorial()" class="cf-btn w-full bg-emerald-500 px-4 py-3 text-sm text-slate-950">Voltar à configuração</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="vacuumSummaryModal" class="cf-modal hidden fixed inset-0 z-[126] bg-black/90 backdrop-blur-md p-4" role="dialog" aria-modal="true" aria-labelledby="vacuumSummaryTitle">
+        <div class="mx-auto flex h-full max-w-md flex-col justify-center">
+            <div class="cf-card space-y-4 p-5">
+                <div><p class="text-[10px] font-black uppercase tracking-[.18em] text-emerald-300">Resumo da sessão</p><h2 id="vacuumSummaryTitle" class="mt-1 text-xl font-black text-white">Execução registrada</h2></div>
+                <div id="vacuumSummaryContent" class="grid grid-cols-2 gap-2 text-xs" aria-live="polite"></div>
+                <form id="vacuumFeedbackForm" class="space-y-3" onsubmit="submitVacuumFeedback(event)"><label for="vacuumFeedbackSelect" class="block text-xs font-bold text-slate-300">Como foi? (opcional)</label><select id="vacuumFeedbackSelect" class="w-full rounded-xl border border-slate-700 bg-slate-900 px-3 py-3 text-sm text-white"><option value="">Não responder</option><option value="comfortable">Confortável</option><option value="difficult">Difícil</option><option value="interrupted">Interrompi</option></select><button type="submit" class="cf-btn w-full bg-emerald-500 px-4 py-3 text-sm text-slate-950">Salvar e continuar</button></form>
+            </div>
+        </div>
+    </div>
+
     <!-- Hidden Printable Report for PDF Export -->
     <div id="printReportContainer" class="hidden print-only p-8 text-black bg-white">
         <div style="border-bottom: 2px solid #059669; padding-bottom: 12px; margin-bottom: 16px;">
@@ -2872,6 +2916,7 @@
                 expireDuration: 6,
                 restDuration: 60,
                 currentPhase: 'ready', // 'ready', 'inspira', 'expira', 'vacuo', 'descanso'
+                isPaused: false,
                 timer: 0,
                 seriesCurrent: 1,
                 seriesTotal: 5,
@@ -2884,6 +2929,7 @@
                 pauseStartedAt: null,
                 phaseElapsedSec: 0,
                 sessionId: null,
+                lastSummary: null,
             },
 
             // Desk mode state
@@ -3144,6 +3190,13 @@
                 const hasRealStats = storedVersion >= 2;
                 const savedSchedule = localStorage.getItem('coreflow_schedule');
                 if (savedSchedule) AppState.schedule = JSON.parse(savedSchedule);
+                const savedVacuumConfig = localStorage.getItem('coreflow_vacuum_config');
+                if (savedVacuumConfig) {
+                    const config = JSON.parse(savedVacuumConfig);
+                    ['posture', 'vacDuration', 'inspireDuration', 'expireDuration', 'restDuration'].forEach(key => {
+                        if (Object.prototype.hasOwnProperty.call(config, key)) AppState.vacuo[key] = config[key];
+                    });
+                }
 
                 const todayStr = localDateKey();
                 const savedDailyDate = localStorage.getItem('coreflow_daily_date');
@@ -3403,6 +3456,13 @@
                 localStorage.setItem('coreflow_daily_count', AppState.dailyExecution.sessionsCompletedToday);
                 const todayStr = localDateKey();
                 localStorage.setItem('coreflow_daily_date', todayStr);
+                localStorage.setItem('coreflow_vacuum_config', JSON.stringify({
+                    posture: AppState.vacuo.posture,
+                    vacDuration: AppState.vacuo.vacDuration,
+                    inspireDuration: AppState.vacuo.inspireDuration,
+                    expireDuration: AppState.vacuo.expireDuration,
+                    restDuration: AppState.vacuo.restDuration
+                }));
             } catch(e) {
                 console.log('Storage save error', e);
             }
@@ -3679,7 +3739,7 @@
         }
 
         function closeTopmostOverlay() {
-            const overlays = ['cancelDailyConfirmModal', 'dailyExecutionModal', 'mindfulnessAudioModal', 'responsivePauseModal', 'bracingProgramModal', 'kegelProgramModal', 'editProgramModal', 'reminderConfigModal', 'interactiveReminderModal', 'scheduleModal', 'noteModal', 'bpmMeasurementModal', 'smartwatchCompanionModal', 'progressProtectionModal'];
+            const overlays = ['vacuumSummaryModal', 'vacuumTutorialModal', 'cancelDailyConfirmModal', 'dailyExecutionModal', 'mindfulnessAudioModal', 'responsivePauseModal', 'bracingProgramModal', 'kegelProgramModal', 'editProgramModal', 'reminderConfigModal', 'interactiveReminderModal', 'scheduleModal', 'noteModal', 'bpmMeasurementModal', 'smartwatchCompanionModal', 'progressProtectionModal'];
             for (const id of overlays) {
                 const overlay = document.getElementById(id);
                 if (overlay && !overlay.classList.contains('hidden')) {
@@ -3713,6 +3773,149 @@
            ABA 1: PLAYER DE VÁCUO ABDOMINAL (LPF ENGINE)
         ------------------------------------------------------------- */
         const VAC_CIRCUMFERENCE = 603; // 2 * PI * 96
+
+        function vacuumPostureLabel(posture) {
+            return { deitado: 'Deitado', '4apoios': '4 apoios', empe: 'Em pé' }[posture] || 'Postura não definida';
+        }
+
+        function vacuumPhaseLabel(phase) {
+            return { ready: 'Pronto', inspira: 'Inspira', expira: 'Expira', vacuo: 'Vácuo', descanso: 'Descanso' }[phase] || 'Próxima etapa';
+        }
+
+        function vacuumSecondsEstimate() {
+            const state = AppState.vacuo;
+            if (state.currentPhase === 'ready') return (state.inspireDuration + state.expireDuration + state.vacDuration + state.restDuration) * state.seriesTotal;
+            const phases = ['inspira', 'expira', 'vacuo', 'descanso'];
+            const durations = { inspira: state.inspireDuration, expira: state.expireDuration, vacuo: state.vacDuration, descanso: state.restDuration };
+            const phaseIndex = Math.max(0, phases.indexOf(state.currentPhase));
+            const current = Math.max(0, Number(state.timer) || 0);
+            const remainingCurrentSeries = current + phases.slice(phaseIndex + 1).reduce((sum, phase) => sum + durations[phase], 0);
+            const remainingSeries = Math.max(0, Number(state.seriesTotal) - Number(state.seriesCurrent));
+            return remainingCurrentSeries + remainingSeries * (state.inspireDuration + state.expireDuration + state.vacDuration + state.restDuration);
+        }
+
+        function updateVacuumPlayerUI() {
+            const state = AppState.vacuo;
+            const posture = document.getElementById('vacPostureValue');
+            const parameters = document.getElementById('vacParametersValue');
+            const nextStep = document.getElementById('vacNextStep');
+            const estimate = document.getElementById('vacEstimate');
+            const phaseTitle = document.getElementById('vacPhaseTitle');
+            const timer = document.getElementById('vacTimerMain');
+            const series = document.getElementById('vacCurrentSeries');
+            if (posture) posture.innerText = vacuumPostureLabel(state.posture);
+            if (parameters) parameters.innerText = `${state.inspireDuration}s · ${state.expireDuration}s · ${state.vacDuration}s · ${state.restDuration}s`;
+            if (nextStep) nextStep.innerText = vacuumPhaseLabel(state.currentPhase === 'ready' ? 'inspira' : state.currentPhase);
+            if (estimate) estimate.innerText = formatDailyTime(vacuumSecondsEstimate());
+            if (phaseTitle && state.currentPhase === 'ready') phaseTitle.innerText = 'Pronto para iniciar';
+            if (timer && state.currentPhase === 'ready') timer.innerText = '▶';
+            if (series) series.innerText = `${state.seriesCurrent} de ${state.seriesTotal}`;
+            const watchStatus = document.getElementById('vacuumWatchStatus');
+            if (watchStatus) {
+                const available = Boolean(window.AndroidBridge?.isWatchHapticsEnabled) && AppState.watchHapticsEnabled;
+                watchStatus.innerText = available ? 'Disponível — sinais hápticos seguem a configuração.' : 'Indisponível — os sinais permanecem no aparelho.';
+            }
+        }
+
+        function showVacuumStartError(message) {
+            const panel = document.getElementById('vacuumStartError');
+            const text = document.getElementById('vacuumStartErrorText');
+            if (text) text.innerText = message || 'Verifique o estado da sessão e tente novamente.';
+            panel?.classList.remove('hidden');
+        }
+
+        function hideVacuumStartError() {
+            document.getElementById('vacuumStartError')?.classList.add('hidden');
+        }
+
+        function openVacuumTutorial() {
+            if (AppState.vacuo.isRunning || AppState.vacuo.nativeManaged) return false;
+            const modal = document.getElementById('vacuumTutorialModal');
+            modal?.classList.remove('hidden');
+            return true;
+        }
+
+        function closeVacuumTutorial() {
+            document.getElementById('vacuumTutorialModal')?.classList.add('hidden');
+        }
+
+        function showVacuumSummary(status) {
+            const state = AppState.vacuo;
+            state.lastSummary = { status, totalElapsedSec: state.totalElapsedSec, retentionElapsedSec: state.retentionElapsedSec, recoveryElapsedSec: state.recoveryElapsedSec, completedSeries: state.completedSeries || (status === 'completed' ? state.seriesTotal : Math.max(0, state.seriesCurrent - 1)) };
+            const summary = document.getElementById('vacuumSummaryContent');
+            if (summary) summary.innerHTML = `<div class="rounded-xl bg-slate-900 p-3"><span class="block text-slate-500">Status</span><strong class="text-white">${status === 'completed' ? 'Concluída' : 'Interrompida'}</strong></div><div class="rounded-xl bg-slate-900 p-3"><span class="block text-slate-500">Tempo executado</span><strong class="text-white">${formatDailyTime(state.totalElapsedSec)}</strong></div><div class="rounded-xl bg-slate-900 p-3"><span class="block text-slate-500">Retenção</span><strong class="text-white">${state.retentionElapsedSec}s</strong></div><div class="rounded-xl bg-slate-900 p-3"><span class="block text-slate-500">Séries</span><strong class="text-white">${state.lastSummary.completedSeries}/${state.seriesTotal}</strong></div>`;
+            document.getElementById('vacuumSummaryModal')?.classList.remove('hidden');
+        }
+
+        function submitVacuumFeedback(event) {
+            event?.preventDefault();
+            const feedback = document.getElementById('vacuumFeedbackSelect')?.value || null;
+            const id = AppState.vacuo.sessionId;
+            const record = CorePersistence.sessionHistory.find(item => item.id === id);
+            if (record) {
+                record.feedback = feedback;
+                saveState();
+            }
+            document.getElementById('vacuumSummaryModal')?.classList.add('hidden');
+        }
+
+        function retryVacuumStart() {
+            hideVacuumStartError();
+            AppState.vacuo.isPaused = false;
+            startVacuo();
+        }
+
+        function endVacuumRetention() {
+            if (!AppState.vacuo.isRunning || AppState.vacuo.currentPhase !== 'vacuo') return false;
+            pauseVacuo();
+            return true;
+        }
+
+        function completeVacuumSession(completed = true) {
+            if (completed) {
+                pauseVacuo();
+                const completionId = AppState.vacuo.sessionId || `vacuum-${localDateKey()}-${AppState.vacuo.posture}`;
+                if (CorePersistence.completedSessionIds.includes(completionId)) return;
+                AppState.vacuo.sessionId = completionId;
+                recordVacuumSession('completed', false);
+                saveState();
+                markScheduleDone(1, true);
+                addMinutesToday(Math.max(1, Math.ceil(AppState.vacuo.totalElapsedSec / 60)), 'vacuum');
+                CorePersistence.completedSessionIds.push(completionId);
+                CorePersistence.completedSessionIds = CorePersistence.completedSessionIds.slice(-200);
+                speakVoice('Treino de Vácuo Concluído! Excelente trabalho.');
+                playTibetanChime();
+                triggerHaptic([200, 100, 200, 100, 400]);
+                document.getElementById('vacPhaseTitle').innerText = 'Concluído! 🎉';
+                document.getElementById('vacTimerMain').innerText = '✓';
+                showVacuumSummary('completed');
+            } else {
+                finishVacuumSession(false);
+            }
+        }
+
+        function finishVacuumSession(completed = false) {
+            if (AppState.vacuo.currentPhase === 'ready' && !AppState.vacuo.sessionId) return false;
+            cancelPendingSignals();
+            if (AppState.vacuo.nativeManaged) window.AndroidBridge?.stopWorkoutSession?.();
+            clearInterval(AppState.vacuo.intervalId);
+            AppState.vacuo.isRunning = false;
+            AppState.vacuo.nativeManaged = false;
+            if (AppState.vacuo.totalElapsedSec > 0 || AppState.vacuo.currentPhase !== 'ready') {
+                if (!AppState.vacuo.sessionId) AppState.vacuo.sessionId = `vacuum-abort-${Date.now()}`;
+                recordVacuumSession(completed ? 'completed' : 'interrupted', !completed);
+                saveState();
+                showVacuumSummary(completed ? 'completed' : 'interrupted');
+            }
+            AppState.vacuo.isPaused = false;
+            AppState.vacuo.currentPhase = 'ready';
+            AppState.vacuo.timer = 0;
+            document.getElementById('vacPlayIcon').className = 'fa-solid fa-play';
+            document.getElementById('vacPlayText').innerText = 'Iniciar';
+            document.getElementById('vacPhaseTitle').innerText = completed ? 'Concluído! 🎉' : 'Sessão encerrada';
+            updateVacuumPlayerUI();
+            return true;
+        }
 
         function getVacuumSessionMetrics() {
             const state = AppState.vacuo || {};
@@ -3904,6 +4107,8 @@
 
             // Update vacuum pills
             updateVacDurationPills(vacSec);
+            updateVacuumPlayerUI();
+            saveState();
             triggerHaptic([40]);
             return true;
         }
@@ -3912,6 +4117,8 @@
             if (AppState.vacuo.isRunning || AppState.vacuo.nativeManaged) return false;
             AppState.vacuo.vacDuration = sec;
             updateVacDurationPills(sec);
+            updateVacuumPlayerUI();
+            saveState();
             triggerHaptic([30]);
             return true;
         }
@@ -3961,6 +4168,7 @@
 
         function startVacuo() {
             if (AppState.vacuo.isRunning) return;
+            hideVacuumStartError();
             finalizeVacuumPause();
             if (window.AndroidBridge?.getWorkoutState) {
                 try {
@@ -4013,11 +4221,24 @@
                     retentionElapsedSeconds: AppState.vacuo.retentionElapsedSec,
                     voiceEnabled: AppState.voiceEnabled,
                     hapticsEnabled: AppState.hapticsEnabled,
+                    watchHapticsEnabled: AppState.watchHapticsEnabled,
                     steps
                 });
-                if (window.AndroidBridge.startWorkoutSession(payload)) {
-                    AppState.vacuo.nativeManaged = true;
+                try {
+                    if (window.AndroidBridge.startWorkoutSession(payload)) {
+                        AppState.vacuo.nativeManaged = true;
+                        AppState.vacuo.intervalId = null;
+                        updateVacuumPlayerUI();
+                        return;
+                    }
+                    throw new Error('O motor nativo recusou a sessão.');
+                } catch (error) {
+                    AppState.vacuo.isRunning = false;
+                    AppState.vacuo.nativeManaged = false;
                     AppState.vacuo.intervalId = null;
+                    window.AndroidBridge?.setKeepScreenOn?.(false);
+                    showVacuumStartError(error?.message);
+                    updateVacuumPlayerUI();
                     return;
                 }
             }
@@ -4029,12 +4250,14 @@
             } else {
                 runVacuoTick();
             }
+            updateVacuumPlayerUI();
         }
 
         function pauseVacuo() {
             const wasNativeManaged = AppState.vacuo.nativeManaged === true;
             const exitingRetention = AppState.vacuo.currentPhase === 'vacuo';
             AppState.vacuo.isRunning = false;
+            AppState.vacuo.isPaused = true;
             if (!AppState.vacuo.pauseStartedAt) AppState.vacuo.pauseStartedAt = Date.now();
             if (window.AndroidBridge && window.AndroidBridge.setKeepScreenOn) {
                 window.AndroidBridge.setKeepScreenOn(false);
@@ -4059,6 +4282,7 @@
             }
             document.getElementById('vacPlayIcon').className = 'fa-solid fa-play';
             document.getElementById('vacPlayText').innerText = 'Continuar';
+            updateVacuumPlayerUI();
         }
 
         function resetVacuo(isInterrupted = true) {
@@ -4078,6 +4302,7 @@
             clearInterval(AppState.vacuo.intervalId);
             AppState.vacuo.intervalId = null;
             AppState.vacuo.isRunning = false;
+            AppState.vacuo.isPaused = false;
             AppState.vacuo.nativeManaged = false;
             if (window.AndroidBridge?.setKeepScreenOn) {
                 window.AndroidBridge.setKeepScreenOn(false);
@@ -4110,6 +4335,7 @@
             setVacProgress(0);
             updateCoreAnimation('ready');
             highlightPhaseCard(null);
+            updateVacuumPlayerUI();
         }
 
         function skipVacuoPhase() {
@@ -4217,6 +4443,7 @@
             }
 
             timerEl.innerText = AppState.vacuo.timer;
+            updateVacuumPlayerUI();
             if (!nativeState) runVacuoTick();
         }
 
@@ -4245,6 +4472,7 @@
                 document.getElementById('vacTimerMain').innerText = Math.max(0, AppState.vacuo.timer);
                 const progressRatio = (totalPhaseTime - AppState.vacuo.timer) / totalPhaseTime;
                 setVacProgress(progressRatio);
+                updateVacuumPlayerUI();
 
                 // Audio beeps for countdown
                 if (AppState.vacuo.timer <= 3 && AppState.vacuo.timer > 0) {
@@ -4275,28 +4503,7 @@
                 document.getElementById('vacCurrentSeries').innerText = `${AppState.vacuo.seriesCurrent} de ${AppState.vacuo.seriesTotal}`;
                 transitionVacuoPhase('inspira');
             } else {
-                // Workout Completed!
-                pauseVacuo();
-                speakVoice('Treino de Vácuo Concluído! Excelente trabalho.');
-                playTibetanChime();
-                triggerHaptic([200, 100, 200, 100, 400]);
-
-                document.getElementById('vacPhaseTitle').innerText = 'Concluído! 🎉';
-                document.getElementById('vacTimerMain').innerText = '✓';
-
-                const completionId = AppState.vacuo.sessionId || `vacuum-${localDateKey()}-${AppState.vacuo.posture}`;
-                if (CorePersistence.completedSessionIds.includes(completionId)) return;
-                AppState.vacuo.sessionId = completionId;
-                try {
-                    recordVacuumSession('completed', false);
-                    saveState();
-                } catch(e) { console.error(e); }
-                // Mark schedule item 1 as completed
-                markScheduleDone(1, true);
-                addMinutesToday(Math.max(1, Math.ceil(AppState.vacuo.totalElapsedSec / 60)), 'vacuum');
-                CorePersistence.completedSessionIds.push(completionId);
-                CorePersistence.completedSessionIds = CorePersistence.completedSessionIds.slice(-200);
-                saveState();
+                completeVacuumSession(true);
             }
         }
 
@@ -9659,6 +9866,7 @@
             if (!step && state.status !== 'completed') return;
             AppState.vacuo.nativeManaged = state.status === 'running' || state.status === 'paused';
             AppState.vacuo.isRunning = state.status === 'running';
+            AppState.vacuo.isPaused = state.status === 'paused';
             AppState.vacuo.timer = Math.max(0, state.stepTimeLeft || 0);
             AppState.vacuo.totalElapsedSec = Math.max(0, state.totalSessionElapsed || 0);
             AppState.vacuo.seriesCurrent = step?.series || AppState.vacuo.seriesTotal;
@@ -9687,6 +9895,7 @@
                 document.getElementById('vacPlayText').innerText = 'Iniciar';
                 document.getElementById('vacPhaseTitle').innerText = 'Concluído! 🎉';
                 document.getElementById('vacTimerMain').innerText = '✓';
+                showVacuumSummary('completed');
                 markScheduleDone(1, true);
                 addMinutesToday(Math.max(1, Math.ceil(AppState.vacuo.totalElapsedSec / 60)), 'vacuum');
                 CorePersistence.completedSessionIds.push(completionId);
@@ -9702,6 +9911,7 @@
             transitionVacuoPhase(step.phase, { timer: AppState.vacuo.timer });
             const phaseProgress = step.duration > 0 ? (step.duration - AppState.vacuo.timer) / step.duration : 0;
             setVacProgress(Math.max(0, Math.min(1, phaseProgress)));
+            updateVacuumPlayerUI();
         }
 
         function syncNativeWorkoutState() {
@@ -12114,7 +12324,8 @@
             loadResponsivePauseState();
             syncWatchHapticsSetting();
             syncNativeWorkoutState();
-            setPosture('deitado', 10);
+            setPosture(AppState.vacuo.posture, AppState.vacuo.vacDuration);
+            updateVacuumPlayerUI();
             updateBracingLoad(25);
             // Set random initial health tip
             currentTipIndex = Math.floor(Math.random() * HEALTH_TIPS.length);
