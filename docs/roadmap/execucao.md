@@ -181,3 +181,10 @@ Próximo passo:
 - Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS; `cmp -s index.html app/src/main/assets/index.html` e SHA-256 idênticos; `git diff --check` → PASS.
 - Validação integrada: `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → PASS (`BUILD SUCCESSFUL`), incluindo compilação Kotlin, testes unitários Android e builds debug phone/Wear.
 - Limitações: não houve validação em aparelho/Watch físico; auditoria independente do novo target SHA permanece pendente; “Mais descanso” continua desativado e sem incremento clínico inventado.
+
+## 2026-09-21 — E04 / rejeição estrita de geração stale no Wear
+
+- Diagnóstico RED adicionado antes da implementação: a entrega independente de uma geração nova antes de uma antiga ainda permitia que o callback antigo fosse aceito e reativasse a vibração anterior.
+- Implementação: `HapticListenerService` agora rejeita qualquer padrão com geração menor ou igual à geração ativa, além da geração cancelada; a geração ativa não pode regredir após entrega fora de ordem.
+- Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS, incluindo regressão nova→antiga com somente a geração mais recente entregue.
+- Limitações: auditoria independente do target SHA e validação em aparelho/Watch físico ainda pendentes; a compilação integrada local passou; “Mais descanso” permanece desativado e sem incremento clínico inventado.

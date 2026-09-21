@@ -22,7 +22,9 @@ class HapticListenerService : WearableListenerService() {
             val sentAt = message.getLong("sentAt")
             val generation = message.optLong("generation", 0L)
             val preferences = getSharedPreferences(PREFS, MODE_PRIVATE)
-            if (generation <= preferences.getLong(KEY_CANCELLED_GENERATION, 0L)) return
+            if (generation <= preferences.getLong(KEY_CANCELLED_GENERATION, 0L) ||
+                generation <= preferences.getLong(KEY_ACTIVE_GENERATION, 0L)
+            ) return
             if (System.currentTimeMillis() - sentAt !in 0..MAX_AGE_MS || wasHandled(id)) return
 
             val values = message.getJSONArray("pattern")

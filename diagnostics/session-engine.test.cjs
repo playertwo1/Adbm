@@ -706,4 +706,19 @@ assert.match(relay, /"cancel"/);
 assert.match(wearListener, /message\.optString\("type"\) == "cancel"/);
 assert.match(wearListener, /(?:vibrator\(\)|vibrator)\.cancel\(\)/);
 
+// A newer Wear pattern must invalidate an older callback delivered later;
+// stale generations must be rejected before they can cancel/replay the wave.
+assert.match(wearListener, /generation <= preferences\.getLong\(KEY_ACTIVE_GENERATION, 0L\)/);
+const deliveredGenerations = [];
+let activeGeneration = 0;
+let cancelledGeneration = 0;
+const deliverWearPattern = generation => {
+    if (generation <= cancelledGeneration || generation <= activeGeneration) return;
+    activeGeneration = generation;
+    deliveredGenerations.push(generation);
+};
+deliverWearPattern(3);
+deliverWearPattern(1);
+assert.deepEqual(deliveredGenerations, [3], 'Wear must reject an older pattern delivered after a newer one');
+
 console.log("session-engine tests passed!");
