@@ -81,7 +81,7 @@ class WorkoutForegroundService : Service() {
         when (intent?.action) {
             ACTION_START -> startSession(intent.getStringExtra(EXTRA_SESSION_JSON).orEmpty())
             ACTION_PAUSE -> pauseSession()
-            ACTION_SAFE_EXIT_RETENTION -> safeExitRetention()
+            ACTION_SAFE_EXIT_RETENTION -> exitRetentionSafely()
             ACTION_RESUME -> resumeSession()
             ACTION_SKIP -> advanceStep()
             ACTION_STOP -> stopSession(interrupted = true)
@@ -200,6 +200,10 @@ class WorkoutForegroundService : Service() {
         persistAndBroadcast("paused")
     }
 
+    private fun exitRetentionSafely() {
+        safeExitRetention()
+    }
+
     private fun safeExitRetention() {
         if (steps.isEmpty()) return
         if (steps.getOrNull(currentStepIndex)?.phase != "vacuo") {
@@ -246,9 +250,9 @@ class WorkoutForegroundService : Service() {
     }
 
     private fun markRetentionInterrupted() {
-        val step = steps.getOrNull(currentStepIndex) ?: return
-        if (step.phase == "vacuo" && stepTimeLeft > 0 && step.series > 0) {
-            retentionInterruptedSeries = retentionInterruptedSeries + step.series
+        val currentStep = steps.getOrNull(currentStepIndex) ?: return
+        if (currentStep.phase == "vacuo" && stepTimeLeft > 0 && currentStep.series > 0) {
+            retentionInterruptedSeries = retentionInterruptedSeries + currentStep.series
         }
     }
 
@@ -327,6 +331,8 @@ class WorkoutForegroundService : Service() {
         AdvancedHapticsManager.cancel(this)
         WearHapticsRelay.cancel(this)
     }
+
+    private fun cancelPendingSignals() = cancelActiveSignals()
 
     private fun sessionMetadataFrom(payload: JSONObject): JSONObject = JSONObject().apply {
         listOf(
