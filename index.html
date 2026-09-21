@@ -3586,7 +3586,13 @@
 
         function countWorkoutSeries(steps, endExclusive = Number.POSITIVE_INFINITY) {
             if (!Array.isArray(steps)) return 0;
-            return steps.slice(0, endExclusive).filter(step => step && step.isRest !== true).length;
+            const groups = new Set();
+            steps.slice(0, endExclusive).forEach((step, index) => {
+                if (!step || step.isRest === true) return;
+                const series = Number(step.series);
+                groups.add(Number.isInteger(series) && series > 0 ? `series:${series}` : `step:${index}`);
+            });
+            return groups.size;
         }
 
         function countCompletedSeries(steps, currentStepIndex = Number.POSITIVE_INFINITY) {
@@ -3607,6 +3613,23 @@
                 if (group.completed >= group.total) completedSeries++;
             });
             return completedSeries;
+        }
+
+        function deriveDailySessionMetrics(execution, completed = false) {
+            const steps = Array.isArray(execution?.steps) ? execution.steps : [];
+            const currentIndex = Math.max(0, Math.min(steps.length, Number(execution?.currentStepIndex) || 0));
+            const hasCurrentTime = Number.isFinite(Number(execution?.stepTimeLeft));
+            let retentionSeconds = 0;
+            let recoverySeconds = 0;
+            steps.forEach((step, index) => {
+                const duration = Math.max(0, Number(step?.duration) || 0);
+                let elapsed = 0;
+                if (completed || index < currentIndex) elapsed = duration;
+                else if (index === currentIndex && hasCurrentTime) elapsed = Math.max(0, duration - Number(execution.stepTimeLeft));
+                if (step?.phase === 'vacuo') retentionSeconds += elapsed;
+                if (step?.phase === 'descanso') recoverySeconds += elapsed;
+            });
+            return { retentionSeconds, recoverySeconds, pausedSeconds: 0 };
         }
 
         function finalizeVacuumPause() {
@@ -3662,6 +3685,7 @@
         }
 
         function setPosture(posture, vacSec) {
+            if (AppState.vacuo.isRunning || AppState.vacuo.nativeManaged) return false;
             AppState.vacuo.posture = posture;
             AppState.vacuo.vacDuration = vacSec;
 
@@ -3692,12 +3716,15 @@
             // Update vacuum pills
             updateVacDurationPills(vacSec);
             triggerHaptic([40]);
+            return true;
         }
 
         function setVacuumDuration(sec) {
+            if (AppState.vacuo.isRunning || AppState.vacuo.nativeManaged) return false;
             AppState.vacuo.vacDuration = sec;
             updateVacDurationPills(sec);
             triggerHaptic([30]);
+            return true;
         }
 
         function updateVacDurationPills(sec) {
@@ -8414,7 +8441,8 @@
                         isRest: true,
                         voice: `Série ${set}. Ajuste a posição.`,
                         badge: `PREPARE ${set}/${setCount}`,
-                        haptic: 'relax'
+                        haptic: 'relax',
+                        series: set
                     });
                     steps.push({
                         title: `Série ${set}/${setCount}: Inspire`,
@@ -8424,7 +8452,8 @@
                         voice: 'Inspire suavemente pelo nariz.',
                         badge: 'INSPIRE PELO NARIZ',
                         phase: 'inspira',
-                        haptic: 'inhale'
+                        haptic: 'inhale',
+                        series: set
                     });
                     steps.push({
                         title: `Série ${set}/${setCount}: Exalação Total`,
@@ -8434,7 +8463,8 @@
                         voice: 'Solte todo o ar pela boca.',
                         badge: 'EXPIRE TODO O AR',
                         phase: 'expira',
-                        haptic: 'exhale'
+                        haptic: 'exhale',
+                        series: set
                     });
                     steps.push({
                         title: `Série ${set}/${setCount}: Sucção Abdominal`,
@@ -8444,7 +8474,8 @@
                         voice: `Sem puxar ar. Abra as costelas e faça a sucção por ${holdSeconds} segundos.`,
                         badge: `VÁCUO ${holdSeconds}s • ${set}/${setCount}`,
                         phase: 'vacuo',
-                        haptic: 'success'
+                        haptic: 'success',
+                        series: set
                     });
                     steps.push({
                         title: `Série ${set}/${setCount}: Retorno Controlado`,
@@ -8453,7 +8484,8 @@
                         isRest: true,
                         voice: 'Solte a sucção antes de inspirar calmamente.',
                         badge: 'RETORNO CONTROLADO',
-                        haptic: 'relax'
+                        haptic: 'relax',
+                        series: set
                     });
                     if (set < setCount) {
                         steps.push({
@@ -8464,7 +8496,8 @@
                             voice: `Descanse por ${phase.restSeconds} segundos.`,
                             badge: `DESCANSO ${phase.restSeconds}s`,
                             phase: 'descanso',
-                            haptic: 'relax'
+                            haptic: 'relax',
+                            series: set
                         });
                     }
                 }
@@ -8486,7 +8519,7 @@
                 const [name, instruction, workSeconds] = selected;
                 const steps = [{ title: `Sessão ${sessionNumber === 1 ? 'A' : 'B'}: Preparação`, instruction: 'Ajuste a posição. Respire duas vezes sem esforço. A sessão deve permanecer confortável e sem dor.', duration: 15, isRest: true, voice: 'Ajuste a postura e respire sem esforço.', badge: 'PREPARAÇÃO' }];
                 for (let set = 1; set <= 3; set++) {
-                    steps.push({ title: `${name} • Série ${set}/3`, instruction, duration: workSeconds, isRest: false, voice: set === 1 ? name : `Série ${set}`, badge: `CONTROLE • ${set}/3` });
+                    steps.push({ title: `${name} • Série ${set}/3`, instruction, duration: workSeconds, isRest: false, voice: set === 1 ? name : `Série ${set}`, badge: `CONTROLE • ${set}/3`, series: set });
                     if (set < 3) steps.push({ title: `Recuperação • Série ${set}/3`, instruction: 'Solte totalmente a tensão, respire normalmente e confira mandíbula, ombros e lombar.', duration: 20, isRest: true, voice: 'Relaxe completamente.', badge: 'RECUPERAÇÃO' });
                 }
                 steps.push({ title: 'Encerramento e checagem', instruction: 'Solte o abdômen. Confirme: respirou livremente, manteve a postura e terminou sem dor. Se não, repita esta semana com menor esforço.', duration: 20, isRest: true, voice: 'Relaxe e confira a qualidade da prática.', badge: 'QUALIDADE' });
@@ -9248,6 +9281,7 @@
                 }
 
                 try {
+                    const metrics = deriveDailySessionMetrics(state);
                     upsertSessionRecord({
                         id: AppState.dailyExecution.sessionId,
                         schemaVersion: 1,
@@ -9255,11 +9289,11 @@
                         phaseIndex: AppState.dailyExecution.phaseIndex || 0,
                         date: localDateKey(),
                         status: 'interrupted',
-                        plannedSeries: AppState.dailyExecution.steps ? countWorkoutSeries(AppState.dailyExecution.steps) : 1,
-                        completedSeries: AppState.dailyExecution.steps ? countCompletedSeries(AppState.dailyExecution.steps, AppState.dailyExecution.currentStepIndex) : 0,
-                        retentionSeconds: AppState.dailyExecution.totalSessionElapsed || 0,
-                        recoverySeconds: 0,
-                        pausedSeconds: 0,
+                        plannedSeries: state.steps ? countWorkoutSeries(state.steps) : 1,
+                        completedSeries: state.steps ? countCompletedSeries(state.steps, state.currentStepIndex) : 0,
+                        retentionSeconds: metrics.retentionSeconds,
+                        recoverySeconds: metrics.recoverySeconds,
+                        pausedSeconds: metrics.pausedSeconds,
                         interrupted: true,
                         feedback: null
                     });
@@ -9560,6 +9594,7 @@
             AppState.dailyExecution.isPaused = false;
 
             try {
+                const metrics = deriveDailySessionMetrics(AppState.dailyExecution, true);
                 upsertSessionRecord({
                     id: completionId,
                     schemaVersion: 1,
@@ -9567,11 +9602,11 @@
                     phaseIndex: AppState.dailyExecution.phaseIndex || 0,
                     date: localDateKey(),
                     status: 'completed',
-                    plannedSeries: AppState.dailyExecution.steps ? AppState.dailyExecution.steps.length : 1,
-                    completedSeries: AppState.dailyExecution.steps ? AppState.dailyExecution.steps.length : 1,
-                    retentionSeconds: AppState.dailyExecution.totalSessionElapsed || 0,
-                    recoverySeconds: 0,
-                    pausedSeconds: 0,
+                    plannedSeries: AppState.dailyExecution.steps ? countWorkoutSeries(AppState.dailyExecution.steps) : 1,
+                    completedSeries: AppState.dailyExecution.steps ? countCompletedSeries(AppState.dailyExecution.steps, AppState.dailyExecution.steps.length) : 1,
+                    retentionSeconds: metrics.retentionSeconds,
+                    recoverySeconds: metrics.recoverySeconds,
+                    pausedSeconds: metrics.pausedSeconds,
                     interrupted: false,
                     feedback: null
                 });
@@ -9717,6 +9752,7 @@
             }
 
             try {
+                const metrics = deriveDailySessionMetrics(AppState.dailyExecution);
                 upsertSessionRecord({
                     id: AppState.dailyExecution.sessionId,
                     schemaVersion: 1,
@@ -9726,9 +9762,9 @@
                     status: isInterrupted ? 'interrupted' : 'cancelled',
                     plannedSeries: AppState.dailyExecution.steps ? countWorkoutSeries(AppState.dailyExecution.steps) : 1,
                     completedSeries: AppState.dailyExecution.steps ? countCompletedSeries(AppState.dailyExecution.steps, AppState.dailyExecution.currentStepIndex) : 0,
-                    retentionSeconds: AppState.dailyExecution.totalSessionElapsed || 0,
-                    recoverySeconds: 0,
-                    pausedSeconds: 0,
+                    retentionSeconds: metrics.retentionSeconds,
+                    recoverySeconds: metrics.recoverySeconds,
+                    pausedSeconds: metrics.pausedSeconds,
                     interrupted: isInterrupted,
                     feedback: null
                 });

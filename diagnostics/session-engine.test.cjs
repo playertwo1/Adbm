@@ -27,8 +27,10 @@ const source = [
     'const CORE_DATA_VERSION = 3;',
     extractFunction('localDateKey'),
     extractFunction('synchronizeProgramProgress'),
+    extractFunction('getProgramSteps'),
     extractFunction('countWorkoutSeries'),
     extractFunction('countCompletedSeries'),
+    extractFunction('deriveDailySessionMetrics'),
     extractFunction('deriveNativeVacuumMetrics'),
     extractFunction('getVacuumSessionMetrics'),
     extractFunction('finalizeVacuumPause'),
@@ -37,6 +39,10 @@ const source = [
     extractFunction('abortDailySession'),
     extractFunction('handleNativeVacuumState'),
     extractFunction('resetVacuo'),
+    extractFunction('setPosture'),
+    extractFunction('setVacuumDuration'),
+    extractFunction('updateVacDurationPills'),
+    extractFunction('triggerQuickAction'),
     extractFunction('updateSessionFeedback'),
     html.slice(persistenceStart, persistenceEnd)
 ].join('\n');
@@ -48,7 +54,8 @@ const context = vm.createContext({
     document: {
         getElementById() {
             return { classList: { remove(){}, add(){}, contains(){return false;} }, className: '', innerText: '' };
-        }
+        },
+        querySelectorAll() { return []; }
     },
     window: {},
     localStorage: {
@@ -71,7 +78,13 @@ const context = vm.createContext({
     playTibetanChime() {},
     updateCoreAnimation() {},
     setVacProgress() {},
-    highlightPhaseCard() {}
+    highlightPhaseCard() {},
+    switchTab() {},
+    switchDiscreteSubtab() {},
+    setKegelMode() {},
+    toggleBracingTimer() {},
+    toggleKegelTimer() {},
+    startFullStretchCircuit() {}
 });
 
 vm.runInContext(source, context);
@@ -100,7 +113,24 @@ assert.equal(history1[0].status, 'completed', 'record status should be completed
 
 const snapshot1 = JSON.parse(storage['coreflow_progress_snapshot_v4'] || '{}');
 assert.equal(snapshot1.data?.sessionHistory?.length, 1, 'sessionHistory must be saved to localStorage v4');
-assert.deepEqual(snapshot1.data?.dailyExecution?.sessionId, 'test-session-1', 'dailyExecution state must be persisted');
+assert.equal(snapshot1.data?.dailyExecution?.sessionId, 'test-session-1', 'dailyExecution state must be persisted');
+assert.equal(history1[0].retentionSeconds, 0, 'daily session retention must not use total elapsed time');
+
+// Daily vacuum steps share one logical series across preparation, breathing,
+// retention, return, and recovery phases.
+assert.equal(vm.runInContext('countWorkoutSeries(getProgramSteps("3", 0))', context), 3, 'planned series must count logical sets, not phases');
+assert.equal(vm.runInContext('countCompletedSeries(getProgramSteps("3", 0), 4)', context), 1, 'completed series must require every work phase in the set');
+
+// Active web/native sessions reject silent posture or load changes, including
+// the quick-action shortcut.
+vm.runInContext(`
+    AppState.vacuo = { posture: 'deitado', vacDuration: 15, isRunning: true, nativeManaged: false };
+    setPosture('empe', 30);
+    setVacuumDuration(30);
+    triggerQuickAction('vacuo_rapido');
+`, context);
+assert.equal(vm.runInContext('AppState.vacuo.posture', context), 'deitado', 'active session must keep posture');
+assert.equal(vm.runInContext('AppState.vacuo.vacDuration', context), 15, 'active session must keep vacuum duration');
 
 // Ending a partial session through the real UI path is an interruption.
 vm.runInContext(`
@@ -257,6 +287,52 @@ const seriesRecord = history8.find(record => record.id === 'test-series-metrics'
 assert.equal(seriesRecord.plannedSeries, 2, 'planned series must exclude recovery steps');
 assert.equal(seriesRecord.completedSeries, 1, 'completed series must count completed work steps only');
 
+// A completed logical set records its retention only; an interruption in the
+// middle of a set does not mark that set completed and records elapsed phases.
+vm.runInContext(`
+    AppState.dailyExecution = {
+        sessionId: 'test-daily-vacuum-complete',
+        programId: '3',
+        phaseIndex: 0,
+        totalSessionElapsed: 999,
+        steps: [
+            { phase: 'inspira', series: 1, duration: 4 },
+            { phase: 'vacuo', series: 1, duration: 15 },
+            { phase: 'descanso', series: 1, duration: 20 },
+            { phase: 'inspira', series: 2, duration: 4 },
+            { phase: 'vacuo', series: 2, duration: 15 }
+        ]
+    };
+    finishDailySession();
+`, context);
+const completedDailyVacuum = vm.runInContext('CorePersistence.sessionHistory.find(record => record.id === "test-daily-vacuum-complete")', context);
+assert.equal(completedDailyVacuum.plannedSeries, 2, 'completed daily vacuum must count logical sets');
+assert.equal(completedDailyVacuum.completedSeries, 2, 'completed daily vacuum must complete every logical set');
+assert.equal(completedDailyVacuum.retentionSeconds, 30, 'completed daily vacuum retention must exclude breathing and recovery');
+
+vm.runInContext(`
+    AppState.dailyExecution = {
+        sessionId: 'test-daily-vacuum-interrupted',
+        programId: '3',
+        phaseIndex: 0,
+        currentStepIndex: 1,
+        stepTimeLeft: 10,
+        totalSessionElapsed: 999,
+        steps: [
+            { phase: 'inspira', series: 1, duration: 4 },
+            { phase: 'vacuo', series: 1, duration: 15 },
+            { phase: 'descanso', series: 1, duration: 20 },
+            { phase: 'inspira', series: 2, duration: 4 },
+            { phase: 'vacuo', series: 2, duration: 15 }
+        ]
+    };
+    abortDailySession(true);
+`, context);
+const interruptedDailyVacuum = vm.runInContext('CorePersistence.sessionHistory.find(record => record.id === "test-daily-vacuum-interrupted")', context);
+assert.equal(interruptedDailyVacuum.plannedSeries, 2, 'interrupted daily vacuum must count logical sets');
+assert.equal(interruptedDailyVacuum.completedSeries, 0, 'partial logical set must not be completed');
+assert.equal(interruptedDailyVacuum.retentionSeconds, 5, 'interrupted retention must include only elapsed vacuum time');
+
 // Test applyProgressData timer protection (pauses restored sessions)
 vm.runInContext(`
     applyProgressData({
@@ -290,7 +366,7 @@ assert.equal(partialSnapshot.data.vacuo.nativeManaged, false);
 assert.equal(partialSnapshot.data.vacuo.intervalId, null);
 assert.equal(partialSnapshot.data.vacuo.totalElapsedSec, 17);
 assert.equal(partialSnapshot.data.vacuo.timer, 8);
-assert.equal(partialSnapshot.data.sessionHistory.length, 6);
+assert.equal(partialSnapshot.data.sessionHistory.length, 8);
 context.savedPartial = partialSnapshot.data;
 vm.runInContext('applyProgressData(savedPartial)', context);
 assert.equal(vm.runInContext('AppState.vacuo.sessionId', context), 'reopen-partial');
