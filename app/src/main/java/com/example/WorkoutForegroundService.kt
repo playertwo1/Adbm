@@ -122,22 +122,7 @@ class WorkoutForegroundService : Service() {
         voiceEnabled = payload.optBoolean("voiceEnabled", true)
         hapticsEnabled = payload.optBoolean("hapticsEnabled", true)
         paused = false
-        sessionMetadata = JSONObject().apply {
-            listOf(
-                "programId",
-                "phaseIndex",
-                "programTitle",
-                "phaseTitle",
-                "sessionId",
-                "sessionNumber",
-                "targetSessions",
-                "type",
-                "completionMessage",
-                "seriesTotal"
-            ).forEach { key ->
-                if (payload.has(key)) put(key, payload.get(key))
-            }
-        }
+        sessionMetadata = sessionMetadataFrom(payload)
 
         startForeground(NOTIFICATION_ID, buildNotification())
         acquireWakeLock()
@@ -252,6 +237,7 @@ class WorkoutForegroundService : Service() {
         if (currentStepIndex < steps.lastIndex) {
             currentStepIndex++
             stepTimeLeft = steps[currentStepIndex].duration
+            cancelActiveSignals()
             announceCurrentStep(firstStep = false)
             persistAndBroadcast(if (paused) "paused" else "running")
         } else {

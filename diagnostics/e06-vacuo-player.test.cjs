@@ -25,6 +25,18 @@ function extractFunction(source, name) {
   throw new Error(`Função incompleta: ${name}`);
 }
 
+function extractAssignedFunction(source, name) {
+  const start = source.indexOf(`window.${name} = function(`);
+  assert.ok(start >= 0, `Função atribuída ausente: ${name}`);
+  const bodyStart = source.indexOf('{', start);
+  let depth = 0;
+  for (let index = bodyStart; index < source.length; index += 1) {
+    if (source[index] === '{') depth += 1;
+    if (source[index] === '}' && --depth === 0) return source.slice(start, index + 1);
+  }
+  throw new Error(`Função atribuída incompleta: ${name}`);
+}
+
 function extractKotlinFunction(source, name) {
   const start = source.search(new RegExp(`(?:private\\s+)?fun\\s+${name}\\s*\\(`));
   assert.ok(start >= 0, `Função Kotlin ausente: ${name}`);
@@ -83,14 +95,19 @@ for (const htmlPath of htmlPaths) {
     `${relativePath} must report completion after the last recovery phase`
   );
   const nativeVacuumHandler = extractFunction(html, 'handleNativeVacuumState');
+  const nativeWorkoutDispatcher = extractAssignedFunction(html, 'onNativeWorkoutState');
   const failureContext = {
     AppState: { vacuo: { isRunning: true, isPaused: false, nativeManaged: true, intervalId: 42, currentPhase: 'inspira', timer: 3, totalElapsedSec: 4, retentionElapsedSec: 2, recoveryElapsedSec: 0, sessionId: 'failed-session' } },
     document: { getElementById: () => ({ className: '', innerText: '' }) },
     window: { AndroidBridge: { acknowledgeWorkoutState: () => { failureContext.acknowledged = true; } } },
+    console,
     showVacuumStartError: message => { failureContext.error = message; },
     updateVacuumPlayerUI: () => { failureContext.updated = true; }
   };
-  vm.runInNewContext(`${nativeVacuumHandler}; handleNativeVacuumState({ status: 'failed', errorMessage: 'retry-me' })`, failureContext);
+  vm.runInNewContext(
+    `${nativeVacuumHandler}; ${nativeWorkoutDispatcher}; window.onNativeWorkoutState({ status: 'failed', session: { type: 'vacuum', sessionId: 'failed-session' }, errorMessage: 'retry-me' })`,
+    failureContext
+  );
   assert.equal(failureContext.AppState.vacuo.isRunning, false, `${relativePath} async start failure must stop the player`);
   assert.equal(failureContext.AppState.vacuo.nativeManaged, false, `${relativePath} async start failure must clear native ownership`);
   assert.equal(failureContext.AppState.vacuo.timer, 0, `${relativePath} async start failure must clear the timer`);
@@ -132,12 +149,20 @@ assert.match(service, /currentStep\.phase == "vacuo"[\s\S]*retentionInterruptedS
 const pauseSession = extractKotlinFunction(service, 'pauseSession');
 const safeExitRetention = extractKotlinFunction(service, 'safeExitRetention');
 const stopSession = extractKotlinFunction(service, 'stopSession');
+const advanceStep = extractKotlinFunction(service, 'advanceStep');
 for (const [name, body] of [['pauseSession', pauseSession], ['safeExitRetention', safeExitRetention], ['stopSession', stopSession]]) {
   assert.match(body, /cancelActiveSignals\(\)/, `${name} must cancel active native signals before leaving the session state`);
 }
+assert.ok(
+  advanceStep.indexOf('cancelActiveSignals()') < advanceStep.indexOf('announceCurrentStep('),
+  'native transitions must cancel previous signals before announcing the next step'
+);
 assert.match(service, /private fun cancelActiveSignals\(\)[\s\S]*pendingSpeech = null[\s\S]*tts\?\.stop\(\)[\s\S]*AdvancedHapticsManager\.cancel\(this\)[\s\S]*WearHapticsRelay\.cancel\(this\)/, 'native cancellation must clear TTS, phone and Wear signals');
 assert.match(activity, /fun cancelHaptics\(\)/, 'Web/native bridge must expose haptic cancellation');
 assert.match(wear, /message\.optBoolean\("cancel", false\)[\s\S]*vibrator\(\)\.cancel\(\)/, 'Wear listener must cancel an active waveform');
 assert.match(service, /stateJson\(['"]failed['"]\)/, 'service must publish an explicit start-failure state');
 assert.match(service, /failureMessage|errorMessage|start failure/i, 'service failure state must include a retryable error message');
+const startSession = extractKotlinFunction(service, 'startSession');
+assert.match(startSession, /sessionMetadata\s*=\s*payload\?\.let\s*\{\s*sessionMetadataFrom\(it\)\s*\}\s*\?:\s*JSONObject\(\)/, 'failed vacuum starts must preserve payload session metadata before broadcasting failure');
+assert.doesNotMatch(extractKotlinFunction(service, 'failStart'), /sessionMetadata\s*=\s*JSONObject\(\)/, 'failed starts must not erase the vacuum type before the failure snapshot');
 console.log('E06 vacuum player regressions: state, controls, failure, tutorial, summary, feedback, and offline parity verified.');
