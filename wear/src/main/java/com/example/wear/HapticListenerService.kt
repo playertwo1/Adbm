@@ -26,6 +26,11 @@ class HapticListenerService : WearableListenerService() {
                 generation <= preferences.getLong(KEY_ACTIVE_GENERATION, 0L)
             ) return
             if (System.currentTimeMillis() - sentAt !in 0..MAX_AGE_MS || wasHandled(id)) return
+            if (message.optBoolean("cancel", false)) {
+                vibrator().cancel()
+                remember(id)
+                return
+            }
 
             val values = message.getJSONArray("pattern")
             val pattern = LongArray(values.length()) { index ->

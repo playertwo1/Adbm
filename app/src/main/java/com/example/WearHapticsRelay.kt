@@ -42,8 +42,10 @@ object WearHapticsRelay {
     fun cancel(context: Context) {
         val payload = JSONObject()
             .put("type", "cancel")
+            .put("id", UUID.randomUUID().toString())
             .put("sentAt", System.currentTimeMillis())
             .put("generation", nextGeneration(context))
+            .put("cancel", true)
             .toString()
             .toByteArray(Charsets.UTF_8)
 

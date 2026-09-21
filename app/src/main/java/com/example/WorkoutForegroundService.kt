@@ -81,7 +81,7 @@ class WorkoutForegroundService : Service() {
         when (intent?.action) {
             ACTION_START -> startSession(intent.getStringExtra(EXTRA_SESSION_JSON).orEmpty())
             ACTION_PAUSE -> pauseSession()
-            ACTION_SAFE_EXIT_RETENTION -> exitRetentionSafely()
+            ACTION_SAFE_EXIT_RETENTION -> safeExitRetention()
             ACTION_RESUME -> resumeSession()
             ACTION_SKIP -> advanceStep()
             ACTION_STOP -> stopSession(interrupted = true)
@@ -96,7 +96,7 @@ class WorkoutForegroundService : Service() {
     override fun onDestroy() {
         tickerJob?.cancel()
         releaseWakeLock()
-        cancelPendingSignals()
+        cancelActiveSignals()
         tts?.stop()
         tts?.shutdown()
         scope.cancel()
@@ -107,7 +107,8 @@ class WorkoutForegroundService : Service() {
         val payload = runCatching { JSONObject(rawJson) }.getOrNull()
         val parsedSteps = payload?.optJSONArray("steps")?.toSteps().orEmpty()
         if (payload == null || parsedSteps.isEmpty()) {
-            stopSelf()
+            sessionMetadata = payload?.let { sessionMetadataFrom(it) } ?: JSONObject()
+            failStart("Dados da sessão ausentes ou inválidos.")
             return
         }
 
@@ -140,7 +141,7 @@ class WorkoutForegroundService : Service() {
 
         startForeground(NOTIFICATION_ID, buildNotification())
         acquireWakeLock()
-        cancelPendingSignals()
+        cancelActiveSignals()
         announceCurrentStep(firstStep = true)
         persistAndBroadcast("running")
         startTicker()
@@ -209,19 +210,19 @@ class WorkoutForegroundService : Service() {
     private fun pauseSession() {
         if (steps.isEmpty()) return
         paused = true
-        cancelPendingSignals()
+        cancelActiveSignals()
         releaseWakeLock()
         persistAndBroadcast("paused")
     }
 
-    private fun exitRetentionSafely() {
+    private fun safeExitRetention() {
         if (steps.isEmpty()) return
         if (steps.getOrNull(currentStepIndex)?.phase != "vacuo") {
             pauseSession()
             return
         }
         markRetentionInterrupted()
-        cancelPendingSignals()
+        cancelActiveSignals()
         if (currentStepIndex >= steps.lastIndex) {
             stopSession(interrupted = true)
             return
@@ -247,7 +248,7 @@ class WorkoutForegroundService : Service() {
     private fun advanceStep() {
         if (steps.isEmpty()) return
         markRetentionInterrupted()
-        cancelPendingSignals()
+        cancelActiveSignals()
         if (currentStepIndex < steps.lastIndex) {
             currentStepIndex++
             stepTimeLeft = steps[currentStepIndex].duration
@@ -267,7 +268,7 @@ class WorkoutForegroundService : Service() {
 
     private fun completeSession() {
         tickerJob?.cancel()
-        cancelPendingSignals()
+        cancelActiveSignals()
         releaseWakeLock()
         if (hapticsEnabled) AdvancedHapticsManager.playSuccessPattern(this)
         if (voiceEnabled) {
@@ -290,7 +291,7 @@ class WorkoutForegroundService : Service() {
 
     private fun stopSession(interrupted: Boolean) {
         tickerJob?.cancel()
-        cancelPendingSignals()
+        cancelActiveSignals()
         releaseWakeLock()
         persistAndBroadcast(if (interrupted) "interrupted" else "idle")
         stopForeground(STOP_FOREGROUND_REMOVE)
@@ -299,7 +300,7 @@ class WorkoutForegroundService : Service() {
 
     private fun announceCurrentStep(firstStep: Boolean) {
         val step = steps.getOrNull(currentStepIndex) ?: return
-        cancelPendingSignals()
+        cancelActiveSignals()
         if (voiceEnabled) {
             val phrase = step.voice.ifBlank {
                 when {
@@ -334,10 +335,44 @@ class WorkoutForegroundService : Service() {
         tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "CoreFlowBackgroundWorkout")
     }
 
-    private fun cancelPendingSignals() {
+    private fun cancelActiveSignals() {
         pendingSpeech = null
         tts?.stop()
         AdvancedHapticsManager.cancel(this)
+        WearHapticsRelay.cancel(this)
+    }
+
+    private fun sessionMetadataFrom(payload: JSONObject): JSONObject = JSONObject().apply {
+        listOf(
+            "programId",
+            "phaseIndex",
+            "programTitle",
+            "phaseTitle",
+            "sessionId",
+            "sessionNumber",
+            "targetSessions",
+            "type",
+            "completionMessage",
+            "seriesTotal"
+        ).forEach { key ->
+            if (payload.has(key)) put(key, payload.get(key))
+        }
+    }
+
+    private fun failStart(message: String) {
+        tickerJob?.cancel()
+        cancelActiveSignals()
+        releaseWakeLock()
+        steps = emptyList()
+        currentStepIndex = 0
+        stepTimeLeft = 0
+        totalSessionElapsed = 0
+        paused = false
+        val state = stateJson("failed").put("errorMessage", message)
+        preferences().edit().putString(PREF_STATE_JSON, state.toString()).apply()
+        broadcastState(state)
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
     }
 
     private fun configureTtsLanguage() {

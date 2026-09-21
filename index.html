@@ -3794,6 +3794,16 @@
             return remainingCurrentSeries + remainingSeries * (state.inspireDuration + state.expireDuration + state.vacDuration + state.restDuration);
         }
 
+        function vacuumNextPhase(state) {
+            const phases = ['inspira', 'expira', 'vacuo', 'descanso'];
+            if (state.currentPhase === 'ready') return 'inspira';
+            const phaseIndex = phases.indexOf(state.currentPhase);
+            if (phaseIndex < 0 || phaseIndex === phases.length - 1) {
+                return Number(state.seriesCurrent) < Number(state.seriesTotal) ? 'inspira' : 'concluida';
+            }
+            return phases[phaseIndex + 1];
+        }
+
         function updateVacuumPlayerUI() {
             const state = AppState.vacuo;
             const posture = document.getElementById('vacPostureValue');
@@ -3805,7 +3815,7 @@
             const series = document.getElementById('vacCurrentSeries');
             if (posture) posture.innerText = vacuumPostureLabel(state.posture);
             if (parameters) parameters.innerText = `${state.inspireDuration}s · ${state.expireDuration}s · ${state.vacDuration}s · ${state.restDuration}s`;
-            if (nextStep) nextStep.innerText = vacuumPhaseLabel(state.currentPhase === 'ready' ? 'inspira' : state.currentPhase);
+            if (nextStep) nextStep.innerText = vacuumPhaseLabel(vacuumNextPhase(state));
             if (estimate) estimate.innerText = formatDailyTime(vacuumSecondsEstimate());
             if (phaseTitle && state.currentPhase === 'ready') phaseTitle.innerText = 'Pronto para iniciar';
             if (timer && state.currentPhase === 'ready') timer.innerText = '▶';
@@ -9809,6 +9819,26 @@
         };
 
         function handleNativeVacuumState(state) {
+            if (state.status === 'failed') {
+                AppState.vacuo.isRunning = false;
+                AppState.vacuo.isPaused = false;
+                AppState.vacuo.nativeManaged = false;
+                AppState.vacuo.intervalId = null;
+                AppState.vacuo.currentPhase = 'ready';
+                AppState.vacuo.timer = 0;
+                AppState.vacuo.totalElapsedSec = 0;
+                AppState.vacuo.retentionElapsedSec = 0;
+                AppState.vacuo.recoveryElapsedSec = 0;
+                AppState.vacuo.sessionId = null;
+                document.getElementById('vacPlayIcon').className = 'fa-solid fa-play';
+                document.getElementById('vacPlayText').innerText = 'Iniciar';
+                document.getElementById('vacPhaseTitle').innerText = 'Pronto para iniciar';
+                document.getElementById('vacTimerMain').innerText = '▶';
+                showVacuumStartError(state.errorMessage || 'Não foi possível iniciar o motor nativo.');
+                updateVacuumPlayerUI();
+                window.AndroidBridge?.acknowledgeWorkoutState?.();
+                return;
+            }
             if (state.status === 'interrupted' || state.status === 'canceled') {
                 const nativeSessionId = state.session?.sessionId;
                 const existingSessionId = AppState.vacuo.sessionId;
