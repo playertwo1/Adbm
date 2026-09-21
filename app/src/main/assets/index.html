@@ -8963,7 +8963,7 @@
                     }
                 }
                 return steps;
-            } else { // Program 1: Bracing guiado em 8 semanas
+            } else if (progId === '1') { // Program 1: Bracing guiado em 8 semanas
                 const program = AppState.programs.find(program => program.id === '1');
                 const sessionNumber = Math.min((program?.sessionsToday || 0) + 1, program?.dailyTarget || 2);
                 const plans = [
@@ -8986,6 +8986,7 @@
                 steps.push({ title: 'Encerramento e checagem', instruction: 'Solte o abdômen. Confirme: respirou livremente, manteve a postura e terminou sem dor. Se não, repita esta semana com menor esforço.', duration: 20, isRest: true, voice: 'Relaxe e confira a qualidade da prática.', badge: 'QUALIDADE' });
                 return steps;
             }
+            return [];
         }
 
         let mindfulnessPlayer = { programId: '4', phaseIndex: 0, trackType: 'formal', completed: false, wakeLock: null, sessionId: null };
@@ -9512,7 +9513,7 @@
         function getProgramExerciseDetails(programId, phaseIndex) {
             const program = AppState.programs.find(item => item.id === programId);
             const phase = program?.phases?.[phaseIndex];
-            if (!program || !phase) return [];
+            if (!program || program.type === 'mindfulness' || !phase) return [];
             const steps = getProgramSteps(programId, phaseIndex);
             if (!Array.isArray(steps) || steps.length === 0) return [];
 

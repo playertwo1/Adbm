@@ -241,7 +241,19 @@ function setup() {
     assert.match(env.getElementById('programExerciseDetailModal').innerHTML, /01:33/);
 }
 
-// 14. Exercício sem sequência cadastrada mostra ausência utilizável, sem fabricar dados.
+// 14. Mindfulness não reutiliza a sequência de Bracing nem expõe seus exercícios.
+{
+    const env = setup();
+    const details = vm.runInContext(`getProgramExerciseDetails('4', 0)`, env.context);
+    assert.equal(details.length, 0, 'Mindfulness não possui detalhes de exercícios de Bracing');
+    assert.equal(vm.runInContext(`getProgramSteps('4', 0).length`, env.context), 0, 'ID Mindfulness não pode cair no fallback de Bracing');
+    assert.equal(vm.runInContext(`getProgramSteps('unknown-program', 0).length`, env.context), 0, 'ID desconhecido não pode fabricar uma sequência');
+    vm.runInContext(`openProgramExerciseDetail('4', 0)`, env.context);
+    assert.match(env.getElementById('programExerciseDetailModal').innerHTML, /Nenhum exercício cadastrado/);
+    assert.doesNotMatch(env.getElementById('programExerciseDetailModal').innerHTML, /Sessão A: Preparação|75 segundos/);
+}
+
+// 15. Exercício sem sequência cadastrada mostra ausência utilizável, sem fabricar dados.
 {
     const env = setup();
     vm.runInContext(`openProgramExerciseDetail('3', 99)`, env.context);
