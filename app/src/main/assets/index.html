@@ -47,6 +47,77 @@
     <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css">
 
     <style>
+        :root {
+            --cf-color-canvas: #000000;
+            --cf-color-surface: #0A0A0B;
+            --cf-color-surface-raised: #111214;
+            --cf-color-surface-interactive: #18191B;
+            --cf-color-text-primary: #F7F7F8;
+            --cf-color-text-secondary: #A7A9AD;
+            --cf-color-text-muted: #73767C;
+            --cf-color-menta: #5EE6B1;
+            --cf-color-cyan: #67D9FF;
+            --cf-color-alert: #FFB86B;
+            --cf-color-danger: #FF7F8A;
+            --cf-focus-ring: 0 0 0 3px rgba(103, 217, 255, 0.42);
+            --cf-radius-card: 1.25rem;
+            --cf-safe-top: env(safe-area-inset-top, 0px);
+            --cf-safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        html, body {
+            background: var(--cf-color-canvas);
+            color: var(--cf-color-text-primary);
+        }
+        body.cf-app {
+            padding-top: var(--cf-safe-top);
+            padding-bottom: calc(6rem + var(--cf-safe-bottom));
+        }
+        .cf-btn, .cf-icon, .cf-card, .cf-selector, .cf-toggle, .cf-modal,
+        .cf-notice, .cf-empty, .cf-error { box-sizing: border-box; }
+        .cf-btn, .cf-icon, .cf-selector, .cf-toggle,
+        button, [role="button"], input[type="checkbox"], input[type="radio"] {
+            min-width: 48px;
+            min-height: 48px;
+        }
+        .cf-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            border-radius: 1rem;
+            font-weight: 800;
+            transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+        }
+        .cf-btn:focus-visible, .cf-icon:focus-visible, .cf-selector:focus-visible,
+        .cf-toggle:focus-visible, button:focus-visible, input:focus-visible,
+        select:focus-visible, textarea:focus-visible { outline: none; box-shadow: var(--cf-focus-ring); }
+        .cf-btn:active, .cf-icon:active, button:active { transform: scale(.98); }
+        .cf-icon { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; }
+        .cf-card { background: var(--cf-color-surface-raised); border: 1px solid rgba(255,255,255,.09); border-radius: var(--cf-radius-card); }
+        .cf-selector { border: 1px solid rgba(103,217,255,.28); background: var(--cf-color-surface); border-radius: 1rem; }
+        .cf-selector[aria-pressed="true"], .cf-toggle[aria-checked="true"] { border-color: var(--cf-color-menta); box-shadow: inset 0 0 0 1px var(--cf-color-menta); }
+        .cf-toggle { position: relative; display: inline-flex; align-items: center; justify-content: flex-start; padding: .25rem; border-radius: 999px; background: #24262A; border: 1px solid #3A3D42; }
+        .cf-toggle::after { content: ''; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--cf-color-text-secondary); transition: transform .18s ease, background-color .18s ease; }
+        .cf-toggle[aria-checked="true"] { justify-content: flex-end; background: rgba(94,230,177,.2); }
+        .cf-toggle[aria-checked="true"]::after { background: var(--cf-color-menta); }
+        .cf-modal { overscroll-behavior: contain; padding-top: max(1rem, var(--cf-safe-top)); padding-bottom: max(1rem, var(--cf-safe-bottom)); }
+        .cf-notice { border-left: 3px solid var(--cf-color-cyan); background: rgba(103,217,255,.08); color: var(--cf-color-text-secondary); }
+        .cf-empty { border: 1px dashed rgba(255,255,255,.2); color: var(--cf-color-text-secondary); }
+        .cf-error { border: 1px solid rgba(255,127,138,.4); background: rgba(255,127,138,.1); color: #FFD5D8; }
+        .cf-bottom-nav { padding-bottom: max(.5rem, var(--cf-safe-bottom)); background: rgba(10,10,11,.96); border-color: rgba(255,255,255,.1); }
+        .cf-nav-label { font-size: .68rem; line-height: 1.1; }
+        .cf-status-dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--cf-color-menta); }
+        @media (min-width: 520px) { main { max-width: 38rem; } }
+        @media (max-width: 380px) {
+            .cf-nav-label { font-size: .6rem; }
+            main { padding-left: .75rem; padding-right: .75rem; }
+            .cf-app header { flex-wrap: wrap; row-gap: .5rem; }
+            .cf-app header > div:last-child { width: 100%; max-width: 100%; justify-content: flex-end; }
+            .cf-app .overflow-x-auto { min-width: 0; max-width: 100%; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+        }
         * {
             -webkit-tap-highlight-color: transparent;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -150,7 +221,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen pb-24 overflow-x-hidden antialiased selection:bg-emerald-500 selection:text-white">
+<body class="cf-app bg-slate-900 text-slate-100 min-h-screen pb-24 overflow-x-hidden antialiased selection:bg-emerald-500 selection:text-white">
 
     <!-- Top Status Bar & App Header -->
     <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3.5 flex items-center justify-between no-print">
@@ -232,10 +303,27 @@
             </div>
         </div>
 
+        <section id="tab-hoje" class="tab-content active space-y-4" aria-labelledby="today-heading">
+            <div class="cf-card p-4 space-y-4">
+                <div class="flex items-start justify-between gap-3">
+                    <div><p class="text-[10px] font-extrabold uppercase tracking-[.18em] text-cyan-300">Hoje</p><h2 id="today-heading" class="mt-1 text-2xl font-black text-white">Seu próximo passo</h2><p class="mt-1 text-sm text-slate-300">Escolha uma prática real e acompanhe o que foi feito.</p></div>
+                    <span class="cf-status-dot mt-2" aria-label="Estado local disponível"></span>
+                </div>
+                <div class="cf-notice rounded-xl p-3 text-xs" role="status" aria-live="polite"><strong class="text-cyan-200">Dados locais protegidos.</strong> Sem conexão, os fluxos essenciais continuam disponíveis.</div>
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button" class="cf-btn bg-emerald-500 px-3 py-3 text-sm text-slate-950" onclick="switchTab('vacuo')" aria-label="Abrir Vácuo"><i class="fa-solid fa-lungs" aria-hidden="true"></i><span>Vácuo</span></button>
+                    <button type="button" class="cf-btn border border-cyan-400/40 bg-cyan-400/10 px-3 py-3 text-sm text-cyan-100" onclick="switchTab('discreto')" aria-label="Abrir Modo Discreto"><i class="fa-solid fa-briefcase" aria-hidden="true"></i><span>Discreto</span></button>
+                    <button type="button" class="cf-btn border border-violet-400/40 bg-violet-400/10 px-3 py-3 text-sm text-violet-100" onclick="openMindfulnessAudioModal()" aria-label="Abrir Mindfulness"><i class="fa-solid fa-brain" aria-hidden="true"></i><span>Mindfulness</span></button>
+                    <button type="button" class="cf-btn border border-slate-700 bg-slate-900 px-3 py-3 text-sm text-slate-100" onclick="switchTab('programas')" aria-label="Abrir Programas"><i class="fa-solid fa-list-check" aria-hidden="true"></i><span>Programas</span></button>
+                </div>
+            </div>
+            <div class="cf-card p-4"><div class="flex items-center justify-between gap-3"><div><p class="text-xs font-bold uppercase tracking-wider text-slate-400">Resumo do dia</p><p class="mt-1 text-2xl font-black text-white"><span id="todayMinutesValue">0</span> min</p></div><button type="button" class="cf-btn border border-slate-700 px-3 py-2 text-xs text-slate-200" onclick="switchTab('dashboard')">Ver evolução</button></div><div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-800"><div id="todayGoalProgress" class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400" style="width:0%"></div></div></div>
+        </section>
+
         <!-- ============================================================ -->
         <!-- ABA 1: PLAYER DE VÁCUO ABDOMINAL (RESPIRAÇÃO & LPF) -->
         <!-- ============================================================ -->
-        <section id="tab-vacuo" class="tab-content active space-y-5">
+        <section id="tab-vacuo" class="tab-content space-y-5" aria-labelledby="vacuo-heading">
 
             <!-- Posture & Setting Header -->
             <div class="bg-slate-800/80 rounded-2xl p-3.5 border border-slate-700/60 shadow-lg">
@@ -2721,51 +2809,25 @@
         </div>
     </div>
 
+    <section id="tab-perfil" class="tab-content space-y-4" aria-labelledby="profile-heading">
+        <div class="cf-card p-4"><p class="text-[10px] font-extrabold uppercase tracking-[.18em] text-cyan-300">Perfil</p><h2 id="profile-heading" class="mt-1 text-2xl font-black text-white">Preferências</h2><p class="mt-1 text-sm text-slate-300">Ajustes ficam neste dispositivo e podem ser exportados.</p></div>
+        <div class="cf-card divide-y divide-white/10">
+            <button type="button" class="flex w-full items-center justify-between gap-4 p-4 text-left" onclick="toggleVoice()" aria-label="Alternar condução por voz"><span><strong class="block text-sm text-white">Condução por voz</strong><span class="text-xs text-slate-400">Avisos durante as práticas</span></span><span id="profileVoiceToggle" class="cf-toggle" role="switch" aria-checked="true" aria-label="Voz ativada"></span></button>
+            <button type="button" class="flex w-full items-center justify-between gap-4 p-4 text-left" onclick="toggleHaptics()" aria-label="Alternar vibração do aparelho"><span><strong class="block text-sm text-white">Vibração</strong><span class="text-xs text-slate-400">Sinais táteis no aparelho</span></span><span id="profileHapticsToggle" class="cf-toggle" role="switch" aria-checked="true" aria-label="Vibração ativada"></span></button>
+            <button type="button" class="flex w-full items-center justify-between gap-4 p-4 text-left" onclick="toggleWatchHaptics()" aria-label="Alternar vibração do relógio"><span><strong class="block text-sm text-white">Galaxy Watch</strong><span class="text-xs text-slate-400">Somente quando o relógio estiver disponível</span></span><span id="profileWatchToggle" class="cf-toggle" role="switch" aria-checked="true" aria-label="Watch ativado"></span></button>
+        </div>
+        <div class="cf-card p-4 space-y-3"><h3 class="text-sm font-bold text-white">Dados e segurança</h3><p class="text-xs text-slate-400">Exporte uma cópia antes de importar ou apagar dados.</p><div class="grid grid-cols-2 gap-3"><button type="button" class="cf-btn bg-emerald-500 px-3 py-3 text-xs text-slate-950" onclick="openProgressProtection(); exportProgressCopy()">Exportar</button><button type="button" class="cf-btn border border-cyan-400/40 px-3 py-3 text-xs text-cyan-100" onclick="openProgressProtection(); chooseProgressImport()">Importar</button></div><button type="button" class="cf-btn w-full border border-slate-700 px-3 py-3 text-xs text-slate-200" onclick="openSmartwatchCompanionModal()"><i class="fa-solid fa-clock" aria-hidden="true"></i> Estado do Watch</button></div>
+        <div class="cf-empty p-4 text-center text-xs" aria-live="polite">Nenhum dado de saúde externo está conectado.</div>
+    </section>
+
     <!-- BOTTOM NAVIGATION BAR (MATERIAL DESIGN 3 / ANDROID TABS) -->
-    <!-- ============================================================ -->
-    <nav class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-1 py-2 no-print">
-        <div class="max-w-md mx-auto grid grid-cols-5 gap-1">
-
-            <!-- Tab 1: Vácuo -->
-            <button onclick="switchTab('vacuo')" id="nav-btn-vacuo" class="nav-item active flex flex-col items-center justify-center py-1.5 px-0.5 rounded-2xl transition text-emerald-400">
-                <div class="nav-icon-box w-10 h-7 flex items-center justify-center rounded-full bg-emerald-500/15 mb-0.5 transition">
-                    <i class="fa-solid fa-lungs text-base"></i>
-                </div>
-                <span class="text-[10px] font-bold tracking-tight">Vácuo</span>
-            </button>
-
-            <!-- Tab 2: Discreto -->
-            <button onclick="switchTab('discreto')" id="nav-btn-discreto" class="nav-item flex flex-col items-center justify-center py-1.5 px-0.5 rounded-2xl transition text-slate-400 hover:text-slate-200">
-                <div class="nav-icon-box w-10 h-7 flex items-center justify-center rounded-full mb-0.5 transition">
-                    <i class="fa-solid fa-briefcase text-base"></i>
-                </div>
-                <span class="text-[10px] font-bold tracking-tight">Discreto</span>
-            </button>
-
-            <!-- Tab 3: Pausas Ativas -->
-            <button onclick="switchTab('pausas')" id="nav-btn-pausas" class="nav-item flex flex-col items-center justify-center py-1.5 px-0.5 rounded-2xl transition text-slate-400 hover:text-slate-200">
-                <div class="nav-icon-box w-10 h-7 flex items-center justify-center rounded-full mb-0.5 transition">
-                    <i class="fa-solid fa-chair text-base"></i>
-                </div>
-                <span class="text-[10px] font-bold tracking-tight">Pausas</span>
-            </button>
-
-            <!-- Tab 4: Programas -->
-            <button onclick="switchTab('programas')" id="nav-btn-programas" class="nav-item flex flex-col items-center justify-center py-1.5 px-0.5 rounded-2xl transition text-slate-400 hover:text-slate-200">
-                <div class="nav-icon-box w-10 h-7 flex items-center justify-center rounded-full mb-0.5 transition">
-                    <i class="fa-solid fa-list-check text-base"></i>
-                </div>
-                <span class="text-[10px] font-bold tracking-tight">Programas</span>
-            </button>
-
-            <!-- Tab 5: Cronograma / Dashboard -->
-            <button onclick="switchTab('dashboard')" id="nav-btn-dashboard" class="nav-item flex flex-col items-center justify-center py-1.5 px-0.5 rounded-2xl transition text-slate-400 hover:text-slate-200">
-                <div class="nav-icon-box w-10 h-7 flex items-center justify-center rounded-full mb-0.5 transition">
-                    <i class="fa-solid fa-chart-line text-base"></i>
-                </div>
-                <span class="text-[10px] font-bold tracking-tight">Evolução</span>
-            </button>
-
+    <nav id="coreflow-bottom-nav" class="cf-bottom-nav fixed bottom-0 left-0 right-0 z-50 border-t px-1 pt-2 no-print" aria-label="Navegação principal">
+        <div class="mx-auto grid max-w-md grid-cols-5 gap-1">
+            <button type="button" onclick="switchTab('hoje')" id="nav-btn-hoje" class="nav-item flex flex-col items-center justify-center rounded-2xl px-0.5 py-1.5 text-emerald-400" aria-current="page"><span class="nav-icon-box flex h-7 w-10 items-center justify-center rounded-full bg-emerald-500/15 transition"><i class="fa-solid fa-house" aria-hidden="true"></i></span><span class="cf-nav-label font-bold">Hoje</span></button>
+            <button type="button" onclick="switchTab('programas')" id="nav-btn-programas" class="nav-item flex flex-col items-center justify-center rounded-2xl px-0.5 py-1.5 text-slate-400 hover:text-slate-200"><span class="nav-icon-box flex h-7 w-10 items-center justify-center rounded-full transition"><i class="fa-solid fa-list-check" aria-hidden="true"></i></span><span class="cf-nav-label font-bold">Programas</span></button>
+            <button type="button" onclick="switchTab('pausas')" id="nav-btn-pausas" class="nav-item flex flex-col items-center justify-center rounded-2xl px-0.5 py-1.5 text-slate-400 hover:text-slate-200"><span class="nav-icon-box flex h-7 w-10 items-center justify-center rounded-full transition"><i class="fa-solid fa-chair" aria-hidden="true"></i></span><span class="cf-nav-label font-bold">Pausas</span></button>
+            <button type="button" onclick="switchTab('dashboard')" id="nav-btn-dashboard" class="nav-item flex flex-col items-center justify-center rounded-2xl px-0.5 py-1.5 text-slate-400 hover:text-slate-200"><span class="nav-icon-box flex h-7 w-10 items-center justify-center rounded-full transition"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span><span class="cf-nav-label font-bold">Evolução</span></button>
+            <button type="button" onclick="switchTab('perfil')" id="nav-btn-perfil" class="nav-item flex flex-col items-center justify-center rounded-2xl px-0.5 py-1.5 text-slate-400 hover:text-slate-200"><span class="nav-icon-box flex h-7 w-10 items-center justify-center rounded-full transition"><i class="fa-solid fa-user" aria-hidden="true"></i></span><span class="cf-nav-label font-bold">Perfil</span></button>
         </div>
     </nav>
 
@@ -2777,7 +2839,7 @@
            APP STATE & INITIALIZATION
         ------------------------------------------------------------- */
         const AppState = {
-            activeTab: 'vacuo',
+            activeTab: 'hoje',
             voiceEnabled: true,
             hapticsEnabled: true,
             watchHapticsEnabled: true,
@@ -3521,6 +3583,11 @@
             } else {
                 icon.className = 'fa-solid fa-volume-xmark text-slate-500';
             }
+            const profileToggle = document.getElementById('profileVoiceToggle');
+            if (profileToggle) {
+                profileToggle.setAttribute('aria-checked', String(AppState.voiceEnabled));
+                profileToggle.setAttribute('aria-label', AppState.voiceEnabled ? 'Voz ativada' : 'Voz desativada');
+            }
         }
 
         function toggleHaptics() {
@@ -3531,6 +3598,11 @@
                 triggerHaptic([100]);
             } else {
                 icon.className = 'fa-solid fa-mobile-screen text-slate-500';
+            }
+            const profileToggle = document.getElementById('profileHapticsToggle');
+            if (profileToggle) {
+                profileToggle.setAttribute('aria-checked', String(AppState.hapticsEnabled));
+                profileToggle.setAttribute('aria-label', AppState.hapticsEnabled ? 'Vibração ativada' : 'Vibração desativada');
             }
         }
 
@@ -3549,6 +3621,7 @@
             document.querySelectorAll('.nav-item').forEach(btn => {
                 btn.classList.remove('text-emerald-400');
                 btn.classList.add('text-slate-400');
+                btn.removeAttribute('aria-current');
                 const box = btn.querySelector('.nav-icon-box');
                 if (box) {
                     box.classList.remove('bg-emerald-500/15', 'nav-bounce');
@@ -3559,6 +3632,7 @@
             if (activeNavBtn) {
                 activeNavBtn.classList.remove('text-slate-400');
                 activeNavBtn.classList.add('text-emerald-400');
+                activeNavBtn.setAttribute('aria-current', 'page');
                 const box = activeNavBtn.querySelector('.nav-icon-box');
                 if (box) {
                     box.classList.add('bg-emerald-500/15');
@@ -3568,7 +3642,13 @@
                 }
             }
 
-            if (tabName === 'programas') {
+            if (tabName === 'hoje') {
+                const minutes = Math.max(0, Number(AppState.totalMinutesToday) || 0);
+                const value = document.getElementById('todayMinutesValue');
+                const progress = document.getElementById('todayGoalProgress');
+                if (value) value.textContent = String(minutes);
+                if (progress) progress.style.width = `${Math.min(100, Math.round((minutes / Math.max(1, AppState.dailyGoal || 1)) * 100))}%`;
+            } else if (tabName === 'programas') {
                 renderProgramsList();
             } else if (tabName === 'dashboard') {
                 renderWeeklyChart();
@@ -3582,6 +3662,37 @@
             triggerHaptic([30]);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        function closeTopmostOverlay() {
+            const overlays = ['cancelDailyConfirmModal', 'dailyExecutionModal', 'mindfulnessAudioModal', 'responsivePauseModal', 'bracingProgramModal', 'kegelProgramModal', 'editProgramModal', 'reminderConfigModal', 'interactiveReminderModal', 'scheduleModal', 'noteModal', 'bpmMeasurementModal', 'smartwatchCompanionModal', 'progressProtectionModal'];
+            for (const id of overlays) {
+                const overlay = document.getElementById(id);
+                if (overlay && !overlay.classList.contains('hidden')) {
+                    const close = window[`close${id.charAt(0).toUpperCase()}${id.slice(1)}`];
+                    if (typeof close === 'function') close();
+                    else overlay.classList.add('hidden');
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function handleBackNavigation(event) {
+            if (event) event.preventDefault();
+            if (closeTopmostOverlay()) return false;
+            if (AppState.dailyExecution?.isRunning || AppState.vacuo?.isRunning) {
+                if (typeof requestCancelDailySession === 'function' && AppState.dailyExecution?.isRunning) requestCancelDailySession();
+                else if (typeof pauseVacuo === 'function') pauseVacuo();
+                return false;
+            }
+            if (AppState.activeTab !== 'hoje') {
+                switchTab('hoje');
+                return false;
+            }
+            return true;
+        }
+
+        window.addEventListener('popstate', handleBackNavigation);
 
         /* -------------------------------------------------------------
            ABA 1: PLAYER DE VÁCUO ABDOMINAL (LPF ENGINE)
@@ -8662,6 +8773,11 @@
             button.title = AppState.watchHapticsEnabled
                 ? 'Galaxy Watch: vibração ativada'
                 : 'Galaxy Watch: vibração desativada';
+            const profileToggle = document.getElementById('profileWatchToggle');
+            if (profileToggle) {
+                profileToggle.setAttribute('aria-checked', String(AppState.watchHapticsEnabled));
+                profileToggle.setAttribute('aria-label', AppState.watchHapticsEnabled ? 'Watch ativado' : 'Watch desativado');
+            }
         }
 
         function toggleWatchHaptics() {

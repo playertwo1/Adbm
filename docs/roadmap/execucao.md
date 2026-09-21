@@ -188,3 +188,14 @@ Próximo passo:
 - Implementação: `HapticListenerService` agora rejeita qualquer padrão com geração menor ou igual à geração ativa, além da geração cancelada; a geração ativa não pode regredir após entrega fora de ordem.
 - Validação GREEN: `node diagnostics/session-engine.test.cjs` e `CORE_HTML=index.html node diagnostics/session-engine.test.cjs` → PASS, incluindo regressão nova→antiga com somente a geração mais recente entregue.
 - Limitações: auditoria independente do target SHA e validação em aparelho/Watch físico ainda pendentes; a compilação integrada local passou; “Mais descanso” permanece desativado e sem incremento clínico inventado.
+
+## 2026-09-21 — E05 / sistema visual AMOLED
+
+- Regressão RED criada antes da alteração: `diagnostics/e05-visual.test.cjs` exigiu tokens centralizados, componentes reutilizáveis, cinco destinos fixos, atalhos, alvos de toque, insets, redução de movimento, retorno por overlay, acessibilidade e ausência de URLs remotas.
+- Implementação: tokens `#000000`, `#0A0A0B`, `#111214`, texto claro, menta, ciano e alertas; componentes CSS `cf-btn`, `cf-icon`, `cf-card`, `cf-selector`, `cf-toggle`, `cf-modal`, `cf-notice`, `cf-empty` e `cf-error`; tela Hoje e Perfil; navegação fixa Hoje/Programas/Pausas/Evolução/Perfil; atalhos Vácuo/Discreto/Mindfulness.
+- Estado e acessibilidade: navegação atualiza `aria-current`; toggles de voz, vibração e Watch anunciam `aria-checked`; retorno via `popstate` fecha primeiro o overlay e, durante sessão ativa, solicita cancelamento/pausa sem perder estado; insets, viewport-fit, foco visível e `prefers-reduced-motion` foram centralizados.
+- Inventário versionado: `docs/roadmap/inventario-controles-e05.md`. Nenhum ID de programa, armazenamento ou protocolo E04 foi alterado.
+- Validação GREEN: `node diagnostics/e05-visual.test.cjs` → PASS; `node diagnostics/session-engine.test.cjs` → PASS; `node diagnostics/progress-persistence.test.cjs` → PASS; `node diagnostics/webview-security.test.cjs` → PASS; `node diagnostics/vacuum-roadmap.test.cjs` → PASS; `git diff --check` → PASS; `cmp -s index.html app/src/main/assets/index.html` → PASS.
+- Exercício real no browser local: cinco destinos abriram `tab-hoje`, `tab-programas`, `tab-pausas`, `tab-dashboard` e `tab-perfil`; atalhos abriram Vácuo/Discreto e o modal Mindfulness; `popstate` fechou o modal antes de trocar contexto; toggle de voz alterou `aria-checked`. Em viewport 360×800 e referência 1440×3120, a navegação permaneceu fixa e não houve overflow horizontal.
+- Limitações: TalkBack físico, teclado/rotação e Galaxy Watch físico ainda precisam ser exercitados; não são declarados aprovados nesta etapa e permanecem na validação integrada E13.
+- Próximo passo: auditoria independente do target SHA exato, sem push, merge, release ou deploy.

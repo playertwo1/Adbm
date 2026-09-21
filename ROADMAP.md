@@ -112,16 +112,17 @@ Aceite: sequência, tempo e estado iguais nos caminhos web/nativo; interrupção
 Evidência parcial verificada: diagnóstico do motor cobre registros/feedback por ID e restauração do snapshot web de vácuo sem timer/posse nativa obsoletos. Isso não comprova o aceite completo nem substitui validação no aparelho. Marcações anteriores de conclusão foram retiradas por falta de evidência e contradição com o bloqueio de E03.
 
 ### E05 — Sistema visual
-- [ ] Tokens: preto #000000, superfícies #0A0A0B/#111214, texto claro, verde/menta, ciano e alertas.
-- [ ] Componentes reutilizáveis: botão, ícone, card, seletor, toggle, modal, aviso, vazio e erro.
-- [ ] Navegação fixa: Hoje, Programas, Pausas, Evolução, Perfil; atalhos para Vácuo/Discreto/Mindfulness.
-- [ ] Voltar fecha modal antes de sair da tela; tratar sessão ativa.
-- [ ] Alvos de toque de 48dp equivalentes na WebView, rótulos e seleção compreensível sem cor.
-- [ ] Insets reais, câmera, teclado, gestos, fonte ampliada, TalkBack e redução de movimento.
-- [ ] Layout responsivo para S25 Ultra e telas menores; não fixar pixels físicos.
-- [ ] Assets essenciais locais/offline; não usar PNG inteiro como interface.
-- [ ] Criar inventário de controles: tela, ID, evento, estado alterado, persistência, falha/cancelamento e teste.
+- [x] Tokens: preto #000000, superfícies #0A0A0B/#111214, texto claro, verde/menta, ciano e alertas.
+- [x] Componentes reutilizáveis: botão, ícone, card, seletor, toggle, modal, aviso, vazio e erro.
+- [x] Navegação fixa: Hoje, Programas, Pausas, Evolução, Perfil; atalhos para Vácuo/Discreto/Mindfulness.
+- [x] Voltar fecha modal antes de sair da tela; tratar sessão ativa.
+- [x] Alvos de toque de 48dp equivalentes na WebView, rótulos e seleção compreensível sem cor.
+- [x] Insets reais, câmera, teclado, gestos, fonte ampliada, TalkBack e redução de movimento (suporte implementado; validação física pendente).
+- [x] Layout responsivo para S25 Ultra e telas menores; não fixar pixels físicos.
+- [x] Assets essenciais locais/offline; não usar PNG inteiro como interface.
+- [x] Criar inventário de controles: tela, ID, evento, estado alterado, persistência, falha/cancelamento e teste.
 Aceite: navegação funcional; sem sobreposição/corte; nenhum controle decorativo aparentando funcionar.
+Evidência E05: `docs/roadmap/inventario-controles-e05.md`, `diagnostics/e05-visual.test.cjs`, comparação byte a byte dos HTMLs e validação browser/emulador registrada no `docs/roadmap/execucao.md`.
 
 ### E06 — Tela 03: Vácuo
 [Referência](assets/design/coreflow-s25-ultra/03-vacuo-player.png)
