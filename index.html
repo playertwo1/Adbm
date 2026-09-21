@@ -1898,7 +1898,7 @@
                     </div>
 
                     <div class="pt-1 flex gap-2">
-                        <button onclick="openDailyExecutionModal('2')" class="flex-1 py-3.5 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 active:scale-95 text-slate-950 font-extrabold text-sm rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition">
+                        <button onclick="openRecommendedProgram()" class="flex-1 py-3.5 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 active:scale-95 text-slate-950 font-extrabold text-sm rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition">
                             <i class="fa-solid fa-play"></i>
                             <span id="heroWorkoutButtonText">Iniciar Treino Guiado Passo a Passo</span>
                         </button>
@@ -1906,6 +1906,16 @@
                 </div>
             </div>
 
+            <section id="programDetailState" class="hidden space-y-4 pb-12" aria-live="polite"></section>
+            <div id="programsListEmpty" class="hidden rounded-2xl border border-slate-700 bg-slate-900/80 p-4 text-xs text-slate-300">
+                <strong class="block text-sm text-white">Sem histórico de programas ainda</strong>
+                <span class="mt-1 block">Escolha um programa para ver a etapa inicial e iniciar somente quando desejar.</span>
+            </div>
+            <div id="programsListError" class="hidden rounded-2xl border border-amber-400/40 bg-amber-500/10 p-4 text-xs text-amber-100" role="alert">
+                <strong class="block text-sm text-amber-200">Não foi possível ler parte do progresso</strong>
+                <span class="mt-1 block">Os programas disponíveis foram preservados. Tente recuperar os dados antes de alterar o progresso.</span>
+                <button type="button" onclick="retryProgressPersistence()" class="mt-3 rounded-xl border border-amber-300/40 px-3 py-2 font-bold text-amber-100">Tentar novamente</button>
+            </div>
             <div id="programsListContainer" class="space-y-4 pb-12">
                 <!-- Preenchido via JS -->
             </div>
@@ -2883,6 +2893,11 @@
         ------------------------------------------------------------- */
         const AppState = {
             activeTab: 'hoje',
+            programDetailState: {
+                programId: null,
+                phaseIndex: null,
+                isOpen: false
+            },
             voiceEnabled: true,
             hapticsEnabled: true,
             watchHapticsEnabled: true,
@@ -9178,7 +9193,7 @@
             const informalDone = prog.informalCompletedDate === localDateKey();
             const secondaryButton = phase.secondaryTrack ? `<button onclick="openMindfulnessAudioModal('4', ${phaseIdx}, 'secondary')" class="w-full rounded-xl border border-violet-400/30 bg-violet-500/10 py-3 text-xs font-bold text-violet-200"><i class="fa-solid fa-wind mr-2"></i>${phase.secondaryTrackTitle}</button>` : '';
             const weeks = prog.phases.map((item, index) => `<button onclick="openMindfulnessAudioModal('4', ${index}, 'formal')" class="flex w-full items-center gap-3 border-t border-slate-700/50 py-3 text-left"><span class="flex h-7 w-7 items-center justify-center rounded-full ${index === phaseIdx ? 'bg-violet-500 text-white' : 'bg-slate-800 text-slate-400'} text-xs font-bold">${index + 1}</span><span class="flex-1"><strong class="block text-xs ${item.completed ? 'text-emerald-400' : 'text-slate-200'}">${item.title}</strong><small class="text-[10px] text-slate-500">${item.formalTrackTitle}</small></span><i class="fa-solid fa-play text-xs text-violet-400"></i></button>`).join('');
-            return `<div class="overflow-hidden rounded-3xl border border-violet-400/30 bg-gradient-to-br from-violet-950/80 via-slate-900 to-slate-950 shadow-2xl shadow-violet-950/30"><div class="p-5"><div class="flex items-start gap-3"><div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/20 text-xl text-violet-300"><i class="fa-solid fa-brain"></i></div><div class="flex-1"><span class="rounded-full bg-violet-500/15 px-2 py-1 text-[9px] font-black uppercase tracking-wider text-violet-300">Mindfulness & Mente</span><h3 class="mt-2 text-lg font-black text-white">${prog.title}</h3><p class="text-xs text-slate-400">${phase.title}</p></div></div><div class="mt-4"><div class="mb-1 flex justify-between text-[11px] text-slate-400"><span>Progresso semanal</span><strong class="text-violet-300">${days}/6 dias</strong></div><div class="h-2 overflow-hidden rounded-full bg-slate-800"><div class="h-full bg-gradient-to-r from-violet-600 to-fuchsia-400" style="width:${Math.min(100, days / 6 * 100)}%"></div></div></div><div class="mt-4 rounded-2xl border border-violet-400/20 bg-slate-950/50 p-4"><div class="flex gap-3"><i class="fa-solid fa-leaf mt-1 text-emerald-400"></i><div class="flex-1"><strong class="text-xs text-white">${phase.informalTitle}</strong><p class="mt-1 text-[11px] leading-relaxed text-slate-400">${phase.informalDescription}</p></div></div><button onclick="toggleMindfulnessInformal()" class="mt-3 w-full rounded-xl py-2 text-xs font-bold ${informalDone ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-300'}"><i class="fa-solid ${informalDone ? 'fa-circle-check' : 'fa-circle'} mr-2"></i>${informalDone ? 'Prática informal concluída hoje' : 'Marcar prática informal de hoje'}</button></div><div class="mt-4 space-y-2"><button onclick="openMindfulnessAudioModal('4', ${phaseIdx}, 'formal')" class="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-700 py-3.5 text-xs font-black text-white"><i class="fa-solid fa-headphones mr-2"></i>Iniciar Prática Formal (${sessions}/${prog.dailyTarget})</button>${secondaryButton}</div><button onclick="toggleProgramExpand(${pIdx})" class="mt-4 w-full text-xs font-bold text-violet-300">${prog.expanded ? 'Ocultar semanas' : 'Ver as 8 semanas'} <i class="fa-solid fa-chevron-${prog.expanded ? 'up' : 'down'} ml-1"></i></button></div><div class="${prog.expanded ? 'block' : 'hidden'} border-t border-violet-400/20 bg-black/15 px-5 pb-3">${weeks}</div></div>`;
+            return `<div data-program-id="${prog.id}" class="overflow-hidden rounded-3xl border border-violet-400/30 bg-gradient-to-br from-violet-950/80 via-slate-900 to-slate-950 shadow-2xl shadow-violet-950/30"><div class="p-5"><div class="flex items-start gap-3"><div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/20 text-xl text-violet-300"><i class="fa-solid fa-brain"></i></div><div class="flex-1"><span class="rounded-full bg-violet-500/15 px-2 py-1 text-[9px] font-black uppercase tracking-wider text-violet-300">Mindfulness & Mente</span><h3 class="mt-2 text-lg font-black text-white">${prog.title}</h3><p class="text-xs text-slate-400">${phase.title}</p></div></div><div class="mt-4"><div class="mb-1 flex justify-between text-[11px] text-slate-400"><span>Progresso semanal</span><strong class="text-violet-300">${days}/6 dias</strong></div><div class="h-2 overflow-hidden rounded-full bg-slate-800"><div class="h-full bg-gradient-to-r from-violet-600 to-fuchsia-400" style="width:${Math.min(100, days / 6 * 100)}%"></div></div></div><div class="mt-4 rounded-2xl border border-violet-400/20 bg-slate-950/50 p-4"><div class="flex gap-3"><i class="fa-solid fa-leaf mt-1 text-emerald-400"></i><div class="flex-1"><strong class="text-xs text-white">${phase.informalTitle}</strong><p class="mt-1 text-[11px] leading-relaxed text-slate-400">${phase.informalDescription}</p></div></div><button onclick="toggleMindfulnessInformal()" class="mt-3 w-full rounded-xl py-2 text-xs font-bold ${informalDone ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-300'}"><i class="fa-solid ${informalDone ? 'fa-circle-check' : 'fa-circle'} mr-2"></i>${informalDone ? 'Prática informal concluída hoje' : 'Marcar prática informal de hoje'}</button></div><div class="mt-4 space-y-2"><button onclick="openMindfulnessAudioModal('4', ${phaseIdx}, 'formal')" class="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-700 py-3.5 text-xs font-black text-white"><i class="fa-solid fa-headphones mr-2"></i>Iniciar Prática Formal (${sessions}/${prog.dailyTarget})</button>${secondaryButton}</div><button onclick="openProgramDetail('${prog.id}')" class="mt-4 w-full rounded-xl border border-violet-400/40 py-2.5 text-xs font-bold text-violet-200"><i class="fa-solid fa-list-check mr-2"></i>Ver detalhe da etapa</button><button onclick="toggleProgramExpand(${pIdx})" class="mt-4 w-full text-xs font-bold text-violet-300">${prog.expanded ? 'Ocultar semanas' : 'Ver as 8 semanas'} <i class="fa-solid fa-chevron-${prog.expanded ? 'up' : 'down'} ml-1"></i></button></div><div class="${prog.expanded ? 'block' : 'hidden'} border-t border-violet-400/20 bg-black/15 px-5 pb-3">${weeks}</div></div>`;
         }
 
         function synchronizeProgramProgress(program) {
@@ -9201,13 +9216,113 @@
             return program;
         }
 
+        function programHasRecordedHistory(program) {
+            return (program.sessionsToday || 0) > 0 || (program.daysCompletedInPhase || 0) > 0 || program.phases?.some(phase => phase.completed === true);
+        }
+
+        function formatProgramDuration(program, phaseIndex) {
+            if (program.type === 'mindfulness') return 'Faixa guiada disponível nesta etapa';
+            const seconds = getProgramSteps(program.id, phaseIndex).reduce((total, step) => total + (Number(step.duration) || 0), 0);
+            const minutes = Math.floor(seconds / 60);
+            const remainder = seconds % 60;
+            return minutes > 0 ? `${minutes} min${remainder ? ` ${remainder}s` : ''}` : `${remainder}s`;
+        }
+
+        function renderProgramDetail() {
+            const detail = document.getElementById('programDetailState');
+            const container = document.getElementById('programsListContainer');
+            const empty = document.getElementById('programsListEmpty');
+            const error = document.getElementById('programsListError');
+            const hero = document.getElementById('todayWorkoutHeroBanner');
+            const state = AppState.programDetailState;
+            const program = AppState.programs.find(item => item.id === state?.programId);
+            const isOpen = state?.isOpen === true && !!program;
+            if (container) container.classList.toggle('hidden', isOpen);
+            if (empty) empty.classList.toggle('hidden', isOpen || !AppState.programs.every(programHasRecordedHistory));
+            if (error) error.classList.toggle('hidden', CorePersistence.status !== 'recoveryRequired');
+            if (hero) hero.classList.toggle('hidden', isOpen);
+            if (!detail) return;
+            detail.classList.toggle('hidden', !isOpen);
+            if (!isOpen) {
+                detail.innerHTML = '';
+                return;
+            }
+            synchronizeProgramProgress(program);
+            const phaseIndex = Math.min(program.phases.length - 1, Math.max(0, Number(state.phaseIndex) || program.currentPhaseIndex || 0));
+            const phase = program.phases[phaseIndex];
+            const targetDays = phase.weeklyTargetDays || 7;
+            const currentDay = program.currentDayInWeek || Math.min((program.daysCompletedInPhase || 0) + 1, targetDays);
+            const completed = program.programCompleted === true;
+            const primaryAction = program.type === 'mindfulness'
+                ? `openMindfulnessAudioModal('${program.id}', ${phaseIndex}, 'formal')`
+                : `openDailyExecutionModal('${program.id}', ${phaseIndex})`;
+            detail.innerHTML = `
+                <button type="button" onclick="closeProgramDetail()" class="w-fit rounded-xl border border-slate-700 px-3 py-2 text-xs font-bold text-slate-300"><i class="fa-solid fa-arrow-left mr-2"></i>Programas</button>
+                <article class="rounded-3xl border border-indigo-400/30 bg-slate-900 p-5 shadow-2xl" data-program-id="${program.id}">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-indigo-300">Programa ${program.id} · detalhe</p>
+                    <h3 class="mt-2 text-xl font-black text-white">${program.title}</h3>
+                    <p class="mt-2 text-xs leading-relaxed text-slate-400">${program.description}</p>
+                    <div class="mt-5 rounded-2xl border border-slate-700 bg-slate-950/60 p-4">
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Etapa atual</p>
+                        <h4 class="mt-1 text-base font-black text-indigo-200">${phase.title}</h4>
+                        <p class="mt-2 text-xs leading-relaxed text-slate-300">${phase.details}</p>
+                        <div class="mt-4 grid grid-cols-3 gap-2 text-center text-[11px]"><div class="rounded-xl bg-slate-800 p-2"><strong class="block text-white">Dia ${currentDay}/${targetDays}</strong><span class="text-slate-400">posição real</span></div><div class="rounded-xl bg-slate-800 p-2"><strong class="block text-white">${program.sessionsToday || 0}/${program.dailyTarget || 1}</strong><span class="text-slate-400">sessões hoje</span></div><div class="rounded-xl bg-slate-800 p-2"><strong class="block text-white">${formatProgramDuration(program, phaseIndex)}</strong><span class="text-slate-400">sequência</span></div></div>
+                    </div>
+                    <div class="mt-4 rounded-2xl border ${completed ? 'border-emerald-400/40 bg-emerald-500/10 text-emerald-100' : 'border-slate-700 bg-slate-950/40 text-slate-300'} p-3 text-xs">${completed ? 'Programa concluído. Repetir esta etapa mantém o diário e reabre apenas o planejamento.' : 'A posição exibida vem do progresso salvo deste programa; iniciar mantém este ID e esta etapa.'}</div>
+                    <div class="mt-4 grid grid-cols-2 gap-3"><button type="button" onclick="${primaryAction}" class="rounded-xl bg-indigo-500 px-3 py-3 text-xs font-black text-white"><i class="fa-solid fa-play mr-2"></i>${program.type === 'mindfulness' ? 'Abrir faixa' : 'Iniciar esta etapa'}</button><button type="button" onclick="repeatProgramPhase('${program.id}')" class="rounded-xl border border-sky-400/40 px-3 py-3 text-xs font-bold text-sky-200"><i class="fa-solid fa-rotate-left mr-2"></i>Repetir etapa</button></div>
+                </article>`;
+        }
+
+        function openProgramDetail(programId) {
+            const program = AppState.programs.find(item => item.id === String(programId));
+            if (!program) {
+                showInlineToast('Programa indisponível. Nenhum outro programa foi aberto.');
+                return false;
+            }
+            synchronizeProgramProgress(program);
+            AppState.programDetailState = { programId: program.id, phaseIndex: program.currentPhaseIndex || 0, isOpen: true };
+            if (AppState.activeTab !== 'programas') switchTab('programas');
+            else renderProgramsList();
+            return true;
+        }
+
+        function closeProgramDetail() {
+            if (AppState.programDetailState) AppState.programDetailState.isOpen = false;
+            renderProgramsList();
+        }
+
+        function repeatProgramPhase(programId) {
+            const program = AppState.programs.find(item => item.id === String(programId));
+            if (!program) return false;
+            const phaseIndex = Math.min(program.phases.length - 1, Math.max(0, Number(AppState.programDetailState?.phaseIndex) || program.currentPhaseIndex || 0));
+            program.phases.forEach((phase, index) => { phase.completed = index < phaseIndex; });
+            program.currentPhaseIndex = phaseIndex;
+            program.daysCompletedInPhase = 0;
+            program.currentDayInWeek = 1;
+            program.programCompleted = false;
+            if (!saveState()) return false;
+            AppState.programDetailState = { programId: program.id, phaseIndex, isOpen: true };
+            renderProgramsList();
+            showInlineToast('Etapa repetida sem apagar o diário ou sessões anteriores.');
+            return true;
+        }
+
+        function openRecommendedProgram() {
+            const selected = AppState.programs.find(item => item.id === AppState.programDetailState?.programId) || AppState.programs[0];
+            return selected ? openProgramDetail(selected.id) : false;
+        }
+
         function renderProgramsList() {
             const container = document.getElementById('programsListContainer');
             if (!container) return;
+            renderProgramDetail();
+            if (AppState.programDetailState?.isOpen) return;
             container.innerHTML = '';
+            if (!AppState.programs.length) return;
 
-            // Update Hero Banner with Active Program Info
-            const mainProg = AppState.programs.find(p => p.id === '2') || AppState.programs[0];
+            // Update Hero Banner with the selected program when one was visited, otherwise the first real catalog entry.
+            const selectedProgramId = AppState.programDetailState?.programId;
+            const mainProg = AppState.programs.find(p => p.id === selectedProgramId) || AppState.programs[0];
             if (mainProg) {
                 synchronizeProgramProgress(mainProg);
                 const activePh = mainProg.phases[mainProg.currentPhaseIndex || 0] || mainProg.phases[0];
@@ -9221,16 +9336,16 @@
                 const heroBtn = document.getElementById('heroWorkoutButtonText');
 
                 if (heroTitle) heroTitle.innerText = mainProg.title;
-                if (heroSub) heroSub.innerText = `${activePh.title} • Dia ${currentDay} de 7 (${daysCompleted}/7 dias concluídos)`;
+                if (heroSub) heroSub.innerText = `${activePh.title} • Dia ${currentDay} de ${activePh.weeklyTargetDays || 7} (${daysCompleted}/${activePh.weeklyTargetDays || 7} dias concluídos)`;
                 if (heroBadge) {
-                    heroBadge.innerText = `${sToday}/2 Sessões Hoje`;
-                    heroBadge.className = `text-xs font-black px-2.5 py-0.5 rounded-full border ${sToday >= 2 ? 'text-emerald-300 bg-emerald-950/80 border-emerald-400/40' : 'text-amber-300 bg-black/40 border-amber-400/30'}`;
+                    heroBadge.innerText = `${sToday}/${mainProg.dailyTarget || 1} Sessões Hoje`;
+                    heroBadge.className = `text-xs font-black px-2.5 py-0.5 rounded-full border ${sToday >= (mainProg.dailyTarget || 1) ? 'text-emerald-300 bg-emerald-950/80 border-emerald-400/40' : 'text-amber-300 bg-black/40 border-amber-400/30'}`;
                 }
                 if (heroBtn) {
                     if (mainProg.programCompleted) heroBtn.innerText = 'Programa de 8 semanas concluído ✓ • Repetir sessão final';
-                    else if (sToday === 0) heroBtn.innerText = `Iniciar Sessão 1/2 (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
-                    else if (sToday === 1) heroBtn.innerText = `Iniciar Sessão 2/2 (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
-                    else heroBtn.innerText = `Meta Diária Concluída (2/2) ✓ - Repetir Treino`;
+                    else if (sToday === 0) heroBtn.innerText = `Iniciar Sessão 1/${mainProg.dailyTarget || 1} (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
+                    else if (sToday < (mainProg.dailyTarget || 1)) heroBtn.innerText = `Iniciar Sessão ${sToday + 1}/${mainProg.dailyTarget || 1} (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
+                    else heroBtn.innerText = `Meta Diária Concluída (${mainProg.dailyTarget || 1}/${mainProg.dailyTarget || 1}) ✓ - Repetir Treino`;
                 }
             }
 
@@ -9344,13 +9459,14 @@
                 }).join('');
 
                 container.innerHTML += `
-                    <div class="bg-slate-850 rounded-3xl overflow-hidden border border-slate-700/80 shadow-2xl transition-all">
+                    <div data-program-id="${prog.id}" class="bg-slate-850 rounded-3xl overflow-hidden border border-slate-700/80 shadow-2xl transition-all">
                         <div class="p-5">
                             <!-- Card Header -->
                             <div class="flex items-start justify-between">
-                                <div class="flex-1 pr-3 cursor-pointer" onclick="toggleProgramExpand(${pIdx})">
+                                <div class="flex-1 pr-3 cursor-pointer" onclick="openProgramDetail('${prog.id}')">
                                     <h3 class="text-lg font-bold text-white tracking-tight">${prog.title}</h3>
                                     <p class="text-xs text-slate-400 mt-1 leading-relaxed">${prog.description}</p>
+                                    <p class="mt-2 text-[10px] font-bold uppercase tracking-wider text-indigo-300">Ver detalhe da etapa</p>
                                     ${progressionReviewHtml}
                                 </div>
                                 <div class="flex items-center gap-1.5 flex-shrink-0">
@@ -9546,7 +9662,11 @@
                 }
             }
 
-            const prog = AppState.programs.find(p => p.id === programId) || AppState.programs[1] || AppState.programs[0];
+            const prog = AppState.programs.find(p => p.id === programId);
+            if (!prog) {
+                showInlineToast('Programa indisponível. Nenhum outro programa foi aberto.');
+                return false;
+            }
             synchronizeProgramProgress(prog);
             let pIdx = phaseIndex;
             if (pIdx === null || typeof pIdx === 'undefined') {

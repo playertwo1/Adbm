@@ -250,3 +250,13 @@ Próximo passo:
 - Integridade: `cmp -s index.html app/src/main/assets/index.html` passou; SHA-256 idêntico nos dois HTMLs (`2cd4cbe8c66c0810863aca7eaf608d28726ea840ba8fb7cb1967c24cdad43f34`); `git diff --check` passou.
 - Limitações: não houve teste em aparelho/Watch físico ou browser local nesta etapa sem alteração de produto; o build Android integrado passou, mas o diagnóstico RED não constitui aprovação e precisa passar após a implementação E07.2.
 - Próximo passo: E07.2 implementa lista/detalhe por ID, estados vazio/concluído/erro e remoção do fallback silencioso, sem alterar os contratos inventariados.
+
+## 2026-09-21 — E07.2 / lista de Programas e navegação por ID
+
+- Base: `926c173890b6374e24d4b9c61988218432d35eb7` (E07.1 aprovada de forma independente). O worktree isolado foi realinhado a esta base antes das alterações; a modificação não commitada preservada no worktree original não foi reutilizada.
+- Alterações: `AppState.programDetailState` mantém o ID e a fase visitados durante a navegação; `openProgramDetail(programId)` renderiza o detalhe do programa encontrado por ID e retorna sem abrir outro programa quando o ID não existe. Cards de Bracing, Kegel, Vácuo e Mindfulness expõem `data-program-id` e oferecem acesso ao detalhe; o hero usa o último programa visitado ou a primeira entrada real do catálogo, com meta diária e etapa derivadas do estado.
+- Estados: a aba mostra o aviso utilizável de sem histórico sem ocultar o catálogo, mantém os cards preservados com aviso próprio quando `CorePersistence.status === 'recoveryRequired'` e apresenta conclusão com ação explícita de repetir etapa. `repeatProgramPhase(programId)` somente reposiciona o planejamento da etapa e salva; não escreve `activityLog` ou histórico de sessão.
+- Contratos preservados: IDs 1–4, fases, snapshot/espelho de persistência, bridge, lembretes por ID, progressão pendente do Vácuo, ajuste manual e protocolo de treino não foram alterados. `openDailyExecutionModal()` deixou de usar fallback silencioso para IDs desconhecidos.
+- Validação: `node diagnostics/e07-programas-red.cjs` → PASS; browser local exerceu a aba Programas, o handler DOM do card do Vácuo, detalhe `data-program-id="3"`, retorno preservando `{ id: '3', phase: 0 }` e repetição com `activityLog` inalterado. Paridade HTML e gate integrado registrados no commit desta etapa.
+- Limitações: sem aparelho Android/Watch físico, push, merge, release ou deploy; a alteração requer auditoria independente antes de qualquer integração.
+- Próximo passo: auditoria independente do commit E07.2.
