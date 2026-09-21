@@ -35,6 +35,9 @@ const source = [
     extractFunction('startHeroWorkout'),
     extractFunction('repeatProgramPhase'),
     extractFunction('toggleProgramPhase'),
+    extractFunction('getProgramExerciseDetails'),
+    extractFunction('renderProgramExerciseDetail'),
+    extractFunction('openProgramExerciseDetail'),
     extractFunction('applyProgramProgressAdjustment'),
     extractFunction('getProgramSteps'),
     extractFunction('renderMindfulnessProgramCard'),
@@ -226,4 +229,24 @@ function setup() {
     assert.match(env.getElementById('programsListContainer').innerHTML, /Revisão da etapa necessária/);
 }
 
-console.log('E07 regressões comportamentais: rota por ID, fallback removido, reabertura, hero real, repetir etapa e estados vazio/erro/E03 verificados.');
+// 13. Exercícios exibem a sequência real da fase escolhida, sem duração genérica.
+{
+    const env = setup();
+    vm.runInContext(`openProgramExerciseDetail('3', 0)`, env.context);
+    const details = vm.runInContext(`getProgramExerciseDetails('3', 0)`, env.context);
+    assert.ok(details.length > 0, 'a fase real precisa expor exercícios');
+    assert.equal(details[0].durationSeconds, 93, 'a duração deve vir dos passos reais da primeira série');
+    assert.match(env.getElementById('programExerciseDetailModal').innerHTML, /Sente-se na ponta da cadeira/);
+    assert.match(env.getElementById('programExerciseDetailModal').innerHTML, /Sustente por 10 segundos/);
+    assert.match(env.getElementById('programExerciseDetailModal').innerHTML, /01:33/);
+}
+
+// 14. Exercício sem sequência cadastrada mostra ausência utilizável, sem fabricar dados.
+{
+    const env = setup();
+    vm.runInContext(`openProgramExerciseDetail('3', 99)`, env.context);
+    assert.match(env.getElementById('programExerciseDetailModal').innerHTML, /Nenhum exercício cadastrado/);
+    assert.doesNotMatch(env.getElementById('programExerciseDetailModal').innerHTML, /01:00|60 segundos/);
+}
+
+console.log('E07 regressões comportamentais: rota por ID, fallback removido, reabertura, hero real, exercícios por sequência e estados vazio/erro/E03 verificados.');

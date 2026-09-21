@@ -2223,6 +2223,9 @@
         </div>
     </div>
 
+    <div id="programExerciseDetailModal" role="dialog" aria-modal="true" aria-label="Exercícios da sequência" class="fixed inset-0 z-[80] hidden items-end justify-center overflow-y-auto bg-slate-950/95 p-4 backdrop-blur-md">
+    </div>
+
     <!-- Modal for Cancel Confirmation -->
     <div id="cancelDailyConfirmModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[70] hidden flex items-center justify-center p-4 no-print">
         <div class="bg-slate-850 border border-slate-700 rounded-3xl p-6 w-full max-w-xs space-y-4 shadow-2xl text-center">
@@ -3739,7 +3742,7 @@
         }
 
         function closeTopmostOverlay() {
-            const overlays = ['vacuumSummaryModal', 'vacuumTutorialModal', 'cancelDailyConfirmModal', 'dailyExecutionModal', 'mindfulnessAudioModal', 'responsivePauseModal', 'bracingProgramModal', 'kegelProgramModal', 'editProgramModal', 'reminderConfigModal', 'interactiveReminderModal', 'scheduleModal', 'noteModal', 'bpmMeasurementModal', 'smartwatchCompanionModal', 'progressProtectionModal'];
+            const overlays = ['vacuumSummaryModal', 'vacuumTutorialModal', 'cancelDailyConfirmModal', 'programExerciseDetailModal', 'dailyExecutionModal', 'mindfulnessAudioModal', 'responsivePauseModal', 'bracingProgramModal', 'kegelProgramModal', 'editProgramModal', 'reminderConfigModal', 'interactiveReminderModal', 'scheduleModal', 'noteModal', 'bpmMeasurementModal', 'smartwatchCompanionModal', 'progressProtectionModal'];
             for (const id of overlays) {
                 const overlay = document.getElementById(id);
                 if (overlay && !overlay.classList.contains('hidden')) {
@@ -9387,6 +9390,9 @@
                                 <p class="text-[11px] ${phase.completed ? 'text-slate-600' : 'text-slate-400'} mt-0.5 leading-relaxed">${phase.details}</p>
                             </div>
                             ${repeatBtnHtml}
+                            <button onclick="event.stopPropagation(); openProgramExerciseDetail('${prog.id}', ${i})" title="Ver exercícios, instruções e duração desta sequência" class="p-2 text-slate-400 hover:text-emerald-400 transition text-xs">
+                                <i class="fa-solid fa-list-check"></i>
+                            </button>
                             <button onclick="event.stopPropagation(); openDailyExecutionModal('${prog.id}', ${i})" title="Treinar esta Fase" class="p-2 text-slate-400 hover:text-indigo-400 transition text-xs">
                                 <i class="fa-solid fa-play"></i>
                             </button>
@@ -9501,6 +9507,104 @@
             };
             saveState();
             renderProgramsList();
+        }
+
+        function getProgramExerciseDetails(programId, phaseIndex) {
+            const program = AppState.programs.find(item => item.id === programId);
+            const phase = program?.phases?.[phaseIndex];
+            if (!program || !phase) return [];
+            const steps = getProgramSteps(programId, phaseIndex);
+            if (!Array.isArray(steps) || steps.length === 0) return [];
+
+            const groups = new Map();
+            let currentSeries = null;
+            let pendingRest = [];
+            const addToGroup = (series, step) => {
+                if (!groups.has(series)) {
+                    groups.set(series, {
+                        series,
+                        title: `Exercício ${series}`,
+                        durationSeconds: 0,
+                        steps: []
+                    });
+                }
+                const group = groups.get(series);
+                group.durationSeconds += Math.max(0, Number(step.duration) || 0);
+                group.steps.push({
+                    title: String(step.title || 'Etapa'),
+                    instruction: String(step.instruction || '').trim(),
+                    durationSeconds: Math.max(0, Number(step.duration) || 0),
+                    isRest: step.isRest === true
+                });
+            };
+
+            steps.forEach(step => {
+                const series = Number(step?.series);
+                if (step && step.isRest !== true && Number.isInteger(series) && series > 0) {
+                    currentSeries = series;
+                    if (!groups.has(series)) {
+                        pendingRest.splice(0).forEach(rest => addToGroup(series, rest));
+                    }
+                    addToGroup(series, step);
+                    return;
+                }
+                if (step?.isRest === true) {
+                    const explicitRestSeries = Number(step.series);
+                    if (Number.isInteger(explicitRestSeries) && explicitRestSeries > 0) {
+                        addToGroup(explicitRestSeries, step);
+                    } else if (currentSeries === null) pendingRest.push(step);
+                    else addToGroup(currentSeries, step);
+                }
+            });
+
+            return Array.from(groups.values()).sort((a, b) => a.series - b.series);
+        }
+
+        function renderProgramExerciseDetail(program, phase, exercises) {
+            const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+            const formatDuration = seconds => {
+                const safe = Math.max(0, Math.floor(Number(seconds) || 0));
+                return `${String(Math.floor(safe / 60)).padStart(2, '0')}:${String(safe % 60).padStart(2, '0')}`;
+            };
+            if (!exercises.length) {
+                return `<div id="programExerciseDetailEmpty" class="rounded-2xl border border-slate-700 bg-slate-900/70 p-5 text-center text-sm text-slate-300"><i class="fa-solid fa-circle-info text-xl text-slate-500 mb-2"></i><p class="font-bold text-white">Nenhum exercício cadastrado para esta sequência</p><p class="mt-1 text-xs text-slate-400">A duração e as instruções não estão disponíveis; nenhum valor foi estimado.</p></div>`;
+            }
+            return exercises.map(exercise => `
+                <article class="rounded-2xl border border-slate-700/80 bg-slate-900/80 p-4 space-y-3">
+                    <div class="flex items-start justify-between gap-3">
+                        <div><p class="text-[10px] font-black uppercase tracking-wider text-emerald-400">Exercício ${exercise.series}</p><h3 class="mt-1 text-sm font-bold text-white">${escapeHtml(exercise.steps.find(step => !step.isRest)?.title || exercise.title)}</h3></div>
+                        <span class="shrink-0 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2 py-1 font-mono text-xs font-bold text-emerald-300">${formatDuration(exercise.durationSeconds)}</span>
+                    </div>
+                    <ol class="space-y-2">
+                        ${exercise.steps.map(step => `<li class="rounded-xl border ${step.isRest ? 'border-sky-500/20 bg-sky-500/5' : 'border-slate-800 bg-slate-950/60'} p-2.5"><div class="flex items-start justify-between gap-2"><span class="text-xs font-semibold ${step.isRest ? 'text-sky-200' : 'text-slate-200'}">${escapeHtml(step.title)}</span><span class="shrink-0 font-mono text-[11px] text-slate-400">${formatDuration(step.durationSeconds)}</span></div><p class="mt-1 text-[11px] leading-relaxed text-slate-400">${escapeHtml(step.instruction || 'Instrução não cadastrada.')}</p></li>`).join('')}
+                    </ol>
+                </article>
+            `).join('');
+        }
+
+        function openProgramExerciseDetail(programId, phaseIndex) {
+            const program = AppState.programs.find(item => item.id === programId);
+            const phase = program?.phases?.[phaseIndex];
+            const modal = document.getElementById('programExerciseDetailModal');
+            const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+            if (!modal) return;
+            if (!program || !phase) {
+                modal.innerHTML = `<div class="mx-auto w-full max-w-md rounded-3xl border border-slate-700 bg-slate-900 p-5"><div class="flex items-center justify-between"><h2 class="text-lg font-black text-white">Exercícios da sequência</h2><button onclick="closeProgramExerciseDetail()" class="h-9 w-9 rounded-full bg-slate-800 text-slate-300" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button></div><div class="mt-4">${renderProgramExerciseDetail({}, {}, [])}</div></div>`;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                return;
+            }
+            const exercises = getProgramExerciseDetails(programId, phaseIndex);
+            modal.innerHTML = `<div class="mx-auto w-full max-w-md max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-700 bg-slate-900 p-5"><div class="flex items-start justify-between gap-3"><div><p class="text-[10px] font-black uppercase tracking-wider text-emerald-400">${escapeHtml(program.title)}</p><h2 class="mt-1 text-lg font-black text-white">${escapeHtml(phase.title)}</h2><p class="mt-1 text-xs text-slate-400">Instruções e duração da sequência configurada.</p></div><button onclick="closeProgramExerciseDetail()" class="h-9 w-9 shrink-0 rounded-full bg-slate-800 text-slate-300" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button></div><div class="mt-4 space-y-3">${renderProgramExerciseDetail(program, phase, exercises)}</div></div>`;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeProgramExerciseDetail() {
+            const modal = document.getElementById('programExerciseDetailModal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
 
         function startHeroWorkout() {
