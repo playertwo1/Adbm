@@ -55,6 +55,7 @@ class WorkoutForegroundService : Service() {
     private var currentStepIndex = 0
     private var stepTimeLeft = 0
     private var totalSessionElapsed = 0
+    private var retentionElapsedSeconds = 0
     private var paused = false
     private var sessionMetadata = JSONObject()
     private var voiceEnabled = true
@@ -113,6 +114,7 @@ class WorkoutForegroundService : Service() {
         stepTimeLeft = payload.optInt("stepTimeLeft", steps[currentStepIndex].duration)
             .coerceAtLeast(0)
         totalSessionElapsed = payload.optInt("totalSessionElapsed", 0).coerceAtLeast(0)
+        retentionElapsedSeconds = payload.optInt("retentionElapsedSeconds", 0).coerceAtLeast(0)
         voiceEnabled = payload.optBoolean("voiceEnabled", true)
         hapticsEnabled = payload.optBoolean("hapticsEnabled", true)
         paused = false
@@ -163,6 +165,7 @@ class WorkoutForegroundService : Service() {
         currentStepIndex = state.optInt("currentStepIndex", 0).coerceIn(0, steps.lastIndex)
         stepTimeLeft = state.optInt("stepTimeLeft", steps[currentStepIndex].duration)
         totalSessionElapsed = state.optInt("totalSessionElapsed", 0)
+        retentionElapsedSeconds = state.optInt("retentionElapsedSeconds", 0).coerceAtLeast(0)
         voiceEnabled = state.optBoolean("voiceEnabled", true)
         hapticsEnabled = state.optBoolean("hapticsEnabled", true)
         paused = status == "paused"
@@ -184,6 +187,9 @@ class WorkoutForegroundService : Service() {
                 if (paused) continue
 
                 totalSessionElapsed++
+                if (steps.getOrNull(currentStepIndex)?.phase == "vacuo") {
+                    retentionElapsedSeconds++
+                }
                 if (stepTimeLeft > 1) {
                     stepTimeLeft--
                     persistAndBroadcast("running")
@@ -359,6 +365,7 @@ class WorkoutForegroundService : Service() {
         put("currentStepIndex", currentStepIndex)
         put("stepTimeLeft", stepTimeLeft)
         put("totalSessionElapsed", totalSessionElapsed)
+        put("retentionElapsedSeconds", retentionElapsedSeconds)
         put("voiceEnabled", voiceEnabled)
         put("hapticsEnabled", hapticsEnabled)
         put("session", sessionMetadata)

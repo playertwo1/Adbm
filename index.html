@@ -3683,6 +3683,7 @@
             const steps = Array.isArray(state?.steps) ? state.steps : [];
             const currentIndex = Math.max(0, Number(state?.currentStepIndex) || 0);
             const currentRemaining = Math.max(0, Number(state?.stepTimeLeft) || 0);
+            const explicitRetention = Number(state?.retentionElapsedSeconds);
             let retentionSeconds = 0;
             let recoverySeconds = 0;
             steps.forEach((step, index) => {
@@ -3691,6 +3692,9 @@
                 if (step?.phase === 'vacuo') retentionSeconds += elapsed;
                 if (step?.phase === 'descanso') recoverySeconds += elapsed;
             });
+            if (Number.isFinite(explicitRetention) && explicitRetention >= 0) {
+                retentionSeconds = explicitRetention;
+            }
             return {
                 retentionSeconds,
                 recoverySeconds,
@@ -3861,6 +3865,7 @@
                     currentStepIndex: 0,
                     stepTimeLeft: steps[0].duration,
                     totalSessionElapsed: AppState.vacuo.totalElapsedSec,
+                    retentionElapsedSeconds: AppState.vacuo.retentionElapsedSec,
                     voiceEnabled: AppState.voiceEnabled,
                     hapticsEnabled: AppState.hapticsEnabled,
                     steps
@@ -9426,6 +9431,23 @@
         function handleNativeVacuumState(state) {
             if (state.status === 'interrupted' || state.status === 'canceled') {
                 const nativeSessionId = state.session?.sessionId;
+                const existingSessionId = AppState.vacuo.sessionId;
+                const hasRestorableWebSnapshot = Boolean(
+                    nativeSessionId && existingSessionId === nativeSessionId &&
+                    AppState.vacuo.nativeManaged !== true && AppState.vacuo.isRunning !== true &&
+                    (AppState.vacuo.currentPhase !== 'ready' ||
+                        Number(AppState.vacuo.totalElapsedSec) > 0 ||
+                        Number(AppState.vacuo.retentionElapsedSec) > 0 ||
+                        Number(AppState.vacuo.recoveryElapsedSec) > 0)
+                );
+                if (hasRestorableWebSnapshot) {
+                    AppState.vacuo.isRunning = false;
+                    AppState.vacuo.nativeManaged = false;
+                    AppState.vacuo.intervalId = null;
+                    AppState.vacuo.isPaused = true;
+                    window.AndroidBridge?.acknowledgeWorkoutState?.();
+                    return;
+                }
                 if (nativeSessionId) AppState.vacuo.sessionId = nativeSessionId;
                 if (!AppState.vacuo.sessionId) {
                     AppState.vacuo.sessionId = `vacuum-abort-${Date.now()}`;

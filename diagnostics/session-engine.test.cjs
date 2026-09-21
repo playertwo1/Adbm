@@ -428,6 +428,22 @@ assert.equal(interruptedDailyVacuum.plannedSeries, 2, 'interrupted daily vacuum 
 assert.equal(interruptedDailyVacuum.completedSeries, 0, 'partial logical set must not be completed');
 assert.equal(interruptedDailyVacuum.retentionSeconds, 5, 'interrupted retention must include only elapsed vacuum time');
 
+// Native safe-exit advances past the hold step. The explicit accumulated
+// retention value must remain authoritative instead of re-counting the full
+// duration of the exited step.
+const nativeRetentionExit = vm.runInContext(`deriveNativeVacuumMetrics({
+    currentStepIndex: 3,
+    stepTimeLeft: 20,
+    retentionElapsedSeconds: 7,
+    steps: [
+        { phase: 'inspira', duration: 4 },
+        { phase: 'expira', duration: 6 },
+        { phase: 'vacuo', duration: 15 },
+        { phase: 'descanso', duration: 20 }
+    ]
+})`, context);
+assert.equal(nativeRetentionExit.retentionSeconds, 7, 'native safe exit must preserve only executed retention seconds');
+
 // Test applyProgressData timer protection (pauses restored sessions)
 vm.runInContext(`
     applyProgressData({
@@ -487,6 +503,42 @@ vm.runInContext(`
 assert.equal(vm.runInContext('AppState.vacuo.sessionId', context), 'native-owned');
 assert.equal(vm.runInContext('AppState.vacuo.isRunning', context), true);
 
+// A terminal native interrupted snapshot must not erase a matching partial
+// Web snapshot during reopen synchronization.
+vm.runInContext(`
+    let acknowledgeCalls = 0;
+    window.AndroidBridge = { acknowledgeWorkoutState() { acknowledgeCalls++; } };
+    AppState.vacuo = {
+        sessionId: 'reopen-interrupted',
+        currentPhase: 'descanso',
+        timer: 8,
+        totalElapsedSec: 17,
+        retentionElapsedSec: 7,
+        recoveryElapsedSec: 0,
+        isRunning: false,
+        nativeManaged: false,
+        intervalId: null
+    };
+    handleNativeVacuumState({
+        status: 'interrupted',
+        currentStepIndex: 3,
+        stepTimeLeft: 8,
+        totalSessionElapsed: 17,
+        session: { sessionId: 'reopen-interrupted', type: 'vacuum' },
+        steps: [
+            { phase: 'inspira', duration: 4, series: 1 },
+            { phase: 'expira', duration: 6, series: 1 },
+            { phase: 'vacuo', duration: 15, series: 1 },
+            { phase: 'descanso', duration: 20, series: 1 }
+        ]
+    });
+`, context);
+assert.equal(vm.runInContext('AppState.vacuo.sessionId', context), 'reopen-interrupted', 'reopen must keep partial session id');
+assert.equal(vm.runInContext('AppState.vacuo.currentPhase', context), 'descanso', 'terminal native state must not reset restored phase');
+assert.equal(vm.runInContext('AppState.vacuo.timer', context), 8, 'terminal native state must not reset restored timer');
+assert.equal(vm.runInContext('AppState.vacuo.nativeManaged', context), false, 'terminal native state must release ownership');
+assert.equal(vm.runInContext('acknowledgeCalls', context), 1, 'terminal native state must be acknowledged once');
+
 // Exercise the real daily Web completion/interruption paths with program 2,
 // not only the metric helpers used by the native callback.
 vm.runInContext(`
@@ -517,6 +569,7 @@ assert.equal(kegelNativeInterrupted.interrupted, true, 'Kegel native interruptio
 assert.match(service, /ACTION_STOP -> stopSession\(interrupted = true\)/);
 assert.match(service, /persistAndBroadcast\(if \(interrupted\) "interrupted" else "idle"\)/);
 assert.match(service, /ACTION_SAFE_EXIT_RETENTION -> exitRetentionSafely\(\)/);
+assert.match(service, /retentionElapsedSeconds/);
 assert.match(service, /currentStepIndex\+\+.*stepTimeLeft = steps\[currentStepIndex\]\.duration/s);
 assert.match(service, /exitRetentionSafely[\s\S]*persistAndBroadcast\("paused"\)/);
 
