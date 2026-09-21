@@ -140,7 +140,7 @@ Evidência E06: `diagnostics/e06-vacuo-player.test.cjs`, equivalência byte a by
 [Programas](assets/design/coreflow-s25-ultra/06-programas.png) · [Detalhe](assets/design/coreflow-s25-ultra/07-programa-detalhe.png)
 - [x] Cards abrem programa correto, preservando IDs e fases reais; corrigir divergências do mockup.
 - [x] Progresso, etapa, sessão diária e duração calculados do estado real.
-- [ ] Exercícios abrem instruções e duração da sequência escolhida.
+- [x] Exercícios abrem instruções e duração da sequência escolhida.
 - [x] Iniciar envia exatamente etapa/sessão exibidas.
 - [x] Repetir etapa altera planejamento futuro sem apagar diário.
 - [x] Ajuste manual mantém prévia e não cria treino retroativo.

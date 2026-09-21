@@ -270,3 +270,14 @@ Próximo passo:
 - Limitações: sem push, merge, GitHub Actions, release ou deploy nesta execução; sem validação em aparelho Android físico, Galaxy Watch físico ou TalkBack; a navegação foi validada via harness Node/vm (DOM simulado) reproduzindo os elementos reais do HTML, não via WebView renderizada; auditoria independente do commit resultante ainda não foi realizada e este handoff não constitui aprovação própria.
 - Próximo passo: auditoria independente de E07.2 antes de qualquer avanço para as etapas subsequentes do roadmap E07 (E07.3+).
 
+## 2026-09-21 — E07.3 / exercícios, instruções e duração reais / IMPLEMENTADA
+
+- Base confirmada: `17430e9` (E07.2-R aprovado no handoff independente `047ede96d2bc6f37031fcf4fdf73eceac1f92925`); IDs `1`–`4`, fases, `AppState.programs`, snapshot/bridge e protocolo de treino foram preservados.
+- Alteração: cada fase não-Mindfulness agora expõe a ação de exercícios. A nova rota `openProgramExerciseDetail(programId, phaseIndex)` resolve a fase pelo ID e usa `getProgramSteps(programId, phaseIndex)` como fonte única da sequência real.
+- Duração/instruções: `getProgramExerciseDetails()` agrupa os passos pela série lógica já configurada (incluindo preparação, recuperação e descansos explicitamente associados), soma somente os segundos dos passos reais e renderiza cada instrução individual. Não existe fallback de `60` segundos para ausência de dados.
+- Ausência: ID/fase sem sequência ou sem exercícios abre estado explícito `Nenhum exercício cadastrado para esta sequência`, informando que duração/instruções não estão disponíveis; nenhum dado é fabricado. O modal também entrou no fechamento de overlays/voltar.
+- Diagnóstico: `diagnostics/e07-programas.test.cjs` ampliado de 12 para 14 cenários; cobre fase 0 do Vácuo com instrução real e duração real de `01:33` na primeira série, além da ausência para fase inexistente.
+- Validação: `node diagnostics/e07-programas.test.cjs` → PASS; regressões disponíveis E01–E06/políticas → PASS; `cmp -s index.html app/src/main/assets/index.html` e SHA-256 → PASS; `git diff --check` → PASS; `bash scripts/check.sh` → PASS com `BUILD SUCCESSFUL`.
+- Limitações: sem aparelho Android físico, Galaxy Watch físico, TalkBack, WebView renderizada, push, merge, Actions, release ou deploy; diagnóstico usa harness Node/vm e não substitui validação física. Auditoria independente do target desta etapa permanece obrigatória; este handoff não é PASS.
+- Próximo passo: auditoria independente no target SHA exato desta implementação; só depois avaliar liberação de E07.4.
+
