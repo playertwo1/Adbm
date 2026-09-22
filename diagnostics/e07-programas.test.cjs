@@ -3,17 +3,22 @@ const path = require('node:path');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
 
-const html = fs.readFileSync(path.join(__dirname, '..', 'app', 'src', 'main', 'assets', 'index.html'), 'utf8');
+const root = path.join(__dirname, '..');
+const html = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'assets', 'index.html'), 'utf8');
 
-function extractFunction(name) {
-    const start = html.indexOf(`        function ${name}(`);
+function extractFunctionFrom(source, name) {
+    const start = source.indexOf(`        function ${name}(`);
     assert(start >= 0, `Função ausente: ${name}`);
     let depth = 0, opened = false;
-    for (let index = html.indexOf('{', start); index < html.length; index++) {
-        if (html[index] === '{') { depth++; opened = true; }
-        if (html[index] === '}' && opened && --depth === 0) return html.slice(start, index + 1);
+    for (let index = source.indexOf('{', start); index < source.length; index++) {
+        if (source[index] === '{') { depth++; opened = true; }
+        if (source[index] === '}' && opened && --depth === 0) return source.slice(start, index + 1);
     }
     throw new Error(`Função incompleta: ${name}`);
+}
+
+function extractFunction(name) {
+    return extractFunctionFrom(html, name);
 }
 
 const appState = html.slice(html.indexOf('        const AppState = {'), html.indexOf('        const CORE_DATA_VERSION'));
@@ -46,6 +51,18 @@ const source = [
     extractFunction('formatDailyTime'),
     html.slice(persistenceStart, persistenceEnd)
 ].join('\n');
+
+function extractAssignedFunctionFrom(source, name) {
+    const start = source.indexOf(`window.${name} = function(`);
+    assert(start >= 0, `Função atribuída ausente: ${name}`);
+    const bodyStart = source.indexOf('{', start);
+    let depth = 0;
+    for (let index = bodyStart; index < source.length; index += 1) {
+        if (source[index] === '{') depth += 1;
+        if (source[index] === '}' && --depth === 0) return source.slice(start, index + 1);
+    }
+    throw new Error(`Função atribuída incompleta: ${name}`);
+}
 
 function makeElement() {
     return {
@@ -261,4 +278,23 @@ function setup() {
     assert.doesNotMatch(env.getElementById('programExerciseDetailModal').innerHTML, /01:00|60 segundos/);
 }
 
-console.log('E07 regressões comportamentais: rota por ID, fallback removido, reabertura, hero real, exercícios por sequência e estados vazio/erro/E03 verificados.');
+const htmlPaths = [
+  path.join(root, 'index.html'),
+  path.join(root, 'app', 'src', 'main', 'assets', 'index.html')
+];
+
+for (const htmlPath of htmlPaths) {
+  const html = fs.readFileSync(htmlPath, 'utf8');
+  assert.match(html, /function openDailyExecutionModal\(programId, phaseIndex = null, sessionNumber = null\)/, `${path.relative(root, htmlPath)} deve aceitar a sessão exibida explicitamente`);
+  assert.match(html, /openDailyExecutionModal\(activeReminderProgId, null, activeReminderSessionNumber\)/, `${path.relative(root, htmlPath)} deve encaminhar o número da sessão do lembrete`);
+  const payloadStart = extractFunctionFrom(html, 'buildNativeWorkoutPayload');
+  for (const field of ['programId', 'phaseIndex', 'sessionNumber', 'steps']) {
+    assert.match(payloadStart, new RegExp(`${field}: execution\\.${field}`), `${path.relative(root, htmlPath)} payload nativo deve preservar ${field} exibido`);
+  }
+  const nativeStateHandler = extractAssignedFunctionFrom(html, 'onNativeWorkoutState');
+  assert.match(nativeStateHandler, /state\.status === ['"]failed['"][\s\S]*isRunning = false[\s\S]*acknowledgeWorkoutState/, `${path.relative(root, htmlPath)} falha de início deve limpar o estado e permitir nova tentativa`);
+  const open = extractFunctionFrom(html, 'openDailyExecutionModal');
+  assert.match(open, /pIdx < 0|pIdx >= prog\.phases\.length/, `${path.relative(root, htmlPath)} não pode substituir uma fase inválida por outra fase`);
+}
+
+console.log('E07 regressões comportamentais: rota por ID, sessão/etapa exatas no payload, falha de início sem timer fantasma, reabertura, hero real, exercícios por sequência e estados vazio/erro/E03 verificados.');
