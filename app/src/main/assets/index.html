@@ -9204,6 +9204,11 @@
             };
         }
 
+        function renderProgramWeeklyAgendaLabel(schedule) {
+            if (!schedule?.targetDays) return 'Agenda semanal não configurada';
+            return `${schedule.currentDayLabel}/${schedule.targetDaysLabel} (${schedule.daysCompleted}/${schedule.targetDaysLabel} concluídos)`;
+        }
+
         function synchronizeProgramProgress(program) {
             if (!program?.phases?.length) return program;
             let completedPrefix = 0;
@@ -9461,7 +9466,7 @@
                                             <i class="fa-solid fa-calendar-week text-indigo-400 text-[11px]"></i>
                                             Trilha da Semana Atual:
                                         </span>
-                                        <span class="text-[11px] font-black text-indigo-300">${currentDayLabel}/${targetDaysLabel} (${daysCompleted}/${targetDaysLabel} concluídos)</span>
+                                        <span class="text-[11px] font-black text-indigo-300">${renderProgramWeeklyAgendaLabel({ currentDayLabel, targetDaysLabel, daysCompleted, targetDays })}</span>
                                     </div>
                                     <div class="flex items-center gap-1.5">
                                         ${daysPillsHtml}
