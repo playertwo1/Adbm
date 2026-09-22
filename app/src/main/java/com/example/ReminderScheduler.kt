@@ -102,6 +102,7 @@ object ReminderScheduler {
         sessionNumber: Int,
         minutes: Int
     ) {
+        if (!hasEffectiveNotificationPermission(context)) return
         val triggerAt = System.currentTimeMillis() + minutes.coerceIn(1, 720) * 60_000L
         scheduleAlarm(context, programId, title, sessionNumber, triggerAt, true)
     }
@@ -112,6 +113,12 @@ object ReminderScheduler {
         val sessionNumber = intent.getIntExtra(EXTRA_SESSION_NUMBER, 1).coerceIn(1, 2)
         val isSnooze = intent.getBooleanExtra(EXTRA_IS_SNOOZE, false)
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+
+        if (!hasEffectiveNotificationPermission(context)) {
+            cancelProgram(context, programId)
+            prefs.edit().putBoolean(key(programId, "enabled"), false).apply()
+            return
+        }
 
         if (!prefs.getBoolean(key(programId, "enabled"), false)) return
 
@@ -401,7 +408,7 @@ object ReminderScheduler {
         return true
     }
 
-    private fun isValidTime(value: String): Boolean {
+    fun isValidTime(value: String): Boolean {
         if (!Regex("^\\d{2}:\\d{2}$").matches(value)) return false
         val parts = value.split(":")
         return parts[0].toInt() in 0..23 && parts[1].toInt() in 0..59

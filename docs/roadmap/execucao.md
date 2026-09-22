@@ -1,5 +1,11 @@
 # Registro de execução
 
+## 2026-09-22 — E08.6 / correção de divergências de estado e regressões comportamentais
+
+- Base: `bfb7da5adb71e81f460e61513b6b90c77d843e33`.
+- Correção: horários inválidos são removidos da persistência/UI e não contam como agenda completa; revogação zera `pushNotificationsEnabled`; `Começar agora` exibe erro para `sessionsToday` inválido sem alterar o payload; disparo/adiamento nativos não rearmam alarmes sem permissão e desativam o programa revogado.
+- Regressão `diagnostics/e08-6-hoje-controls.test.cjs` agora executa validação de `HH:mm`, completude da agenda, smart reminder negado e revogação em foreground, além dos testes de roteamento E08.6 e dos guardas nativos.
+
 ## 2026-09-22 — E08.6 / correção de fonte única de lembretes após auditoria
 
 - Base: `d11a998b697a1d1e09b021f7561d4dd1efef679e`.
