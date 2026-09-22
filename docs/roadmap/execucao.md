@@ -1,5 +1,16 @@
 # Registro de execução
 
+## 2026-09-22 — E08.6 / Hoje: começar agora, atalhos, avatar e lembretes
+
+- Base: `5c43fea19fd70094534d760281d36c7f0b087dcf` (E08.5 com PASS independente confirmado pelo card pai); worktree `adbm/t_281c2916-adbm-e08.6-hoje-come-ar-agora-atalhos-av` confirmado limpo antes da alteração.
+- Implementação:
+  - O card `todayRecommendationCard` captura no markup o `programId`, `currentPhaseIndex` e número de sessão que exibiu. `openTodayRecommendationSession()` valida exatamente esse trio e o encaminha a `openDailyExecutionModal(programId, phaseIndex, sessionNumber)`, sem recalcular/fazer fallback para outra etapa ou sessão.
+  - Os controles de Hoje agora são Vácuo, Pausa, Kegel, Meditar e Discreto. `openTodayShortcut()` somente abre o módulo real correspondente: Vácuo → `tab-vacuo`; Pausa → `tab-pausas`; Kegel → `tab-discreto` com `setDeskMode('kegel-velocidade')`; Meditar → player existente `openMindfulnessAudioModal`; Discreto → `tab-discreto`. Nenhum atalho inicia timer/sessão de forma implícita. O encaminhamento legado `triggerQuickAction()` foi ajustado para não chamar os símbolos inexistentes `switchDiscreteSubtab`, `setKegelMode` e `toggleKegelTimer`.
+  - Foram adicionados no cabeçalho o sino que abre `openTodayReminderConfig()` e o avatar que navega a `tab-perfil`; sem programa recomendado, lembretes não fabricam um alvo e levam o usuário a Programas com mensagem utilizável.
+  - A configuração de lembrete agora confere a permissão real antes de marcar o programa como ativo. `requestSystemReminderPermission()` consulta/sinaliza o bridge; `saveReminderConfig()` persiste `remindersEnabled:false` quando a permissão não está concedida e a UI não mostra "Ativos" nesse estado. `AndroidBridge.requestReminderPermission()` solicita `POST_NOTIFICATIONS` no Android quando necessário; após conceder a permissão, o usuário salva novamente a configuração, evitando marcar ativa uma autorização ainda pendente ou negada.
+- Regressão nova: `diagnostics/e08-6-hoje-controls.test.cjs`, com execução VM dos caminhos públicos para programa/fase/sessão exatos; as cinco rotas de atalho; avatar; lembrete com e sem programa; e contratos de permissão WebView/bridge. `diagnostics/session-engine.test.cjs` foi adaptado para incluir o novo roteador real de atalhos e continua cobrindo sessão ativa de Vácuo sem alteração de postura/duração.
+- Limitações conhecidas: Perfil completo permanece escopo E09; qualidade funcional integral de Pausas/Discreto e Mindfulness permanece dependente das etapas E10/E11. Não foi possível validar a caixa de permissão nem a alteração de status em dispositivo Android físico nesta execução; a lógica é coberta pelo bridge e testes locais, mas a auditoria deve manter essa limitação explícita.
+
 ## 2026-09-22 — E08.5 / Hoje: recomendação de programa e desempate
 
 - Base: `0ef3c996a5bf25d1a07e5cf61db0f6d96d3d7f1c` (E08.4 com PASS independente confirmado no card pai `t_ab568790`, auditoria round 2); worktree alinhado por fast-forward limpo de `67849ee` para esse SHA antes de iniciar.

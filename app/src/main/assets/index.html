@@ -304,6 +304,12 @@
             <button id="watchHapticToggleBtn" type="button" onclick="toggleWatchHaptics()" title="Galaxy Watch: vibração ativada" aria-label="Galaxy Watch: vibração ativada" aria-pressed="true" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
                 <i id="watchHapticIcon" class="fa-solid fa-clock text-emerald-400"></i>
             </button>
+            <button type="button" onclick="openTodayReminderConfig()" aria-label="Configurar lembretes" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-amber-400 transition text-sm">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i>
+            </button>
+            <button type="button" onclick="switchTab('perfil')" aria-label="Abrir Perfil" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
+                <i class="fa-solid fa-user" aria-hidden="true"></i>
+            </button>
         </div>
     </header>
 
@@ -359,10 +365,11 @@
                 </div>
                 <div class="cf-notice rounded-xl p-3 text-xs" role="status" aria-live="polite"><strong class="text-cyan-200">Dados locais protegidos.</strong> Sem conexão, os fluxos essenciais continuam disponíveis.</div>
                 <div class="grid grid-cols-2 gap-3">
-                    <button type="button" class="cf-btn bg-emerald-500 px-3 py-3 text-sm text-slate-950" onclick="switchTab('vacuo')" aria-label="Abrir Vácuo"><i class="fa-solid fa-lungs" aria-hidden="true"></i><span>Vácuo</span></button>
-                    <button type="button" class="cf-btn border border-cyan-400/40 bg-cyan-400/10 px-3 py-3 text-sm text-cyan-100" onclick="switchTab('discreto')" aria-label="Abrir Modo Discreto"><i class="fa-solid fa-briefcase" aria-hidden="true"></i><span>Discreto</span></button>
-                    <button type="button" class="cf-btn border border-violet-400/40 bg-violet-400/10 px-3 py-3 text-sm text-violet-100" onclick="openMindfulnessAudioModal()" aria-label="Abrir Mindfulness"><i class="fa-solid fa-brain" aria-hidden="true"></i><span>Mindfulness</span></button>
-                    <button type="button" class="cf-btn border border-slate-700 bg-slate-900 px-3 py-3 text-sm text-slate-100" onclick="switchTab('programas')" aria-label="Abrir Programas"><i class="fa-solid fa-list-check" aria-hidden="true"></i><span>Programas</span></button>
+                    <button type="button" class="cf-btn bg-emerald-500 px-3 py-3 text-sm text-slate-950" onclick="openTodayShortcut('vacuo')" aria-label="Abrir Vácuo"><i class="fa-solid fa-lungs" aria-hidden="true"></i><span>Vácuo</span></button>
+                    <button type="button" class="cf-btn border border-slate-700 bg-slate-900 px-3 py-3 text-sm text-slate-100" onclick="openTodayShortcut('pausa')" aria-label="Abrir Pausas"><i class="fa-solid fa-chair" aria-hidden="true"></i><span>Pausa</span></button>
+                    <button type="button" class="cf-btn border border-amber-400/40 bg-amber-400/10 px-3 py-3 text-sm text-amber-100" onclick="openTodayShortcut('kegel')" aria-label="Abrir Kegel"><i class="fa-solid fa-bolt" aria-hidden="true"></i><span>Kegel</span></button>
+                    <button type="button" class="cf-btn border border-violet-400/40 bg-violet-400/10 px-3 py-3 text-sm text-violet-100" onclick="openTodayShortcut('meditar')" aria-label="Abrir Mindfulness"><i class="fa-solid fa-brain" aria-hidden="true"></i><span>Meditar</span></button>
+                    <button type="button" class="cf-btn col-span-2 border border-cyan-400/40 bg-cyan-400/10 px-3 py-3 text-sm text-cyan-100" onclick="openTodayShortcut('discreto')" aria-label="Abrir Modo Discreto"><i class="fa-solid fa-briefcase" aria-hidden="true"></i><span>Discreto</span></button>
                 </div>
             </div>
             <div id="todayRecommendationContainer"></div>
@@ -3851,9 +3858,11 @@
             }
 
             synchronizeProgramProgress(program);
-            const activePh = program.phases[program.currentPhaseIndex || 0] || program.phases[0];
+            const displayedPhaseIndex = program.currentPhaseIndex || 0;
+            const activePh = program.phases[displayedPhaseIndex] || program.phases[0];
             const sToday = program.sessionsToday || 0;
             const targetSessions = program.dailyTarget || 1;
+            const displayedSessionNumber = Math.min(sToday + 1, targetSessions);
             const actionLabel = program.programCompleted
                 ? 'Programa concluído • Repetir sessão final'
                 : (sToday === 0 ? `Iniciar Sessão 1/${targetSessions}` : (sToday < targetSessions ? `Continuar Sessão ${sToday + 1}/${targetSessions}` : `Meta diária concluída (${targetSessions}/${targetSessions}) ✓`));
@@ -3862,9 +3871,52 @@
                 <div id="todayRecommendationCard" class="cf-card p-4 space-y-3">
                     <p class="text-xs font-bold uppercase tracking-wider text-cyan-300">Continuar treino</p>
                     <div><h3 class="text-lg font-black text-white leading-tight">${escapeHtmlToday(program.title)}</h3><p class="mt-1 text-xs text-slate-400">${escapeHtmlToday(activePh.title)}</p></div>
-                    <button type="button" class="cf-btn w-full bg-emerald-500 px-3 py-3 text-sm text-slate-950" onclick="openDailyExecutionModal('${program.id}')">${actionLabel}</button>
+                    <button type="button" class="cf-btn w-full bg-emerald-500 px-3 py-3 text-sm text-slate-950" onclick="openTodayRecommendationSession('${program.id}', ${displayedPhaseIndex}, ${displayedSessionNumber})">${actionLabel}</button>
                 </div>
             `;
+        }
+
+        function openTodayRecommendationSession(programId, phaseIndex, sessionNumber) {
+            const program = AppState.programs.find(p => p.id === programId && p.type !== 'mindfulness');
+            if (!program || !Number.isInteger(phaseIndex) || phaseIndex < 0 || phaseIndex >= program.phases.length || !Number.isInteger(sessionNumber) || sessionNumber < 1) {
+                showInlineToast('Não foi possível iniciar a sessão exibida. Atualize a recomendação e tente novamente.');
+                return;
+            }
+            openDailyExecutionModal(programId, phaseIndex, sessionNumber);
+        }
+
+        function openTodayShortcut(shortcut) {
+            triggerHaptic([30]);
+            switch (shortcut) {
+                case 'vacuo':
+                    switchTab('vacuo');
+                    break;
+                case 'pausa':
+                    switchTab('pausas');
+                    break;
+                case 'kegel':
+                    switchTab('discreto');
+                    setDeskMode('kegel-velocidade');
+                    break;
+                case 'meditar':
+                    openMindfulnessAudioModal();
+                    break;
+                case 'discreto':
+                    switchTab('discreto');
+                    break;
+                default:
+                    showInlineToast('Esse atalho não está disponível.');
+            }
+        }
+
+        function openTodayReminderConfig() {
+            const { program } = selectTodayRecommendedProgram();
+            if (!program) {
+                switchTab('programas');
+                showInlineToast('Escolha um programa antes de configurar lembretes.');
+                return;
+            }
+            openReminderConfigModal(program.id);
         }
 
         function switchTab(tabName) {
@@ -10998,11 +11050,40 @@
             AppState.programs.forEach(syncProgramNativeReminder);
         }
 
+        function hasSystemReminderPermission() {
+            try {
+                if (hasNativeReminderScheduler()) return window.AndroidBridge?.notificationsPermissionGranted?.() === true;
+                return typeof Notification !== 'undefined' && Notification.permission === 'granted';
+            } catch (_) {
+                return false;
+            }
+        }
+
+        async function requestSystemReminderPermission() {
+            if (hasSystemReminderPermission()) return true;
+            if (hasNativeReminderScheduler()) {
+                window.AndroidBridge?.requestReminderPermission?.();
+                showInlineToast('Autorize as notificações do sistema e salve novamente para ativar os lembretes.');
+                return false;
+            }
+            if (typeof Notification === 'undefined') {
+                showInlineToast('Este ambiente não oferece notificações do sistema.');
+                return false;
+            }
+            try {
+                return (await Notification.requestPermission()) === 'granted';
+            } catch (_) {
+                showInlineToast('Não foi possível solicitar a permissão de notificações.');
+                return false;
+            }
+        }
+
         function updatePushNotificationButton() {
             const btnText = document.getElementById('pushNotifBtnText');
             if (!btnText) return;
             const enabledCount = AppState.programs.filter(program => program.remindersEnabled === true).length;
-            btnText.innerText = enabledCount > 0 ? `Lembretes Ativos (${enabledCount}) ✓` : 'Ativar Lembretes Push';
+            const activeCount = hasSystemReminderPermission() ? enabledCount : 0;
+            btnText.innerText = activeCount > 0 ? `Lembretes Ativos (${activeCount}) ✓` : 'Ativar Lembretes Push';
         }
 
         function showInlineToast(message) {
@@ -11026,7 +11107,7 @@
             document.getElementById('reminderTimeInput1').value = times[0] || '';
             document.getElementById('reminderTimeInput2').value = times[1] || '';
             document.getElementById('reminderTimeBlock2').classList.toggle('hidden', targetSessions === 1);
-            document.getElementById('reminderEnabledToggle').checked = prog.remindersEnabled !== false;
+            document.getElementById('reminderEnabledToggle').checked = prog.remindersEnabled === true && hasSystemReminderPermission();
 
             document.getElementById('reminderConfigModal').classList.remove('hidden');
         }
@@ -11035,21 +11116,26 @@
             document.getElementById('reminderConfigModal').classList.add('hidden');
         }
 
-        function saveReminderConfig() {
+        async function saveReminderConfig() {
             triggerHaptic([30]);
             const prog = AppState.programs.find(p => p.id === activeReminderProgId);
             if (prog) {
                 const t1 = document.getElementById('reminderTimeInput1').value || '09:00';
                 const t2 = document.getElementById('reminderTimeInput2').value || '16:00';
-                const enabled = document.getElementById('reminderEnabledToggle').checked;
+                const requestedEnabled = document.getElementById('reminderEnabledToggle').checked;
+                const enabled = !requestedEnabled || await requestSystemReminderPermission();
 
                 prog.reminderTimes = [t1, t2];
                 prog.remindersEnabled = enabled;
-                AppState.pushNotificationsEnabled = AppState.programs.some(program => program.remindersEnabled === true);
+                AppState.pushNotificationsEnabled = AppState.programs.some(program => program.remindersEnabled === true) && hasSystemReminderPermission();
                 saveState();
                 renderProgramsList();
                 updatePushNotificationButton();
                 syncProgramNativeReminder(prog, true);
+                if (requestedEnabled && !enabled) {
+                    document.getElementById('reminderEnabledToggle').checked = false;
+                    return;
+                }
                 const savedTimes = (prog.dailyTarget || 2) === 1 ? t1 : `${t1} e ${t2}`;
                 showInlineToast(enabled ? `Lembretes salvos: ${savedTimes}` : 'Lembretes desativados para este programa');
             }
@@ -11854,36 +11940,7 @@
 
         // PUSH NOTIFICATIONS SETUP
         function requestPushNotifications() {
-            triggerHaptic([50]);
-            AppState.programs.forEach(program => {
-                program.remindersEnabled = true;
-            });
-            AppState.pushNotificationsEnabled = true;
-            saveState();
-            renderProgramsList();
-            updatePushNotificationButton();
-
-            if (hasNativeReminderScheduler()) {
-                syncAllNativeReminders();
-                showInlineToast('Lembretes push ativados nos horários configurados');
-                return;
-            }
-
-            const btnText = document.getElementById('pushNotifBtnText');
-            if ('Notification' in window) {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        btnText.innerText = 'Lembretes Ativos ✓';
-                        new Notification('CoreFlow Notificações Ativadas', {
-                            body: 'Você receberá avisos para as pausas de vácuo e postura.'
-                        });
-                    } else {
-                        btnText.innerText = 'Ativo (In-App)';
-                    }
-                });
-            } else {
-                btnText.innerText = 'Ativo (In-App)';
-            }
+            openTodayReminderConfig();
         }
 
         /* -------------------------------------------------------------
@@ -11936,16 +11993,14 @@
             switch (action) {
                 case 'bracing_2min':
                     switchTab('discreto');
-                    switchDiscreteSubtab('bracing');
+                    setDeskMode('bracing');
                     setTimeout(() => {
-                        if (!AppState.discrete.bracing.isRunning) {
-                            toggleBracingTimer();
-                        }
-                    }, 250);
+                        if (!AppState.desk.bracing.isRunning) toggleBracingTimer();
+                    }, 300);
                     break;
                 case 'vacuo_rapido':
                     switchTab('vacuo');
-                    setPosture('deitado', 10);
+                    if (!setPosture('deitado', 10)) return;
                     setTimeout(() => {
                         if (!AppState.vacuo.isRunning) {
                             startVacuo();
@@ -11954,20 +12009,19 @@
                     break;
                 case 'kegel_velocidade':
                     switchTab('discreto');
-                    switchDiscreteSubtab('kegel');
-                    setKegelMode('rapido');
+                    setDeskMode('kegel-velocidade');
                     setTimeout(() => {
-                        if (!AppState.discrete.kegel.isRunning) {
-                            toggleKegelTimer();
-                        }
-                    }, 250);
+                        if (!AppState.desk.fast.isRunning) toggleKegelFast();
+                    }, 300);
                     break;
                 case 'pausa':
                     switchTab('pausas');
                     setTimeout(() => {
-                        startFullStretchCircuit();
+                        if (!AppState.pausas.circuitActive) startFullStretchCircuit();
                     }, 250);
                     break;
+                default:
+                    showInlineToast('Esse atalho não está disponível.');
             }
         }
 

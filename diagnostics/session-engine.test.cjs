@@ -53,6 +53,7 @@ const source = [
     extractFunction('setPosture'),
     extractFunction('setVacuumDuration'),
     extractFunction('updateVacDurationPills'),
+    extractFunction('openTodayShortcut'),
     extractFunction('triggerQuickAction'),
     extractFunction('updateSessionFeedback'),
     html.slice(persistenceStart, persistenceEnd)
@@ -103,6 +104,8 @@ const context = vm.createContext({
     setVacProgress() {},
     highlightPhaseCard() {},
     switchTab() {},
+    setDeskMode() {},
+    openMindfulnessAudioModal() {},
     switchDiscreteSubtab() {},
     setKegelMode() {},
     toggleBracingTimer() {},
