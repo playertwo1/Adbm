@@ -69,12 +69,19 @@ if [ -n "$parent" ] && git cat-file -e "${parent}^{commit}" 2>/dev/null; then
   head_sha=$(git rev-parse HEAD)
   head_parent=$(git rev-parse HEAD^ 2>/dev/null || echo "")
   full_parent=$(git rev-parse "${parent}^{commit}")
-  if [ "$full_parent" != "$head_sha" ] && [ "$full_parent" != "$head_parent" ]; then
-    report "documentation_parent_sha=$parent nao e HEAD ($head_sha) nem HEAD^ (${head_parent:-nenhum}).
-      Antes de commitar a atualizacao documental ele deve ser o HEAD atual;
-      depois de commitar, o pai imediato do commit documental."
+  if [ "$full_parent" = "$head_sha" ]; then
+    echo "ok: documentation_parent_sha e o HEAD atual (antes de commitar o commit documental)"
+  elif [ "$full_parent" = "$head_parent" ]; then
+    echo "ok: documentation_parent_sha e o pai imediato de HEAD (commit documental recem-criado)"
+  elif git merge-base --is-ancestor "$full_parent" HEAD 2>/dev/null; then
+    # A relacao pai-imediato e um invariante de HANDOFF, nao do repositorio: depois
+    # que a branch do card e integrada, HEAD anda e ela se quebra para sempre.
+    # Fora da ponta da branch basta que o SHA declarado pertenca a esta historia.
+    echo "ok: documentation_parent_sha ja integrado nesta historia (branch do card consolidada)"
   else
-    echo "ok: documentation_parent_sha casa com a posicao real do commit documental"
+    report "documentation_parent_sha=$parent nao pertence a historia de HEAD ($head_sha).
+      Na ponta da branch do card ele deve ser o HEAD atual (antes de commitar) ou
+      o pai imediato de HEAD (depois de commitar)."
   fi
 fi
 
