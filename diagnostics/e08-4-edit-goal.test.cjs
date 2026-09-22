@@ -76,7 +76,7 @@ const noopNames = [
     'updateWeeklyMobilityMetrics', 'updateStretchDurationUI', 'loadCustomPresets', 'updateBreathDurationUI',
     'updateBreathLevelUI', 'updateTimeOfDayRecommendation', 'updateWeeklyCalmMetrics',
     'updatePushNotificationButton', 'syncAllNativeReminders', 'renderCustomPresetsList', 'triggerHaptic',
-    'renderTodayRecommendation'
+    'renderTodayRecommendation', 'applyProfilePreferences'
 ];
 
 function makeElement(id) {
@@ -112,6 +112,14 @@ function setup() {
     const context = vm.createContext({
         console: { log() {} },
         window: {},
+        ACCESSIBILITY_DEFAULTS: { textScale: 'normal', highContrast: false, reducedMotion: false },
+        normalizeAccessibilityPreferences(value) {
+            return {
+                textScale: value?.textScale === 'large' ? 'large' : 'normal',
+                highContrast: value?.highContrast === true,
+                reducedMotion: value?.reducedMotion === true
+            };
+        },
         document: {
             getElementById, activeElement: null, querySelectorAll() { return []; },
             createElement() { return { classList: { add() {} }, remove() {}, appendChild() {} }; },

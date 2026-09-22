@@ -84,6 +84,12 @@ const context = vm.createContext({
     responsivePause: { history: [], historyEnabled: false },
     localDateKey: () => '2026-09-22',
     hasSystemReminderPermission: () => false,
+    ACCESSIBILITY_DEFAULTS: { textScale: 'normal', highContrast: false, reducedMotion: false },
+    normalizeAccessibilityPreferences: value => ({
+        textScale: value?.textScale === 'large' ? 'large' : 'normal',
+        highContrast: value?.highContrast === true,
+        reducedMotion: value?.reducedMotion === true
+    }),
     normalizeSessionHistory: records => Array.isArray(records) ? records : [],
     renderDailyExecutionUI: () => {},
     addMinutesToday: () => {},

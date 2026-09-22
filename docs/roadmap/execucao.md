@@ -1,5 +1,17 @@
 # Registro de execução
 
+## 2026-09-22 — E09.2 / Perfil: nome, meta, tema AMOLED e acessibilidade (t_ac12e0e4) — IMPLEMENTADA
+
+- Base: `f7de3d44920d1e7f7b7bc8efdcb92dd2c5b1a8b0` (HEAD inicial do worktree; alterações mantidas sem commit para auditoria independente).
+- Contrato observável:
+  - AC1 — Perfil permite editar nome e meta com Salvar/Cancelar; valores válidos atualizam `AppState`, snapshot v4 e o resumo; valores inválidos exibem erro real, mantêm o modal aberto e não alteram o estado confirmado; Cancelar descarta o rascunho.
+  - AC2 — Tema AMOLED, tamanho de texto, alto contraste e redução de movimento alteram classes/estilos observáveis e são persistidos/restaurados junto ao snapshot v4.
+  - AC3 — Ausência ou corrupção de `theme`/`accessibility` normaliza para preferências neutras (`standard`/`normal`/`false`), sem fabricar opt-in.
+- Implementação: `index.html` e `app/src/main/assets/index.html` receberam a UI de Perfil, modais de edição/acessibilidade, efeitos CSS reais e funções `applyProfilePreferences`/`applyAccessibilityPreferences`; `collectProgressData`/`applyProgressData` preservam o round-trip sem alterar IDs, chaves de armazenamento existentes, bridge ou protocolo de treino.
+- Regressão: `diagnostics/e09-2-profile.test.cjs` executa os caminhos públicos em ambos os HTMLs, incluindo salvar/cancelar/invalidade, persistência real no snapshot, restauração, efeitos DOM e dados ausentes/corrompidos. Os harnesses existentes foram ajustados apenas para fornecer a nova normalização durante a extração isolada (`diagnostics/e07-*`, `diagnostics/e08-*`, `diagnostics/progress-persistence.test.cjs`, `diagnostics/session-engine.test.cjs`).
+- Verificação: `for f in diagnostics/*.test.cjs; do node "$f" || exit 1; done` → 22 arquivos, exit 0; `bash scripts/check.sh` com `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr'` e `ANDROID_HOME=$LOCALAPPDATA/Android/Sdk` → `CHECK PASS`, `BUILD SUCCESSFUL`, `:app:testDebugUnitTest`, `:app:assembleDebug` e `:wear:assembleDebug`; `cmp -s index.html app/src/main/assets/index.html` → exit 0; SHA-256 idêntico `40aff67b8523b955f77da533378eb728acc7c5b34654f9c5b3aefc3b2eb587f5`; `git diff --check` → exit 0.
+- Limitações/dependências: sem validação em aparelho Android físico, TalkBack, fonte do sistema ou Galaxy Watch; a auditoria independente no alvo exato ainda é obrigatória. E09.3 (lembretes posicionais) permanece bloqueada por este card.
+
 ## 2026-09-22 — E08.6r / fechamento dos 3 achados de auditoria (t_dc4dfd04)
 
 - Base: cadeia E08.6 completa (`caa02db..8255644`) reaplicada por cherry-pick sobre o base E08.5 aprovado (`5c43fea19fd70094534d760281d36c7f0b087dcf`), conforme requisito de redesign da task `t_b3ac2abf`.

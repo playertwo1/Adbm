@@ -31,7 +31,7 @@ const source = [
     html.slice(persistenceStart, persistenceEnd)
 ].join('\n');
 const noopNames = [
-    'evaluateAchievements', 'updateHeaderStats', 'renderTodaySummary', 'renderScheduleList', 'renderProgramsList',
+    'evaluateAchievements', 'applyProfilePreferences', 'updateHeaderStats', 'renderTodaySummary', 'renderScheduleList', 'renderProgramsList',
     'renderMonthlyBars', 'renderWeeklyChart', 'renderSmartSuggestionCard', 'renderWeeklyTimeSummary',
     'renderAchievements', 'renderMenteHistory', 'renderCorpoHistory', 'updateTimeOfDayStretchRecommendation',
     'updateWeeklyMobilityMetrics', 'updateStretchDurationUI', 'loadCustomPresets', 'updateBreathDurationUI',
@@ -45,6 +45,14 @@ function setup({ failReadOnce = false, failSnapshotWrite = false, nativeCurrent 
     const context = vm.createContext({
         console: { log() {} },
         TextEncoder,
+        ACCESSIBILITY_DEFAULTS: { textScale: 'normal', highContrast: false, reducedMotion: false },
+        normalizeAccessibilityPreferences(value) {
+            return {
+                textScale: value?.textScale === 'large' ? 'large' : 'normal',
+                highContrast: value?.highContrast === true,
+                reducedMotion: value?.reducedMotion === true
+            };
+        },
         document: { getElementById() { return null; } },
         hasSystemReminderPermission() { return false; },
         window: nativeCurrent === null ? {} : { AndroidBridge: { getProgressSnapshot() { return nativeCurrent; } } },

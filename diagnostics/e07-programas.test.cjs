@@ -100,6 +100,12 @@ function setup() {
     const context = vm.createContext({
         console: { log() {} },
         window: {},
+        ACCESSIBILITY_DEFAULTS: { textScale: 'normal', highContrast: false, reducedMotion: false },
+        normalizeAccessibilityPreferences: value => ({
+            textScale: value?.textScale === 'large' ? 'large' : 'normal',
+            highContrast: value?.highContrast === true,
+            reducedMotion: value?.reducedMotion === true
+        }),
         hasSystemReminderPermission() { return false; },
         document: { getElementById },
         localStorage: {

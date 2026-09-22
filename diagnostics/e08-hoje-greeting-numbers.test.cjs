@@ -70,7 +70,7 @@ const updateHeaderStats = extractFunction(source, 'updateHeaderStats');
 const renderTodaySummary = extractFunction(source, 'renderTodaySummary');
 
 const noopNames = [
-    'evaluateAchievements', 'renderScheduleList', 'renderProgramsList',
+    'evaluateAchievements', 'applyProfilePreferences', 'renderScheduleList', 'renderProgramsList',
     'renderMonthlyBars', 'renderWeeklyChart', 'renderSmartSuggestionCard', 'renderWeeklyTimeSummary',
     'renderAchievements', 'renderMenteHistory', 'renderCorpoHistory', 'updateTimeOfDayStretchRecommendation',
     'updateWeeklyMobilityMetrics', 'updateStretchDurationUI', 'loadCustomPresets', 'updateBreathDurationUI',
@@ -120,6 +120,14 @@ function setup(fixedHour) {
     const context = vm.createContext({
         console: { log() {} },
         window: {},
+        ACCESSIBILITY_DEFAULTS: { textScale: 'normal', highContrast: false, reducedMotion: false },
+        normalizeAccessibilityPreferences(value) {
+            return {
+                textScale: value?.textScale === 'large' ? 'large' : 'normal',
+                highContrast: value?.highContrast === true,
+                reducedMotion: value?.reducedMotion === true
+            };
+        },
         hasSystemReminderPermission() { return false; },
         document: { getElementById, activeElement: null, querySelectorAll() { return []; } },
         localStorage: {

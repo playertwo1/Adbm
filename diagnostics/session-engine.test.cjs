@@ -66,6 +66,12 @@ const storage = {};
 const context = vm.createContext({
     console: { log(msg) { console.log(msg); }, error(msg, err) { console.error("ERROR:", msg, err); } },
     TextEncoder,
+    ACCESSIBILITY_DEFAULTS: { textScale: 'normal', highContrast: false, reducedMotion: false },
+    normalizeAccessibilityPreferences: value => ({
+        textScale: value?.textScale === 'large' ? 'large' : 'normal',
+        highContrast: value?.highContrast === true,
+        reducedMotion: value?.reducedMotion === true
+    }),
     document: {
         getElementById() {
             return { classList: { remove(){}, add(){}, contains(){return false;} }, className: '', innerText: '', style: {} };
