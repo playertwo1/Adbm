@@ -59,8 +59,12 @@ assert.match(nativeScheduler, /scheduleMindSmartReminder[\s\S]*?hasEffectiveNoti
 
 assert.match(nativeScheduler, /fun scheduleSnooze\([\s\S]*?if \(!hasEffectiveNotificationPermission\(context\)\) return/, 'adiar não pode rearmar alarme sem permissão');
 assert.match(nativeScheduler, /fun handleFire\([\s\S]*?if \(!hasEffectiveNotificationPermission\(context\)\) \{[\s\S]*?putBoolean\(key\(programId, "enabled"\), false\)/, 'disparo após revogação deve cancelar e desativar o programa');
-assert.match(nativeScheduler, /fun cancelProgram\([\s\S]*?0\.\.720[\s\S]*?ACTION_SNOOZE/, 'revogação deve cancelar sonezas pendentes do programa');
-assert.match(nativeScheduler, /prefs\.getBoolean\("mind_reminder_enabled", false\)[\s\S]*?hasEffectiveNotificationPermission\(context\)/, 'smart reminder não pode rearmar por default ativo');
+assert.match(nativeScheduler, /fun cancelProgram\([\s\S]*?0\.\.720[\s\S]*?action = ACTION_FIRE/, 'revogação deve cancelar sonezas pendentes do programa pelo mesmo tipo de alarme');
+assert.match(nativeScheduler, /scheduleAlarm\(context, programId, title, sessionNumber, triggerAt, true, safeMinutes\)/, 'soneza deve carregar sua duração até a identidade do alarme');
+assert.match(nativeScheduler, /if \(snooze\) snoozeRequestCode\(programId, session, snoozeMinutes\) else dailyRequestCode\(programId, session\)/, 'cancelamento deve usar a mesma identidade determinística da soneza');
+assert.match(nativeScheduler, /val request = if \(snooze\)[\s\S]*?action = ACTION_FIRE/, 'alarme de soneza deve ser cancelável pelo mesmo ACTION_FIRE');
+assert.match(nativeScheduler, /val enabled = prefs\.getBoolean\("mind_reminder_enabled", false\)[\s\S]*?shouldPublishMindReminder\(enabled, time, hasEffectiveNotificationPermission\(context\)\)/, 'smart reminder stale deve validar opt-in antes de publicar');
+assert.match(nativeScheduler, /fun showMindSmartNotification\(context: Context\)[\s\S]*?cancelMindSmartReminder\(context\)[\s\S]*?return/, 'smart reminder desativado deve cancelar e não publicar');
 
 const sourceForVm = [
     extractFunction('isValidReminderTime'),

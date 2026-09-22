@@ -103,8 +103,9 @@ object ReminderScheduler {
         minutes: Int
     ) {
         if (!hasEffectiveNotificationPermission(context)) return
-        val triggerAt = System.currentTimeMillis() + minutes.coerceIn(1, 720) * 60_000L
-        scheduleAlarm(context, programId, title, sessionNumber, triggerAt, true)
+        val safeMinutes = minutes.coerceIn(1, 720)
+        val triggerAt = System.currentTimeMillis() + safeMinutes * 60_000L
+        scheduleAlarm(context, programId, title, sessionNumber, triggerAt, true, safeMinutes)
     }
 
     fun handleFire(context: Context, intent: Intent) {
@@ -201,9 +202,9 @@ object ReminderScheduler {
         (1..2).forEach { session ->
             (0..720).forEach { snoozeMinutes ->
                 val snooze = snoozeMinutes > 0
-                val request = if (snooze) requestCode(programId, session, true) + snoozeMinutes else requestCode(programId, session, false)
+                val request = if (snooze) snoozeRequestCode(programId, session, snoozeMinutes) else dailyRequestCode(programId, session)
                 val intent = Intent(context, ReminderReceiver::class.java).apply {
-                    action = if (snooze) ACTION_SNOOZE else ACTION_FIRE
+                    action = ACTION_FIRE
                 }
                 val pendingIntent = PendingIntent.getBroadcast(
                     context,
@@ -247,7 +248,8 @@ object ReminderScheduler {
         title: String,
         sessionNumber: Int,
         triggerAt: Long,
-        isSnooze: Boolean
+        isSnooze: Boolean,
+        snoozeMinutes: Int = 0
     ) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, ReminderReceiver::class.java).apply {
@@ -259,7 +261,7 @@ object ReminderScheduler {
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            requestCode(programId, sessionNumber, isSnooze),
+            if (isSnooze) snoozeRequestCode(programId, sessionNumber, snoozeMinutes) else dailyRequestCode(programId, sessionNumber),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -295,6 +297,23 @@ object ReminderScheduler {
         )
     }
 
+    private fun cancelMindSmartReminder(context: Context) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, ReminderReceiver::class.java).apply {
+            action = ACTION_MIND_REMINDER_FIRE
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            MIND_REMINDER_ID,
+            intent,
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+        )
+        if (pendingIntent != null) {
+            alarmManager.cancel(pendingIntent)
+            pendingIntent.cancel()
+        }
+    }
+
     private fun createChannel(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val channel = NotificationChannel(
@@ -308,6 +327,15 @@ object ReminderScheduler {
         (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
             .createNotificationChannel(channel)
     }
+
+    internal fun dailyRequestCode(programId: String, sessionNumber: Int): Int =
+        requestCode(programId, sessionNumber, false)
+
+    internal fun snoozeRequestCode(programId: String, sessionNumber: Int, minutes: Int): Int =
+        requestCode(programId, sessionNumber, true) + minutes.coerceIn(1, 720)
+
+    internal fun shouldPublishMindReminder(enabled: Boolean, time: String, permissionGranted: Boolean): Boolean =
+        enabled && permissionGranted && isValidTime(time)
 
     private fun requestCode(programId: String, sessionNumber: Int, snooze: Boolean): Int {
         val base = (programId.hashCode() and 0x7fffffff) % 100_000
@@ -357,7 +385,13 @@ object ReminderScheduler {
     }
 
     fun showMindSmartNotification(context: Context) {
-        if (!hasEffectiveNotificationPermission(context)) return
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val time = prefs.getString("mind_reminder_time", "") ?: ""
+        val enabled = prefs.getBoolean("mind_reminder_enabled", false)
+        if (!shouldPublishMindReminder(enabled, time, hasEffectiveNotificationPermission(context))) {
+            cancelMindSmartReminder(context)
+            return
+        }
         createChannel(context)
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -393,10 +427,10 @@ object ReminderScheduler {
         manager.notify(MIND_REMINDER_ID, notification)
 
         // Agendar para o dia seguinte automaticamente
-        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        if (prefs.getBoolean("mind_reminder_enabled", false) && hasEffectiveNotificationPermission(context)) {
-            val time = prefs.getString("mind_reminder_time", "") ?: ""
-            if (isValidTime(time)) scheduleMindSmartReminder(context, time, true)
+        val storedPrefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        if (storedPrefs.getBoolean("mind_reminder_enabled", false) && hasEffectiveNotificationPermission(context)) {
+            val storedTime = storedPrefs.getString("mind_reminder_time", "") ?: ""
+            if (isValidTime(storedTime)) scheduleMindSmartReminder(context, storedTime, true)
         }
     }
 
