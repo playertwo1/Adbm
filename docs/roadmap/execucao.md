@@ -448,3 +448,16 @@ Próximo passo:
 - Limitações: sem aparelho/Watch/TalkBack físico, push, merge, Actions, release ou deploy nesta execução. Auditoria independente do target final continua obrigatória; este handoff não é PASS.
 - Próximo passo: Auditor independente revisar o target SHA exato desta implementação.
 
+## 2026-09-22 — E08.7 / consolidação E08 / IMPLEMENTADA
+
+- Dependência confirmada: E08.6-R aceita com limitação por decisão de Rafael, conforme auditoria independente da task `t_b3ac2abf`; base correta desta consolidação: `666e24a6f64c84c265fa46644efbaa089847823c`. O target reprovado anterior `825564481460dab35be6c1c5707e9ec512e52697` não foi usado como base.
+- SHAs da consolidação: `base_sha=666e24a6f64c84c265fa46644efbaa089847823c`; `target_sha=666e24a6f64c84c265fa46644efbaa089847823c`.
+- Matriz consolidada: onboarding objetivo → meta/agenda → revisão com Voltar; validação de meta/frequência e conclusão; instalação limpa versus usuário existente/legado; saudação e números do diário; edição de meta com salvar/cancelar; recomendação, seleção explícita e desempate; Começar agora com etapa/sessão exibidas; atalhos Vácuo/Pausa/Kegel/Meditar/Discreto; avatar/Perfil; lembretes com permissão efetiva, horários válidos, soneza e smart reminder stale.
+- Diagnósticos E08 GREEN: `node diagnostics/e08-onboarding.test.cjs`, `node diagnostics/e08-existing-user.test.cjs`, `node diagnostics/e08-hoje-greeting-numbers.test.cjs`, `node diagnostics/e08-4-edit-goal.test.cjs`, `node diagnostics/e08-5-hoje-recommendation.test.cjs` e `node diagnostics/e08-6-hoje-controls.test.cjs` → exit 0. Os testes verificam os dois HTMLs byte-equivalentes; E08.6 também inspeciona `MainActivity.kt`, `ReminderScheduler.kt`, permissões efetivas, horários inválidos, soneza, smart reminder stale e a matriz nativa de identidade.
+- Regressões E01–E07 e políticas disponíveis: `for f in diagnostics/*.test.cjs; do node "$f" >/dev/null || exit 1; done` → exit 0.
+- Equivalência e higiene: `cmp -s index.html app/src/main/assets/index.html` → exit 0; hashes SHA-256 idênticos; `git diff --check` → exit 0.
+- Validação integrada: `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → `BUILD SUCCESSFUL`/exit 0.
+- Limitações: sem aparelho Android físico, Galaxy Watch físico ou TalkBack; harness Node/vm e inspeção de fonte não substituem teste físico de permissão, canal ou AlarmManager. Finding 1 da E08.6-R permanece aceito e documentado: `.filter(isValidReminderTime)` pode compactar `reminderTimes` e reatribuir horário entre sessões no fallback de navegador; a correção de preservação posicional permanece fora desta etapa. E09 Perfil, E10 Discreto/Pausas e E11 Mindfulness continuam pendentes; não foram iniciados nem declarados aceitos.
+- Arquivos desta consolidação: `ROADMAP.md` e `docs/roadmap/execucao.md`. Nenhum ID, armazenamento, protocolo de treino ou código funcional foi alterado nesta etapa.
+- Próximo passo: auditoria independente do target final desta consolidação; depois, retrospectiva do Diretor antes de qualquer proposta de E09.
+
