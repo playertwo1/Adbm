@@ -11087,6 +11087,19 @@
         function syncAllNativeReminders() {
             if (!hasNativeReminderScheduler()) return;
             AppState.programs.forEach(syncProgramNativeReminder);
+            syncSmartMiddayReminderNative();
+        }
+
+        // Fonte única de verdade para o smart reminder é o estado persistido da UI
+        // (AppState.mente.smartReminderEnabled). Após restore/restart, reenvia esse
+        // estado ao agendador nativo em vez de deixar o alarme nativo divergir do
+        // opt-in exibido: o agendador nativo já filtra por permissão/horário válido
+        // antes de publicar ou rearmar, então a chamada é idempotente e nunca fabrica
+        // um horário ou ativa algo que o usuário não escolheu.
+        function syncSmartMiddayReminderNative() {
+            if (!window.AndroidBridge?.scheduleSmartMindReminder) return;
+            const requested = AppState.mente.smartReminderEnabled === true && hasSystemReminderPermission();
+            window.AndroidBridge.scheduleSmartMindReminder('15:30', requested);
         }
 
         function hasSystemReminderPermission() {
@@ -12674,6 +12687,11 @@
             AppState.mente.history = Array.isArray(data.menteHistory) ? data.menteHistory : [];
             AppState.pausas.history = Array.isArray(data.corpoHistory) ? data.corpoHistory : [];
             AppState.mente.customPresets = Array.isArray(data.customPresets) ? data.customPresets : AppState.mente.customPresets;
+            // Opt-in real do smart reminder: só considerado ativo com booleano persistido
+            // explícito e permissão efetiva; ausência/valor não-booleano nunca vira true.
+            AppState.mente.smartReminderEnabled = typeof data.smartReminderEnabled === 'boolean'
+                && data.smartReminderEnabled === true
+                && hasSystemReminderPermission();
             AppState.pushNotificationsEnabled = hasSystemReminderPermission() && AppState.programs.some(program =>
                 program.remindersEnabled === true && program.progressInvalid !== true && isReminderScheduleComplete(program)
             );
@@ -12788,7 +12806,8 @@
                 onboardingCompleted: AppState.onboardingCompleted === true,
                 onboardingFocus: AppState.onboardingFocus || null,
                 weeklyGoalDays: AppState.weeklyGoalDays || null,
-                userName: AppState.userName || null
+                userName: AppState.userName || null,
+                smartReminderEnabled: AppState.mente?.smartReminderEnabled === true
             };
         }
 
@@ -13116,6 +13135,7 @@
             updateTimeOfDayRecommendation();
             updateWeeklyCalmMetrics();
             updatePushNotificationButton();
+            if (typeof updateSmartMiddayReminderUI === 'function') updateSmartMiddayReminderUI();
             syncAllNativeReminders();
         }
 

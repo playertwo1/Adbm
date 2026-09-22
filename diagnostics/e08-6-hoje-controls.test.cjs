@@ -66,6 +66,18 @@ assert.match(nativeScheduler, /val request = if \(snooze\)[\s\S]*?action = ACTIO
 assert.match(nativeScheduler, /val enabled = prefs\.getBoolean\("mind_reminder_enabled", false\)[\s\S]*?shouldPublishMindReminder\(enabled, time, hasEffectiveNotificationPermission\(context\)\)/, 'smart reminder stale deve validar opt-in antes de publicar');
 assert.match(nativeScheduler, /fun showMindSmartNotification\(context: Context\)[\s\S]*?cancelMindSmartReminder\(context\)[\s\S]*?return/, 'smart reminder desativado deve cancelar e não publicar');
 
+// ADBM-E08.6-R — fechamento dos findings da auditoria FAIL anterior (t_dc4dfd04):
+// F1 identidade de soneza não injetiva, F2 fallback fabricado 15:30 no boot,
+// F3 divergência de estado smart reminder entre UI e nativo após restart.
+assert.match(nativeScheduler, /internal fun snoozeRequestCode\(programId: String, sessionNumber: Int, minutes: Int\): Int \{[\s\S]*?SNOOZE_REQUEST_BASE \+ programBase\(programId\) \* 10_000 \+ sessionNumber \* 1_000 \+ safeMinutes/, 'F1: soneza deve usar identidade injetiva por bloco de programa/sessão/minuto, não soma que pode transbordar');
+assert.doesNotMatch(nativeScheduler, /requestCode\(programId, sessionNumber, true\) \+ minutes/, 'F1: não pode restar a fórmula antiga de soneza que permitia colisão');
+assert.match(nativeScheduler, /class ReminderRescheduleReceiver[\s\S]*?val time = prefs\.getString\("mind_reminder_time", ""\) \?: ""[\s\S]*?ReminderScheduler\.scheduleMindSmartReminder\(context, time, enabled\)/, 'F2: reagendamento no boot não pode fabricar horário 15:30 quando ausente');
+assert.doesNotMatch(nativeScheduler, /getString\("mind_reminder_time", "15:30"\)/, 'F2: nenhum ponto do scheduler pode usar 15:30 como valor padrão fabricado');
+assert.match(source, /function syncSmartMiddayReminderNative\(\)[\s\S]*?AppState\.mente\.smartReminderEnabled === true && hasSystemReminderPermission\(\)/, 'F3: sincronismo nativo do smart reminder deve seguir o estado persistido da UI, não divergir dele');
+assert.match(source, /function syncAllNativeReminders\(\)[\s\S]*?syncSmartMiddayReminderNative\(\);/, 'F3: syncAllNativeReminders deve reconciliar também o smart reminder, não só os programas');
+assert.match(source, /smartReminderEnabled: AppState\.mente\?\.smartReminderEnabled === true/, 'F3: snapshot deve persistir o opt-in real do smart reminder (contrato único de lembretes)');
+assert.match(source, /AppState\.mente\.smartReminderEnabled = typeof data\.smartReminderEnabled === 'boolean'[\s\S]*?data\.smartReminderEnabled === true[\s\S]*?hasSystemReminderPermission\(\)/, 'F3: restore não pode reativar smart reminder sem opt-in persistido e permissão efetiva');
+
 const sourceForVm = [
     extractFunction('isValidReminderTime'),
     extractFunction('isStrictNonNegativeInteger'),
@@ -144,5 +156,39 @@ context.selectTodayRecommendedProgram = () => ({ program: null });
 calls.length = 0;
 vm.runInContext('openTodayReminderConfig()', context);
 assert.deepEqual(calls, [['tab', 'programas'], ['toast', 'Escolha um programa antes de configurar lembretes.']], 'sem programa, lembrete não pode fabricar configuração');
+
+// ADBM-E08.6-R — F3: syncAllNativeReminders deve reconciliar o smart reminder com o
+// estado persistido da UI (AppState.mente.smartReminderEnabled), nunca deixando o
+// alarme nativo divergir silenciosamente após um restart/restore.
+const syncSource = [
+    extractFunction('hasNativeReminderScheduler'),
+    extractFunction('syncProgramNativeReminder'),
+    extractFunction('syncAllNativeReminders'),
+    extractFunction('syncSmartMiddayReminderNative')
+].join('\n');
+const smartCalls = [];
+const syncContext = vm.createContext({
+    AppState: { programs: [], mente: { smartReminderEnabled: true } },
+    hasSystemReminderPermission() { return true; },
+    localDateKey() { return '2024-01-01'; },
+    window: {
+        AndroidBridge: {
+            hasNativeReminderScheduler() { return true; },
+            scheduleSmartMindReminder(time, enabled) { smartCalls.push([time, enabled]); }
+        }
+    }
+});
+vm.runInContext(syncSource, syncContext);
+vm.runInContext('syncAllNativeReminders()', syncContext);
+assert.deepEqual(smartCalls.pop(), ['15:30', true], 'F3: opt-in ativo + permissão concedida deve reativar o alarme nativo, refletindo a UI');
+
+syncContext.AppState.mente.smartReminderEnabled = false;
+vm.runInContext('syncAllNativeReminders()', syncContext);
+assert.deepEqual(smartCalls.pop(), ['15:30', false], 'F3: opt-in desativado na UI deve cancelar o alarme nativo, não deixá-lo divergente');
+
+syncContext.AppState.mente.smartReminderEnabled = true;
+syncContext.hasSystemReminderPermission = () => false;
+vm.runInContext('syncAllNativeReminders()', syncContext);
+assert.deepEqual(smartCalls.pop(), ['15:30', false], 'F3: permissão revogada deve cancelar mesmo com opt-in ativo salvo, nunca publicar sem permissão efetiva');
 
 console.log('E08.6 Hoje controls: OK');

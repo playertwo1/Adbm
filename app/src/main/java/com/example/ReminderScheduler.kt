@@ -291,7 +291,7 @@ object ReminderScheduler {
         }
         return PendingIntent.getBroadcast(
             context,
-            requestCode(programId, sessionNumber, true) + minutes,
+            snoozeRequestCode(programId, sessionNumber, minutes),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -331,16 +331,27 @@ object ReminderScheduler {
     internal fun dailyRequestCode(programId: String, sessionNumber: Int): Int =
         requestCode(programId, sessionNumber, false)
 
-    internal fun snoozeRequestCode(programId: String, sessionNumber: Int, minutes: Int): Int =
-        requestCode(programId, sessionNumber, true) + minutes.coerceIn(1, 720)
+    // Identidade injetiva: base do programa isolada em blocos de 10_000 (acima do teto
+    // sessão*1_000 + minutos, no máximo 2*1_000 + 720 = 2_720), então nenhuma combinação
+    // de programa real x sessão real x minuto (1..720) pode colidir com outra, nem com o
+    // espaço de request codes diários/notificação (que ocupam a faixa 0..~3_000_000).
+    internal fun snoozeRequestCode(programId: String, sessionNumber: Int, minutes: Int): Int {
+        val safeMinutes = minutes.coerceIn(1, 720)
+        return SNOOZE_REQUEST_BASE + programBase(programId) * 10_000 + sessionNumber * 1_000 + safeMinutes
+    }
 
     internal fun shouldPublishMindReminder(enabled: Boolean, time: String, permissionGranted: Boolean): Boolean =
         enabled && permissionGranted && isValidTime(time)
 
+    private fun programBase(programId: String): Int =
+        (programId.hashCode() and 0x7fffffff) % 100_000
+
     private fun requestCode(programId: String, sessionNumber: Int, snooze: Boolean): Int {
-        val base = (programId.hashCode() and 0x7fffffff) % 100_000
+        val base = programBase(programId)
         return base * 10 + sessionNumber + if (snooze) 1_000_000 else 0
     }
+
+    private const val SNOOZE_REQUEST_BASE = 10_000_000
 
     private const val MIND_REMINDER_ID = 999_001
 
@@ -485,9 +496,11 @@ class ReminderRescheduleReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         ReminderScheduler.rescheduleAll(context)
         val prefs = context.getSharedPreferences("coreflow_native_reminders", Context.MODE_PRIVATE)
-        if (prefs.getBoolean("mind_reminder_enabled", false)) {
-            val time = prefs.getString("mind_reminder_time", "15:30") ?: "15:30"
-            ReminderScheduler.scheduleMindSmartReminder(context, time, true)
-        }
+        val enabled = prefs.getBoolean("mind_reminder_enabled", false)
+        val time = prefs.getString("mind_reminder_time", "") ?: ""
+        // Nunca fabricar um horário ausente/inválido: reencaminha ao próprio agendador,
+        // que já valida opt-in persistido, formato HH:mm e permissão efetiva antes de
+        // publicar. Ausência/valor inválido apenas desativa e cancela o alarme nativo.
+        ReminderScheduler.scheduleMindSmartReminder(context, time, enabled)
     }
 }

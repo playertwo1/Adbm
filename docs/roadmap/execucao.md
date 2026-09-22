@@ -1,5 +1,15 @@
 # Registro de execução
 
+## 2026-09-22 — E08.6r / fechamento dos 3 achados de auditoria (t_dc4dfd04)
+
+- Base: cadeia E08.6 completa (`caa02db..8255644`) reaplicada por cherry-pick sobre o base E08.5 aprovado (`5c43fea19fd70094534d760281d36c7f0b087dcf`), conforme requisito de redesign da task `t_b3ac2abf`.
+- F1 (colisão de identidade de soneza): `snoozeRequestCode` deixou de somar `minutes` diretamente ao código base (que podia transbordar/colidir com outro programa/sessão) e passou a compor a identidade por blocos disjuntos (`SNOOZE_REQUEST_BASE + programBase*10_000 + sessionNumber*1_000 + minutos`), injetiva para toda a matriz real de programas/sessões/minutos 1..720 e sem sobreposição com os códigos diários/notificação.
+- F2 (fallback fabricado de 15:30): `ReminderRescheduleReceiver` (reagendamento no boot) não usa mais `"15:30"` como valor padrão quando `mind_reminder_time` está ausente; lê o horário persistido tal como está (vazio se ausente) e delega a `scheduleMindSmartReminder`, que já valida formato/opt-in/permissão antes de publicar — ausência ou valor inválido apenas cancela o alarme, nunca fabrica um horário.
+- F3 (divergência UI/nativo do smart reminder): `syncAllNativeReminders()` agora também chama `syncSmartMiddayReminderNative()`, que reconcilia o alarme nativo com o estado persistido `AppState.mente.smartReminderEnabled` + permissão efetiva a cada carregamento/restore. O snapshot de progresso passou a persistir `smartReminderEnabled` e a restauração (`applyProgressData`) só reativa o opt-in com valor booleano explícito e permissão efetiva — nunca por omissão.
+- Regressões: `app/src/test/java/com/example/ReminderSchedulerTest.kt` ganhou uma matriz adversarial cobrindo todos os programas reais (`1`..`4`) × sessões (1,2) × minutos de soneza (1..720) sem colisão, e nenhuma coincidência com os códigos diários/notificação; `diagnostics/e08-6-hoje-controls.test.cjs` ampliado com asserções estáticas dos 3 fechamentos e um cenário comportamental de `syncAllNativeReminders`/`syncSmartMiddayReminderNative` cobrindo opt-in ativo, opt-in desativado e permissão revogada.
+- Verificação: `node diagnostics/*.test.cjs` (21 arquivos) — todos OK; `index.html` e `app/src/main/assets/index.html` mantidos byte-idênticos (verificado por `cmp`).
+- Limitação conhecida: build Gradle/JVM (`app/src/test/.../ReminderSchedulerTest.kt`) não pôde ser executado nesta sessão por ausência de JDK/Android SDK no ambiente do worker — os novos testes foram revisados manualmente contra a implementação e cobrem a matriz declarada, mas não têm confirmação de compilação/execução real do Gradle. Recomenda-se rodar `bash scripts/check.sh` com JDK/Android SDK configurados antes de aprovar.
+
 ## 2026-09-22 — E08.6 / correção de identidade de soneza e smart reminder stale
 
 - Base: `f4ffc61daa846dd3caa73202ae7696f170e96016`.
