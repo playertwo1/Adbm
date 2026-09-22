@@ -1,5 +1,12 @@
 # Registro de execução
 
+## 2026-09-22 — E08.6 / correção de fonte única de lembretes após auditoria
+
+- Base: `d11a998b697a1d1e09b021f7561d4dd1efef679e`.
+- Correção: permissão efetiva agora combina runtime `POST_NOTIFICATIONS`, estado global do app e canal `coreflow_reminders`; scheduler, bridge, UI, restauração e smart reminder usam essa mesma decisão. Horários são aceitos somente em `HH:mm` válido em JS e Kotlin, sem fallback para 09:00/15:30/16:00.
+- Retorno ao foreground revalida permissão, cancela/desativa lembretes negados e atualiza a UI; smart reminder não aparece ativo nem agenda quando a permissão está negada. ROADMAP corrigido para não contradizer E08.6.
+- Regressão `diagnostics/e08-6-hoje-controls.test.cjs` ampliada para os contratos de smart reminder, revogação em foreground, app/canal desativado e validação HH:mm.
+
 ## 2026-09-22 — E08.6 / Hoje: começar agora, atalhos, avatar e lembretes
 
 - Base: `5c43fea19fd70094534d760281d36c7f0b087dcf` (E08.5 com PASS independente confirmado pelo card pai); worktree `adbm/t_281c2916-adbm-e08.6-hoje-come-ar-agora-atalhos-av` confirmado limpo antes da alteração.

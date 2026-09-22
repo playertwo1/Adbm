@@ -236,7 +236,23 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
+        val reminderPermission = ReminderScheduler.hasEffectiveNotificationPermission(this)
+        ReminderScheduler.rescheduleAll(this)
+        if (!reminderPermission) {
+            val reminderPrefs = getSharedPreferences("coreflow_native_reminders", Context.MODE_PRIVATE)
+            ReminderScheduler.scheduleMindSmartReminder(
+                this,
+                reminderPrefs.getString("mind_reminder_time", "") ?: "",
+                false
+            )
+        }
         deliverWorkoutState(WorkoutForegroundService.readStoredState(this))
+        webView?.post {
+            webView?.evaluateJavascript(
+                "if (window.onNativeReminderPermissionChanged) window.onNativeReminderPermissionChanged($reminderPermission);",
+                null
+            )
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -720,8 +736,7 @@ class AndroidBridge(
 
     @JavascriptInterface
     fun notificationsPermissionGranted(): Boolean =
-        Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
-            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+        ReminderScheduler.hasEffectiveNotificationPermission(context)
 
     @JavascriptInterface
     fun requestReminderPermission(): Boolean {
