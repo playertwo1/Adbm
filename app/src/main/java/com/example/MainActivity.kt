@@ -722,6 +722,16 @@ class AndroidBridge(
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
 
     @JavascriptInterface
+    fun requestReminderPermission(): Boolean {
+        val activity = context as? ComponentActivity ?: return false
+        if (notificationsPermissionGranted()) return true
+        activity.runOnUiThread {
+            requestNotificationPermission(activity)
+        }
+        return false
+    }
+
+    @JavascriptInterface
     fun setDoNotDisturbMode(enabled: Boolean): Boolean {
         return try {
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
