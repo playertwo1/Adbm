@@ -448,3 +448,17 @@ Próximo passo:
 - Limitações: sem aparelho/Watch/TalkBack físico, push, merge, Actions, release ou deploy nesta execução. Auditoria independente do target final continua obrigatória; este handoff não é PASS.
 - Próximo passo: Auditor independente revisar o target SHA exato desta implementação.
 
+## 2026-09-22 — E08.6-R / redesign do contrato de lembretes / ACEITA COM LIMITAÇÃO (decisão de Rafael)
+
+- **Contexto:** a E08.6 original (target `825564481460dab35be6c1c5707e9ec512e52697`) recebeu FAIL definitivo após 6 rounds técnicos por colisão de identidade de `PendingIntent` entre programas/sessões. O card `t_b3ac2abf` redesenhou o contrato de lembretes a partir da base aprovada da E08.5 (`5c43fea19fd70094534d760281d36c7f0b087dcf`).
+- **Target do redesign:** `666e24a6f64c84c265fa46644efbaa089847823c`.
+- **Auditoria independente completa (run 138, `t_b3ac2abf`):** reverificação própria e independente (não apenas leitura do handoff) fechou os 3 achados anteriores:
+  - Colisão de soneza: reimplementação independente de `snoozeRequestCode`/`dailyRequestCode`, varredura de 4 programas × 2 sessões × 1–720 minutos (5760 combinações) → 0 colisões, 0 overlap com `notificationId`.
+  - Horário fabricado (`15:30`/`09:00`/`16:00` como default): confirmado por busca no código que não existe mais nenhum fallback desse tipo no scheduler nativo.
+  - Divergência UI/nativo do smart reminder: testado com opt-in ligado/desligado/permissão revogada e valores corrompidos (`"true"` string, `1`, `null`, ausente) — só liga com `true` booleano real + permissão efetiva.
+- **Achado novo, não corrigido (Finding 1 — risco aceito):** `.filter(isValidReminderTime)` sobre `reminderTimes` em `saveReminderConfig()`, `openReminderConfigModal()`, `syncProgramNativeReminder()`, `mergeLoadedPrograms()` e `readLegacyProgress()` compacta o array em vez de preservar a posição por sessão. Se a Sessão 1 fica sem horário e a Sessão 2 mantém um, o horário da Sessão 2 é silenciosamente reatribuído ao índice da Sessão 1. No fallback de navegador isso dispara o alerta da sessão errada no horário errado; no Android real, uma checagem redundante e não documentada em `MainActivity.kt` desativa o programa nesse estado incompleto por acidente, não por design.
+- **Decisão (Rafael, 22/09/2026):** aceitar o risco residual e documentar a limitação em vez de abrir mais uma rodada Builder→Auditor. Correção mínima conhecida (preservar índice/comprimento do array de horários, sem `.filter()`) fica registrada para retomada futura, mas não é bloqueante para prosseguir.
+- **Gates executados na auditoria (todos verdes, reproduzidos na sessão, não apenas lidos):** `diagnostics/*.test.cjs` (21/21), `cmp`/SHA-256 dos HTMLs, `git diff --check`, `:app:testDebugUnitTest --rerun` (4/4), `bash scripts/check.sh` completo (`BUILD SUCCESSFUL`).
+- **Nota de processo:** uma auditoria manual anterior (fora do worker Hermes) tinha dado PASS indevido para o target original da E08.6 por não ter feito a varredura de colisão cruzada entre programas — esse PASS foi retratado publicamente no card `t_281c2916` antes da E08.6-R ser avaliada.
+- **Próximo passo:** liberar E08.7 (consolidação da E08) com esta limitação registrada; não reabrir a linha original da E08.6 (target `8255644...`, reprovado definitivamente).
+
