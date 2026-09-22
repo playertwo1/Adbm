@@ -58,7 +58,7 @@ const applyProgramProgressAdjustment = extractFunction(source, 'applyProgramProg
 const loadSavedState = extractLastFunction(source, 'loadSavedState');
 
 const noopNames = [
-    'evaluateAchievements', 'updateHeaderStats', 'renderScheduleList', 'renderProgramsList',
+    'evaluateAchievements', 'updateHeaderStats', 'renderTodaySummary', 'renderScheduleList', 'renderProgramsList',
     'renderMonthlyBars', 'renderWeeklyChart', 'renderSmartSuggestionCard', 'renderWeeklyTimeSummary',
     'renderAchievements', 'renderMenteHistory', 'renderCorpoHistory', 'updateTimeOfDayStretchRecommendation',
     'updateWeeklyMobilityMetrics', 'updateStretchDurationUI', 'loadCustomPresets', 'updateBreathDurationUI',

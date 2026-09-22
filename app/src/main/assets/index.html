@@ -290,7 +290,7 @@
             <!-- Streak badge -->
             <button onclick="switchTab('dashboard')" class="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/70 rounded-full text-xs font-bold text-amber-400 transition shadow-sm">
                 <i class="fa-solid fa-fire text-amber-500 text-sm"></i>
-                <span id="headerStreakCount">5</span> <span class="text-slate-400 font-normal">dias</span>
+                <span id="headerStreakCount">0</span> <span class="text-slate-400 font-normal">dias</span>
             </button>
             <!-- Audio voice toggle -->
             <button id="voiceToggleBtn" type="button" onclick="toggleVoice()" aria-label="Voz ativada" aria-pressed="true" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
@@ -317,7 +317,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                        Olá, Rafael <span class="text-emerald-400 text-lg">👋</span>
+                        <span id="greetingText">Olá!</span> <span class="text-emerald-400 text-lg">👋</span>
                     </h2>
                     <p class="text-xs text-slate-400 mt-0.5">Pronto para fortalecer o core hoje?</p>
                 </div>
@@ -2808,15 +2808,15 @@
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
             <div style="border: 1px solid #cbd5e1; padding: 10px; border-radius: 8px; text-align: center;">
                 <span style="font-size: 11px; color: #64748b;">Ofensiva Atual</span>
-                <p id="printStreak" style="font-size: 18px; font-weight: bold; color: #d97706; margin: 2px 0;">5 Dias</p>
+                <p id="printStreak" style="font-size: 18px; font-weight: bold; color: #d97706; margin: 2px 0;">0 Dias</p>
             </div>
             <div style="border: 1px solid #cbd5e1; padding: 10px; border-radius: 8px; text-align: center;">
                 <span style="font-size: 11px; color: #64748b;">Exercícios Concluídos</span>
-                <p id="printCompleted" style="font-size: 18px; font-weight: bold; color: #059669; margin: 2px 0;">4 / 5</p>
+                <p id="printCompleted" style="font-size: 18px; font-weight: bold; color: #059669; margin: 2px 0;">0 / 0</p>
             </div>
             <div style="border: 1px solid #cbd5e1; padding: 10px; border-radius: 8px; text-align: center;">
                 <span style="font-size: 11px; color: #64748b;">Tempo Total</span>
-                <p id="printTime" style="font-size: 18px; font-weight: bold; color: #0284c7; margin: 2px 0;">18 Minutos</p>
+                <p id="printTime" style="font-size: 18px; font-weight: bold; color: #0284c7; margin: 2px 0;">0 Minutos</p>
             </div>
         </div>
 
@@ -2949,6 +2949,7 @@
             onboardingCompleted: true,
             onboardingFocus: null,
             weeklyGoalDays: null,
+            userName: null,
 
             dailyExecution: {
                 isRunning: false,
@@ -3737,6 +3738,14 @@
         /* -------------------------------------------------------------
            NAVIGATION TABS
         ------------------------------------------------------------- */
+        function renderTodaySummary() {
+            const minutes = Math.max(0, Number(AppState.totalMinutesToday) || 0);
+            const value = document.getElementById('todayMinutesValue');
+            const progress = document.getElementById('todayGoalProgress');
+            if (value) value.textContent = String(minutes);
+            if (progress) progress.style.width = `${Math.min(100, Math.round((minutes / Math.max(1, AppState.dailyGoal || 1)) * 100))}%`;
+        }
+
         function switchTab(tabName) {
             AppState.activeTab = tabName;
 
@@ -3771,11 +3780,7 @@
             }
 
             if (tabName === 'hoje') {
-                const minutes = Math.max(0, Number(AppState.totalMinutesToday) || 0);
-                const value = document.getElementById('todayMinutesValue');
-                const progress = document.getElementById('todayGoalProgress');
-                if (value) value.textContent = String(minutes);
-                if (progress) progress.style.width = `${Math.min(100, Math.round((minutes / Math.max(1, AppState.dailyGoal || 1)) * 100))}%`;
+                renderTodaySummary();
             } else if (tabName === 'programas') {
                 renderProgramsList();
             } else if (tabName === 'dashboard') {
@@ -11421,7 +11426,17 @@
             }, 3500);
         }
 
+        function renderGreeting() {
+            const el = document.getElementById('greetingText');
+            if (!el) return;
+            const hour = new Date().getHours();
+            const period = hour >= 5 && hour < 12 ? 'Bom dia' : hour >= 12 && hour < 18 ? 'Boa tarde' : 'Boa noite';
+            const name = typeof AppState.userName === 'string' && AppState.userName.trim() !== '' ? AppState.userName.trim() : null;
+            el.textContent = name ? `${period}, ${name}` : `${period}!`;
+        }
+
         function updateHeaderStats() {
+            renderGreeting();
             const completedCount = AppState.schedule.filter(s => s.completed).length;
             const totalCount = AppState.schedule.length;
 
@@ -11465,6 +11480,7 @@
 
             if (!deferSave) saveState();
             updateHeaderStats();
+            renderTodaySummary();
             renderWeeklyChart();
             renderWeeklyTimeSummary();
             renderMonthlyBars();
@@ -12350,6 +12366,7 @@
             AppState.onboardingCompleted = typeof data.onboardingCompleted === 'boolean' ? data.onboardingCompleted : true;
             AppState.onboardingFocus = typeof data.onboardingFocus === 'string' ? data.onboardingFocus : null;
             AppState.weeklyGoalDays = Number.isInteger(data.weeklyGoalDays) && data.weeklyGoalDays >= 1 && data.weeklyGoalDays <= 7 ? data.weeklyGoalDays : null;
+            AppState.userName = typeof data.userName === 'string' && data.userName.trim() !== '' ? data.userName.trim() : null;
             mergeLoadedPrograms(data.programs, todayStr, isNewDay);
             AppState.dailyExecution.sessionsCompletedToday = isNewDay ? 0 : Math.max(0, Number(data.dailyCount) || 0);
             AppState.mente.history = Array.isArray(data.menteHistory) ? data.menteHistory : [];
@@ -12466,7 +12483,8 @@
                 dailyGoal: AppState.dailyGoal,
                 onboardingCompleted: AppState.onboardingCompleted === true,
                 onboardingFocus: AppState.onboardingFocus || null,
-                weeklyGoalDays: AppState.weeklyGoalDays || null
+                weeklyGoalDays: AppState.weeklyGoalDays || null,
+                userName: AppState.userName || null
             };
         }
 
@@ -12775,6 +12793,7 @@
             syncDerivedStats();
             evaluateAchievements(false);
             updateHeaderStats();
+            renderTodaySummary();
             renderScheduleList();
             renderProgramsList();
             renderMonthlyBars();

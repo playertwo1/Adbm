@@ -28,7 +28,7 @@ const source = [
     html.slice(persistenceStart, persistenceEnd)
 ].join('\n');
 const noopNames = [
-    'evaluateAchievements', 'updateHeaderStats', 'renderScheduleList', 'renderProgramsList',
+    'evaluateAchievements', 'updateHeaderStats', 'renderTodaySummary', 'renderScheduleList', 'renderProgramsList',
     'renderMonthlyBars', 'renderWeeklyChart', 'renderSmartSuggestionCard', 'renderWeeklyTimeSummary',
     'renderAchievements', 'renderMenteHistory', 'renderCorpoHistory', 'updateTimeOfDayStretchRecommendation',
     'updateWeeklyMobilityMetrics', 'updateStretchDurationUI', 'loadCustomPresets', 'updateBreathDurationUI',
