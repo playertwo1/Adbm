@@ -52,6 +52,7 @@ const collect = extractFunction(source, 'collectProgressData');
 const apply = extractFunction(source, 'applyProgressData');
 const nativeWorkoutState = extractAssignedFunction(source, 'onNativeWorkoutState');
 const completeMindfulness = extractFunction(source, 'completeMindfulnessAudio');
+const renderMindfulness = extractFunction(source, 'renderMindfulnessProgramCard');
 const context = vm.createContext({
     AppState: {
         programs: [{
@@ -97,7 +98,7 @@ const context = vm.createContext({
     mindfulnessPlayer: { programId: '4', phaseIndex: 0, trackType: 'formal', completed: false, sessionId: 'mindfulness-test' },
     window: {}
 });
-vm.runInContext(`${schedule}; ${synchronize}; ${merge}; ${collect}; ${apply}; ${nativeWorkoutState}; ${completeMindfulness}`, context);
+vm.runInContext(`${schedule}; ${synchronize}; ${merge}; ${collect}; ${apply}; ${nativeWorkoutState}; ${completeMindfulness}; ${renderMindfulness}`, context);
 
 // Renderização derivada: ausência de frequência produz estado explícito, nunca null/undefined ou 7.
 assert.equal(vm.runInContext("JSON.stringify(getProgramSchedule({ currentPhaseIndex: 0, daysCompletedInPhase: 3, phases: [{ title: 'Sem frequência' }] }))", context), JSON.stringify({
@@ -107,6 +108,11 @@ assert.equal(vm.runInContext("JSON.stringify(getProgramSchedule({ currentPhaseIn
     targetDaysLabel: 'frequência não configurada',
     currentDayLabel: 'Dia não configurado'
 }));
+
+// O card Mindfulness não fabrica uma meta semanal quando a fase não a configura.
+const mindfulnessCard = vm.runInContext("renderMindfulnessProgramCard({ id: '4', title: 'Mente', currentPhaseIndex: 0, daysCompletedInPhase: 0, sessionsToday: 0, phases: [{ title: 'Sem frequência', formalTrackTitle: 'Prática', informalTitle: 'Informal', informalDescription: 'Descrição', targetSessionsPerDay: 1, completed: false }] }, 0)", context);
+assert.match(mindfulnessCard, /Progresso semanal não configurado/);
+assert.doesNotMatch(mindfulnessCard, /0\/6 dias|width:6|undefined|null/);
 
 // Sem weeklyTargetDays, sincronização e conclusão não fabricam uma semana de 7 dias.
 vm.runInContext('synchronizeProgramProgress(AppState.programs[1])', context);

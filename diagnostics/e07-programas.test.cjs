@@ -45,6 +45,7 @@ const source = [
     extractFunction('openProgramExerciseDetail'),
     extractFunction('applyProgramProgressAdjustment'),
     extractFunction('getProgramSteps'),
+    extractFunction('getProgramSchedule'),
     extractFunction('renderMindfulnessProgramCard'),
     extractFunction('openDailyExecutionModal'),
     extractFunction('renderDailyExecutionUI'),
