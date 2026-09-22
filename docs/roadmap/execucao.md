@@ -1,5 +1,27 @@
 # Registro de execução
 
+## 2026-09-22 — E07.6 / CONSOLIDAÇÃO — fechamento formal da E07
+
+- Dependência: PASS independente da E07.5 confirmado pelo Auditor (task `t_600dfe21`, run 100) no target `3326576700a5910f772c9659d060a3a02518884c`, após 6 rounds de rework (fallbacks `weeklyTargetDays || 7/6/1` e `reminderTimes || ['09:00','16:00']` eliminados e substituídos por estado explícito real).
+- Ação desta etapa: fast-forward do branch de trabalho (`67849ee` → `3326576700a5910f772c9659d060a3a02518884c`); nenhuma alteração de código adicional foi necessária. Apenas `ROADMAP.md` e este arquivo foram atualizados para refletir o fechamento.
+- Cobertura confirmada da matriz de aceite E07 (todas com evidência real, ver `diagnostics/e07-programas.test.cjs` e `diagnostics/e07-agenda-progress.test.cjs`):
+  1. Cards abrem programa correto por ID; ID inválido não abre outro card e mostra erro utilizável (casos 1–4).
+  2. Progresso/etapa/sessão diária calculados do estado real; hero não fixa mais programa 2/meta 2 (caso 6).
+  3. Exercícios abrem instruções/duração da sequência real; Mindfulness e IDs desconhecidos não herdam Bracing (casos 13–15).
+  4. Iniciar envia exatamente etapa/sessão exibidas via payload nativo preservado; falha de início não deixa timer fantasma.
+  5. Repetir etapa reposiciona sem apagar diário/histórico; bloqueado durante sessão ativa (casos 8–9).
+  6. Ajuste manual não fabrica minutos/diário retroativo, inclusive sem `weeklyTargetDays` configurado (caso 7; e07-agenda-progress).
+  7. Agenda/recuperação/progressão conforme E03: ausência real de `weeklyTargetDays`/`reminderTimes` (null/undefined/vazio/zero) nunca fabrica agenda nem lembretes; revisão pendente do Vácuo (`progressionReview`/`reviewPending`) não avança por calendário e sobrevive a round-trip de snapshot (suite completa de e07-agenda-progress.test.cjs, 6 rounds de auditoria).
+  8. Estados sem histórico/concluído/erro: `programsListEmpty`, `programsListError` (via `CorePersistence.status = 'recoveryRequired'`) e `programCompleted` (Programa concluído, sem sessão fabricada) (casos 10–11).
+- Verificações executadas nesta consolidação (target `3326576700a5910f772c9659d060a3a02518884c`):
+  - `for f in diagnostics/*.test.cjs; do node "$f" || exit 1; done` → PASS em todos (16 arquivos, incluindo E01–E07, persistência, backup, contrato E02, sessão, política CI/release/webview/version).
+  - `cmp -s index.html app/src/main/assets/index.html` → PASS; SHA `d5f990ed4bc4f989a4b4d81689936d74e3acaea1bf87b8c2859feefbf4a450d4` em ambos.
+  - `git diff --check` → PASS; `git status --short` → worktree limpo.
+  - `bash scripts/check.sh` (com `JAVA_HOME`/`ANDROID_HOME` configurados) → CHECK PASS; builds debug phone/Wear e testes unitários passaram.
+- Não fabricado: nenhum item da checklist E07 foi marcado sem evidência de execução direta (node/vm) documentada acima; nenhuma alteração de IDs, armazenamento, bridge, protocolo de treino ou histórico foi feita nesta etapa.
+- Limitações conhecidas (herdadas de E07.1–E07.5, não resolvidas nesta etapa): sem validação física em Android, Galaxy Watch ou TalkBack; `adb` não disponível no PATH desta sessão.
+- Próximo passo: E08 (Onboarding e Hoje) permanece bloqueada aguardando retrospectiva do Diretor antes de ser proposta, conforme processo registrado no card E07.6.
+
 ## 2026-09-21 — E07.4 / IMPLEMENTED — iniciar etapa e sessão exibidas
 
 - Base de implementação: `bb8c80b603afb04be7b0d5d553ddd34b8a435d79` (E07.3 aprovado), integrado nesta worktree antes da alteração.

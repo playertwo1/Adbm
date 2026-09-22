@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 21/09/2026. Status: E00–E03, E05 e E06 concluídas; E04 em execução, com o item "Mais descanso" resolvido por remoção do produto (decisão registrada, sem incremento clínico inventado) — demais itens conforme `docs/roadmap/execucao.md`. SHA integrado: `706c5dafee3224b6b1de240f44401f5b5f427938`. Próxima etapa pendente: E07.
+Atualizado: 22/09/2026. Status: E00–E03, E05, E06 e E07 concluídas; E04 em execução, com o item "Mais descanso" resolvido por remoção do produto (decisão registrada, sem incremento clínico inventado) — demais itens conforme `docs/roadmap/execucao.md`. SHA integrado: `3326576700a5910f772c9659d060a3a02518884c`. Próxima etapa pendente: E08 (aguarda retrospectiva do Diretor).
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -138,16 +138,17 @@ Evidência E06: `diagnostics/e06-vacuo-player.test.cjs`, equivalência byte a by
 
 ### E07 — Telas 06/07: Programas e detalhe
 [Programas](assets/design/coreflow-s25-ultra/06-programas.png) · [Detalhe](assets/design/coreflow-s25-ultra/07-programa-detalhe.png)
-- [x] Cards abrem programa correto, preservando IDs e fases reais; corrigir divergências do mockup.
-- [x] Progresso, etapa, sessão diária e duração calculados do estado real.
-- [x] Exercícios abrem instruções e duração da sequência escolhida.
-- [x] Iniciar envia exatamente etapa/sessão exibidas.
-- [x] Repetir etapa altera planejamento futuro sem apagar diário.
-- [x] Ajuste manual mantém prévia e não cria treino retroativo.
-- [x] Agenda, recuperação e sugestão de progressão obedecem E03.
-- [x] Definir estados sem histórico, concluído e erro.
-Aceite: etapa 3/sessão 2 abre etapa 3/sessão 2; reabrir preserva posição; ajuste não fabrica minutos.
-Evidência E07.5: `diagnostics/e07-agenda-progress.test.cjs` valida agenda derivada de `reminderTimes`/`weeklyTargetDays` sem fallback fabricado, estado explícito quando a configuração real está ausente e persistência da revisão pendente do Vácuo após reload; `diagnostics/e07-programas.test.cjs` continua PASS. Equivalência byte a byte dos HTMLs e `git diff --check` passaram. A auditoria independente do target SHA continua obrigatória; este registro não é PASS.
+Estado: CONCLUÍDA. SHA integrado: `3326576700a5910f772c9659d060a3a02518884c` (PASS independente do Auditor após 6 rounds de rework, ver `docs/roadmap/execucao.md`).
+- [x] Cards abrem programa correto, preservando IDs e fases reais; corrigir divergências do mockup. Evidência: `openDailyExecutionModal`/`openProgramDetail` roteiam por ID real e rejeitam ID inválido sem abrir outro card (`diagnostics/e07-programas.test.cjs`, casos 1–4).
+- [x] Progresso, etapa, sessão diária e duração calculados do estado real. Evidência: hero/cards usam `getProgramSchedule`/`renderProgramWeeklyAgendaLabel` sobre dados reais do programa selecionado, sem fixar programa 2/meta 2 (`diagnostics/e07-programas.test.cjs`, caso 6).
+- [x] Exercícios abrem instruções e duração da sequência escolhida. Evidência: `getProgramExerciseDetails`/`getProgramSteps` derivam da fase real; Mindfulness e IDs desconhecidos não herdam a sequência de Bracing (`diagnostics/e07-programas.test.cjs`, casos 13–15).
+- [x] Iniciar envia exatamente etapa/sessão exibidas. Evidência: payload nativo preserva `programId`/`phaseIndex`/`sessionNumber`/`steps`; falha de início limpa o estado sem timer fantasma (`diagnostics/e07-programas.test.cjs`, verificação de `buildNativeWorkoutPayload`/`onNativeWorkoutState`).
+- [x] Repetir etapa altera planejamento futuro sem apagar diário. Evidência: `repeatProgramPhase` reposiciona a etapa preservando `activityLog`/`sessionHistory` e bloqueia durante sessão ativa (`diagnostics/e07-programas.test.cjs`, casos 8–9).
+- [x] Ajuste manual mantém prévia e não cria treino retroativo. Evidência: `applyProgramProgressAdjustment` registra posição sem fabricar minutos/diário, inclusive com `weeklyTargetDays` ausente (`diagnostics/e07-programas.test.cjs` caso 7; `diagnostics/e07-agenda-progress.test.cjs`, ajuste sem frequência).
+- [x] Agenda, recuperação e sugestão de progressão obedecem E03. Evidência: ausência real de `weeklyTargetDays`/`reminderTimes` (null/undefined/vazio/zero) nunca fabrica agenda (7/6/1 dias) nem lembretes 09:00/16:00; revisão pendente do Vácuo (`progressionReview`/`reviewPending`) não avança por calendário e sobrevive a round-trip de snapshot (`diagnostics/e07-agenda-progress.test.cjs` completo; card "Revisão da etapa necessária" em `index.html:9344`).
+- [x] Definir estados sem histórico, concluído e erro. Evidência: lista vazia mostra `programsListEmpty`, `CorePersistence.status = 'recoveryRequired'` mostra `programsListError`, e `programCompleted` mostra "Programa concluído" sem fabricar sessão nova (`diagnostics/e07-programas.test.cjs` casos 10–11; `index.html:9398-9401`).
+Aceite: etapa 3/sessão 2 abre etapa 3/sessão 2; reabrir preserva posição; ajuste não fabrica minutos. Verificado nos dois HTMLs (byte-equivalentes, SHA `d5f990ed4bc4f989a4b4d81689936d74e3acaea1bf87b8c2859feefbf4a450d4`).
+Limitação conhecida: sem validação física em Android, Galaxy Watch ou TalkBack (consistente com limitação declarada em todas as etapas E07.1–E07.5); `adb` não disponível no PATH desta sessão de consolidação.
 
 ### E08 — Telas 01/02: Onboarding e Hoje
 [Onboarding](assets/design/coreflow-s25-ultra/01-onboarding.png) · [Hoje](assets/design/coreflow-s25-ultra/02-home.png)
