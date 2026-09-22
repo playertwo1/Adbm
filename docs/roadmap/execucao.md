@@ -1,5 +1,11 @@
 # Registro de execução
 
+## 2026-09-22 — E08.6 / correção de identidade de soneza e smart reminder stale
+
+- Base: `f4ffc61daa846dd3caa73202ae7696f170e96016`.
+- Correção: sonezas nativas agora incluem a duração na identidade do `PendingIntent` e o cancelamento usa a mesma ação/identidade, evitando colisões e alarmes pendentes após revogação. `showMindSmartNotification()` exige opt-in persistido, horário `HH:mm` válido e permissão efetiva antes de publicar; estado stale é cancelado sem notificação nem rearmamento.
+- Regressões: `app/src/test/java/com/example/ReminderSchedulerTest.kt` executa os contratos de identidade e publicação; `diagnostics/e08-6-hoje-controls.test.cjs` trava os caminhos nativos correspondentes.
+
 ## 2026-09-22 — E08.6 / correção de restauração e cancelamento completo de lembretes
 
 - Base: `c269ef71e70dfcbf9ba890ca43a2d8a16fffa0cc`.
