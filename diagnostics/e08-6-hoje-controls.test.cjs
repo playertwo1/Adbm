@@ -34,9 +34,20 @@ for (const shortcut of ['vacuo', 'pausa', 'kegel', 'meditar', 'discreto']) {
 }
 
 assert.match(source, /async function saveReminderConfig\(\)[\s\S]*?await requestSystemReminderPermission\(\)[\s\S]*?prog\.remindersEnabled = enabled;/, 'salvar lembrete deve depender da permissão real antes de marcar ativo');
-assert.match(source, /const activeCount = hasSystemReminderPermission\(\) \? enabledCount : 0;/, 'permissão negada não pode aparecer como lembrete ativo');
+assert.match(source, /const activeCount = hasPermission \? enabledCount : 0;/, 'permissão negada não pode aparecer como lembrete ativo');
+assert.match(source, /notificationBanner.*class="hidden/, 'banner de notificação deve iniciar oculto até confirmar estado real');
+assert.match(source, /const activePrograms = AppState\.programs\.filter\(program => program\.remindersEnabled === true && Array\.isArray\(program\.reminderTimes\)/, 'banner deve considerar somente programas com horários reais');
+assert.match(source, /const enabled = hasRealSchedule && prog\.remindersEnabled === true && hasSystemReminderPermission\(\);/, 'sincronismo nativo deve bloquear agendamento sem permissão');
+assert.match(source, /const t1 = document\.getElementById\('reminderTimeInput1'\)\.value;[\s\S]*?const t2 = document\.getElementById\('reminderTimeInput2'\)\.value;[\s\S]*?if \(requestedEnabled && \(!t1 \|\| \(targetSessions > 1 && !t2\)\)\)/, 'salvar lembrete deve rejeitar horário vazio sem fabricar valor');
+assert.doesNotMatch(source, /value \|\| '09:00'/, 'não deve fabricar horário 09:00');
+assert.doesNotMatch(source, /value \|\| '16:00'/, 'não deve fabricar horário 16:00');
+assert.match(source, /if \(!hasSystemReminderPermission\(\)\) \{[\s\S]*?Notificações do sistema não estão autorizadas/, 'teste de notificação deve refletir permissão negada');
 const nativeBridge = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'java', 'com', 'example', 'MainActivity.kt'), 'utf8');
 assert.match(nativeBridge, /fun requestReminderPermission\(\): Boolean[\s\S]*?requestNotificationPermission\(activity\)/, 'bridge Android deve solicitar POST_NOTIFICATIONS quando ainda não concedida');
+assert.match(nativeBridge, /val effectiveEnabled = enabled && permissionGranted && time1\.isNotBlank\(\) && \(targetSessions <= 1 \|\| time2\.isNotBlank\(\)\)/, 'bridge Android não pode persistir lembrete ativo sem permissão ou horários');
+const nativeScheduler = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'java', 'com', 'example', 'ReminderScheduler.kt'), 'utf8');
+assert.match(nativeScheduler, /val permissionGranted = Build\.VERSION\.SDK_INT < Build\.VERSION_CODES\.TIRAMISU/, 'scheduler nativo deve verificar permissão ao restaurar');
+assert.match(nativeScheduler, /if \(!permissionGranted\) \{[\s\S]*?putBoolean\(key\(programId, "enabled"\), false\)/, 'scheduler nativo deve cancelar e desativar quando permissão for negada');
 
 const sourceForVm = [
     extractFunction('openTodayRecommendationSession'),
@@ -66,6 +77,8 @@ vm.runInContext("openTodayRecommendationSession('1', 2, 2)", context);
 assert.deepEqual(calls.pop(), ['session', '1', 2, 2], 'Começar agora deve preservar programa, etapa e sessão exibidos');
 vm.runInContext("openTodayRecommendationSession('1', 5, 2)", context);
 assert.equal(calls.pop()[0], 'toast', 'etapa exibida inválida não pode abrir outra etapa');
+vm.runInContext("openTodayRecommendationSession('1', 2, 4)", context);
+assert.equal(calls.pop()[0], 'toast', 'sessão acima da meta diária não pode sofrer clamp silencioso');
 
 const expectedShortcuts = {
     vacuo: [['tab', 'vacuo']],

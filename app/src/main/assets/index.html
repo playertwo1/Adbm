@@ -2060,7 +2060,7 @@
             </div>
 
             <!-- In-App Notification Reminder Card -->
-            <div id="notificationBanner" class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-xs text-amber-200 flex items-start gap-2.5">
+            <div id="notificationBanner" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-xs text-amber-200 flex items-start gap-2.5">
                 <i class="fa-solid fa-bell text-amber-400 text-sm mt-0.5"></i>
                 <div class="flex-1">
                     <p class="font-bold">Notificações Ativas</p>
@@ -3878,7 +3878,8 @@
 
         function openTodayRecommendationSession(programId, phaseIndex, sessionNumber) {
             const program = AppState.programs.find(p => p.id === programId && p.type !== 'mindfulness');
-            if (!program || !Number.isInteger(phaseIndex) || phaseIndex < 0 || phaseIndex >= program.phases.length || !Number.isInteger(sessionNumber) || sessionNumber < 1) {
+            const targetSessions = Number.isInteger(program?.dailyTarget) && program.dailyTarget > 0 ? program.dailyTarget : 1;
+            if (!program || !Number.isInteger(phaseIndex) || phaseIndex < 0 || phaseIndex >= program.phases.length || !Number.isInteger(sessionNumber) || sessionNumber < 1 || sessionNumber > targetSessions) {
                 showInlineToast('Não foi possível iniciar a sessão exibida. Atualize a recomendação e tente novamente.');
                 return;
             }
@@ -11029,13 +11030,14 @@
             if (!prog || !window.AndroidBridge?.scheduleProgramReminders) return;
             const configuredTimes = Array.isArray(prog.reminderTimes) ? prog.reminderTimes.filter(time => typeof time === 'string' && time.trim()) : [];
             const hasRealSchedule = configuredTimes.length > 0;
+            const enabled = hasRealSchedule && prog.remindersEnabled === true && hasSystemReminderPermission();
             window.AndroidBridge.scheduleProgramReminders(
                 String(prog.id),
                 prog.title,
-                configuredTimes[0] || '09:00',
-                configuredTimes[1] || '16:00',
+                configuredTimes[0] || '',
+                configuredTimes[1] || '',
                 prog.dailyTarget || 2,
-                hasRealSchedule && prog.remindersEnabled === true,
+                enabled,
                 showConfirmation
             );
             window.AndroidBridge?.updateProgramReminderProgress?.(
@@ -11080,10 +11082,22 @@
 
         function updatePushNotificationButton() {
             const btnText = document.getElementById('pushNotifBtnText');
+            const banner = document.getElementById('notificationBanner');
             if (!btnText) return;
-            const enabledCount = AppState.programs.filter(program => program.remindersEnabled === true).length;
-            const activeCount = hasSystemReminderPermission() ? enabledCount : 0;
+            const activePrograms = AppState.programs.filter(program => program.remindersEnabled === true && Array.isArray(program.reminderTimes) && program.reminderTimes.some(time => typeof time === 'string' && time.trim()));
+            const enabledCount = activePrograms.length;
+            const hasPermission = hasSystemReminderPermission();
+            const activeCount = hasPermission ? enabledCount : 0;
             btnText.innerText = activeCount > 0 ? `Lembretes Ativos (${activeCount}) ✓` : 'Ativar Lembretes Push';
+            if (banner) {
+                banner.classList.toggle('hidden', activeCount === 0);
+                const title = banner.querySelector('p.font-bold');
+                const description = banner.querySelector('p.text-slate-400');
+                if (title) title.innerText = activeCount > 0 ? `Notificações Ativas (${activeCount})` : 'Notificações Inativas';
+                if (description) description.innerText = activeCount > 0
+                    ? 'Você receberá vibração e lembrete 5 minutos antes de cada bloco de treino.'
+                    : 'Autorize as notificações do sistema e configure um horário para ativar os lembretes.';
+            }
         }
 
         function showInlineToast(message) {
@@ -11120,12 +11134,17 @@
             triggerHaptic([30]);
             const prog = AppState.programs.find(p => p.id === activeReminderProgId);
             if (prog) {
-                const t1 = document.getElementById('reminderTimeInput1').value || '09:00';
-                const t2 = document.getElementById('reminderTimeInput2').value || '16:00';
+                const targetSessions = Number.isInteger(prog.dailyTarget) && prog.dailyTarget > 0 ? prog.dailyTarget : 2;
+                const t1 = document.getElementById('reminderTimeInput1').value;
+                const t2 = document.getElementById('reminderTimeInput2').value;
                 const requestedEnabled = document.getElementById('reminderEnabledToggle').checked;
-                const enabled = !requestedEnabled || await requestSystemReminderPermission();
+                if (requestedEnabled && (!t1 || (targetSessions > 1 && !t2))) {
+                    showInlineToast(targetSessions > 1 ? 'Informe os dois horários para ativar os lembretes.' : 'Informe o horário para ativar o lembrete.');
+                    return;
+                }
+                const enabled = requestedEnabled && await requestSystemReminderPermission();
 
-                prog.reminderTimes = [t1, t2];
+                prog.reminderTimes = targetSessions === 1 ? (t1 ? [t1] : []) : (t1 || t2 ? [t1, t2] : []);
                 prog.remindersEnabled = enabled;
                 AppState.pushNotificationsEnabled = AppState.programs.some(program => program.remindersEnabled === true) && hasSystemReminderPermission();
                 saveState();
@@ -11136,7 +11155,7 @@
                     document.getElementById('reminderEnabledToggle').checked = false;
                     return;
                 }
-                const savedTimes = (prog.dailyTarget || 2) === 1 ? t1 : `${t1} e ${t2}`;
+                const savedTimes = targetSessions === 1 ? t1 : `${t1} e ${t2}`;
                 showInlineToast(enabled ? `Lembretes salvos: ${savedTimes}` : 'Lembretes desativados para este programa');
             }
             closeReminderConfigModal();
@@ -11144,10 +11163,15 @@
 
         function testNotificationNow() {
             const prog = AppState.programs.find(p => p.id === activeReminderProgId) || AppState.programs[0];
+            if (!prog) return;
+            if (!hasSystemReminderPermission()) {
+                showInlineToast('Notificações do sistema não estão autorizadas.');
+                return;
+            }
             const sessionNumber = Math.min((prog.sessionsToday || 0) + 1, prog.dailyTarget || 2);
             if (window.AndroidBridge?.postReminderNotification) {
                 window.AndroidBridge.postReminderNotification(String(prog.id), prog.title, sessionNumber, prog.dailyTarget || 2);
-                showInlineToast('Notificação de teste enviada');
+                showInlineToast('Notificação de teste solicitada');
             } else {
                 triggerReminderAlert(prog, sessionNumber);
             }

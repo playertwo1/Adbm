@@ -63,12 +63,24 @@ object ReminderScheduler {
 
     fun rescheduleAll(context: Context) {
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val permissionGranted = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
         prefs.getStringSet(PROGRAM_IDS, emptySet()).orEmpty().forEach { programId ->
             if (!prefs.getBoolean(key(programId, "enabled"), false)) return@forEach
+            if (!permissionGranted) {
+                cancelProgram(context, programId)
+                prefs.edit().putBoolean(key(programId, "enabled"), false).apply()
+                return@forEach
+            }
             val title = prefs.getString(key(programId, "title"), "Programa CoreFlow") ?: "Programa CoreFlow"
-            val time1 = prefs.getString(key(programId, "time1"), "09:00") ?: "09:00"
-            val time2 = prefs.getString(key(programId, "time2"), "16:00") ?: "16:00"
+            val time1 = prefs.getString(key(programId, "time1"), "") ?: ""
+            val time2 = prefs.getString(key(programId, "time2"), "") ?: ""
             val targetSessions = prefs.getInt(key(programId, "target_sessions"), 2).coerceIn(1, 2)
+            if (time1.isBlank() || (targetSessions > 1 && time2.isBlank())) {
+                cancelProgram(context, programId)
+                prefs.edit().putBoolean(key(programId, "enabled"), false).apply()
+                return@forEach
+            }
             scheduleDaily(context, programId, title, 1, time1)
             if (targetSessions > 1) scheduleDaily(context, programId, title, 2, time2)
         }
