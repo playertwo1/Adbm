@@ -12,13 +12,24 @@ const files = [
 function extractFunction(source, name) {
     const start = source.indexOf(`        function ${name}(`);
     assert(start >= 0, `Função ausente: ${name}`);
+    return extractBlock(source, start, `function ${name}`);
+}
+
+function extractBlock(source, start, label) {
     let depth = 0;
     let opened = false;
     for (let index = source.indexOf('{', start); index < source.length; index += 1) {
         if (source[index] === '{') { depth += 1; opened = true; }
         if (source[index] === '}' && opened && --depth === 0) return source.slice(start, index + 1);
     }
-    throw new Error(`Função incompleta: ${name}`);
+    throw new Error(`Bloco incompleto: ${label}`);
+}
+
+function extractAssignedFunction(source, name) {
+    const start = source.indexOf(`        window.${name} = function(`);
+    assert(start >= 0, `Handler ausente: ${name}`);
+    const functionStart = source.indexOf('function(', start);
+    return extractBlock(source, functionStart, `handler ${name}`).replace(/^function\(/, `function ${name}(`);
 }
 
 const sources = files.map(file => fs.readFileSync(file, 'utf8'));
@@ -39,6 +50,8 @@ const merge = extractFunction(source, 'mergeLoadedPrograms');
 const synchronize = extractFunction(source, 'synchronizeProgramProgress');
 const collect = extractFunction(source, 'collectProgressData');
 const apply = extractFunction(source, 'applyProgressData');
+const nativeWorkoutState = extractAssignedFunction(source, 'onNativeWorkoutState');
+const completeMindfulness = extractFunction(source, 'completeMindfulnessAudio');
 const context = vm.createContext({
     AppState: {
         programs: [{
@@ -64,9 +77,27 @@ const context = vm.createContext({
     localDateKey: () => '2026-09-22',
     normalizeSessionHistory: records => Array.isArray(records) ? records : [],
     renderDailyExecutionUI: () => {},
+    addMinutesToday: () => {},
+    saveState: () => true,
+    showInlineToast: () => {},
+    renderProgramsList: () => {},
+    playTibetanChime: () => {},
+    triggerHaptic: () => {},
+    closeMindfulnessAudioModal: () => {},
+    document: {
+        hidden: false,
+        getElementById: id => id === 'dailyExecutionSessionTag'
+            ? context.nativeSessionTag
+            : id === 'mindfulnessAudio'
+                ? { currentTime: 0, pause: () => {} }
+                : { innerText: '', classList: { add: () => {}, remove: () => {}, toggle: () => {} } }
+    },
+    nativeCompletionHandled: false,
+    nativeSessionTag: { innerText: '' },
+    mindfulnessPlayer: { programId: '4', phaseIndex: 0, trackType: 'formal', completed: false, sessionId: 'mindfulness-test' },
     window: {}
 });
-vm.runInContext(`${schedule}; ${synchronize}; ${merge}; ${collect}; ${apply}`, context);
+vm.runInContext(`${schedule}; ${synchronize}; ${merge}; ${collect}; ${apply}; ${nativeWorkoutState}; ${completeMindfulness}`, context);
 
 // Renderização derivada: ausência de frequência produz estado explícito, nunca null/undefined ou 7.
 assert.equal(vm.runInContext("JSON.stringify(getProgramSchedule({ currentPhaseIndex: 0, daysCompletedInPhase: 3, phases: [{ title: 'Sem frequência' }] }))", context), JSON.stringify({
@@ -81,6 +112,17 @@ assert.equal(vm.runInContext("JSON.stringify(getProgramSchedule({ currentPhaseIn
 vm.runInContext('synchronizeProgramProgress(AppState.programs[1])', context);
 assert.equal(vm.runInContext('AppState.programs[1].currentDayInWeek', context), 1);
 assert.equal(vm.runInContext('AppState.programs[1].daysCompletedInPhase', context), 3);
+
+// Reidratação nativa sem frequência mantém o estado explícito e não fabrica 7 dias.
+vm.runInContext("onNativeWorkoutState({ status: 'running', session: { programId: '2', phaseIndex: 0, currentDay: null, targetDays: null, sessionNumber: 1, targetSessions: 2 } })", context);
+assert.equal(vm.runInContext('nativeSessionTag.innerText', context), 'Semana 1 • Dia não configurado/frequência não configurada (Sessão 1/2)');
+assert.doesNotMatch(vm.runInContext('nativeSessionTag.innerText', context), /null|undefined|7/);
+
+// Conclusão mindfulness sem weeklyTargetDays registra a sessão, mas não avança fase/dia.
+vm.runInContext("AppState.programs.push({ id: '4', currentPhaseIndex: 0, sessionsToday: 0, daysCompletedInPhase: 0, phases: [{ targetSessionsPerDay: 1, completed: false }] }); completeMindfulnessAudio();", context);
+assert.equal(vm.runInContext('AppState.programs[2].sessionsToday', context), 1);
+assert.equal(vm.runInContext('AppState.programs[2].daysCompletedInPhase', context), 0);
+assert.equal(vm.runInContext('AppState.programs[2].phases[0].completed', context), false);
 
 // A revisão pendente e a ausência de frequência sobrevivem a um round-trip real de snapshot.
 const snapshot = vm.runInContext('JSON.parse(JSON.stringify(collectProgressData()))', context);

@@ -9123,9 +9123,10 @@
             if (prog && isFormal) {
                 prog.sessionsToday = (prog.sessionsToday || 0) + 1;
                 prog.dailyTarget = phase.targetSessionsPerDay || 1;
-                if (prog.sessionsToday === prog.dailyTarget) {
+                const weeklyTargetDays = Number.isFinite(Number(phase?.weeklyTargetDays)) ? Math.max(1, Number(phase.weeklyTargetDays)) : null;
+                if (weeklyTargetDays && prog.sessionsToday === prog.dailyTarget) {
                     prog.daysCompletedInPhase = (prog.daysCompletedInPhase || 0) + 1;
-                    if (prog.daysCompletedInPhase >= (phase.weeklyTargetDays || 6)) {
+                    if (prog.daysCompletedInPhase >= weeklyTargetDays) {
                         phase.completed = true;
                         if (mindfulnessPlayer.phaseIndex < prog.phases.length - 1) {
                             prog.currentPhaseIndex = mindfulnessPlayer.phaseIndex + 1;
@@ -9282,7 +9283,8 @@
                 const weeklyTargetDays = Number.isFinite(Number(activePh.weeklyTargetDays)) ? Math.max(1, Number(activePh.weeklyTargetDays)) : null;
                 const currentDay = weeklyTargetDays ? Math.min((mainProg.currentDayInWeek || Math.max(1, (mainProg.daysCompletedInPhase || 0) + 1)), weeklyTargetDays) : null;
                 const daysCompleted = Math.max(0, Number(mainProg.daysCompletedInPhase) || 0);
-                const heroScheduleLabel = weeklyTargetDays ? `${currentDay} de ${weeklyTargetDays} dias (${daysCompleted}/${weeklyTargetDays} dias concluídos)` : 'frequência não configurada';
+                const currentDayLabel = currentDay ? `Dia ${currentDay}` : 'Dia não configurado';
+                const heroScheduleLabel = weeklyTargetDays ? `${currentDayLabel} de ${weeklyTargetDays} dias (${daysCompleted}/${weeklyTargetDays} dias concluídos)` : 'frequência não configurada';
 
                 const heroTitle = document.getElementById('heroWorkoutProgramTitle');
                 const heroSub = document.getElementById('heroWorkoutPhaseSubtitle');
@@ -9297,8 +9299,8 @@
                 }
                 if (heroBtn) {
                     if (mainProg.programCompleted) heroBtn.innerText = 'Programa de 8 semanas concluído ✓ • Repetir sessão final';
-                    else if (sToday === 0) heroBtn.innerText = `Iniciar Sessão 1/${targetSessions} (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
-                    else if (sToday < targetSessions) heroBtn.innerText = `Iniciar Sessão ${sToday + 1}/${targetSessions} (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • Dia ${currentDay})`;
+                    else if (sToday === 0) heroBtn.innerText = `Iniciar Sessão 1/${targetSessions} (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • ${currentDayLabel})`;
+                    else if (sToday < targetSessions) heroBtn.innerText = `Iniciar Sessão ${sToday + 1}/${targetSessions} (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • ${currentDayLabel})`;
                     else heroBtn.innerText = `Meta Diária Concluída (${targetSessions}/${targetSessions}) ✓ - Repetir Treino`;
                 }
             }
@@ -10071,7 +10073,11 @@
             if (title && AppState.dailyExecution.programTitle) title.innerText = AppState.dailyExecution.programTitle;
             if (phaseTitle && AppState.dailyExecution.phaseTitle) phaseTitle.innerText = AppState.dailyExecution.phaseTitle;
             const sessionTag = document.getElementById('dailyExecutionSessionTag');
-            if (sessionTag) sessionTag.innerText = `Semana ${(AppState.dailyExecution.phaseIndex || 0) + 1} • Dia ${AppState.dailyExecution.currentDay || 1}/${AppState.dailyExecution.targetDays || 7} (Sessão ${AppState.dailyExecution.sessionNumber || 1}/${AppState.dailyExecution.targetSessions || 2})`;
+            if (sessionTag) {
+                const currentDayLabel = Number.isFinite(Number(AppState.dailyExecution.currentDay)) ? `Dia ${AppState.dailyExecution.currentDay}` : 'Dia não configurado';
+                const targetDaysLabel = Number.isFinite(Number(AppState.dailyExecution.targetDays)) ? `${AppState.dailyExecution.targetDays}` : 'frequência não configurada';
+                sessionTag.innerText = `Semana ${(AppState.dailyExecution.phaseIndex || 0) + 1} • ${currentDayLabel}/${targetDaysLabel} (Sessão ${AppState.dailyExecution.sessionNumber || 1}/${AppState.dailyExecution.targetSessions || 2})`;
+            }
 
             if (state.status === 'completed') {
                 if (document.hidden || nativeCompletionHandled) return;
