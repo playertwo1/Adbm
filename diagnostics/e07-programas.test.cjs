@@ -31,6 +31,8 @@ const source = [
     'const CORE_DATA_VERSION = 3;',
     extractFunction('localDateKey'), extractFunction('weekDateKeys'), extractFunction('syncDerivedStats'),
     extractFunction('getConfiguredWeeklyTargetDays'),
+    extractFunction('isStrictNonNegativeInteger'),
+    extractFunction('isValidReminderTime'),
     extractFunction('synchronizeProgramProgress'),
     extractFunction('selectHeroProgram'),
     extractFunction('renderProgramsListEmptyState'),
@@ -98,6 +100,7 @@ function setup() {
     const context = vm.createContext({
         console: { log() {} },
         window: {},
+        hasSystemReminderPermission() { return false; },
         document: { getElementById },
         localStorage: {
             getItem(key) { return values.get(key) ?? null; },

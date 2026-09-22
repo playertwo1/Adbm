@@ -1,5 +1,11 @@
 # Registro de execução
 
+## 2026-09-22 — E08.6 / correção de restauração e cancelamento completo de lembretes
+
+- Base: `c269ef71e70dfcbf9ba890ca43a2d8a16fffa0cc`.
+- Correção: restauração v4 agora aceita somente horários `HH:mm` e inteiros estritos para `sessionsToday`, marca progresso inválido para impedir início fabricado e deriva `pushNotificationsEnabled` exclusivamente de permissão efetiva e agenda válida. O retorno ao foreground após carregamento revalida a ponte; cancelamento remove alarmes diários e sonezas pendentes; smart reminder não usa default ativo ao rearmar.
+- Regressões comportamentais: `diagnostics/e07-programas.test.cjs` e `diagnostics/e07-agenda-progress.test.cjs` exercitam restauração inválida, limpeza de horário e permissão negada; `diagnostics/e08-6-hoje-controls.test.cjs` cobre os guardas nativos adicionais.
+
 ## 2026-09-22 — E08.6 / correção de divergências de estado e regressões comportamentais
 
 - Base: `bfb7da5adb71e81f460e61513b6b90c77d843e33`.

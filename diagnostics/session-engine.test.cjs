@@ -27,6 +27,9 @@ const source = [
     'const CORE_DATA_VERSION = 3;',
     extractFunction('localDateKey'),
     extractFunction('getConfiguredWeeklyTargetDays'),
+    extractFunction('isStrictNonNegativeInteger'),
+    extractFunction('isValidReminderTime'),
+    extractFunction('isReminderScheduleComplete'),
     extractFunction('synchronizeProgramProgress'),
     extractFunction('getProgramSteps'),
     extractFunction('assignKegelLogicalSeries'),
@@ -70,6 +73,7 @@ const context = vm.createContext({
         querySelectorAll() { return []; }
     },
     window: {},
+    hasSystemReminderPermission() { return false; },
     navigator: {},
     localStorage: {
         setItem(key, value) { storage[key] = value; },

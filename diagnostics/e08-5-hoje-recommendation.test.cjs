@@ -46,6 +46,7 @@ const selectTodayProgram = extractFunction(source, 'selectTodayProgram');
 const renderTodayRecommendation = extractFunction(source, 'renderTodayRecommendation');
 const synchronizeProgramProgress = extractFunction(source, 'synchronizeProgramProgress');
 const getConfiguredWeeklyTargetDays = extractFunction(source, 'getConfiguredWeeklyTargetDays');
+const isStrictNonNegativeInteger = extractFunction(source, 'isStrictNonNegativeInteger');
 
 function makeElement(id) {
     const el = {
@@ -82,6 +83,7 @@ function setup() {
     const src = [
         appState,
         getConfiguredWeeklyTargetDays,
+        isStrictNonNegativeInteger,
         synchronizeProgramProgress,
         programHasRealProgress,
         selectTodayRecommendedProgram,
