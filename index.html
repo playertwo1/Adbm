@@ -8450,25 +8450,34 @@
             triggerHaptic([20]);
         }
 
-        function toggleSmartMiddayReminder() {
-            AppState.mente.smartReminderEnabled = !AppState.mente.smartReminderEnabled;
-            const btn = document.getElementById('btn-smart-reminder');
-            const label = document.getElementById('label-smart-reminder');
-
-            if (AppState.mente.smartReminderEnabled) {
-                if (btn) btn.className = 'px-2 py-1 rounded-lg border text-[10px] font-bold flex items-center gap-1 transition bg-cyan-500/20 border-cyan-500/40 text-cyan-300';
-                if (label) label.innerText = '15:30 Ativo';
-                if (window.AndroidBridge?.scheduleSmartMindReminder) {
-                    window.AndroidBridge.scheduleSmartMindReminder('15:30', true);
+        async function toggleSmartMiddayReminder() {
+            const enabling = !AppState.mente.smartReminderEnabled;
+            if (enabling && !hasSystemReminderPermission()) {
+                const requested = requestSystemReminderPermission();
+                if (requested && typeof requested.then === 'function') {
+                    requested.then(granted => { if (granted) toggleSmartMiddayReminder(); });
                 }
-            } else {
-                if (btn) btn.className = 'px-2 py-1 rounded-lg border text-[10px] font-bold flex items-center gap-1 transition bg-slate-800 border-slate-700 text-slate-400';
-                if (label) label.innerText = 'Pausa 15:30';
-                if (window.AndroidBridge?.scheduleSmartMindReminder) {
-                    window.AndroidBridge.scheduleSmartMindReminder('15:30', false);
-                }
+                AppState.mente.smartReminderEnabled = false;
+                updateSmartMiddayReminderUI();
+                return;
+            }
+            AppState.mente.smartReminderEnabled = enabling;
+            updateSmartMiddayReminderUI();
+            if (window.AndroidBridge?.scheduleSmartMindReminder) {
+                window.AndroidBridge.scheduleSmartMindReminder('15:30', enabling);
             }
             triggerHaptic([25]);
+        }
+
+        function updateSmartMiddayReminderUI() {
+            const btn = document.getElementById('btn-smart-reminder');
+            const label = document.getElementById('label-smart-reminder');
+            const active = AppState.mente.smartReminderEnabled === true && hasSystemReminderPermission();
+            if (!active) AppState.mente.smartReminderEnabled = false;
+            if (btn) btn.className = active
+                ? 'px-2 py-1 rounded-lg border text-[10px] font-bold flex items-center gap-1 transition bg-cyan-500/20 border-cyan-500/40 text-cyan-300'
+                : 'px-2 py-1 rounded-lg border text-[10px] font-bold flex items-center gap-1 transition bg-slate-800 border-slate-700 text-slate-400';
+            if (label) label.innerText = active ? '15:30 Ativo' : 'Pausa 15:30';
         }
 
         // 7. AFERIÇÃO DE FREQUÊNCIA CARDÍACA (BPM PRÉ / PÓS E TAP-TO-BPM)
@@ -11026,9 +11035,13 @@
             }
         }
 
+        function isValidReminderTime(value) {
+            return typeof value === 'string' && /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
+        }
+
         function syncProgramNativeReminder(prog, showConfirmation = false) {
             if (!prog || !window.AndroidBridge?.scheduleProgramReminders) return;
-            const configuredTimes = Array.isArray(prog.reminderTimes) ? prog.reminderTimes.filter(time => typeof time === 'string' && time.trim()) : [];
+            const configuredTimes = Array.isArray(prog.reminderTimes) ? prog.reminderTimes.filter(time => isValidReminderTime(time)) : [];
             const hasRealSchedule = configuredTimes.length > 0;
             const enabled = hasRealSchedule && prog.remindersEnabled === true && hasSystemReminderPermission();
             window.AndroidBridge.scheduleProgramReminders(
@@ -11100,6 +11113,18 @@
             }
         }
 
+        function onNativeReminderPermissionChanged(granted) {
+            const effective = granted === true && hasSystemReminderPermission();
+            if (!effective) {
+                AppState.programs.forEach(program => { program.remindersEnabled = false; });
+                AppState.mente.smartReminderEnabled = false;
+                saveState();
+            }
+            updateSmartMiddayReminderUI();
+            updatePushNotificationButton();
+            syncAllNativeReminders();
+        }
+
         function showInlineToast(message) {
             document.getElementById('coreflowInlineToast')?.remove();
             const toast = document.createElement('div');
@@ -11110,6 +11135,10 @@
             setTimeout(() => toast.remove(), 3200);
         }
 
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') onNativeReminderPermissionChanged(hasSystemReminderPermission());
+        });
+
         function openReminderConfigModal(progId) {
             triggerHaptic([20]);
             activeReminderProgId = progId;
@@ -11117,7 +11146,7 @@
 
             const targetSessions = prog.dailyTarget || 2;
             document.getElementById('reminderProgramNameSubtitle').innerText = `${prog.title} (${targetSessions}x ao dia)`;
-            const times = Array.isArray(prog.reminderTimes) ? prog.reminderTimes.filter(time => typeof time === 'string' && time.trim()) : [];
+            const times = Array.isArray(prog.reminderTimes) ? prog.reminderTimes.filter(time => isValidReminderTime(time)) : [];
             document.getElementById('reminderTimeInput1').value = times[0] || '';
             document.getElementById('reminderTimeInput2').value = times[1] || '';
             document.getElementById('reminderTimeBlock2').classList.toggle('hidden', targetSessions === 1);
@@ -11138,8 +11167,8 @@
                 const t1 = document.getElementById('reminderTimeInput1').value;
                 const t2 = document.getElementById('reminderTimeInput2').value;
                 const requestedEnabled = document.getElementById('reminderEnabledToggle').checked;
-                if (requestedEnabled && (!t1 || (targetSessions > 1 && !t2))) {
-                    showInlineToast(targetSessions > 1 ? 'Informe os dois horários para ativar os lembretes.' : 'Informe o horário para ativar o lembrete.');
+                if (requestedEnabled && (!isValidReminderTime(t1) || (targetSessions > 1 && !isValidReminderTime(t2)))) {
+                    showInlineToast(targetSessions > 1 ? 'Informe dois horários válidos no formato HH:mm.' : 'Informe um horário válido no formato HH:mm.');
                     return;
                 }
                 const enabled = requestedEnabled && await requestSystemReminderPermission();
@@ -11261,7 +11290,7 @@
             const currentHm = `${hours}:${minutes}`;
 
             AppState.programs.forEach(prog => {
-                const configuredTimes = Array.isArray(prog.reminderTimes) ? prog.reminderTimes.filter(time => typeof time === 'string' && time.trim()) : [];
+                const configuredTimes = Array.isArray(prog.reminderTimes) ? prog.reminderTimes.filter(time => isValidReminderTime(time)) : [];
                 if (prog.remindersEnabled === true && configuredTimes.length > 0 && (prog.sessionsToday || 0) < (prog.dailyTarget || 2)) {
                     const times = configuredTimes;
                     const targetSession = (prog.sessionsToday || 0) + 1;

@@ -38,16 +38,22 @@ assert.match(source, /const activeCount = hasPermission \? enabledCount : 0;/, '
 assert.match(source, /notificationBanner.*class="hidden/, 'banner de notificação deve iniciar oculto até confirmar estado real');
 assert.match(source, /const activePrograms = AppState\.programs\.filter\(program => program\.remindersEnabled === true && Array\.isArray\(program\.reminderTimes\)/, 'banner deve considerar somente programas com horários reais');
 assert.match(source, /const enabled = hasRealSchedule && prog\.remindersEnabled === true && hasSystemReminderPermission\(\);/, 'sincronismo nativo deve bloquear agendamento sem permissão');
-assert.match(source, /const t1 = document\.getElementById\('reminderTimeInput1'\)\.value;[\s\S]*?const t2 = document\.getElementById\('reminderTimeInput2'\)\.value;[\s\S]*?if \(requestedEnabled && \(!t1 \|\| \(targetSessions > 1 && !t2\)\)\)/, 'salvar lembrete deve rejeitar horário vazio sem fabricar valor');
+assert.match(source, /const t1 = document\.getElementById\('reminderTimeInput1'\)\.value;[\s\S]*?const t2 = document\.getElementById\('reminderTimeInput2'\)\.value;[\s\S]*?if \(requestedEnabled && \(!isValidReminderTime\(t1\) \|\| \(targetSessions > 1 && !isValidReminderTime\(t2\)\)\)\)/, 'salvar lembrete deve rejeitar horário vazio ou inválido sem fabricar valor');
+assert.match(source, /function isValidReminderTime\(value\)[\s\S]*?return typeof value === 'string'/, 'horários devem usar validador HH:mm');
+assert.match(source, /function toggleSmartMiddayReminder\(\)[\s\S]*?hasSystemReminderPermission\(\)/, 'smart reminder deve depender da permissão real');
+assert.match(source, /function onNativeReminderPermissionChanged\(granted\)[\s\S]*?saveState\(\)[\s\S]*?syncAllNativeReminders\(\)/, 'revogação em foreground deve atualizar estado e cancelar nativo');
 assert.doesNotMatch(source, /value \|\| '09:00'/, 'não deve fabricar horário 09:00');
 assert.doesNotMatch(source, /value \|\| '16:00'/, 'não deve fabricar horário 16:00');
 assert.match(source, /if \(!hasSystemReminderPermission\(\)\) \{[\s\S]*?Notificações do sistema não estão autorizadas/, 'teste de notificação deve refletir permissão negada');
 const nativeBridge = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'java', 'com', 'example', 'MainActivity.kt'), 'utf8');
+assert.match(nativeBridge, /override fun onResume\(\)[\s\S]*?ReminderScheduler\.rescheduleAll\(this\)[\s\S]*?onNativeReminderPermissionChanged/, 'retorno ao foreground deve revalidar e notificar a UI');
 assert.match(nativeBridge, /fun requestReminderPermission\(\): Boolean[\s\S]*?requestNotificationPermission\(activity\)/, 'bridge Android deve solicitar POST_NOTIFICATIONS quando ainda não concedida');
-assert.match(nativeBridge, /val effectiveEnabled = enabled && permissionGranted && time1\.isNotBlank\(\) && \(targetSessions <= 1 \|\| time2\.isNotBlank\(\)\)/, 'bridge Android não pode persistir lembrete ativo sem permissão ou horários');
+assert.match(nativeBridge, /val effectiveEnabled = enabled && permissionGranted && time1\.isNotBlank\(\) && \(targetSessions <= 1 \|\| time2\.isNotBlank\(\)/, 'bridge Android não pode persistir lembrete ativo sem permissão ou horários');
 const nativeScheduler = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'java', 'com', 'example', 'ReminderScheduler.kt'), 'utf8');
-assert.match(nativeScheduler, /val permissionGranted = Build\.VERSION\.SDK_INT < Build\.VERSION_CODES\.TIRAMISU/, 'scheduler nativo deve verificar permissão ao restaurar');
-assert.match(nativeScheduler, /if \(!permissionGranted\) \{[\s\S]*?putBoolean\(key\(programId, "enabled"\), false\)/, 'scheduler nativo deve cancelar e desativar quando permissão for negada');
+assert.match(nativeScheduler, /val permissionGranted = hasEffectiveNotificationPermission\(context\)/, 'scheduler nativo deve verificar permissão efetiva ao restaurar');
+assert.match(nativeScheduler, /fun hasEffectiveNotificationPermission\(context: Context\): Boolean[\s\S]*?areNotificationsEnabled\(\)[\s\S]*?IMPORTANCE_NONE/, 'scheduler deve considerar permissão runtime, app e canal');
+assert.match(nativeScheduler, /private fun isValidTime\(value: String\)[\s\S]*?Regex\("\^\\\\d\{2\}:\\\\d\{2\}\$"\)/, 'scheduler deve validar HH:mm sem fallback');
+assert.match(nativeScheduler, /scheduleMindSmartReminder[\s\S]*?hasEffectiveNotificationPermission\(context\)[\s\S]*?isValidTime\(timeStr\)/, 'smart reminder nativo deve bloquear permissão e horário inválidos');
 
 const sourceForVm = [
     extractFunction('openTodayRecommendationSession'),

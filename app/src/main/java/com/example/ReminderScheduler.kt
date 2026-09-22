@@ -11,6 +11,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -42,6 +43,8 @@ object ReminderScheduler {
         enabled: Boolean
     ) {
         val safeTarget = targetSessions.coerceIn(1, 2)
+        val effectiveEnabled = enabled && hasEffectiveNotificationPermission(context) &&
+            isValidTime(time1) && (safeTarget <= 1 || isValidTime(time2))
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val ids = prefs.getStringSet(PROGRAM_IDS, emptySet()).orEmpty().toMutableSet()
         ids.add(programId)
@@ -51,11 +54,11 @@ object ReminderScheduler {
             .putString(key(programId, "time1"), time1)
             .putString(key(programId, "time2"), time2)
             .putInt(key(programId, "target_sessions"), safeTarget)
-            .putBoolean(key(programId, "enabled"), enabled)
+            .putBoolean(key(programId, "enabled"), effectiveEnabled)
             .apply()
 
         cancelProgram(context, programId)
-        if (enabled) {
+        if (effectiveEnabled) {
             scheduleDaily(context, programId, title, 1, time1)
             if (safeTarget > 1) scheduleDaily(context, programId, title, 2, time2)
         }
@@ -63,8 +66,7 @@ object ReminderScheduler {
 
     fun rescheduleAll(context: Context) {
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        val permissionGranted = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
-            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+        val permissionGranted = hasEffectiveNotificationPermission(context)
         prefs.getStringSet(PROGRAM_IDS, emptySet()).orEmpty().forEach { programId ->
             if (!prefs.getBoolean(key(programId, "enabled"), false)) return@forEach
             if (!permissionGranted) {
@@ -76,7 +78,7 @@ object ReminderScheduler {
             val time1 = prefs.getString(key(programId, "time1"), "") ?: ""
             val time2 = prefs.getString(key(programId, "time2"), "") ?: ""
             val targetSessions = prefs.getInt(key(programId, "target_sessions"), 2).coerceIn(1, 2)
-            if (time1.isBlank() || (targetSessions > 1 && time2.isBlank())) {
+            if (!isValidTime(time1) || (targetSessions > 1 && !isValidTime(time2))) {
                 cancelProgram(context, programId)
                 prefs.edit().putBoolean(key(programId, "enabled"), false).apply()
                 return@forEach
@@ -138,9 +140,7 @@ object ReminderScheduler {
         sessionNumber: Int,
         targetSessions: Int = 2
     ) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
-        ) return
+        if (!hasEffectiveNotificationPermission(context)) return
 
         createChannel(context)
         val notificationId = notificationId(programId, sessionNumber)
@@ -213,9 +213,10 @@ object ReminderScheduler {
         sessionNumber: Int,
         time: String
     ) {
+        if (!isValidTime(time)) return
         val parts = time.split(":")
-        val hour = parts.getOrNull(0)?.toIntOrNull()?.coerceIn(0, 23) ?: 9
-        val minute = parts.getOrNull(1)?.toIntOrNull()?.coerceIn(0, 59) ?: 0
+        val hour = parts[0].toInt()
+        val minute = parts[1].toInt()
         val now = Calendar.getInstance()
         val trigger = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, hour)
@@ -316,13 +317,14 @@ object ReminderScheduler {
 
         alarmManager.cancel(pendingIntent)
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        prefs.edit().putBoolean("mind_reminder_enabled", enabled).putString("mind_reminder_time", timeStr).apply()
+        val effectiveEnabled = enabled && hasEffectiveNotificationPermission(context) && isValidTime(timeStr)
+        prefs.edit().putBoolean("mind_reminder_enabled", effectiveEnabled).putString("mind_reminder_time", timeStr).apply()
 
-        if (!enabled) return
+        if (!effectiveEnabled) return
 
         val parts = timeStr.split(":")
-        val hour = parts.getOrNull(0)?.toIntOrNull()?.coerceIn(0, 23) ?: 15
-        val minute = parts.getOrNull(1)?.toIntOrNull()?.coerceIn(0, 59) ?: 30
+        val hour = parts[0].toInt()
+        val minute = parts[1].toInt()
         val now = Calendar.getInstance()
         val trigger = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, hour)
@@ -342,6 +344,7 @@ object ReminderScheduler {
     }
 
     fun showMindSmartNotification(context: Context) {
+        if (!hasEffectiveNotificationPermission(context)) return
         createChannel(context)
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -382,6 +385,26 @@ object ReminderScheduler {
             val time = prefs.getString("mind_reminder_time", "15:30") ?: "15:30"
             scheduleMindSmartReminder(context, time, true)
         }
+    }
+
+    fun hasEffectiveNotificationPermission(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) return false
+        val manager = NotificationManagerCompat.from(context)
+        if (!manager.areNotificationsEnabled()) return false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+                .getNotificationChannel(CHANNEL_ID)
+            if (channel?.importance == NotificationManager.IMPORTANCE_NONE) return false
+        }
+        return true
+    }
+
+    private fun isValidTime(value: String): Boolean {
+        if (!Regex("^\\d{2}:\\d{2}$").matches(value)) return false
+        val parts = value.split(":")
+        return parts[0].toInt() in 0..23 && parts[1].toInt() in 0..59
     }
 
     fun notificationId(programId: String, sessionNumber: Int): Int =
