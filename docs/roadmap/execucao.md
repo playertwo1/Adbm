@@ -291,3 +291,13 @@ Próximo passo:
 - Limitações: sem aparelho Android físico, Galaxy Watch físico, TalkBack, WebView renderizada, push, merge, Actions, release ou deploy; diagnóstico usa harness Node/vm e não substitui validação física. Auditoria independente do target desta etapa permanece obrigatória; este handoff não é PASS.
 - Próximo passo: auditoria independente no target SHA exato desta implementação; só depois avaliar liberação de E07.4.
 
+## 2026-09-22 — E07.5 / agenda, recuperação e progressão conforme E03 / IMPLEMENTADA
+
+- Base confirmada: `a6c48e693f3cae77be25e4ab2eb5a8f263a01bf1`, target aprovado independente de E07.4; os commits de E07.2–E07.4 foram reaplicados nesta branch antes da alteração desta etapa.
+- Correção de agenda: o detalhe dos programas deixou de usar horários/frequência padrão inventados. A renderização usa somente `reminderTimes` e `weeklyTargetDays` presentes na configuração real; quando ausentes, exibe `Horário não configurado`/`frequência não configurada` em vez de converter ausência em agenda válida.
+- Correção de recuperação/progressão: a revisão pendente do Vácuo (`progressionReview` e `phase.reviewPending`) agora é restaurada do snapshot junto com o programa, mantendo a fase parada após reload e sem avanço por calendário. Duração/recuperação continuam derivadas de `getProgramSteps` e do histórico real; nenhum valor clínico foi inventado.
+- Regressão nova: `node diagnostics/e07-agenda-progress.test.cjs` → PASS, cobrindo equivalência dos HTMLs, ausência de fallbacks fabricados e persistência da revisão pendente. `node diagnostics/e07-programas.test.cjs` → PASS.
+- Validação: `cmp -s index.html app/src/main/assets/index.html` → PASS; `git diff --check` → PASS.
+- Limitações: sem aparelho/Watch/TalkBack físico, push, merge, Actions, release ou deploy nesta execução. Auditoria independente do target final continua obrigatória; este handoff não é PASS.
+- Próximo passo: Auditor independente revisar o target SHA exato desta implementação.
+

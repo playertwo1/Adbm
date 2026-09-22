@@ -9260,9 +9260,10 @@
                 const activePh = mainProg.phases[mainProg.currentPhaseIndex || 0] || mainProg.phases[0];
                 const sToday = mainProg.sessionsToday || 0;
                 const targetSessions = mainProg.dailyTarget || 1;
-                const weeklyTargetDays = activePh.weeklyTargetDays || 7;
-                const currentDay = mainProg.currentDayInWeek || Math.min((mainProg.daysCompletedInPhase || 0) + 1, weeklyTargetDays);
-                const daysCompleted = mainProg.daysCompletedInPhase || 0;
+                const weeklyTargetDays = Number.isFinite(Number(activePh.weeklyTargetDays)) ? Math.max(1, Number(activePh.weeklyTargetDays)) : null;
+                const currentDay = weeklyTargetDays ? Math.min((mainProg.currentDayInWeek || Math.max(1, (mainProg.daysCompletedInPhase || 0) + 1)), weeklyTargetDays) : null;
+                const daysCompleted = Math.max(0, Number(mainProg.daysCompletedInPhase) || 0);
+                const heroScheduleLabel = weeklyTargetDays ? `${currentDay} de ${weeklyTargetDays} dias (${daysCompleted}/${weeklyTargetDays} dias concluídos)` : 'frequência não configurada';
 
                 const heroTitle = document.getElementById('heroWorkoutProgramTitle');
                 const heroSub = document.getElementById('heroWorkoutPhaseSubtitle');
@@ -9270,7 +9271,7 @@
                 const heroBtn = document.getElementById('heroWorkoutButtonText');
 
                 if (heroTitle) heroTitle.innerText = mainProg.title;
-                if (heroSub) heroSub.innerText = `${activePh.title} • Dia ${currentDay} de ${weeklyTargetDays} (${daysCompleted}/${weeklyTargetDays} dias concluídos)`;
+                if (heroSub) heroSub.innerText = `${activePh.title} • ${heroScheduleLabel}`;
                 if (heroBadge) {
                     heroBadge.innerText = `${sToday}/${targetSessions} Sessões Hoje`;
                     heroBadge.className = `text-xs font-black px-2.5 py-0.5 rounded-full border ${sToday >= targetSessions ? 'text-emerald-300 bg-emerald-950/80 border-emerald-400/40' : 'text-amber-300 bg-black/40 border-amber-400/30'}`;
@@ -9296,10 +9297,12 @@
                 const targetSessions = prog.dailyTarget || 2;
                 const activePhaseIdx = prog.currentPhaseIndex || 0;
                 const activePhase = prog.phases[activePhaseIdx] || prog.phases[0];
-                const reminderTimes = prog.reminderTimes || ['09:00', '16:00'];
-                const targetDays = activePhase.weeklyTargetDays || 7;
-                const currentDay = prog.currentDayInWeek || Math.min((prog.daysCompletedInPhase || 0) + 1, targetDays);
-                const daysCompleted = prog.daysCompletedInPhase || 0;
+                const reminderTimes = Array.isArray(prog.reminderTimes) ? prog.reminderTimes.filter(time => typeof time === 'string' && time.trim()) : [];
+                const targetDays = Number.isFinite(Number(activePhase.weeklyTargetDays)) ? Math.max(1, Number(activePhase.weeklyTargetDays)) : null;
+                const currentDay = targetDays ? Math.min((prog.currentDayInWeek || Math.max(1, (prog.daysCompletedInPhase || 0) + 1)), targetDays) : null;
+                const daysCompleted = Math.max(0, Number(prog.daysCompletedInPhase) || 0);
+                const targetDaysLabel = targetDays ? `${targetDays} dias` : 'frequência não configurada';
+                const currentDayLabel = currentDay ? `Dia ${currentDay}` : 'Dia não configurado';
                 const progressionReviewPending = prog.id === '3' && prog.progressionReview?.status === 'pending';
                 const progressionReviewHtml = progressionReviewPending
                     ? '<div class="mt-3 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-3 text-xs text-amber-100"><strong class="block text-amber-300">Revisão da etapa necessária</strong><span class="mt-1 block text-amber-100/80">A meta foi atingida. A etapa atual será repetida até uma revisão explícita; o calendário não aumenta a carga sozinho.</span></div>'
@@ -9347,7 +9350,7 @@
                     const isDone = sessionsToday >= number;
                     const label = number === 1 ? '1ª' : `${number}ª`;
                     return `<div class="p-2.5 rounded-xl border flex items-center justify-between ${isDone ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' : 'bg-slate-800/80 border-slate-700 text-slate-400'}">
-                        <span>${label} Sessão (${reminderTimes[index] || reminderTimes[0]})</span>
+                        <span>${label} Sessão (${reminderTimes[index] || reminderTimes[0] || 'Horário não configurado'})</span>
                         <i class="fa-solid ${isDone ? 'fa-circle-check text-emerald-400' : 'fa-circle text-slate-600'}"></i>
                     </div>`;
                 }).join('');
@@ -12056,6 +12059,16 @@
                 if (Array.isArray(saved.reminderTimes)) defaultProg.reminderTimes = saved.reminderTimes.filter(value => typeof value === 'string');
                 if (typeof saved.remindersEnabled === 'boolean') defaultProg.remindersEnabled = saved.remindersEnabled;
                 if (saved.lastManualAdjustment && typeof saved.lastManualAdjustment === 'object') defaultProg.lastManualAdjustment = saved.lastManualAdjustment;
+                if (saved.progressionReview && typeof saved.progressionReview === 'object') defaultProg.progressionReview = { ...saved.progressionReview };
+                if (defaultProg.id === '3' && Array.isArray(saved.phases)) {
+                    saved.phases.forEach((savedPhase, index) => {
+                        if (defaultProg.phases[index] && savedPhase && savedPhase.reviewPending === true) {
+                            defaultProg.phases[index].reviewPending = true;
+                            defaultProg.phases[index].reviewPendingAt = savedPhase.reviewPendingAt || null;
+                            defaultProg.phases[index].reviewReason = savedPhase.reviewReason || null;
+                        }
+                    });
+                }
                 if (defaultProg.type === 'mindfulness') {
                     defaultProg.informalCompletedDate = saved.informalCompletedDate || null;
                     defaultProg.informalCompletedToday = defaultProg.informalCompletedDate === todayStr;

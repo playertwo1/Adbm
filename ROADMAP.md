@@ -147,7 +147,7 @@ Evidência E06: `diagnostics/e06-vacuo-player.test.cjs`, equivalência byte a by
 - [x] Agenda, recuperação e sugestão de progressão obedecem E03.
 - [x] Definir estados sem histórico, concluído e erro.
 Aceite: etapa 3/sessão 2 abre etapa 3/sessão 2; reabrir preserva posição; ajuste não fabrica minutos.
-Evidência E07.2-R: `diagnostics/e07-programas-red.cjs` GREEN (contrato satisfeito), `diagnostics/e07-programas.test.cjs` (12 regressões comportamentais), equivalência byte a byte dos HTMLs, `bash scripts/check.sh` com `BUILD SUCCESSFUL`. Item de "exercícios abrem instruções da sequência escolhida" segue pendente para etapa dedicada; demais itens verificados por comportamento real (não apenas cálculo) em ambos os HTMLs.
+Evidência E07.5: `diagnostics/e07-agenda-progress.test.cjs` valida agenda derivada de `reminderTimes`/`weeklyTargetDays` sem fallback fabricado, estado explícito quando a configuração real está ausente e persistência da revisão pendente do Vácuo após reload; `diagnostics/e07-programas.test.cjs` continua PASS. Equivalência byte a byte dos HTMLs e `git diff --check` passaram. A auditoria independente do target SHA continua obrigatória; este registro não é PASS.
 
 ### E08 — Telas 01/02: Onboarding e Hoje
 [Onboarding](assets/design/coreflow-s25-ultra/01-onboarding.png) · [Hoje](assets/design/coreflow-s25-ultra/02-home.png)
