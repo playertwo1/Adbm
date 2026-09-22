@@ -1,5 +1,26 @@
 # Registro de execução
 
+## 2026-09-22 — E08.4 / Hoje: editar meta com salvar/cancelar
+
+- Base: `2bfd1ea407243f26fb7818b1fd685f2aa8d7db3e` (E08.3 com PASS independente confirmado no card pai, auditor `t_075a49be`/run 113); worktree alinhado por fast-forward limpo de `67849ee` para esse SHA antes de iniciar.
+- Escopo: permitir editar a meta diária (`AppState.dailyGoal`) diretamente pela tela Hoje, reutilizando o contrato de validação já definido em E08.1 (`onboardingValidateGoal`: inteiro entre 5 e 180 minutos), com Cancelar sem efeito colateral e Salvar validando/persistindo/atualizando a tela imediatamente.
+- Implementação:
+  - Novo botão de edição (ícone de lápis) no card "Resumo do dia" da tela Hoje (`onclick="openEditGoalModal()"`), ao lado do valor de minutos/meta agora exibido como `X min / Y min` (`todayGoalValue` adicionado ao markup e a `renderTodaySummary()`).
+  - Novo modal `editGoalModal` com input numérico (`editGoalInput`), área de erro real (`editGoalError`, `role="alert"`) e botões Cancelar/Salvar explícitos — sem reaproveitar o modal genérico `editProgramModal` (escopo e contrato de dados diferentes).
+  - `openEditGoalModal()`: pré-carrega o input com o `AppState.dailyGoal` salvo (não um rascunho anterior) e limpa qualquer erro exibido.
+  - `closeEditGoalModal()` (Cancelar/fechar): apenas esconde o modal e limpa o erro; não toca em `AppState.dailyGoal` nem chama `saveState()` — reabrir depois de cancelar volta a mostrar a meta salva, não o rascunho descartado.
+  - `saveEditGoalModal()`: reutiliza `onboardingValidateGoal(rawGoal)` (mesmo contrato de E08.1); em caso de meta inválida, exibe o motivo real retornado pela validação em `editGoalError` e **não fecha o modal nem persiste**; em caso de meta válida, atualiza `AppState.dailyGoal`, chama `saveState()` (aborta com mensagem de erro real se a persistência falhar, sem fechar o modal), e só então fecha o modal, chama `renderTodaySummary()`/`updateHeaderStats()` para refletir a tela imediatamente e mostra um toast de confirmação.
+  - `editGoalModal` registrado nos dois pontos de fechamento por overlay existentes (`closeTopmostOverlay()` e o array `overlayIds` do handler de "Voltar" do Android) para que o botão físico/gesto de voltar feche o editor como os demais modais, sem sair da tela Hoje.
+  - Editar a meta não cria treino nem sessão retroativa: nenhuma chamada a `addMinutesToday`/`saveState` do motor de sessão é feita neste fluxo; apenas `AppState.dailyGoal` é alterado e persistido via o mesmo `saveState()` central do snapshot v4 (`collectProgressData().dailyGoal`).
+- Regressão adicionada: `diagnostics/e08-4-edit-goal.test.cjs`, exercitando `loadSavedState()` + `openEditGoalModal`/`saveEditGoalModal`/`closeEditGoalModal` reais (não apenas string/regex de markup) em 3 cenários: (1) salvar meta válida — persiste no snapshot, atualiza `AppState.dailyGoal` e o markup de Hoje (`todayGoalValue`) imediatamente, fecha o modal; (2) salvar meta inválida — abaixo do mínimo (`3`) e vazia (`''`) são ambas rejeitadas com o motivo real de `onboardingValidateGoal` exibido em `editGoalError`, o modal permanece aberto e o `AppState.dailyGoal`/snapshot persistido continuam com o valor anterior (30); (3) cancelar — editar o input para `90` e cancelar não altera `AppState.dailyGoal` nem o snapshot persistido, e reabrir o editor depois mostra a meta salva (30), não o rascunho descartado. O arquivo também trava por regex a presença dos elementos/handlers de contrato (`editGoalModal`, `openEditGoalModal()`, `saveEditGoalModal()`, `closeEditGoalModal()`, `editGoalInput`, `editGoalError`) no HTML.
+- Verificações executadas:
+  - `node diagnostics/e08-4-edit-goal.test.cjs` → exit 0; 3 cenários (salvar válido, salvar inválido, cancelar) passaram.
+  - `node` em todos os 20 `diagnostics/*.test.cjs` → exit 0 (nenhuma regressão anterior quebrada por esta mudança; nenhum harness precisou de ajuste, pois as novas funções não são chamadas pelos testes existentes).
+  - `bash scripts/check.sh` com `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr'` e `ANDROID_HOME=$LOCALAPPDATA/Android/Sdk` → `BUILD SUCCESSFUL`; diagnostics, `:app:testDebugUnitTest`, `:app:assembleDebug` e `:wear:assembleDebug` passaram.
+  - `cmp -s index.html app/src/main/assets/index.html` → exit 0; SHA-256 idêntico em ambos: `23e8bbdef2eb180ef7cfc5139e5f8738a91244c4268299b1b461eaf5d4978c3c`.
+  - `git diff --check` → exit 0 (sem espaço em branco/whitespace inválido introduzido).
+- Limitação conhecida: sem validação física em Android, Galaxy Watch ou TalkBack. O botão de editar meta foi adicionado apenas na tela Hoje (escopo deste card); a mesma edição em Perfil (E09, "Nome/meta com salvar/cancelar e persistência") não foi tocada e permanece pendente naquela etapa — pode futuramente reutilizar o mesmo `onboardingValidateGoal`/modal ou um equivalente, mas isso é decisão de E09, não desta fatia. Demais itens do checklist E08 (recomendação/desempate de programa, atalhos "Começar agora", avatar/lembretes) continuam pendentes para E08.5+.
+
 ## 2026-09-22 — E08.3 / Hoje: saudação e números reais do diário
 
 - Base: `fb423e89bfcc2dac823eaaac53ea2edc12263a0a` (E08.2 com PASS independente confirmado no card pai); worktree alinhado por fast-forward limpo de `67849ee` para esse SHA antes de iniciar.
