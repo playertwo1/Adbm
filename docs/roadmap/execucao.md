@@ -448,10 +448,11 @@ Próximo passo:
 - Limitações: sem aparelho/Watch/TalkBack físico, push, merge, Actions, release ou deploy nesta execução. Auditoria independente do target final continua obrigatória; este handoff não é PASS.
 - Próximo passo: Auditor independente revisar o target SHA exato desta implementação.
 
-## 2026-09-22 — E08.7 / consolidação E08 / IMPLEMENTADA
+## 2026-09-22 — E08.7 / consolidação E08 / IMPLEMENTADA, aguardando auditoria
 
 - Dependência confirmada: E08.6-R aceita com limitação por decisão de Rafael, conforme auditoria independente da task `t_b3ac2abf`; base correta desta consolidação: `666e24a6f64c84c265fa46644efbaa089847823c`. O target reprovado anterior `825564481460dab35be6c1c5707e9ec512e52697` não foi usado como base.
-- SHAs da consolidação: `base_sha=666e24a6f64c84c265fa46644efbaa089847823c`; `target_sha=666e24a6f64c84c265fa46644efbaa089847823c`.
+- Convenção de SHA explícita: `base_sha=666e24a6f64c84c265fa46644efbaa089847823c`; `behavioral_target_sha=666e24a6f64c84c265fa46644efbaa089847823c`; `documentation_commit` é o commit local desta entrada, informado no handoff da tarefa. O SHA de um commit não pode ser armazenado no próprio commit sem auto-referência; por isso o target auditável de comportamento é separado do commit documental.
+- Estado de aceite: a matriz E08 está GREEN nos diagnósticos locais, mas E08.7 permanece IMPLEMENTADA e aguarda PASS independente; E09 não é iniciada nem liberada por esta entrada.
 - Matriz consolidada: onboarding objetivo → meta/agenda → revisão com Voltar; validação de meta/frequência e conclusão; instalação limpa versus usuário existente/legado; saudação e números do diário; edição de meta com salvar/cancelar; recomendação, seleção explícita e desempate; Começar agora com etapa/sessão exibidas; atalhos Vácuo/Pausa/Kegel/Meditar/Discreto; avatar/Perfil; lembretes com permissão efetiva, horários válidos, soneza e smart reminder stale.
 - Diagnósticos E08 GREEN: `node diagnostics/e08-onboarding.test.cjs`, `node diagnostics/e08-existing-user.test.cjs`, `node diagnostics/e08-hoje-greeting-numbers.test.cjs`, `node diagnostics/e08-4-edit-goal.test.cjs`, `node diagnostics/e08-5-hoje-recommendation.test.cjs` e `node diagnostics/e08-6-hoje-controls.test.cjs` → exit 0. Os testes verificam os dois HTMLs byte-equivalentes; E08.6 também inspeciona `MainActivity.kt`, `ReminderScheduler.kt`, permissões efetivas, horários inválidos, soneza, smart reminder stale e a matriz nativa de identidade.
 - Regressões E01–E07 e políticas disponíveis: `for f in diagnostics/*.test.cjs; do node "$f" >/dev/null || exit 1; done` → exit 0.
