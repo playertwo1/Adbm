@@ -59,9 +59,12 @@ assert.match(nativeScheduler, /scheduleMindSmartReminder[\s\S]*?hasEffectiveNoti
 
 assert.match(nativeScheduler, /fun scheduleSnooze\([\s\S]*?if \(!hasEffectiveNotificationPermission\(context\)\) return/, 'adiar não pode rearmar alarme sem permissão');
 assert.match(nativeScheduler, /fun handleFire\([\s\S]*?if \(!hasEffectiveNotificationPermission\(context\)\) \{[\s\S]*?putBoolean\(key\(programId, "enabled"\), false\)/, 'disparo após revogação deve cancelar e desativar o programa');
+assert.match(nativeScheduler, /fun cancelProgram\([\s\S]*?0\.\.720[\s\S]*?ACTION_SNOOZE/, 'revogação deve cancelar sonezas pendentes do programa');
+assert.match(nativeScheduler, /prefs\.getBoolean\("mind_reminder_enabled", false\)[\s\S]*?hasEffectiveNotificationPermission\(context\)/, 'smart reminder não pode rearmar por default ativo');
 
 const sourceForVm = [
     extractFunction('isValidReminderTime'),
+    extractFunction('isStrictNonNegativeInteger'),
     extractFunction('isReminderScheduleComplete'),
     extractFunction('toggleSmartMiddayReminder'),
     extractFunction('onNativeReminderPermissionChanged'),

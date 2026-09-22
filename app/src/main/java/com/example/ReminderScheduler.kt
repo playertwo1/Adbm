@@ -199,16 +199,22 @@ object ReminderScheduler {
     fun cancelProgram(context: Context, programId: String) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         (1..2).forEach { session ->
-            val intent = Intent(context, ReminderReceiver::class.java).apply { action = ACTION_FIRE }
-            val pendingIntent = PendingIntent.getBroadcast(
-                context,
-                requestCode(programId, session, false),
-                intent,
-                PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
-            )
-            if (pendingIntent != null) {
-                alarmManager.cancel(pendingIntent)
-                pendingIntent.cancel()
+            (0..720).forEach { snoozeMinutes ->
+                val snooze = snoozeMinutes > 0
+                val request = if (snooze) requestCode(programId, session, true) + snoozeMinutes else requestCode(programId, session, false)
+                val intent = Intent(context, ReminderReceiver::class.java).apply {
+                    action = if (snooze) ACTION_SNOOZE else ACTION_FIRE
+                }
+                val pendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    request,
+                    intent,
+                    PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+                )
+                if (pendingIntent != null) {
+                    alarmManager.cancel(pendingIntent)
+                    pendingIntent.cancel()
+                }
             }
         }
     }
@@ -388,9 +394,9 @@ object ReminderScheduler {
 
         // Agendar para o dia seguinte automaticamente
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        if (prefs.getBoolean("mind_reminder_enabled", true)) {
-            val time = prefs.getString("mind_reminder_time", "15:30") ?: "15:30"
-            scheduleMindSmartReminder(context, time, true)
+        if (prefs.getBoolean("mind_reminder_enabled", false) && hasEffectiveNotificationPermission(context)) {
+            val time = prefs.getString("mind_reminder_time", "") ?: ""
+            if (isValidTime(time)) scheduleMindSmartReminder(context, time, true)
         }
     }
 

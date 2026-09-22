@@ -23,6 +23,9 @@ const source = [
     'const CORE_DATA_VERSION = 3;',
     extractFunction('localDateKey'), extractFunction('weekDateKeys'), extractFunction('syncDerivedStats'),
     extractFunction('getConfiguredWeeklyTargetDays'),
+    extractFunction('isStrictNonNegativeInteger'),
+    extractFunction('isValidReminderTime'),
+    extractFunction('isReminderScheduleComplete'),
     extractFunction('synchronizeProgramProgress'),
     extractFunction('applyProgramProgressAdjustment'),
     html.slice(persistenceStart, persistenceEnd)
@@ -43,6 +46,7 @@ function setup({ failReadOnce = false, failSnapshotWrite = false, nativeCurrent 
         console: { log() {} },
         TextEncoder,
         document: { getElementById() { return null; } },
+        hasSystemReminderPermission() { return false; },
         window: nativeCurrent === null ? {} : { AndroidBridge: { getProgressSnapshot() { return nativeCurrent; } } },
         localStorage: {
             getItem(key) {

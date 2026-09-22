@@ -3862,8 +3862,8 @@
             const displayedPhaseIndex = program.currentPhaseIndex || 0;
             const activePh = program.phases[displayedPhaseIndex] || program.phases[0];
             const targetSessions = Number.isInteger(program.dailyTarget) && program.dailyTarget > 0 ? program.dailyTarget : 1;
-            const parsedSessionsToday = Number(program.sessionsToday);
-            if (!Number.isInteger(parsedSessionsToday) || parsedSessionsToday < 0 || parsedSessionsToday > targetSessions) {
+            const parsedSessionsToday = program.sessionsToday;
+            if (program.progressInvalid === true || !isStrictNonNegativeInteger(parsedSessionsToday) || parsedSessionsToday > targetSessions) {
                 container.innerHTML = '<div class="cf-card p-4"><p class="text-sm font-bold text-rose-300">Não foi possível calcular a sessão de hoje. Atualize o progresso antes de começar.</p></div>';
                 return;
             }
@@ -3884,8 +3884,16 @@
 
         function openTodayRecommendationSession(programId, phaseIndex, sessionNumber) {
             const program = AppState.programs.find(p => p.id === programId && p.type !== 'mindfulness');
+            const recommended = selectTodayRecommendedProgram().program;
             const targetSessions = Number.isInteger(program?.dailyTarget) && program.dailyTarget > 0 ? program.dailyTarget : 1;
-            if (!program || !Number.isInteger(phaseIndex) || phaseIndex < 0 || phaseIndex >= program.phases.length || !Number.isInteger(sessionNumber) || sessionNumber < 1 || sessionNumber > targetSessions) {
+            const currentSessions = program?.sessionsToday;
+            const expectedSession = isStrictNonNegativeInteger(currentSessions)
+                ? Math.min(currentSessions + 1, targetSessions)
+                : null;
+            if (!program || recommended?.id !== program.id || program.progressInvalid === true ||
+                !Number.isInteger(phaseIndex) || phaseIndex < 0 || phaseIndex >= program.phases.length ||
+                !Number.isInteger(sessionNumber) || sessionNumber < 1 || sessionNumber > targetSessions ||
+                phaseIndex !== (program.currentPhaseIndex || 0) || sessionNumber !== expectedSession) {
                 showInlineToast('Não foi possível iniciar a sessão exibida. Atualize a recomendação e tente novamente.');
                 return;
             }
@@ -11045,6 +11053,10 @@
             return typeof value === 'string' && /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
         }
 
+        function isStrictNonNegativeInteger(value) {
+            return typeof value === 'number' && Number.isInteger(value) && value >= 0;
+        }
+
         function isReminderScheduleComplete(program) {
             if (!program || !Array.isArray(program.reminderTimes)) return false;
             const target = Number.isInteger(program.dailyTarget) && program.dailyTarget > 0 ? program.dailyTarget : 2;
@@ -12607,8 +12619,12 @@
                 const isLegacyBracing = defaultProg.id === '1' && Array.isArray(saved.phases) && saved.phases.length === 3 && defaultProg.phases.length === 8;
                 defaultProg.currentPhaseIndex = Math.min(maxPhase, Math.max(0, isLegacyBracing ? (Number(saved.currentPhaseIndex) || 0) * 2 : Number(saved.currentPhaseIndex) || 0));
                 defaultProg.daysCompletedInPhase = Math.max(0, Number(saved.daysCompletedInPhase) || 0);
-                defaultProg.sessionsToday = isNewDay ? 0 : Math.max(0, Number(saved.sessionsToday) || 0);
-                if (Array.isArray(saved.reminderTimes)) defaultProg.reminderTimes = saved.reminderTimes.filter(value => typeof value === 'string');
+                const savedSessionsToday = saved.sessionsToday;
+                const validSessionsToday = isStrictNonNegativeInteger(savedSessionsToday) &&
+                    savedSessionsToday <= (Number.isInteger(defaultProg.dailyTarget) && defaultProg.dailyTarget > 0 ? defaultProg.dailyTarget : 1);
+                defaultProg.progressInvalid = !isNewDay && savedSessionsToday !== undefined && !validSessionsToday;
+                defaultProg.sessionsToday = isNewDay ? 0 : (validSessionsToday ? savedSessionsToday : 0);
+                if (Array.isArray(saved.reminderTimes)) defaultProg.reminderTimes = saved.reminderTimes.filter(value => isValidReminderTime(value));
                 if (typeof saved.remindersEnabled === 'boolean') defaultProg.remindersEnabled = saved.remindersEnabled;
                 if (saved.lastManualAdjustment && typeof saved.lastManualAdjustment === 'object') defaultProg.lastManualAdjustment = saved.lastManualAdjustment;
                 if (saved.progressionReview && typeof saved.progressionReview === 'object') defaultProg.progressionReview = { ...saved.progressionReview };
@@ -12658,7 +12674,9 @@
             AppState.mente.history = Array.isArray(data.menteHistory) ? data.menteHistory : [];
             AppState.pausas.history = Array.isArray(data.corpoHistory) ? data.corpoHistory : [];
             AppState.mente.customPresets = Array.isArray(data.customPresets) ? data.customPresets : AppState.mente.customPresets;
-            AppState.pushNotificationsEnabled = data.pushEnabled === true || AppState.programs.some(program => program.remindersEnabled === true);
+            AppState.pushNotificationsEnabled = hasSystemReminderPermission() && AppState.programs.some(program =>
+                program.remindersEnabled === true && program.progressInvalid !== true && isReminderScheduleComplete(program)
+            );
             AppState.programDetailState = (data.programDetailState && typeof data.programDetailState === 'object' && typeof data.programDetailState.programId === 'string'
                 && AppState.programs.some(p => p.id === data.programDetailState.programId))
                 ? data.programDetailState

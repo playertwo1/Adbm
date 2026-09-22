@@ -192,6 +192,14 @@ class MainActivity : ComponentActivity() {
                             },
                             onPageReady = {
                                 deliverPendingReminder()
+                                val reminderPermission = ReminderScheduler.hasEffectiveNotificationPermission(this@MainActivity)
+                                ReminderScheduler.rescheduleAll(this@MainActivity)
+                                webView?.post {
+                                    webView?.evaluateJavascript(
+                                        "if (window.onNativeReminderPermissionChanged) window.onNativeReminderPermissionChanged($reminderPermission);",
+                                        null
+                                    )
+                                }
                             },
                             tts = tts,
                             onPlayConfetti = {

@@ -55,6 +55,9 @@ const completeMindfulness = extractFunction(source, 'completeMindfulnessAudio');
 const renderMindfulness = extractFunction(source, 'renderMindfulnessProgramCard');
 const renderWeeklyAgendaLabel = extractFunction(source, 'renderProgramWeeklyAgendaLabel');
 const getConfigured = extractFunction(source, 'getConfiguredWeeklyTargetDays');
+const strictInteger = extractFunction(source, 'isStrictNonNegativeInteger');
+const validReminderTime = extractFunction(source, 'isValidReminderTime');
+const reminderScheduleComplete = extractFunction(source, 'isReminderScheduleComplete');
 const applyAdjustment = extractFunction(source, 'applyProgramProgressAdjustment');
 const syncNativeReminder = extractFunction(source, 'syncProgramNativeReminder');
 const context = vm.createContext({
@@ -80,6 +83,7 @@ const context = vm.createContext({
     CorePersistence: { completedSessionIds: [], sessionHistory: [] },
     responsivePause: { history: [], historyEnabled: false },
     localDateKey: () => '2026-09-22',
+    hasSystemReminderPermission: () => false,
     normalizeSessionHistory: records => Array.isArray(records) ? records : [],
     renderDailyExecutionUI: () => {},
     addMinutesToday: () => {},
@@ -102,7 +106,7 @@ const context = vm.createContext({
     mindfulnessPlayer: { programId: '4', phaseIndex: 0, trackType: 'formal', completed: false, sessionId: 'mindfulness-test' },
     window: { AndroidBridge: { scheduleProgramReminders: (...args) => { context.__lastReminderCall = args; }, updateProgramReminderProgress: () => {} } }
 });
-vm.runInContext(`${schedule}; ${renderWeeklyAgendaLabel}; ${synchronize}; ${merge}; ${collect}; ${apply}; ${nativeWorkoutState}; ${completeMindfulness}; ${renderMindfulness}; ${getConfigured}; ${applyAdjustment}; ${syncNativeReminder}`, context);
+vm.runInContext(`${schedule}; ${renderWeeklyAgendaLabel}; ${synchronize}; ${strictInteger}; ${validReminderTime}; ${reminderScheduleComplete}; ${merge}; ${collect}; ${apply}; ${nativeWorkoutState}; ${completeMindfulness}; ${renderMindfulness}; ${getConfigured}; ${applyAdjustment}; ${syncNativeReminder}`, context);
 
 // Renderização derivada: ausência de frequência produz estado explícito, nunca null/undefined ou 7.
 assert.equal(vm.runInContext("JSON.stringify(getProgramSchedule({ currentPhaseIndex: 0, daysCompletedInPhase: 3, phases: [{ title: 'Sem frequência' }] }))", context), JSON.stringify({
@@ -153,6 +157,18 @@ assert.equal(vm.runInContext('AppState.programs[0].phases[0].reviewPending', con
 assert.equal(vm.runInContext('AppState.programs[0].currentPhaseIndex', context), 0);
 assert.equal(vm.runInContext('AppState.programs[1].daysCompletedInPhase', context), 3);
 assert.equal(vm.runInContext('AppState.programs[1].currentDayInWeek', context), 1);
+
+// Restore v4 deve limpar horário inválido e não reativar push sem permissão efetiva.
+const invalidRestore = JSON.parse(JSON.stringify(snapshot));
+invalidRestore.programs[0].sessionsToday = '1';
+invalidRestore.programs[0].reminderTimes = ['garbage', '16:00'];
+invalidRestore.programs[0].remindersEnabled = true;
+invalidRestore.pushEnabled = true;
+context.__invalidRestore = invalidRestore;
+vm.runInContext('applyProgressData(__invalidRestore)', context);
+assert.deepEqual(vm.runInContext('AppState.programs[0].reminderTimes', context), ['16:00']);
+assert.equal(vm.runInContext('AppState.programs[0].progressInvalid', context), true);
+assert.equal(vm.runInContext('AppState.pushNotificationsEnabled', context), false);
 
 console.log('E07 agenda/progress regressions: real agenda, missing-data honesty, completion guard, and snapshot round-trip verified.');
 

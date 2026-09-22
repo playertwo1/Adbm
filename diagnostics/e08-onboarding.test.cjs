@@ -62,6 +62,9 @@ const applyProgressData = extractFunction(source, 'applyProgressData');
 const mergeLoadedPrograms = extractFunction(source, 'mergeLoadedPrograms');
 const synchronizeProgramProgress = extractFunction(source, 'synchronizeProgramProgress');
 const getConfiguredWeeklyTargetDays = extractFunction(source, 'getConfiguredWeeklyTargetDays');
+const isStrictNonNegativeInteger = extractFunction(source, 'isStrictNonNegativeInteger');
+const isValidReminderTime = extractFunction(source, 'isValidReminderTime');
+const isReminderScheduleComplete = extractFunction(source, 'isReminderScheduleComplete');
 const localDateKey = extractFunction(source, 'localDateKey');
 const readProgressSnapshot = extractFunction(source, 'readProgressSnapshot');
 const validateProgressSnapshot = extractFunction(source, 'validateProgressSnapshot');
@@ -119,6 +122,7 @@ function setup() {
     const context = vm.createContext({
         console: { log() {} },
         window: {},
+        hasSystemReminderPermission() { return false; },
         document: {
             getElementById,
             activeElement: null,
@@ -156,7 +160,8 @@ function setup() {
         'let onboardingState = { step: 1, focus: null, dailyGoalInput: "", weeklyDaysInput: "" };',
         validateGoal, validateWeekly, showStepError, renderStep, selectFocus, updateGoalInput,
         updateWeeklyInput, goBack, goNext, complete, openIfNeeded,
-        localDateKey, getConfiguredWeeklyTargetDays, synchronizeProgramProgress, mergeLoadedPrograms,
+        localDateKey, getConfiguredWeeklyTargetDays, isStrictNonNegativeInteger,
+        isValidReminderTime, isReminderScheduleComplete, synchronizeProgramProgress, mergeLoadedPrograms,
         isValidSessionRecord, normalizeSessionHistory,
         applyProgressData, collectProgressData
     ].join('\n');
