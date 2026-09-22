@@ -30,6 +30,7 @@ const source = [
     appState,
     'const CORE_DATA_VERSION = 3;',
     extractFunction('localDateKey'), extractFunction('weekDateKeys'), extractFunction('syncDerivedStats'),
+    extractFunction('getConfiguredWeeklyTargetDays'),
     extractFunction('synchronizeProgramProgress'),
     extractFunction('selectHeroProgram'),
     extractFunction('renderProgramsListEmptyState'),

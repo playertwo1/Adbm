@@ -54,6 +54,9 @@ const nativeWorkoutState = extractAssignedFunction(source, 'onNativeWorkoutState
 const completeMindfulness = extractFunction(source, 'completeMindfulnessAudio');
 const renderMindfulness = extractFunction(source, 'renderMindfulnessProgramCard');
 const renderWeeklyAgendaLabel = extractFunction(source, 'renderProgramWeeklyAgendaLabel');
+const getConfigured = extractFunction(source, 'getConfiguredWeeklyTargetDays');
+const applyAdjustment = extractFunction(source, 'applyProgramProgressAdjustment');
+const syncNativeReminder = extractFunction(source, 'syncProgramNativeReminder');
 const context = vm.createContext({
     AppState: {
         programs: [{
@@ -97,9 +100,9 @@ const context = vm.createContext({
     nativeCompletionHandled: false,
     nativeSessionTag: { innerText: '' },
     mindfulnessPlayer: { programId: '4', phaseIndex: 0, trackType: 'formal', completed: false, sessionId: 'mindfulness-test' },
-    window: {}
+    window: { AndroidBridge: { scheduleProgramReminders: (...args) => { context.__lastReminderCall = args; }, updateProgramReminderProgress: () => {} } }
 });
-vm.runInContext(`${schedule}; ${renderWeeklyAgendaLabel}; ${synchronize}; ${merge}; ${collect}; ${apply}; ${nativeWorkoutState}; ${completeMindfulness}; ${renderMindfulness}`, context);
+vm.runInContext(`${schedule}; ${renderWeeklyAgendaLabel}; ${synchronize}; ${merge}; ${collect}; ${apply}; ${nativeWorkoutState}; ${completeMindfulness}; ${renderMindfulness}; ${getConfigured}; ${applyAdjustment}; ${syncNativeReminder}`, context);
 
 // Renderização derivada: ausência de frequência produz estado explícito, nunca null/undefined ou 7.
 assert.equal(vm.runInContext("JSON.stringify(getProgramSchedule({ currentPhaseIndex: 0, daysCompletedInPhase: 3, phases: [{ title: 'Sem frequência' }] }))", context), JSON.stringify({
@@ -152,3 +155,51 @@ assert.equal(vm.runInContext('AppState.programs[1].daysCompletedInPhase', contex
 assert.equal(vm.runInContext('AppState.programs[1].currentDayInWeek', context), 1);
 
 console.log('E07 agenda/progress regressions: real agenda, missing-data honesty, completion guard, and snapshot round-trip verified.');
+
+// getConfiguredWeeklyTargetDays deve rejeitar null, string vazia e zero como configuração real.
+assert.equal(vm.runInContext('getConfiguredWeeklyTargetDays({ weeklyTargetDays: null })', context), null);
+assert.equal(vm.runInContext('getConfiguredWeeklyTargetDays({ weeklyTargetDays: undefined })', context), null);
+assert.equal(vm.runInContext("getConfiguredWeeklyTargetDays({ weeklyTargetDays: '' })", context), null);
+assert.equal(vm.runInContext('getConfiguredWeeklyTargetDays({ weeklyTargetDays: 0 })', context), null);
+assert.equal(vm.runInContext('getConfiguredWeeklyTargetDays({ weeklyTargetDays: 5 })', context), 5);
+assert.equal(vm.runInContext('getConfiguredWeeklyTargetDays(null)', context), null);
+
+// getProgramSchedule não fabrica um único dia quando weeklyTargetDays é null/0/vazio.
+for (const invalid of [null, 0, '']) {
+    const result = vm.runInContext(`JSON.stringify(getProgramSchedule({ currentPhaseIndex: 0, daysCompletedInPhase: 2, phases: [{ weeklyTargetDays: ${JSON.stringify(invalid)} }] }))`, context);
+    assert.equal(result, JSON.stringify({
+        targetDays: null,
+        currentDay: null,
+        daysCompleted: 2,
+        targetDaysLabel: 'frequência não configurada',
+        currentDayLabel: 'Dia não configurado'
+    }), `getProgramSchedule fabricou agenda para weeklyTargetDays=${JSON.stringify(invalid)}`);
+}
+
+// synchronizeProgramProgress com weeklyTargetDays null não avança dia/meta.
+vm.runInContext("AppState.programs.push({ id: 'null-freq', currentPhaseIndex: 0, daysCompletedInPhase: 3, currentDayInWeek: 5, phases: [{ weeklyTargetDays: null, completed: false }] })", context);
+const nullFreqIndex = vm.runInContext('AppState.programs.length - 1', context);
+vm.runInContext(`synchronizeProgramProgress(AppState.programs[${nullFreqIndex}])`, context);
+assert.equal(vm.runInContext(`AppState.programs[${nullFreqIndex}].daysCompletedInPhase`, context), 3, 'daysCompletedInPhase não deve ser truncado para 1 com weeklyTargetDays null');
+assert.equal(vm.runInContext(`AppState.programs[${nullFreqIndex}].currentDayInWeek`, context), 1);
+
+// completeMindfulnessAudio com fase de weeklyTargetDays null/zero não marca fase concluída nem avança dia.
+vm.runInContext("AppState.programs.push({ id: 'zero-freq', currentPhaseIndex: 0, sessionsToday: 0, daysCompletedInPhase: 0, phases: [{ weeklyTargetDays: 0, targetSessionsPerDay: 1, completed: false }] }); mindfulnessPlayer.programId = 'zero-freq'; mindfulnessPlayer.phaseIndex = 0; mindfulnessPlayer.completed = false; mindfulnessPlayer.sessionId = 'zero-freq-session'; completeMindfulnessAudio();", context);
+const zeroFreqIndex = vm.runInContext('AppState.programs.length - 1', context);
+assert.equal(vm.runInContext(`AppState.programs[${zeroFreqIndex}].sessionsToday`, context), 1);
+assert.equal(vm.runInContext(`AppState.programs[${zeroFreqIndex}].daysCompletedInPhase`, context), 0, 'weeklyTargetDays=0 não deve incrementar daysCompletedInPhase');
+assert.equal(vm.runInContext(`AppState.programs[${zeroFreqIndex}].phases[0].completed`, context), false);
+
+// applyProgramProgressAdjustment não limita o dia ajustado a 1 quando weeklyTargetDays é null.
+vm.runInContext("AppState.programs.push({ id: 'adj-null', dailyTarget: 2, currentPhaseIndex: 0, daysCompletedInPhase: 0, phases: [{ weeklyTargetDays: null, completed: false }] })", context);
+const adjIndex = vm.runInContext('AppState.programs.length - 1', context);
+vm.runInContext(`applyProgramProgressAdjustment(AppState.programs[${adjIndex}], 0, 4, 1)`, context);
+assert.equal(vm.runInContext(`AppState.programs[${adjIndex}].daysCompletedInPhase`, context), 3, 'ajuste manual não deve ser truncado para 0 (dia 1) quando weeklyTargetDays é null');
+assert.equal(vm.runInContext(`AppState.programs[${adjIndex}].currentDayInWeek`, context), 4, 'ajuste manual deve preservar o dia solicitado quando não há limite real configurado');
+
+// syncProgramNativeReminder não agenda 09:00/16:00 fabricados quando reminderTimes está ausente.
+vm.runInContext("syncProgramNativeReminder({ id: 'no-reminder', title: 'Sem lembrete', dailyTarget: 2, remindersEnabled: true, sessionsToday: 0 })", context);
+const reminderCall = vm.runInContext('__lastReminderCall', context);
+assert.equal(reminderCall[5], false, 'remindersEnabled real deve ser false quando não há reminderTimes configurados, mesmo com remindersEnabled=true no estado');
+
+console.log('E07 null/zero weeklyTargetDays and reminder-fallback regressions verified.');

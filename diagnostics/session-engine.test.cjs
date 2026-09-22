@@ -26,6 +26,7 @@ const source = [
     appState,
     'const CORE_DATA_VERSION = 3;',
     extractFunction('localDateKey'),
+    extractFunction('getConfiguredWeeklyTargetDays'),
     extractFunction('synchronizeProgramProgress'),
     extractFunction('getProgramSteps'),
     extractFunction('assignKegelLogicalSeries'),
