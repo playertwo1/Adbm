@@ -179,6 +179,28 @@ console.log('E08.4 salvar meta válida: persiste, atualiza Hoje e fecha o editor
 }
 console.log('E08.4 salvar meta inválida: rejeitada com motivo real, editor permanece aberto, estado salvo preservado.');
 
+// 3b) Falha de persistência ao salvar: AppState.dailyGoal não pode divergir do snapshot salvo.
+{
+    const env = setup();
+    vm.runInContext('loadSavedState();', env.context);
+    vm.runInContext('AppState.dailyGoal = 30; saveState();', env.context);
+    vm.runInContext('openEditGoalModal();', env.context);
+    env.getElementById('editGoalInput').value = '77';
+    // Simula falha real de persistência (ex.: recoveryRequired/writeFailed já expostos na UI).
+    vm.runInContext("CorePersistence.status = 'writeFailed';", env.context);
+    vm.runInContext('saveEditGoalModal();', env.context);
+    assert.equal(env.getElementById('editGoalModal').classList.contains('hidden'), false, 'editor permanece aberto quando a persistência falha');
+    assert.equal(env.getElementById('editGoalError').classList.contains('hidden'), false, 'erro de falha de persistência é exibido');
+    assert.equal(vm.runInContext('AppState.dailyGoal', env.context), 30, 'AppState.dailyGoal reverte ao valor anterior quando saveState() falha (sem contaminação em memória)');
+    const persistedAfterFailure = JSON.parse(env.values.get('coreflow_progress_snapshot_v4'));
+    assert.equal(persistedAfterFailure.data.dailyGoal, 30, 'snapshot persistido continua com a meta anterior após falha de saveState()');
+
+    // reabrir o modal depois da falha deve mostrar a meta realmente salva (30), não o rascunho rejeitado (77)
+    vm.runInContext('closeEditGoalModal(); openEditGoalModal();', env.context);
+    assert.equal(env.getElementById('editGoalInput').value, '30', 'reabertura após falha de persistência usa a meta realmente salva, não o rascunho não confirmado');
+}
+console.log('E08.4 falha de persistência ao salvar: AppState.dailyGoal reverte, sem contaminação em memória.');
+
 // 3) Cancelar: não altera o estado salvo, sem efeito colateral.
 {
     const env = setup();

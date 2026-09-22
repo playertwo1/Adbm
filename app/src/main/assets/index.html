@@ -3887,8 +3887,10 @@
                 if (error) { error.textContent = check.reason; error.classList.remove('hidden'); }
                 return;
             }
+            const previousGoal = AppState.dailyGoal;
             AppState.dailyGoal = check.value;
             if (!saveState()) {
+                AppState.dailyGoal = previousGoal;
                 if (error) { error.textContent = 'Não foi possível salvar a meta agora. Tente novamente.'; error.classList.remove('hidden'); }
                 return;
             }
