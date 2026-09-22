@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 22/09/2026. Status: E00–E03, E05, E06 e E07 concluídas conforme as evidências registradas; E04 permanece em execução, com o item "Mais descanso" resolvido por remoção do produto (decisão registrada, sem incremento clínico inventado); E08.7 está IMPLEMENTADA e aguarda auditoria independente, portanto E08 ainda não está formalmente encerrada. A consolidação E08.7 usa `base_sha=666e24a6f64c84c265fa46644efbaa089847823c` e `behavioral_target_sha=666e24a6f64c84c265fa46644efbaa089847823c`; esta atualização documental parte de `documentation_parent_sha=51041a9c95cd329a9b67dfbfb13f74ed07e573f5`, e o commit documental é o filho imediato desse SHA (convenção verificável sem auto-referência). Próxima etapa: nenhuma até o PASS independente e a retrospectiva do Diretor; E09 permanece pendente.
+Atualizado: 22/09/2026. Status: E00–E03, E05, E06 e E07 concluídas conforme as evidências registradas; E04 permanece em execução, com o item "Mais descanso" resolvido por remoção do produto (decisão registrada, sem incremento clínico inventado); E08.7 recebeu PASS independente em 22/09/2026 e E08 está encerrada; a linha foi integrada em `main` no mesmo dia (local, sem push). E04 permanece ABERTA com verificação diferida para E13 (decisão de Rafael, 22/09/2026): E06 foi entregue sobre ela sem que sua dependência fosse verificada, e os oito itens em aberto exigem evidência própria em E13, sem marcação por inferência. A consolidação E08.7 usa `base_sha=666e24a6f64c84c265fa46644efbaa089847823c` e `behavioral_target_sha=666e24a6f64c84c265fa46644efbaa089847823c`; esta atualização documental parte de `documentation_parent_sha=51041a9c95cd329a9b67dfbfb13f74ed07e573f5`, e o commit documental é o filho imediato desse SHA (convenção verificável sem auto-referência). Próxima etapa: nenhuma até o PASS independente e a retrospectiva do Diretor; E09 permanece pendente.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -38,7 +38,7 @@ Se documentação histórica divergir do código, registrar e confirmar antes de
 | E01 | Atalho e tempo real do vácuo | E00 |
 | E02 | Dados e migração | E01 |
 | E03 | Regras de treino | E00 |
-| E04 | Motor e recuperação | E02, E03 |
+| E04 | Motor e recuperação | E02, E03 — **aberta; verificação diferida para E13.** E06 foi entregue sobre ela sem esta dependência verificada. |
 | E05 | Componentes AMOLED e navegação | E00 |
 | E06 | Player de vácuo | E04, E05 |
 | E07 | Programas e detalhe | E06 |
@@ -98,7 +98,11 @@ Aceite: regras explícitas e revisadas. Dosagem não resolvida bloqueia sua impl
 Evidência contextual: [revisão de hipopressivos](https://pubmed.ncbi.nlm.nih.gov/40565470/); não valida automaticamente o protocolo do app.
 
 ### E04 — Motor de sessão
-Estado: EM EXECUÇÃO; item "Mais descanso" resolvido por remoção do produto (decisão de Rafael, 21/09/2026) em vez de permanecer bloqueado aguardando aprovação clínica — nenhum incremento ou dosagem foi definido ou inventado. Demais itens seguem conforme evidências em `docs/roadmap/execucao.md`.
+Estado: **ABERTA — verificação diferida para E13** (decisão de Rafael, 22/09/2026). Item "Mais descanso" resolvido por remoção do produto (decisão de Rafael, 21/09/2026) em vez de permanecer bloqueado aguardando aprovação clínica — nenhum incremento ou dosagem foi definido ou inventado. Demais itens seguem conforme evidências em `docs/roadmap/execucao.md`.
+
+E06, E07 e E08 foram entregues e aprovadas sobre esta etapa sem que os oito itens abaixo tivessem evidência própria registrada. A tabela de sequência lista E04 como dependência de E06, então essa dependência **não foi satisfeita de forma verificável** — o que não invalida as etapas seguintes, mas também não autoriza tratar E04 como fechada. Em vez de reabrir E04 agora e refazer o caminho, os itens ficam explicitamente diferidos para a validação integrada de E13, onde o motor é exercitado de ponta a ponta com aparelho.
+
+Regra até lá: nenhum item de E04 pode ser marcado `[x]` por inferência a partir do aceite de E06/E07/E08. Cada um exige evidência própria, registrada em `docs/roadmap/execucao.md` e no registro de auditoria. Item que em E13 não puder ser verificado permanece `[ ]` com a lacuna nomeada — não vira conclusão por esgotamento do roadmap.
 - [ ] Identificar preparação, inspiração, expiração, retenção, retorno e recuperação.
 - [ ] “Encerrar retenção” registra executado e vai ao retorno/recuperação.
 - [x] “Mais descanso” removido do controle e das referências do produto (HTML, diagnóstico e roadmap) por decisão registrada, em vez de manter o botão desabilitado aguardando incremento clínico não aprovado em E03. Evidência: `docs/roadmap/execucao.md`, SHA integrado `706c5dafee3224b6b1de240f44401f5b5f427938`.
@@ -212,6 +216,15 @@ Aceite: controles na tela/notificação, extremos da busca, bloqueio e arquivo a
 Aceite: períodos vazio/parcial/completo conferem com diário e exportação.
 
 ### E13 — Integração e Android
+**Inclui a verificação diferida de E04** (oito itens em aberto do motor de sessão, ver E04). Cada um exige evidência própria e não pode ser marcado por inferência a partir de E06/E07/E08.
+- [ ] E04 diferido: identificar preparação, inspiração, expiração, retenção, retorno e recuperação.
+- [ ] E04 diferido: "Encerrar retenção" registra executado e vai ao retorno/recuperação.
+- [ ] E04 diferido: pausa na retenção orienta sua saída; retomada não exige continuar apneia congelada.
+- [ ] E04 diferido: bloquear alteração silenciosa de carga/postura em série ativa.
+- [ ] E04 diferido: encerrar salva parcial; não conclui automaticamente programa.
+- [ ] E04 diferido: feedback fica associado ao ID; permitir não responder.
+- [ ] E04 diferido: retomar estado do serviço após bloqueio, sem iniciar timer concorrente.
+- [ ] E04 diferido: cancelar sinais pendentes ao encerrar; evitar vibração duplicada.
 - [ ] Verificar equivalência dos HTMLs e referências de assets.
 - [ ] Executar regressões novas e existentes; registrar saídas.
 - [ ] Confirmar sintaxe JavaScript e build Android; comando inicial a validar em E00: `.\gradlew.bat testDebugUnitTest assembleDebug`.

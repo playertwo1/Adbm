@@ -462,3 +462,13 @@ Próximo passo:
 - Arquivos desta consolidação: `ROADMAP.md` e `docs/roadmap/execucao.md`. Nenhum ID, armazenamento, protocolo de treino ou código funcional foi alterado nesta etapa.
 - Próximo passo: auditoria independente do target final desta consolidação; depois, retrospectiva do Diretor antes de qualquer proposta de E09.
 
+
+## 2026-09-22 — E04 / verificação diferida para E13 (decisão de Rafael)
+
+- **Situação constatada:** E04 (Motor de sessão) está `EM EXECUÇÃO` desde o início do roadmap, com oito itens de aceite sem evidência própria registrada. A tabela de sequência lista E04 como dependência de E06 — e E06, E07 e E08 foram entregues, auditadas e integradas sobre ela. A dependência declarada nunca foi satisfeita de forma verificável.
+- **Por que isso não invalida E06/E07/E08:** cada uma teve aceite próprio demonstrado e auditoria independente no seu target. O que falta é evidência dos itens de E04 em si, não das etapas que vieram depois.
+- **Decisão (Rafael, 22/09/2026):** não reabrir E04 agora. Os oito itens ficam explicitamente diferidos para E13 (Integração e Android), onde o motor é exercitado de ponta a ponta com aparelho, e estão replicados na checklist de E13 prefixados como `E04 diferido:`.
+- **Regra vinculada:** nenhum item de E04 pode ser marcado `[x]` por inferência a partir do aceite de E06/E07/E08. Cada um exige evidência própria registrada aqui e no registro de auditoria. Item que em E13 não puder ser verificado permanece `[ ]` com a lacuna nomeada — não vira conclusão por esgotamento do roadmap.
+- **Itens diferidos:** sequência de fases (preparação, inspiração, expiração, retenção, retorno, recuperação); "Encerrar retenção" registra executado e vai ao retorno/recuperação; pausa na retenção orienta a saída sem exigir apneia congelada na retomada; bloqueio de alteração silenciosa de carga/postura em série ativa; encerrar salva parcial sem concluir programa; feedback associado ao ID com resposta opcional; retomada do estado do serviço após bloqueio sem timer concorrente; cancelamento de sinais pendentes ao encerrar sem vibração duplicada.
+- **Não alterado:** nenhum código funcional, ID, armazenamento ou protocolo de treino. Somente `ROADMAP.md` (estado de E04, checklist de E13, tabela de sequência e linha de status) e este registro.
+- **Próximo passo:** E09 (Tela 10: Perfil), com a correção do Finding 1 da E08.6-R incluída no escopo, já que o item de aceite de lembretes de E09 incide sobre o mesmo código.
