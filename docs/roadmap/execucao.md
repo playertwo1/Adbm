@@ -1,5 +1,15 @@
 # Registro de execução
 
+## 2026-09-21 — E07.4 / IMPLEMENTED — iniciar etapa e sessão exibidas
+
+- Base de implementação: `bb8c80b603afb04be7b0d5d553ddd34b8a435d79` (E07.3 aprovado), integrado nesta worktree antes da alteração.
+- Regressão adicionada em `diagnostics/e07-programas.test.cjs`: o detalhe abre a fase selecionada; o payload nativo preserva `programId`, `phaseIndex`, `sessionNumber` e `steps`; falha assíncrona de início limpa o estado sem timer fantasma e mantém a tentativa disponível.
+- Implementação nos dois HTMLs: `openDailyExecutionModal` aceita o número de sessão exibido pelo lembrete; rejeita fase/etapa sem sequência em vez de cair para outra fase; `startSessionFromReminder` encaminha `activeReminderSessionNumber`; o handler nativo trata `failed` sem deixar sessão rodando fictícia; exceção síncrona do bridge também limpa o estado.
+- Preservação: payload/bridge E04, armazenamento, histórico, IDs de programa e fluxo de Vácuo não foram alterados; os HTMLs permanecem idênticos.
+- Validação desta etapa: `node diagnostics/e07-programas.test.cjs` → PASS; regressões completas, equivalência/hash, `git diff --check` e `bash scripts/check.sh` executados no handoff.
+- Limitações: sem aparelho físico/Watch/TalkBack; Builder não declara PASS. Auditoria independente do target SHA permanece necessária.
+
+
 Estado inicial em 19/09/2026:
 
 - Tarefa atual: nenhuma.

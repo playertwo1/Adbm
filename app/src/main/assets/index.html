@@ -9741,7 +9741,7 @@
         /* -------------------------------------------------------------
            WORKOUT SESSION PLAYER ENGINE (COM PAUSA, CONTROLES E CANCELAMENTO)
         ------------------------------------------------------------- */
-        function openDailyExecutionModal(programId, phaseIndex = null) {
+        function openDailyExecutionModal(programId, phaseIndex = null, sessionNumber = null) {
             triggerHaptic([30]);
 
             if (window.AndroidBridge?.getWorkoutState) {
@@ -9768,9 +9768,17 @@
                 pIdx = prog.currentPhaseIndex || 0;
             }
 
-            const phase = prog.phases[pIdx] || prog.phases[0];
+            if (!Number.isInteger(pIdx) || pIdx < 0 || pIdx >= prog.phases.length) {
+                showInlineToast('Não foi possível iniciar essa etapa: fase inválida.');
+                return;
+            }
+            const phase = prog.phases[pIdx];
             const steps = getProgramSteps(prog.id, pIdx);
-            const targetDays = prog.phases[pIdx]?.weeklyTargetDays || 7;
+            if (!Array.isArray(steps) || steps.length === 0) {
+                showInlineToast('Não há exercícios cadastrados para essa etapa.');
+                return;
+            }
+            const targetDays = phase.weeklyTargetDays || 7;
             const currentDay = prog.currentDayInWeek || Math.min((prog.daysCompletedInPhase || 0) + 1, targetDays);
 
             AppState.dailyExecution.programId = prog.id;
@@ -9780,7 +9788,9 @@
             AppState.dailyExecution.sessionId = `program-${prog.id}-${pIdx}-${Date.now()}`;
             AppState.dailyExecution.steps = steps;
             AppState.dailyExecution.currentStepIndex = 0;
-            AppState.dailyExecution.sessionNumber = Math.min((prog.sessionsToday || 0) + 1, prog.dailyTarget || 2);
+            AppState.dailyExecution.sessionNumber = Number.isInteger(sessionNumber)
+                ? Math.max(1, Math.min(sessionNumber, prog.dailyTarget || 2))
+                : Math.min((prog.sessionsToday || 0) + 1, prog.dailyTarget || 2);
             AppState.dailyExecution.targetSessions = prog.dailyTarget || 2;
             AppState.dailyExecution.currentDay = currentDay;
             AppState.dailyExecution.targetDays = targetDays;
@@ -9947,6 +9957,18 @@
 
             if (state.session?.type === 'vacuum') {
                 handleNativeVacuumState(state);
+                return;
+            }
+
+            if (state.status === 'failed') {
+                AppState.dailyExecution.isRunning = false;
+                AppState.dailyExecution.isPaused = false;
+                if (AppState.dailyExecution.intervalId) clearInterval(AppState.dailyExecution.intervalId);
+                AppState.dailyExecution.intervalId = null;
+                if (window.AndroidBridge?.setKeepScreenOn) window.AndroidBridge.setKeepScreenOn(false);
+                showInlineToast(state.errorMessage || 'Não foi possível iniciar a sessão. Tente novamente.');
+                renderDailyExecutionUI();
+                window.AndroidBridge?.acknowledgeWorkoutState?.();
                 return;
             }
 
@@ -10178,7 +10200,17 @@
             }
 
             if (hasNativeWorkoutService()) {
-                const started = window.AndroidBridge.startWorkoutSession(buildNativeWorkoutPayload());
+                let started = false;
+                try {
+                    started = window.AndroidBridge.startWorkoutSession(buildNativeWorkoutPayload());
+                } catch (error) {
+                    AppState.dailyExecution.isRunning = false;
+                    AppState.dailyExecution.intervalId = null;
+                    if (window.AndroidBridge?.setKeepScreenOn) window.AndroidBridge.setKeepScreenOn(false);
+                    showInlineToast('Não foi possível iniciar a sessão. Tente novamente.');
+                    renderDailyExecutionUI();
+                    return;
+                }
                 if (started) {
                     AppState.dailyExecution.intervalId = null;
                     renderDailyExecutionUI();
@@ -10640,7 +10672,7 @@
 
         function startSessionFromReminder() {
             document.getElementById('interactiveReminderModal').classList.add('hidden');
-            openDailyExecutionModal(activeReminderProgId);
+            openDailyExecutionModal(activeReminderProgId, null, activeReminderSessionNumber);
         }
 
         function snoozeReminder(minutes) {
