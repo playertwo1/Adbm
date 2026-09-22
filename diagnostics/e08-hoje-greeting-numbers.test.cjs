@@ -72,7 +72,8 @@ const noopNames = [
     'renderAchievements', 'renderMenteHistory', 'renderCorpoHistory', 'updateTimeOfDayStretchRecommendation',
     'updateWeeklyMobilityMetrics', 'updateStretchDurationUI', 'loadCustomPresets', 'updateBreathDurationUI',
     'updateBreathLevelUI', 'updateTimeOfDayRecommendation', 'updateWeeklyCalmMetrics',
-    'updatePushNotificationButton', 'syncAllNativeReminders', 'renderCustomPresetsList'
+    'updatePushNotificationButton', 'syncAllNativeReminders', 'renderCustomPresetsList',
+    'renderTodayRecommendation'
 ];
 
 function makeElement(id) {

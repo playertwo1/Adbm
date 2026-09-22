@@ -365,6 +365,7 @@
                     <button type="button" class="cf-btn border border-slate-700 bg-slate-900 px-3 py-3 text-sm text-slate-100" onclick="switchTab('programas')" aria-label="Abrir Programas"><i class="fa-solid fa-list-check" aria-hidden="true"></i><span>Programas</span></button>
                 </div>
             </div>
+            <div id="todayRecommendationContainer"></div>
             <div class="cf-card p-4"><div class="flex items-center justify-between gap-3"><div><p class="text-xs font-bold uppercase tracking-wider text-slate-400">Resumo do dia</p><p class="mt-1 text-2xl font-black text-white"><span id="todayMinutesValue">0</span> min <span class="text-sm font-semibold text-slate-400">/ <span id="todayGoalValue">30</span> min</span></p></div><div class="flex items-center gap-2"><button type="button" class="cf-btn border border-slate-700 px-2.5 py-2 text-xs text-slate-200" onclick="openEditGoalModal()" aria-label="Editar meta diária"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button type="button" class="cf-btn border border-slate-700 px-3 py-2 text-xs text-slate-200" onclick="switchTab('dashboard')">Ver evolução</button></div></div><div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-800"><div id="todayGoalProgress" class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400" style="width:0%"></div></div></div>
         </section>
 
@@ -3771,6 +3772,99 @@
             if (value) value.textContent = String(minutes);
             if (goalValue) goalValue.textContent = String(AppState.dailyGoal || 0);
             if (progress) progress.style.width = `${Math.min(100, Math.round((minutes / Math.max(1, AppState.dailyGoal || 1)) * 100))}%`;
+            renderTodayRecommendation();
+        }
+
+        /* -------------------------------------------------------------
+           HOJE: RECOMENDAÇÃO DE PROGRAMA E DESEMPATE (E08.5)
+           Continua exatamente o programa/etapa já selecionado pelo
+           usuário (programDetailState ou progresso real em andamento).
+           Sem nenhum programa com sinal real de seleção/progresso, Hoje
+           nunca escolhe um programa arbitrário: oferece seleção explícita.
+        ------------------------------------------------------------- */
+        function programHasRealProgress(program) {
+            if (!program || program.type === 'mindfulness') return false;
+            if ((program.sessionsToday || 0) > 0) return true;
+            if ((program.daysCompletedInPhase || 0) > 0) return true;
+            if ((program.currentPhaseIndex || 0) > 0) return true;
+            if (Array.isArray(program.phases) && program.phases.some(phase => phase.completed === true)) return true;
+            if (program.lastManualAdjustment) return true;
+            return false;
+        }
+
+        // Regra de desempate (documentada em docs/roadmap/execucao.md, E08.5): quando mais de
+        // um programa tem progresso real simultâneo, prioriza-se, nesta ordem, (1) mais sessões
+        // já feitas hoje, (2) mais dias concluídos na etapa atual e, só então, (3) o menor ID de
+        // programa como critério estável final — nunca uma escolha aleatória ou fabricada.
+        function selectTodayRecommendedProgram() {
+            const detailProgramId = AppState.programDetailState?.programId;
+            const detailProgram = detailProgramId ? AppState.programs.find(p => p.id === detailProgramId && p.type !== 'mindfulness') : null;
+            if (detailProgram) return { program: detailProgram, reason: 'selected' };
+
+            const candidates = (AppState.programs || []).filter(programHasRealProgress);
+            if (candidates.length === 0) return { program: null, reason: 'none' };
+            if (candidates.length === 1) return { program: candidates[0], reason: 'in-progress' };
+
+            const sorted = [...candidates].sort((a, b) => {
+                const sessA = a.sessionsToday || 0, sessB = b.sessionsToday || 0;
+                if (sessB !== sessA) return sessB - sessA;
+                const daysA = a.daysCompletedInPhase || 0, daysB = b.daysCompletedInPhase || 0;
+                if (daysB !== daysA) return daysB - daysA;
+                return Number(a.id) - Number(b.id);
+            });
+            return { program: sorted[0], reason: 'tie-break', candidateCount: candidates.length };
+        }
+
+        function selectTodayProgram(programId) {
+            const program = AppState.programs.find(p => p.id === programId && p.type !== 'mindfulness');
+            if (!program) { showInlineToast('Não foi possível selecionar esse programa: ID inválido.'); return; }
+            triggerHaptic([10]);
+            AppState.programDetailState = { programId: program.id, phaseIndex: program.currentPhaseIndex || 0, visitedAt: new Date().toISOString() };
+            saveState();
+            renderTodayRecommendation();
+            renderProgramsList();
+        }
+
+        function renderTodayRecommendation() {
+            const container = document.getElementById('todayRecommendationContainer');
+            if (!container) return;
+            const escapeHtmlToday = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+
+            if (!Array.isArray(AppState.programs) || AppState.programs.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const { program } = selectTodayRecommendedProgram();
+            if (!program) {
+                const options = AppState.programs.filter(p => p.type !== 'mindfulness');
+                if (options.length === 0) { container.innerHTML = ''; return; }
+                container.innerHTML = `
+                    <div id="todayProgramSelection" class="cf-card p-4 space-y-3">
+                        <div><p class="text-xs font-bold uppercase tracking-wider text-cyan-300">Escolha seu programa</p><p class="mt-1 text-sm text-slate-300">Nenhum programa selecionado ainda. Escolha um para começar a acompanhar seu progresso.</p></div>
+                        <div class="space-y-2">
+                            ${options.map(p => `<button type="button" class="cf-btn w-full justify-start border border-slate-700 bg-slate-900 px-3 py-3 text-sm text-slate-100" onclick="selectTodayProgram('${p.id}')">${escapeHtmlToday(p.title)}</button>`).join('')}
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            synchronizeProgramProgress(program);
+            const activePh = program.phases[program.currentPhaseIndex || 0] || program.phases[0];
+            const sToday = program.sessionsToday || 0;
+            const targetSessions = program.dailyTarget || 1;
+            const actionLabel = program.programCompleted
+                ? 'Programa concluído • Repetir sessão final'
+                : (sToday === 0 ? `Iniciar Sessão 1/${targetSessions}` : (sToday < targetSessions ? `Continuar Sessão ${sToday + 1}/${targetSessions}` : `Meta diária concluída (${targetSessions}/${targetSessions}) ✓`));
+
+            container.innerHTML = `
+                <div id="todayRecommendationCard" class="cf-card p-4 space-y-3">
+                    <p class="text-xs font-bold uppercase tracking-wider text-cyan-300">Continuar treino</p>
+                    <div><h3 class="text-lg font-black text-white leading-tight">${escapeHtmlToday(program.title)}</h3><p class="mt-1 text-xs text-slate-400">${escapeHtmlToday(activePh.title)}</p></div>
+                    <button type="button" class="cf-btn w-full bg-emerald-500 px-3 py-3 text-sm text-slate-950" onclick="openDailyExecutionModal('${program.id}')">${actionLabel}</button>
+                </div>
+            `;
         }
 
         function switchTab(tabName) {
