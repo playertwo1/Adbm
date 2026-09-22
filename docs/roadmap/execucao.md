@@ -1,5 +1,12 @@
 # Registro de execução
 
+## 2026-09-22 — E08.2 / Onboarding: usuário existente pula fluxo obrigatório
+
+- Base: `13b539a0a228a85cf9c0503c649a4a2165a3758c` (E08.1 com PASS independente confirmado no card pai); worktree alinhado por fast-forward limpo de `67849ee` para esse SHA antes de iniciar.
+- Implementação preservada e verificada: `applyProgressData()` reconhece snapshot v4 legado sem `onboardingCompleted` como usuário já existente (`true`), enquanto `loadSavedState()` marca somente primeira instalação real sem nenhum dado como `onboardingCompleted:false`. Não foi criada flag, chave, ID, migração, bridge ou protocolo novo.
+- Regressão adicionada: `diagnostics/e08-existing-user.test.cjs` cobre a cadeia real `loadSavedState()` → `openOnboardingIfNeeded()` em cinco cenários: (1) instalação limpa abre o modal; (2) snapshot v4 válido com meta/agenda e `onboardingCompleted:true` abre sem onboarding; (3) snapshot v4 legado sem esse campo também abre sem onboarding; (4) snapshot/local legado corrompido não trava, fica em `recoveryRequired`, não persiste estado substituto e não força onboarding; (5) legado parcial fica em `recoveryRequired` sem ser confundido com instalação nova.
+- Limitação conhecida: não houve validação física Android/Galaxy Watch/TalkBack; os itens E08 restantes (saudação, edição de meta, recomendação, atalhos, avatar/lembretes) continuam fora deste escopo e pendentes para E08.3+.
+
 ## 2026-09-22 — E08.1 / Onboarding: objetivo → meta/agenda → revisão
 
 - Base: `eda1705055e093a67a65df62a69b0e4999039ff0` (PASS independente E07.6, fechamento formal da E07, confirmado por `t_a1e68a4e`). Worktree do card `t_7a01c2a4` já estava alinhado a esse SHA (HEAD == merge-base) antes de iniciar; o bloqueio anterior registrado nos eventos do card (worktree divergente em `67849ee`) já havia sido resolvido pelo Diretor antes desta execução.

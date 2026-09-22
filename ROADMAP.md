@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 22/09/2026. Status: E00–E03, E05, E06 e E07 concluídas; E04 em execução, com o item "Mais descanso" resolvido por remoção do produto (decisão registrada, sem incremento clínico inventado) — demais itens conforme `docs/roadmap/execucao.md`. E08.1 (onboarding: objetivo → meta/agenda → revisão) concluída; demais itens de E08 pendentes. SHA integrado: `eda1705055e093a67a65df62a69b0e4999039ff0`. Próxima etapa pendente: E08.2.
+Atualizado: 22/09/2026. Status: E00–E03, E05, E06 e E07 concluídas; E04 em execução, com o item "Mais descanso" resolvido por remoção do produto (decisão registrada, sem incremento clínico inventado) — demais itens conforme `docs/roadmap/execucao.md`. E08.1 (onboarding: objetivo → meta/agenda → revisão) e E08.2 (usuário existente pula onboarding obrigatório) concluídas; demais itens de E08 pendentes. SHA integrado: `eda1705055e093a67a65df62a69b0e4999039ff0`. Próxima etapa pendente: E08.3.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -152,17 +152,17 @@ Limitação conhecida: sem validação física em Android, Galaxy Watch ou TalkB
 
 ### E08 — Telas 01/02: Onboarding e Hoje
 [Onboarding](assets/design/coreflow-s25-ultra/01-onboarding.png) · [Hoje](assets/design/coreflow-s25-ultra/02-home.png)
-Estado: E08.1 CONCLUÍDA (itens abaixo); demais itens (E08.2+) pendentes.
+Estado: E08.1 e E08.2 CONCLUÍDAS (itens abaixo); demais itens (E08.3+) pendentes.
 - [x] Etapas: objetivo → meta/agenda → revisão; Voltar preserva preenchimento. Evidência: `onboardingGoBack`/`onboardingGoNext` preservam `onboardingState.focus`/`dailyGoalInput`/`weeklyDaysInput` entre etapas (`diagnostics/e08-onboarding.test.cjs`, casos 1-2).
 - [x] Validar meta conforme contrato; salvar conclusão e abrir Hoje. Evidência: `onboardingValidateGoal`/`onboardingValidateWeeklyDays` bloqueiam meta vazia/fora de 5–180 min e frequência fora de 1–7 dias com motivo real (sem mensagem genérica); `onboardingComplete` grava `AppState.dailyGoal`/`onboardingFocus`/`weeklyGoalDays` e chama `switchTab('hoje')` (`diagnostics/e08-onboarding.test.cjs`, casos 1, 3, 4).
-- [x] Usuário existente acessa histórico sem onboarding obrigatório novamente. Evidência: `applyProgressData` trata `onboardingCompleted` ausente em snapshot legado como `true` (usuário já instalado não é forçado a repetir onboarding); instalação nova (`readLegacyProgress` sem dados) grava `onboardingCompleted:false` via `loadSavedState()` (`diagnostics/e08-onboarding.test.cjs`, casos 5-6).
+- [x] Usuário existente acessa histórico sem onboarding obrigatório novamente. Evidência: `applyProgressData` trata `onboardingCompleted` ausente em snapshot legado como `true`; a regressão de ponta a ponta `diagnostics/e08-existing-user.test.cjs` exercita `loadSavedState()` + `openOnboardingIfNeeded()` reais para instalação limpa (modal aparece), snapshot v4 existente com meta/agenda (modal não aparece), snapshot legado sem o novo campo (modal não aparece) e dado parcial/corrompido (`recoveryRequired`, sem travar, persistir estado substituto ou forçar onboarding).
 - [ ] Saudação usa nome real ou neutro; números usam diário.
 - [ ] Editar meta permite salvar/cancelar.
 - [ ] Recomendação continua programa selecionado; sem programa oferece seleção; registrar desempate.
 - [ ] Começar agora abre sessão exibida; atalhos Vácuo/Pausa/Kegel/Meditar/Discreto abrem módulos corretos.
 - [ ] Avatar abre Perfil; lembretes abrem configuração/permissão.
 Aceite: instalação limpa, atualização, meta inválida e nenhum programa têm caminhos utilizáveis sem dados fictícios.
-Evidência E08.1: `diagnostics/e08-onboarding.test.cjs` (6 cenários); HTMLs byte-equivalentes; `bash scripts/check.sh` → BUILD SUCCESSFUL. Limitação: nenhum programa/desempate de recomendação (itens restantes do checklist) ainda não implementado — fica para E08.2+.
+Evidência E08.1/E08.2: `diagnostics/e08-onboarding.test.cjs` (6 cenários) e `diagnostics/e08-existing-user.test.cjs` (5 cenários de ponta a ponta); HTMLs byte-equivalentes; `bash scripts/check.sh` → BUILD SUCCESSFUL. Limitação: nenhum programa/desempate de recomendação (itens restantes do checklist) ainda não implementado — fica para E08.3+.
 
 ### E09 — Tela 10: Perfil
 [Referência](assets/design/coreflow-s25-ultra/10-perfil-preferencias.png)
