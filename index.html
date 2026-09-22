@@ -3243,8 +3243,8 @@
                                     if (typeof matchingLoaded.daysCompletedInPhase !== 'undefined') {
                                         defaultProg.daysCompletedInPhase = matchingLoaded.daysCompletedInPhase;
                                     }
-                                    const loadedTargetDays = defaultProg.phases[defaultProg.currentPhaseIndex || 0]?.weeklyTargetDays || 7;
-                                    defaultProg.currentDayInWeek = Math.min((defaultProg.daysCompletedInPhase || 0) + 1, loadedTargetDays);
+                                    const loadedTargetDays = Number.isFinite(Number(defaultProg.phases[defaultProg.currentPhaseIndex || 0]?.weeklyTargetDays)) ? Math.max(1, Number(defaultProg.phases[defaultProg.currentPhaseIndex || 0].weeklyTargetDays)) : null;
+                                    defaultProg.currentDayInWeek = loadedTargetDays ? Math.min((defaultProg.daysCompletedInPhase || 0) + 1, loadedTargetDays) : null;
 
                                     if (matchingLoaded.reminderTimes && Array.isArray(matchingLoaded.reminderTimes)) {
                                         defaultProg.reminderTimes = matchingLoaded.reminderTimes;
@@ -9186,6 +9186,20 @@
             return `<div data-program-id="${prog.id}" class="overflow-hidden rounded-3xl border border-violet-400/30 bg-gradient-to-br from-violet-950/80 via-slate-900 to-slate-950 shadow-2xl shadow-violet-950/30"><div class="p-5"><div class="flex items-start gap-3"><div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/20 text-xl text-violet-300"><i class="fa-solid fa-brain"></i></div><div class="flex-1"><span class="rounded-full bg-violet-500/15 px-2 py-1 text-[9px] font-black uppercase tracking-wider text-violet-300">Mindfulness & Mente</span><h3 class="mt-2 text-lg font-black text-white">${prog.title}</h3><p class="text-xs text-slate-400">${phase.title}</p></div></div><div class="mt-4"><div class="mb-1 flex justify-between text-[11px] text-slate-400"><span>Progresso semanal</span><strong class="text-violet-300">${days}/6 dias</strong></div><div class="h-2 overflow-hidden rounded-full bg-slate-800"><div class="h-full bg-gradient-to-r from-violet-600 to-fuchsia-400" style="width:${Math.min(100, days / 6 * 100)}%"></div></div></div><div class="mt-4 rounded-2xl border border-violet-400/20 bg-slate-950/50 p-4"><div class="flex gap-3"><i class="fa-solid fa-leaf mt-1 text-emerald-400"></i><div class="flex-1"><strong class="text-xs text-white">${phase.informalTitle}</strong><p class="mt-1 text-[11px] leading-relaxed text-slate-400">${phase.informalDescription}</p></div></div><button onclick="toggleMindfulnessInformal()" class="mt-3 w-full rounded-xl py-2 text-xs font-bold ${informalDone ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-300'}"><i class="fa-solid ${informalDone ? 'fa-circle-check' : 'fa-circle'} mr-2"></i>${informalDone ? 'Prática informal concluída hoje' : 'Marcar prática informal de hoje'}</button></div><div class="mt-4 space-y-2"><button onclick="openMindfulnessAudioModal('4', ${phaseIdx}, 'formal')" class="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-700 py-3.5 text-xs font-black text-white"><i class="fa-solid fa-headphones mr-2"></i>Iniciar Prática Formal (${sessions}/${prog.dailyTarget})</button>${secondaryButton}</div><button onclick="toggleProgramExpand(${pIdx})" class="mt-4 w-full text-xs font-bold text-violet-300">${prog.expanded ? 'Ocultar semanas' : 'Ver as 8 semanas'} <i class="fa-solid fa-chevron-${prog.expanded ? 'up' : 'down'} ml-1"></i></button></div><div class="${prog.expanded ? 'block' : 'hidden'} border-t border-violet-400/20 bg-black/15 px-5 pb-3">${weeks}</div></div>`;
         }
 
+        function getProgramSchedule(program, phase = null) {
+            const activePhase = phase || program?.phases?.[program.currentPhaseIndex || 0] || program?.phases?.[0] || {};
+            const targetDays = Number.isFinite(Number(activePhase.weeklyTargetDays)) ? Math.max(1, Number(activePhase.weeklyTargetDays)) : null;
+            const daysCompleted = Math.max(0, Number(program?.daysCompletedInPhase) || 0);
+            const currentDay = targetDays ? Math.min((program?.currentDayInWeek || Math.max(1, daysCompleted + 1)), targetDays) : null;
+            return {
+                targetDays,
+                currentDay,
+                daysCompleted,
+                targetDaysLabel: targetDays ? `${targetDays} dias` : 'frequência não configurada',
+                currentDayLabel: currentDay ? `Dia ${currentDay}` : 'Dia não configurado'
+            };
+        }
+
         function synchronizeProgramProgress(program) {
             if (!program?.phases?.length) return program;
             let completedPrefix = 0;
@@ -9198,9 +9212,14 @@
                 program.currentPhaseIndex = nextPhase;
                 program.daysCompletedInPhase = 0;
             }
-            const target = program.phases[nextPhase].weeklyTargetDays || 7;
-            program.daysCompletedInPhase = Math.min(target, Math.max(0, Number(program.daysCompletedInPhase) || 0));
-            program.currentDayInWeek = Math.min(program.daysCompletedInPhase + 1, target);
+            const target = Number.isFinite(Number(program.phases[nextPhase].weeklyTargetDays)) ? Math.max(1, Number(program.phases[nextPhase].weeklyTargetDays)) : null;
+            if (target) {
+                program.daysCompletedInPhase = Math.min(target, Math.max(0, Number(program.daysCompletedInPhase) || 0));
+                program.currentDayInWeek = Math.min(program.daysCompletedInPhase + 1, target);
+            } else {
+                // Mantém apenas o marcador inicial legado; sem frequência não há avanço de agenda.
+                program.currentDayInWeek = 1;
+            }
             program.programCompleted = completedPrefix === program.phases.length;
             if (program.type === 'mindfulness') program.dailyTarget = program.phases[nextPhase].targetSessionsPerDay || 1;
             return program;
@@ -9364,12 +9383,12 @@
                     sessionBtnIcon = 'fa-trophy';
                     sessionBtnBg = 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white';
                 } else if (sessionsToday < targetSessions) {
-                    sessionBtnText = `Iniciar Sessão ${sessionsToday + 1} de ${targetSessions} (${activePhase.title.split(':')[0]} • Dia ${currentDay})`;
+                    sessionBtnText = `Iniciar Sessão ${sessionsToday + 1} de ${targetSessions} (${activePhase.title.split(':')[0]} • ${currentDayLabel})`;
                     if (sessionsToday > 0) {
-                        sessionBtnBg = 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950';
+                        sessionBtnBg = 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 to-orange-600 text-slate-950';
                     }
                 } else {
-                    sessionBtnText = `Meta Diária Concluída (${targetSessions}/${targetSessions}) ✓ • Dia ${currentDay}/${targetDays}`;
+                    sessionBtnText = `Meta Diária Concluída (${targetSessions}/${targetSessions}) ✓ • ${currentDayLabel}/${targetDaysLabel}`;
                     sessionBtnIcon = 'fa-check-double';
                     sessionBtnBg = 'bg-emerald-600/80 text-white cursor-default';
                 }
@@ -9437,7 +9456,7 @@
                                             <i class="fa-solid fa-calendar-week text-indigo-400 text-[11px]"></i>
                                             Trilha da Semana Atual:
                                         </span>
-                                        <span class="text-[11px] font-black text-indigo-300">Dia ${currentDay}/${targetDays} (${daysCompleted}/${targetDays} concluídos)</span>
+                                        <span class="text-[11px] font-black text-indigo-300">${currentDayLabel}/${targetDaysLabel} (${daysCompleted}/${targetDaysLabel} concluídos)</span>
                                     </div>
                                     <div class="flex items-center gap-1.5">
                                         ${daysPillsHtml}
@@ -9451,7 +9470,7 @@
                                     </div>
                                     <button onclick="openReminderConfigModal('${prog.id}')" class="text-[11px] text-amber-400 hover:underline flex items-center gap-1 font-semibold">
                                         <i class="fa-solid fa-clock text-[10px]"></i>
-                                        <span>${targetSessions === 1 ? reminderTimes[0] : `${reminderTimes[0]} e ${reminderTimes[1]}`}</span>
+                                        <span>${targetSessions === 1 ? (reminderTimes[0] || 'Horário não configurado') : `${reminderTimes[0] || 'Horário não configurado'} e ${reminderTimes[1] || reminderTimes[0] || 'Horário não configurado'}`}</span>
                                     </button>
                                 </div>
 
@@ -9662,7 +9681,11 @@
             if (!program) return;
             const safeTitle = program.title.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
             document.getElementById('programProgressAdjustment')?.remove();
-            const target = program.phases[program.currentPhaseIndex]?.weeklyTargetDays || 7;
+            const target = getProgramSchedule(program).targetDays;
+            if (!target) {
+                showInlineToast('Esta fase não possui frequência configurada para ajuste.');
+                return;
+            }
             const modal = document.createElement('div');
             modal.id = 'programProgressAdjustment';
             modal.className = 'fixed inset-0 z-[125] flex items-end justify-center bg-slate-950/85 p-4 backdrop-blur-sm';
@@ -9676,8 +9699,14 @@
         function previewProgramProgressAdjustment(programId) {
             const program = AppState.programs.find(item => item.id === programId);
             const week = Number(document.getElementById('adjustProgramWeek')?.value || 0);
-            const maxDays = program?.phases[week]?.weeklyTargetDays || 7;
+            const maxDays = getProgramSchedule(program, program?.phases[week]).targetDays;
             const dayInput = document.getElementById('adjustProgramDay');
+            if (!maxDays) {
+                if (dayInput) { dayInput.disabled = true; dayInput.removeAttribute('max'); }
+                const preview = document.getElementById('adjustProgramPreview');
+                if (preview) preview.textContent = 'A fase selecionada não possui frequência configurada; ajuste de dia indisponível.';
+                return;
+            }
             if (dayInput) { dayInput.max = maxDays; dayInput.value = Math.min(maxDays, Math.max(1, Number(dayInput.value) || 1)); }
             const sessions = Math.min(program?.dailyTarget || 2, Math.max(0, Number(document.getElementById('adjustProgramSessions')?.value) || 0));
             const preview = document.getElementById('adjustProgramPreview');
@@ -9686,8 +9715,9 @@
 
         function applyProgramProgressAdjustment(program, week, day, sessions) {
             const safeWeek = Math.min(program.phases.length - 1, Math.max(0, Number(week) || 0));
-            const maxDays = program.phases[safeWeek].weeklyTargetDays || 7;
-            const safeDay = Math.min(maxDays, Math.max(1, Number(day) || 1));
+            const phaseTargetDays = program.phases[safeWeek].weeklyTargetDays;
+            const maxDays = Number.isFinite(Number(phaseTargetDays)) ? Math.max(1, Number(phaseTargetDays)) : null;
+            const safeDay = maxDays ? Math.min(maxDays, Math.max(1, Number(day) || 1)) : Math.max(1, Number(day) || 1);
             const safeSessions = Math.min(program.dailyTarget || 2, Math.max(0, Number(sessions) || 0));
             program.phases.forEach((phase, index) => { phase.completed = index < safeWeek; });
             program.currentPhaseIndex = safeWeek;
@@ -9781,8 +9811,10 @@
                 showInlineToast('Não há exercícios cadastrados para essa etapa.');
                 return;
             }
-            const targetDays = phase.weeklyTargetDays || 7;
-            const currentDay = prog.currentDayInWeek || Math.min((prog.daysCompletedInPhase || 0) + 1, targetDays);
+            const targetDays = Number.isFinite(Number(phase.weeklyTargetDays)) ? Math.max(1, Number(phase.weeklyTargetDays)) : null;
+            const currentDay = targetDays ? Math.min((prog.currentDayInWeek || Math.max(1, (prog.daysCompletedInPhase || 0) + 1)), targetDays) : null;
+            const targetDaysLabel = targetDays ? `${targetDays} dias` : 'frequência não configurada';
+            const currentDayLabel = currentDay ? `Dia ${currentDay}` : 'Dia não configurado';
 
             AppState.dailyExecution.programId = prog.id;
             AppState.dailyExecution.phaseIndex = pIdx;
@@ -9806,7 +9838,7 @@
 
             document.getElementById('dailyExecutionTitle').innerText = prog.title;
             document.getElementById('dailyExecutionPhaseTitle').innerText = phase.title;
-            document.getElementById('dailyExecutionSessionTag').innerText = `Semana ${pIdx + 1} • Dia ${currentDay}/${targetDays} (Sessão ${AppState.dailyExecution.sessionNumber}/${AppState.dailyExecution.targetSessions})`;
+            document.getElementById('dailyExecutionSessionTag').innerText = `Semana ${pIdx + 1} • ${currentDayLabel}/${targetDaysLabel} (Sessão ${AppState.dailyExecution.sessionNumber}/${AppState.dailyExecution.targetSessions})`;
 
             renderDailyExecutionUI();
             const modal = document.getElementById('dailyExecutionModal');
@@ -10396,10 +10428,10 @@
                 window.AndroidBridge?.updateProgramReminderProgress?.(prog.id, prog.sessionsToday, localDateKey());
                 const dailyTarget = prog.dailyTarget || 2;
                 const phase = prog.phases[AppState.dailyExecution.phaseIndex];
-                const weeklyTargetDays = phase?.weeklyTargetDays || 7;
+                const weeklyTargetDays = Number.isFinite(Number(phase?.weeklyTargetDays)) ? Math.max(1, Number(phase.weeklyTargetDays)) : null;
 
-                // Avança o dia somente uma vez, exatamente quando a meta diária é atingida.
-                if (prog.sessionsToday === dailyTarget) {
+                // Avança o dia somente quando existe uma frequência real configurada.
+                if (prog.sessionsToday === dailyTarget && weeklyTargetDays) {
                     const reachedPhaseTarget = (prog.daysCompletedInPhase || 0) + 1 >= weeklyTargetDays;
                     if (completedProgramId === '3') {
                         prog.daysCompletedInPhase = Math.min(weeklyTargetDays, (prog.daysCompletedInPhase || 0) + 1);
@@ -10426,8 +10458,8 @@
                         }
                     }
                     const activePhase = prog.phases[prog.currentPhaseIndex || 0];
-                    const nextWeeklyTarget = activePhase?.weeklyTargetDays || 7;
-                    prog.currentDayInWeek = Math.min((prog.daysCompletedInPhase || 0) + 1, nextWeeklyTarget);
+                    const nextWeeklyTarget = Number.isFinite(Number(activePhase?.weeklyTargetDays)) ? Math.max(1, Number(activePhase.weeklyTargetDays)) : null;
+                    prog.currentDayInWeek = nextWeeklyTarget ? Math.min((prog.daysCompletedInPhase || 0) + 1, nextWeeklyTarget) : null;
                     celebrateDailyGoal();
                 }
                 synchronizeProgramProgress(prog);
@@ -10444,7 +10476,8 @@
                 const daysDone = (prog && prog.daysCompletedInPhase) || 0;
                 const sessions = Math.min((prog && prog.sessionsToday) || 0, (prog && prog.dailyTarget) || 2);
                 const targetSessions = (prog && prog.dailyTarget) || 2;
-                const targetDays = prog?.phases[prog.currentPhaseIndex || 0]?.weeklyTargetDays || 7;
+                const activePhase = prog?.phases[prog.currentPhaseIndex || 0];
+                const targetDays = Number.isFinite(Number(activePhase?.weeklyTargetDays)) ? Math.max(1, Number(activePhase.weeklyTargetDays)) : null;
                 showProgramCompletionScreen({
                     title: prog?.title || 'Programa',
                     sessions,
@@ -10457,7 +10490,7 @@
             }, 500);
         }
 
-        function showProgramCompletionScreen({ title, sessions, daysDone, trainedMinutes, progressSaved = true, targetSessions = 2, targetDays = 7 }) {
+        function showProgramCompletionScreen({ title, sessions, daysDone, trainedMinutes, progressSaved = true, targetSessions = 2, targetDays = null }) {
             document.getElementById('programCompletionScreen')?.remove();
             const dailyGoalReached = sessions >= targetSessions;
             const overlay = document.createElement('div');
@@ -10474,7 +10507,7 @@
                     <div class="mt-5 rounded-2xl border border-slate-700/70 bg-slate-900/70 p-4">
                         <p class="text-lg font-extrabold text-white">Sessão ${sessions}/${targetSessions} de hoje</p>
                         <p class="mt-1 text-sm ${dailyGoalReached ? 'text-emerald-300' : 'text-slate-400'}">
-                            ${dailyGoalReached ? `Meta diária concluída · ${daysDone}/${targetDays} dias da fase` : `Faltam ${targetSessions - sessions} sessão(ões) para concluir a meta do dia.`}
+                            ${dailyGoalReached ? (targetDays ? `Meta diária concluída · ${daysDone}/${targetDays} dias da fase` : 'Meta diária concluída · frequência da fase não configurada') : `Faltam ${targetSessions - sessions} sessão(ões) para concluir a meta do dia.`}
                         </p>
                     </div>
                     <button onclick="closeProgramCompletionScreen()" class="mt-6 w-full rounded-2xl bg-emerald-500 px-5 py-3.5 font-extrabold text-slate-950 shadow-lg shadow-emerald-500/20 active:scale-95 transition-transform">
@@ -12347,7 +12380,8 @@
                 for (const key of ['daysCompletedInPhase', 'sessionsToday']) {
                     if (!Number.isInteger(program[key]) || program[key] < 0 || program[key] > 10000) throw new Error('Progresso de programa inválido.');
                 }
-                if (program.daysCompletedInPhase > (known.phases[program.currentPhaseIndex].weeklyTargetDays || 7)) throw new Error('Dias da semana fora do limite.');
+                const knownTargetDays = Number.isFinite(Number(known.phases[program.currentPhaseIndex].weeklyTargetDays)) ? Math.max(1, Number(known.phases[program.currentPhaseIndex].weeklyTargetDays)) : null;
+                if (knownTargetDays && program.daysCompletedInPhase > knownTargetDays) throw new Error('Dias da semana fora do limite.');
                 if (!program.phases.every(phase => object(phase) && typeof phase.completed === 'boolean')) throw new Error('Semanas inválidas.');
                 if (program.reminderTimes !== undefined && (!Array.isArray(program.reminderTimes) || !program.reminderTimes.every(time => typeof time === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(time)))) throw new Error('Horários de lembrete inválidos.');
             });
