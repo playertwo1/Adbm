@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 22/09/2026. Status: E00–E03, E05, E06 e E07 concluídas; E04 em execução, com o item "Mais descanso" resolvido por remoção do produto (decisão registrada, sem incremento clínico inventado) — demais itens conforme `docs/roadmap/execucao.md`. SHA integrado: `3326576700a5910f772c9659d060a3a02518884c`. Próxima etapa pendente: E08 (aguarda retrospectiva do Diretor).
+Atualizado: 22/09/2026. Status: E00–E03, E05, E06 e E07 concluídas; E04 em execução, com o item "Mais descanso" resolvido por remoção do produto (decisão registrada, sem incremento clínico inventado) — demais itens conforme `docs/roadmap/execucao.md`. E08.1 (onboarding: objetivo → meta/agenda → revisão) concluída; demais itens de E08 pendentes. SHA integrado: `eda1705055e093a67a65df62a69b0e4999039ff0`. Próxima etapa pendente: E08.2.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -152,15 +152,17 @@ Limitação conhecida: sem validação física em Android, Galaxy Watch ou TalkB
 
 ### E08 — Telas 01/02: Onboarding e Hoje
 [Onboarding](assets/design/coreflow-s25-ultra/01-onboarding.png) · [Hoje](assets/design/coreflow-s25-ultra/02-home.png)
-- [ ] Etapas: objetivo → meta/agenda → revisão; Voltar preserva preenchimento.
-- [ ] Validar meta conforme contrato; salvar conclusão e abrir Hoje.
-- [ ] Usuário existente acessa histórico sem onboarding obrigatório novamente.
+Estado: E08.1 CONCLUÍDA (itens abaixo); demais itens (E08.2+) pendentes.
+- [x] Etapas: objetivo → meta/agenda → revisão; Voltar preserva preenchimento. Evidência: `onboardingGoBack`/`onboardingGoNext` preservam `onboardingState.focus`/`dailyGoalInput`/`weeklyDaysInput` entre etapas (`diagnostics/e08-onboarding.test.cjs`, casos 1-2).
+- [x] Validar meta conforme contrato; salvar conclusão e abrir Hoje. Evidência: `onboardingValidateGoal`/`onboardingValidateWeeklyDays` bloqueiam meta vazia/fora de 5–180 min e frequência fora de 1–7 dias com motivo real (sem mensagem genérica); `onboardingComplete` grava `AppState.dailyGoal`/`onboardingFocus`/`weeklyGoalDays` e chama `switchTab('hoje')` (`diagnostics/e08-onboarding.test.cjs`, casos 1, 3, 4).
+- [x] Usuário existente acessa histórico sem onboarding obrigatório novamente. Evidência: `applyProgressData` trata `onboardingCompleted` ausente em snapshot legado como `true` (usuário já instalado não é forçado a repetir onboarding); instalação nova (`readLegacyProgress` sem dados) grava `onboardingCompleted:false` via `loadSavedState()` (`diagnostics/e08-onboarding.test.cjs`, casos 5-6).
 - [ ] Saudação usa nome real ou neutro; números usam diário.
 - [ ] Editar meta permite salvar/cancelar.
 - [ ] Recomendação continua programa selecionado; sem programa oferece seleção; registrar desempate.
 - [ ] Começar agora abre sessão exibida; atalhos Vácuo/Pausa/Kegel/Meditar/Discreto abrem módulos corretos.
 - [ ] Avatar abre Perfil; lembretes abrem configuração/permissão.
 Aceite: instalação limpa, atualização, meta inválida e nenhum programa têm caminhos utilizáveis sem dados fictícios.
+Evidência E08.1: `diagnostics/e08-onboarding.test.cjs` (6 cenários); HTMLs byte-equivalentes; `bash scripts/check.sh` → BUILD SUCCESSFUL. Limitação: nenhum programa/desempate de recomendação (itens restantes do checklist) ainda não implementado — fica para E08.2+.
 
 ### E09 — Tela 10: Perfil
 [Referência](assets/design/coreflow-s25-ultra/10-perfil-preferencias.png)

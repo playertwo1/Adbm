@@ -223,6 +223,54 @@
 </head>
 <body class="cf-app bg-slate-900 text-slate-100 min-h-screen pb-24 overflow-x-hidden antialiased selection:bg-emerald-500 selection:text-white">
 
+    <!-- Onboarding: objetivo -> meta/agenda -> revisão -->
+    <div id="onboardingModal" role="dialog" aria-modal="true" aria-label="Configuração inicial" class="cf-modal fixed inset-0 z-[150] hidden flex-col items-center justify-center bg-slate-950/98 backdrop-blur-xl p-4 no-print">
+        <div class="w-full max-w-md rounded-3xl border border-emerald-500/25 bg-slate-900 p-5 shadow-2xl">
+            <p class="text-[10px] font-black uppercase tracking-[.2em] text-emerald-300">Passo <span id="onboardingStepLabel">1</span> de 3</p>
+            <div class="mt-2 flex gap-1.5" aria-hidden="true">
+                <span id="onboardingDot1" class="h-1.5 flex-1 rounded-full bg-emerald-400"></span>
+                <span id="onboardingDot2" class="h-1.5 flex-1 rounded-full bg-slate-700"></span>
+                <span id="onboardingDot3" class="h-1.5 flex-1 rounded-full bg-slate-700"></span>
+            </div>
+
+            <div id="onboardingStep1" class="mt-4 space-y-2">
+                <h2 class="text-lg font-black text-white">Qual é seu foco principal?</h2>
+                <div id="onboardingFocusOptions" class="space-y-2">
+                    <button type="button" data-focus="core" onclick="onboardingSelectFocus('core')" class="onboarding-focus-btn w-full rounded-2xl border border-slate-700 bg-slate-800/60 p-3 text-left text-sm font-bold text-white">Fortalecer o core</button>
+                    <button type="button" data-focus="postura" onclick="onboardingSelectFocus('postura')" class="onboarding-focus-btn w-full rounded-2xl border border-slate-700 bg-slate-800/60 p-3 text-left text-sm font-bold text-white">Melhorar postura</button>
+                    <button type="button" data-focus="assoalho" onclick="onboardingSelectFocus('assoalho')" class="onboarding-focus-btn w-full rounded-2xl border border-slate-700 bg-slate-800/60 p-3 text-left text-sm font-bold text-white">Assoalho pélvico</button>
+                    <button type="button" data-focus="respirar" onclick="onboardingSelectFocus('respirar')" class="onboarding-focus-btn w-full rounded-2xl border border-slate-700 bg-slate-800/60 p-3 text-left text-sm font-bold text-white">Respirar melhor</button>
+                    <button type="button" data-focus="mindfulness" onclick="onboardingSelectFocus('mindfulness')" class="onboarding-focus-btn w-full rounded-2xl border border-slate-700 bg-slate-800/60 p-3 text-left text-sm font-bold text-white">Mindfulness</button>
+                </div>
+            </div>
+
+            <div id="onboardingStep2" class="mt-4 hidden space-y-3">
+                <h2 class="text-lg font-black text-white">Defina sua meta diária</h2>
+                <label class="block text-xs font-bold text-slate-300">Meta diária (minutos)
+                    <input id="onboardingDailyGoalInput" type="number" min="5" max="180" inputmode="numeric" oninput="onboardingUpdateDailyGoalInput(this.value)" class="mt-1 w-full rounded-xl bg-slate-800 p-3 text-white" aria-label="Meta diária em minutos" />
+                </label>
+                <label class="block text-xs font-bold text-slate-300">Dias por semana (opcional)
+                    <input id="onboardingWeeklyDaysInput" type="number" min="1" max="7" inputmode="numeric" oninput="onboardingUpdateWeeklyDaysInput(this.value)" class="mt-1 w-full rounded-xl bg-slate-800 p-3 text-white" aria-label="Frequência semanal em dias" />
+                </label>
+                <p id="onboardingStepError" class="hidden rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-200" role="alert"></p>
+            </div>
+
+            <div id="onboardingStep3" class="mt-4 hidden space-y-3">
+                <h2 class="text-lg font-black text-white">Revise antes de começar</h2>
+                <div class="space-y-1 rounded-2xl border border-slate-700 bg-slate-800/50 p-3 text-sm text-slate-200">
+                    <p>Foco: <strong id="onboardingReviewFocus" class="text-emerald-300"></strong></p>
+                    <p>Meta diária: <strong id="onboardingReviewGoal" class="text-emerald-300"></strong></p>
+                    <p>Frequência semanal: <strong id="onboardingReviewWeekly" class="text-emerald-300"></strong></p>
+                </div>
+            </div>
+
+            <div class="mt-5 flex gap-2">
+                <button type="button" id="onboardingBackBtn" onclick="onboardingGoBack()" class="cf-btn hidden flex-1 border border-slate-700 px-3 py-3 text-sm text-slate-200">Voltar</button>
+                <button type="button" id="onboardingNextBtn" onclick="onboardingGoNext()" class="cf-btn flex-1 bg-emerald-500 px-3 py-3 text-sm text-slate-950">Continuar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Top Status Bar & App Header -->
     <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3.5 flex items-center justify-between no-print">
         <div class="flex items-center gap-3">
@@ -2898,6 +2946,9 @@
             unlockedAchievements: [],
             pushNotificationsEnabled: false,
             programDetailState: null,
+            onboardingCompleted: true,
+            onboardingFocus: null,
+            weeklyGoalDays: null,
 
             dailyExecution: {
                 isRunning: false,
@@ -3753,6 +3804,149 @@
                 }
             }
             return false;
+        }
+
+        /* -------------------------------------------------------------
+           ONBOARDING: objetivo -> meta/agenda -> revisão
+        ------------------------------------------------------------- */
+        const ONBOARDING_FOCUS_LABELS = {
+            core: 'Fortalecer o core',
+            postura: 'Melhorar postura',
+            assoalho: 'Assoalho pélvico',
+            respirar: 'Respirar melhor',
+            mindfulness: 'Mindfulness'
+        };
+        let onboardingState = { step: 1, focus: null, dailyGoalInput: '', weeklyDaysInput: '' };
+
+        function onboardingValidateGoal(rawGoal) {
+            const trimmed = String(rawGoal ?? '').trim();
+            if (trimmed === '') return { valid: false, reason: 'Informe a meta diária em minutos.' };
+            const value = Number(trimmed);
+            if (!Number.isFinite(value) || !Number.isInteger(value)) return { valid: false, reason: 'A meta diária precisa ser um número inteiro de minutos.' };
+            if (value < 5 || value > 180) return { valid: false, reason: 'A meta diária deve estar entre 5 e 180 minutos.' };
+            return { valid: true, value };
+        }
+
+        function onboardingValidateWeeklyDays(rawDays) {
+            const trimmed = String(rawDays ?? '').trim();
+            if (trimmed === '') return { valid: true, value: null };
+            const value = Number(trimmed);
+            if (!Number.isFinite(value) || !Number.isInteger(value)) return { valid: false, reason: 'Os dias por semana precisam ser um número inteiro.' };
+            if (value < 1 || value > 7) return { valid: false, reason: 'Os dias por semana devem estar entre 1 e 7.' };
+            return { valid: true, value };
+        }
+
+        function onboardingShowStepError(message) {
+            const el = document.getElementById('onboardingStepError');
+            if (!el) return;
+            if (!message) { el.classList.add('hidden'); el.textContent = ''; return; }
+            el.textContent = message;
+            el.classList.remove('hidden');
+        }
+
+        function onboardingRenderStep() {
+            for (let step = 1; step <= 3; step++) {
+                const panel = document.getElementById(`onboardingStep${step}`);
+                if (panel) panel.classList.toggle('hidden', step !== onboardingState.step);
+                const dot = document.getElementById(`onboardingDot${step}`);
+                if (dot) { dot.classList.toggle('bg-emerald-400', step <= onboardingState.step); dot.classList.toggle('bg-slate-700', step > onboardingState.step); }
+            }
+            const label = document.getElementById('onboardingStepLabel');
+            if (label) label.textContent = String(onboardingState.step);
+            const backBtn = document.getElementById('onboardingBackBtn');
+            if (backBtn) backBtn.classList.toggle('hidden', onboardingState.step === 1);
+            const nextBtn = document.getElementById('onboardingNextBtn');
+            if (nextBtn) nextBtn.textContent = onboardingState.step === 3 ? 'Concluir' : 'Continuar';
+            document.querySelectorAll('.onboarding-focus-btn').forEach(btn => {
+                const selected = btn.getAttribute('data-focus') === onboardingState.focus;
+                btn.classList.toggle('border-emerald-400', selected);
+                btn.classList.toggle('bg-emerald-500/15', selected);
+                btn.classList.toggle('border-slate-700', !selected);
+                btn.classList.toggle('bg-slate-800/60', !selected);
+                btn.setAttribute('aria-pressed', selected ? 'true' : 'false');
+            });
+            const goalInput = document.getElementById('onboardingDailyGoalInput');
+            if (goalInput && document.activeElement !== goalInput) goalInput.value = onboardingState.dailyGoalInput;
+            const weeklyInput = document.getElementById('onboardingWeeklyDaysInput');
+            if (weeklyInput && document.activeElement !== weeklyInput) weeklyInput.value = onboardingState.weeklyDaysInput;
+            if (onboardingState.step === 3) {
+                const reviewFocus = document.getElementById('onboardingReviewFocus');
+                if (reviewFocus) reviewFocus.textContent = ONBOARDING_FOCUS_LABELS[onboardingState.focus] || 'Não selecionado';
+                const reviewGoal = document.getElementById('onboardingReviewGoal');
+                if (reviewGoal) reviewGoal.textContent = `${onboardingState.dailyGoalInput} min`;
+                const weeklyValidation = onboardingValidateWeeklyDays(onboardingState.weeklyDaysInput);
+                const reviewWeekly = document.getElementById('onboardingReviewWeekly');
+                if (reviewWeekly) reviewWeekly.textContent = weeklyValidation.valid && weeklyValidation.value ? `${weeklyValidation.value} dias` : 'Não configurada';
+            }
+            onboardingShowStepError('');
+        }
+
+        function onboardingSelectFocus(focus) {
+            onboardingState.focus = focus;
+            onboardingRenderStep();
+        }
+
+        function onboardingUpdateDailyGoalInput(value) {
+            onboardingState.dailyGoalInput = value;
+        }
+
+        function onboardingUpdateWeeklyDaysInput(value) {
+            onboardingState.weeklyDaysInput = value;
+        }
+
+        function onboardingGoBack() {
+            if (onboardingState.step <= 1) return;
+            onboardingState.step -= 1;
+            onboardingRenderStep();
+        }
+
+        function onboardingGoNext() {
+            if (onboardingState.step === 1) {
+                if (!onboardingState.focus) { onboardingShowStepError('Escolha um foco principal para continuar.'); return; }
+                onboardingState.step = 2;
+                onboardingRenderStep();
+                return;
+            }
+            if (onboardingState.step === 2) {
+                const goalCheck = onboardingValidateGoal(onboardingState.dailyGoalInput);
+                if (!goalCheck.valid) { onboardingShowStepError(goalCheck.reason); return; }
+                const weeklyCheck = onboardingValidateWeeklyDays(onboardingState.weeklyDaysInput);
+                if (!weeklyCheck.valid) { onboardingShowStepError(weeklyCheck.reason); return; }
+                onboardingState.step = 3;
+                onboardingRenderStep();
+                return;
+            }
+            onboardingComplete();
+        }
+
+        function onboardingComplete() {
+            const goalCheck = onboardingValidateGoal(onboardingState.dailyGoalInput);
+            if (!goalCheck.valid) { onboardingState.step = 2; onboardingRenderStep(); onboardingShowStepError(goalCheck.reason); return; }
+            const weeklyCheck = onboardingValidateWeeklyDays(onboardingState.weeklyDaysInput);
+            if (!weeklyCheck.valid) { onboardingState.step = 2; onboardingRenderStep(); onboardingShowStepError(weeklyCheck.reason); return; }
+            AppState.dailyGoal = goalCheck.value;
+            AppState.onboardingFocus = onboardingState.focus;
+            AppState.weeklyGoalDays = weeklyCheck.value;
+            AppState.onboardingCompleted = true;
+            const modal = document.getElementById('onboardingModal');
+            if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+            saveState();
+            switchTab('hoje');
+            renderAfterProgressLoad();
+            showInlineToast('Meta salva. Bem-vindo(a) ao CoreFlow!');
+        }
+
+        function openOnboardingIfNeeded() {
+            if (AppState.onboardingCompleted === true) return;
+            onboardingState = {
+                step: 1,
+                focus: AppState.onboardingFocus || null,
+                dailyGoalInput: AppState.dailyGoal ? String(AppState.dailyGoal) : '',
+                weeklyDaysInput: AppState.weeklyGoalDays ? String(AppState.weeklyGoalDays) : ''
+            };
+            const modal = document.getElementById('onboardingModal');
+            if (modal) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
+            onboardingRenderStep();
         }
 
         function handleBackNavigation(event) {
@@ -12151,6 +12345,11 @@
             if (isNewDay) AppState.schedule.forEach(item => { item.completed = false; });
             AppState.activityLog = data.activityLog && typeof data.activityLog === 'object' && !Array.isArray(data.activityLog) ? data.activityLog : {};
             AppState.unlockedAchievements = Array.isArray(data.achievements) ? data.achievements : [];
+            if (Number.isFinite(Number(data.dailyGoal)) && Number(data.dailyGoal) >= 5 && Number(data.dailyGoal) <= 180) AppState.dailyGoal = Number(data.dailyGoal);
+            // Ausência do campo em snapshot anterior à E08 significa usuário existente: não força onboarding novamente.
+            AppState.onboardingCompleted = typeof data.onboardingCompleted === 'boolean' ? data.onboardingCompleted : true;
+            AppState.onboardingFocus = typeof data.onboardingFocus === 'string' ? data.onboardingFocus : null;
+            AppState.weeklyGoalDays = Number.isInteger(data.weeklyGoalDays) && data.weeklyGoalDays >= 1 && data.weeklyGoalDays <= 7 ? data.weeklyGoalDays : null;
             mergeLoadedPrograms(data.programs, todayStr, isNewDay);
             AppState.dailyExecution.sessionsCompletedToday = isNewDay ? 0 : Math.max(0, Number(data.dailyCount) || 0);
             AppState.mente.history = Array.isArray(data.menteHistory) ? data.menteHistory : [];
@@ -12263,7 +12462,11 @@
                 } : undefined,
                 vacuo: { ...AppState.vacuo, intervalId: null },
                 dailyExecution: { ...AppState.dailyExecution, intervalId: null },
-                programDetailState: AppState.programDetailState || null
+                programDetailState: AppState.programDetailState || null,
+                dailyGoal: AppState.dailyGoal,
+                onboardingCompleted: AppState.onboardingCompleted === true,
+                onboardingFocus: AppState.onboardingFocus || null,
+                weeklyGoalDays: AppState.weeklyGoalDays || null
             };
         }
 
@@ -12624,6 +12827,7 @@
             legacy.errors.push(...snapshotErrors);
             if (legacy.firstUse) {
                 if (typeof DEFAULT_CUSTOM_PRESETS !== 'undefined') AppState.mente.customPresets = [...DEFAULT_CUSTOM_PRESETS];
+                AppState.onboardingCompleted = false;
                 CorePersistence.status = 'ready';
                 renderAfterProgressLoad();
                 saveState();
@@ -12682,6 +12886,7 @@
             currentTipIndex = Math.floor(Math.random() * HEALTH_TIPS.length);
             displayHealthTip(currentTipIndex);
             ensureAccessibleButtonNames();
+            openOnboardingIfNeeded();
         });
 
         document.addEventListener('visibilitychange', () => {
