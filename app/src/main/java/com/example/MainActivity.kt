@@ -695,7 +695,8 @@ class AndroidBridge(
         showConfirmation: Boolean
     ) {
         val permissionGranted = notificationsPermissionGranted()
-        val effectiveEnabled = enabled && permissionGranted && time1.isNotBlank() && (targetSessions <= 1 || time2.isNotBlank())
+        val effectiveEnabled = enabled && permissionGranted && ReminderScheduler.isValidTime(time1) &&
+            (targetSessions <= 1 || ReminderScheduler.isValidTime(time2))
         ReminderScheduler.updateProgram(context, programId, title, time1, time2, targetSessions, effectiveEnabled)
         val activity = context as? ComponentActivity ?: return
         activity.runOnUiThread {

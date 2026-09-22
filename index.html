@@ -3331,7 +3331,7 @@
                                     defaultProg.currentDayInWeek = loadedTargetDays ? Math.min((defaultProg.daysCompletedInPhase || 0) + 1, loadedTargetDays) : null;
 
                                     if (matchingLoaded.reminderTimes && Array.isArray(matchingLoaded.reminderTimes)) {
-                                        defaultProg.reminderTimes = matchingLoaded.reminderTimes;
+                                        defaultProg.reminderTimes = matchingLoaded.reminderTimes.filter(time => isValidReminderTime(time));
                                     }
                                     if (typeof matchingLoaded.remindersEnabled !== 'undefined') {
                                         defaultProg.remindersEnabled = matchingLoaded.remindersEnabled;
@@ -3369,13 +3369,14 @@
                     AppState.programs.forEach(program => {
                         const setting = reminderSettings[program.id];
                         if (!setting) return;
-                        if (Array.isArray(setting.times)) program.reminderTimes = setting.times;
+                        if (Array.isArray(setting.times)) program.reminderTimes = setting.times.filter(time => isValidReminderTime(time));
                         if (typeof setting.enabled === 'boolean') program.remindersEnabled = setting.enabled;
                     });
                 }
                 AppState.pushNotificationsEnabled =
-                    localStorage.getItem('coreflow_push_enabled') === 'true' ||
-                    AppState.programs.some(program => program.remindersEnabled === true);
+                    hasSystemReminderPermission() && AppState.programs.some(program =>
+                        program.remindersEnabled === true && isReminderScheduleComplete(program)
+                    );
 
                 // Daily Execution Session Tracker
                 if (hasRealStats && savedDailyDate === todayStr) {
@@ -3860,8 +3861,13 @@
             synchronizeProgramProgress(program);
             const displayedPhaseIndex = program.currentPhaseIndex || 0;
             const activePh = program.phases[displayedPhaseIndex] || program.phases[0];
-            const sToday = program.sessionsToday || 0;
-            const targetSessions = program.dailyTarget || 1;
+            const targetSessions = Number.isInteger(program.dailyTarget) && program.dailyTarget > 0 ? program.dailyTarget : 1;
+            const parsedSessionsToday = Number(program.sessionsToday);
+            if (!Number.isInteger(parsedSessionsToday) || parsedSessionsToday < 0 || parsedSessionsToday > targetSessions) {
+                container.innerHTML = '<div class="cf-card p-4"><p class="text-sm font-bold text-rose-300">Não foi possível calcular a sessão de hoje. Atualize o progresso antes de começar.</p></div>';
+                return;
+            }
+            const sToday = parsedSessionsToday;
             const displayedSessionNumber = Math.min(sToday + 1, targetSessions);
             const actionLabel = program.programCompleted
                 ? 'Programa concluído • Repetir sessão final'
@@ -11039,6 +11045,12 @@
             return typeof value === 'string' && /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
         }
 
+        function isReminderScheduleComplete(program) {
+            if (!program || !Array.isArray(program.reminderTimes)) return false;
+            const target = Number.isInteger(program.dailyTarget) && program.dailyTarget > 0 ? program.dailyTarget : 2;
+            return program.reminderTimes.filter(time => isValidReminderTime(time)).length >= target;
+        }
+
         function syncProgramNativeReminder(prog, showConfirmation = false) {
             if (!prog || !window.AndroidBridge?.scheduleProgramReminders) return;
             const configuredTimes = Array.isArray(prog.reminderTimes) ? prog.reminderTimes.filter(time => isValidReminderTime(time)) : [];
@@ -11097,7 +11109,7 @@
             const btnText = document.getElementById('pushNotifBtnText');
             const banner = document.getElementById('notificationBanner');
             if (!btnText) return;
-            const activePrograms = AppState.programs.filter(program => program.remindersEnabled === true && Array.isArray(program.reminderTimes) && program.reminderTimes.some(time => typeof time === 'string' && time.trim()));
+            const activePrograms = AppState.programs.filter(program => program.remindersEnabled === true && isReminderScheduleComplete(program));
             const enabledCount = activePrograms.length;
             const hasPermission = hasSystemReminderPermission();
             const activeCount = hasPermission ? enabledCount : 0;
@@ -11118,6 +11130,7 @@
             if (!effective) {
                 AppState.programs.forEach(program => { program.remindersEnabled = false; });
                 AppState.mente.smartReminderEnabled = false;
+                AppState.pushNotificationsEnabled = false;
                 saveState();
             }
             updateSmartMiddayReminderUI();
@@ -11173,9 +11186,13 @@
                 }
                 const enabled = requestedEnabled && await requestSystemReminderPermission();
 
-                prog.reminderTimes = targetSessions === 1 ? (t1 ? [t1] : []) : (t1 || t2 ? [t1, t2] : []);
+                prog.reminderTimes = targetSessions === 1
+                    ? (isValidReminderTime(t1) ? [t1] : [])
+                    : [t1, t2].filter(time => isValidReminderTime(time));
                 prog.remindersEnabled = enabled;
-                AppState.pushNotificationsEnabled = AppState.programs.some(program => program.remindersEnabled === true) && hasSystemReminderPermission();
+                AppState.pushNotificationsEnabled = AppState.programs.some(program =>
+                    program.remindersEnabled === true && isReminderScheduleComplete(program)
+                ) && hasSystemReminderPermission();
                 saveState();
                 renderProgramsList();
                 updatePushNotificationButton();
@@ -12718,7 +12735,7 @@
                 programs.forEach(program => {
                     const setting = reminderSettings[String(program.id)];
                     if (setting) {
-                        if (Array.isArray(setting.times)) program.reminderTimes = setting.times;
+                        if (Array.isArray(setting.times)) program.reminderTimes = setting.times.filter(time => isValidReminderTime(time));
                         if (typeof setting.enabled === 'boolean') program.remindersEnabled = setting.enabled;
                     }
                 });
