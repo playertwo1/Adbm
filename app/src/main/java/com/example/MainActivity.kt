@@ -678,12 +678,14 @@ class AndroidBridge(
         enabled: Boolean,
         showConfirmation: Boolean
     ) {
-        ReminderScheduler.updateProgram(context, programId, title, time1, time2, targetSessions, enabled)
+        val permissionGranted = notificationsPermissionGranted()
+        val effectiveEnabled = enabled && permissionGranted && time1.isNotBlank() && (targetSessions <= 1 || time2.isNotBlank())
+        ReminderScheduler.updateProgram(context, programId, title, time1, time2, targetSessions, effectiveEnabled)
         val activity = context as? ComponentActivity ?: return
         activity.runOnUiThread {
-            if (enabled) requestNotificationPermission(activity)
+            if (enabled && !permissionGranted) requestNotificationPermission(activity)
             if (showConfirmation) {
-                val message = if (enabled) {
+                val message = if (effectiveEnabled) {
                     if (targetSessions <= 1) "Lembrete ativo às $time1" else "Lembretes ativos às $time1 e $time2"
                 } else {
                     "Lembretes desativados para este programa"
