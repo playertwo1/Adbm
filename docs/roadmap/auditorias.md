@@ -75,4 +75,16 @@ existe por causa do segundo; a classificação ENUMERÁVEL/ABERTA, por causa do 
 - regressao_pos_pass: <preencher depois, ou "nenhuma até <data>">
 -->
 
-_Nenhuma entrada ainda. A primeira auditoria após a integração da E08 abre esta seção._
+### 2026-09-22 — t_4061fe58 — E09.2 (re-auditoria cross-family) — rodada 1/3 — PASS
+
+- target_sha: `61dec44716e139e3a006840b1d6302ea80784b91`
+- classe: n/a (PASS sem achados)
+- achados_confirmados: 0
+- achados_retirados: 0 (nenhuma hipótese de defeito levantada durante a leitura do diff/testes; cobertura foi confirmar independentemente o handoff existente, não caça a bug nova)
+- achados_tardios: 0
+- causa_raiz: sem causa comum (PASS)
+- gates_mecanicos: `for f in diagnostics/*.test.cjs; do node "$f" || exit 1; done` → 22 arquivos, exit 0; `bash scripts/check.sh` (JAVA_HOME=Android Studio jbr, ANDROID_HOME=$LOCALAPPDATA/Android/Sdk) → `CHECK PASS`, `BUILD SUCCESSFUL`, `:app:testDebugUnitTest`, `:app:assembleDebug`, `:wear:assembleDebug`; `cmp index.html app/src/main/assets/index.html` → exit 0 (sha256 `40aff67b...eb587f5` idêntico nos dois); `git diff --check f7de3d4..61dec44` → exit 0; `git merge-base --is-ancestor f7de3d44920d1e7f7b7bc8efdcb92dd2c5b1a8b0 61dec44716e139e3a006840b1d6302ea80784b91` → IS_ANCESTOR.
+- familia_builder: desconhecida (commit de `playertwo1`, sem metadado de família no card) / familia_auditor: claude (claude-sonnet-5) — run anterior (Auditor 160) era GPT-6 Luna, mesma família do Builder do PASS anterior; este card existe exatamente para produzir o veredito cross-family exigido pela regra de independência.
+- cobertura: leitura completa do diff de `index.html`/asset embarcado (checkout isolado via `git worktree` no SHA exato, sem editar arquivos de implementação); revisão de `applyProfilePreferences`, `applyAccessibilityPreferences`, `normalizeAccessibilityPreferences`, `saveProfileEditor`, `toggleAmoledTheme` e dos handlers de acessibilidade; verificação de que `collectProgressData`/`applyProgressData` persistem e restauram `theme`/`accessibility` sem fabricar opt-in; leitura de `diagnostics/e09-2-profile.test.cjs` linha a linha confirmando AC1 (salvar/cancelar/inválido/persistência), AC2 (tema AMOLED, texto grande, alto contraste, redução de movimento — classes DOM e persistência) e AC3 (dado ausente/corrompido normaliza para `standard`/`normal`/`false`); revisão dos ajustes nos harnesses `e07-*`/`e08-*`/`progress-persistence`/`session-engine` (apenas stubs de contexto novos, sem enfraquecer asserções existentes); execução independente de todos os 22 diagnósticos e do `scripts/check.sh` completo (build debug app+wear) neste worker. NÃO coberto: aparelho Android físico, TalkBack, fonte do sistema do dispositivo, Galaxy Watch real — mesma limitação já declarada no handoff do Builder, não é lacuna nova introduzida por esta rodada.
+- tempo_espera: desconhecido (não medido nesta rodada)
+- regressao_pos_pass: nenhuma até 2026-09-22

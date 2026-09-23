@@ -1,5 +1,16 @@
 # Registro de execução
 
+## 2026-09-23 — Consolidação histórica dos targets aprovados divergentes (t_ce21c966) — IMPLEMENTADA, aguardando auditoria
+
+- Base obrigatória: `d9af749ee64b0d155629574ee43c81b405e5d0a3` (`main` e worktree limpos antes da integração). O `target_sha` é o filho novo desta base e foi registrado no handoff do card; não é repetido neste arquivo para evitar auto-referência documental.
+- Contrato observável e inventário completo: `docs/roadmap/integracao-targets-aprovados.md` registra AC-1–AC-5, a ordem dos oito SHAs, a decisão por alvo, equivalentes posteriores, conflitos, exclusões e limitações.
+- Decisões: E04 `f40a1bd` já representado exatamente por `f1068c3`; E05-FIX `8351d801` por `03b1946`; E07.2-R `047ede96` por `6d5f2f7` na árvore de comportamento/teste; E07.3-FIX `bb8c80b` por `6548f9b`; E07.4 `a6c48e6` por `ca2e5b8`; E08.6-R `64e45b6` já documentado na cadeia `666e24a6` → `291c068e` → `51041a9c` → `fd8ab4e`.
+- Integrações materiais: artefatos históricos E07.1 ausentes foram adicionados (`diagnostics/e07-programas-red.cjs` e `docs/roadmap/e07-contrato-inventario.md`); o registro do veredito PASS cross-family E09.2 (`e354ddf`, target `61dec447`) foi restaurado em `docs/roadmap/auditorias.md`.
+- Nenhum código funcional, ID de programa, armazenamento, bridge, protocolo de treino ou HTML foi alterado. Não houve merge cego, conflito de implementação, push, release, deploy, Actions ou fast-forward de `main`.
+- Verificação focada: `node diagnostics/e07-programas-red.cjs` → exit 0 (`E07 contract diagnostic: PASS`); `node diagnostics/e07-programas.test.cjs` → exit 0; `node diagnostics/e05-audit-fix.test.cjs` → exit 0; `cmp -s index.html app/src/main/assets/index.html` → exit 0; `git diff --check` → exit 0.
+- Gate integrado: `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME="$LOCALAPPDATA/Android/Sdk" bash scripts/check.sh` → exit 0, `CHECK PASS`, todos os diagnósticos `*.test.cjs`, `:app:testDebugUnitTest`, `:app:assembleDebug`, `:wear:assembleDebug` e `BUILD SUCCESSFUL`.
+- Limitações: não houve validação em aparelho Android físico, Galaxy Watch físico ou TalkBack; o novo target ainda não tem PASS de Auditor. Próximo passo obrigatório: auditoria independente integral do SHA novo antes de qualquer avanço sobre `main`.
+
 ## 2026-09-22 — E09.3 / Perfil: lembretes reais e correção posicional E08.6-R (t_9396bf7a) — IMPLEMENTADA, aguardando auditoria
 
 - Base: `61dec44716e139e3a006840b1d6302ea80784b91` (E09.2 com PASS independente; branch `adbm/t_9396bf7a-adbm-e09.3-perfil-lembretes-reais-e-corr`). Nenhum commit foi criado; alterações permanecem na worktree para auditoria.
