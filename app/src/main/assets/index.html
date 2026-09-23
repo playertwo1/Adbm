@@ -3736,6 +3736,20 @@
                         AppState.mente.history = [];
                     }
                 }
+
+                // E09.4: Restaurar Voz, Hápticos e Watch da persistência
+                const savedVoiceEnabled = localStorage.getItem('coreflow_voice_enabled');
+                if (savedVoiceEnabled !== null) {
+                    AppState.voiceEnabled = savedVoiceEnabled === 'true';
+                }
+                const savedHapticsEnabled = localStorage.getItem('coreflow_haptics_enabled');
+                if (savedHapticsEnabled !== null) {
+                    AppState.hapticsEnabled = savedHapticsEnabled === 'true';
+                }
+                const savedWatchHapticsEnabled = localStorage.getItem('coreflow_watch_haptics_enabled');
+                if (savedWatchHapticsEnabled !== null) {
+                    AppState.watchHapticsEnabled = savedWatchHapticsEnabled === 'true';
+                }
             } catch(e) {
                 console.log('Storage load fallback', e);
             }
@@ -3889,6 +3903,11 @@
                     expireDuration: AppState.vacuo.expireDuration,
                     restDuration: AppState.vacuo.restDuration
                 }));
+
+                // E09.4: Persistência de Voz, Hápticos e Watch
+                localStorage.setItem('coreflow_voice_enabled', String(AppState.voiceEnabled));
+                localStorage.setItem('coreflow_haptics_enabled', String(AppState.hapticsEnabled));
+                localStorage.setItem('coreflow_watch_haptics_enabled', String(AppState.watchHapticsEnabled));
             } catch(e) {
                 console.log('Storage save error', e);
             }
@@ -9775,7 +9794,9 @@
         function syncWatchHapticsSetting() {
             try {
                 if (window.AndroidBridge?.isWatchHapticsEnabled) {
-                    AppState.watchHapticsEnabled = window.AndroidBridge.isWatchHapticsEnabled();
+                    // AC-2: Sincronizar com disponibilidade real do Bridge
+                    const bridgeState = window.AndroidBridge.isWatchHapticsEnabled();
+                    AppState.watchHapticsEnabled = bridgeState;
                 }
             } catch(e) {}
             const icon = document.getElementById('watchHapticIcon');
