@@ -162,6 +162,8 @@ function setup(source) {
         'collectProgressData',
         'applyProgressData',
         'normalizeAccessibilityPreferences',
+        'isValidReminderTime',
+        'reminderTimeAt',
         'applyProfilePreferences',
         'applyThemePreference',
         'applyAccessibilityPreferences',

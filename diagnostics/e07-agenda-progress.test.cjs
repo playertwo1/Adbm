@@ -38,7 +38,7 @@ const source = sources[0];
 
 // Agenda não pode inventar horários/frequência quando o programa não os possui.
 assert.match(source, /function getProgramSchedule\(program, phase = null\)/);
-assert.match(source, /const reminderTimes = Array\.isArray\(prog\.reminderTimes\)/);
+assert.match(source, /function reminderTimeAt\(program, index\)/);
 assert.match(source, /Horário não configurado/);
 assert.match(source, /frequência não configurada/);
 assert.match(source, /Dia não configurado/);
@@ -57,6 +57,7 @@ const renderWeeklyAgendaLabel = extractFunction(source, 'renderProgramWeeklyAgen
 const getConfigured = extractFunction(source, 'getConfiguredWeeklyTargetDays');
 const strictInteger = extractFunction(source, 'isStrictNonNegativeInteger');
 const validReminderTime = extractFunction(source, 'isValidReminderTime');
+const reminderTimeAt = extractFunction(source, 'reminderTimeAt');
 const reminderScheduleComplete = extractFunction(source, 'isReminderScheduleComplete');
 const applyAdjustment = extractFunction(source, 'applyProgramProgressAdjustment');
 const syncNativeReminder = extractFunction(source, 'syncProgramNativeReminder');
@@ -112,7 +113,7 @@ const context = vm.createContext({
     mindfulnessPlayer: { programId: '4', phaseIndex: 0, trackType: 'formal', completed: false, sessionId: 'mindfulness-test' },
     window: { AndroidBridge: { scheduleProgramReminders: (...args) => { context.__lastReminderCall = args; }, updateProgramReminderProgress: () => {} } }
 });
-vm.runInContext(`${schedule}; ${renderWeeklyAgendaLabel}; ${synchronize}; ${strictInteger}; ${validReminderTime}; ${reminderScheduleComplete}; ${merge}; ${collect}; ${apply}; ${nativeWorkoutState}; ${completeMindfulness}; ${renderMindfulness}; ${getConfigured}; ${applyAdjustment}; ${syncNativeReminder}`, context);
+vm.runInContext(`${schedule}; ${renderWeeklyAgendaLabel}; ${synchronize}; ${strictInteger}; ${validReminderTime}; ${reminderTimeAt}; ${reminderScheduleComplete}; ${merge}; ${collect}; ${apply}; ${nativeWorkoutState}; ${completeMindfulness}; ${renderMindfulness}; ${getConfigured}; ${applyAdjustment}; ${syncNativeReminder}`, context);
 
 // Renderização derivada: ausência de frequência produz estado explícito, nunca null/undefined ou 7.
 assert.equal(vm.runInContext("JSON.stringify(getProgramSchedule({ currentPhaseIndex: 0, daysCompletedInPhase: 3, phases: [{ title: 'Sem frequência' }] }))", context), JSON.stringify({
@@ -172,7 +173,7 @@ invalidRestore.programs[0].remindersEnabled = true;
 invalidRestore.pushEnabled = true;
 context.__invalidRestore = invalidRestore;
 vm.runInContext('applyProgressData(__invalidRestore)', context);
-assert.deepEqual(vm.runInContext('AppState.programs[0].reminderTimes', context), ['16:00']);
+assert.deepEqual(Array.from(vm.runInContext('AppState.programs[0].reminderTimes', context)), ['', '16:00'], 'horário inválido deve virar slot vazio sem compactar o horário da Sessão 2');
 assert.equal(vm.runInContext('AppState.programs[0].progressInvalid', context), true);
 assert.equal(vm.runInContext('AppState.pushNotificationsEnabled', context), false);
 

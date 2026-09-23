@@ -33,6 +33,7 @@ const source = [
     extractFunction('getConfiguredWeeklyTargetDays'),
     extractFunction('isStrictNonNegativeInteger'),
     extractFunction('isValidReminderTime'),
+    extractFunction('reminderTimeAt'),
     extractFunction('synchronizeProgramProgress'),
     extractFunction('selectHeroProgram'),
     extractFunction('renderProgramsListEmptyState'),

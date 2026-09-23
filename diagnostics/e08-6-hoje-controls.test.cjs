@@ -39,7 +39,7 @@ assert.match(source, /async function saveReminderConfig\(\)[\s\S]*?await request
 assert.match(source, /const activeCount = hasPermission \? enabledCount : 0;/, 'permissão negada não pode aparecer como lembrete ativo');
 assert.match(source, /notificationBanner.*class="hidden/, 'banner de notificação deve iniciar oculto até confirmar estado real');
 assert.match(source, /const activePrograms = AppState\.programs\.filter\(program => program\.remindersEnabled === true && isReminderScheduleComplete\(program\)\);/, 'banner deve considerar somente programas com horários completos e válidos');
-assert.match(source, /const enabled = hasRealSchedule && prog\.remindersEnabled === true && hasSystemReminderPermission\(\);/, 'sincronismo nativo deve bloquear agendamento sem permissão');
+assert.match(source, /const enabled = isReminderScheduleComplete\(prog\) && prog\.remindersEnabled === true && hasSystemReminderPermission\(\);/, 'sincronismo nativo deve exigir agenda completa e permissão efetiva');
 assert.match(source, /const t1 = document\.getElementById\('reminderTimeInput1'\)\.value;[\s\S]*?const t2 = document\.getElementById\('reminderTimeInput2'\)\.value;[\s\S]*?if \(requestedEnabled && \(!isValidReminderTime\(t1\) \|\| \(targetSessions > 1 && !isValidReminderTime\(t2\)\)\)\)/, 'salvar lembrete deve rejeitar horário vazio ou inválido sem fabricar valor');
 assert.match(source, /function isValidReminderTime\(value\)[\s\S]*?return typeof value === 'string'/, 'horários devem usar validador HH:mm');
 assert.match(source, /function toggleSmartMiddayReminder\(\)[\s\S]*?hasSystemReminderPermission\(\)/, 'smart reminder deve depender da permissão real');
@@ -97,6 +97,7 @@ const programs = [
 const context = vm.createContext({
     AppState: { programs, mente: { smartReminderEnabled: false }, pushNotificationsEnabled: false, programDetailState: { programId: '1' } },
     hasSystemReminderPermission() { return false; },
+    renderProfilePreferences() {},
     requestSystemReminderPermission() { return false; },
     updateSmartMiddayReminderUI() {},
     updatePushNotificationButton() {},

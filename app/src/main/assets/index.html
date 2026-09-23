@@ -2970,6 +2970,10 @@
             </div>
             <button type="button" id="profileEditButton" class="cf-btn w-full border border-cyan-400/40 bg-cyan-400/10 px-3 py-3 text-sm text-cyan-100" onclick="openProfileEditor()"><i class="fa-solid fa-pen" aria-hidden="true"></i>Editar nome e meta</button>
         </div>
+        <div class="cf-card p-4 space-y-3">
+            <div><h3 class="text-sm font-bold text-white">Lembretes dos programas</h3><p class="mt-1 text-xs text-slate-400">Horários por sessão e estado atual das notificações deste aparelho.</p></div>
+            <div id="profileReminderPrograms" class="space-y-3" aria-live="polite"></div>
+        </div>
         <div class="cf-card divide-y divide-white/10">
             <button type="button" class="flex w-full items-center justify-between gap-4 p-4 text-left" onclick="toggleVoice()" aria-label="Alternar condução por voz"><span><strong class="block text-sm text-white">Condução por voz</strong><span class="text-xs text-slate-400">Avisos durante as práticas</span></span><span id="profileVoiceToggle" class="cf-toggle" role="switch" aria-checked="true" aria-label="Voz ativada"></span></button>
             <button type="button" class="flex w-full items-center justify-between gap-4 p-4 text-left" onclick="toggleHaptics()" aria-label="Alternar vibração do aparelho"><span><strong class="block text-sm text-white">Vibração</strong><span class="text-xs text-slate-400">Sinais táteis no aparelho</span></span><span id="profileHapticsToggle" class="cf-toggle" role="switch" aria-checked="true" aria-label="Vibração ativada"></span></button>
@@ -3431,6 +3435,20 @@
             const goal = document.getElementById('profileGoalValue');
             const goalValue = Number(AppState.dailyGoal);
             if (goal) goal.textContent = Number.isInteger(goalValue) && goalValue >= 5 && goalValue <= 180 ? `Meta diária: ${goalValue} min` : 'Meta diária não configurada';
+            const reminders = document.getElementById('profileReminderPrograms');
+            if (reminders) {
+                const permissionGranted = hasSystemReminderPermission();
+                const escapeReminderText = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+                reminders.innerHTML = (AppState.programs || []).map(program => {
+                    const targetSessions = Number.isInteger(program.dailyTarget) && program.dailyTarget > 0 ? program.dailyTarget : 2;
+                    const active = program.remindersEnabled === true && isReminderScheduleComplete(program) && permissionGranted;
+                    const sessions = Array.from({ length: Math.min(targetSessions, 2) }, (_, index) =>
+                        `<li class="flex items-center justify-between gap-3 text-xs text-slate-300"><span>Sessão ${index + 1}</span><span class="font-mono">${reminderTimeAt(program, index) || 'Horário não configurado'}</span></li>`
+                    ).join('');
+                    const title = escapeReminderText(program.title || 'Programa');
+                    return `<article class="rounded-2xl border border-slate-700 bg-slate-950/50 p-3"><div class="flex items-start justify-between gap-3"><strong class="min-w-0 truncate text-sm text-white">${title}</strong><span class="shrink-0 text-[10px] font-bold ${active ? 'text-emerald-300' : 'text-slate-400'}">${active ? 'Lembretes ativos' : 'Lembretes inativos'}</span></div><ul class="mt-2 space-y-1.5">${sessions}</ul><button type="button" class="cf-btn mt-3 min-h-10 w-full border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-xs font-bold text-amber-200" aria-label="Configurar lembretes para ${title}" onclick="openReminderConfigModal('${program.id}')">Configurar horários</button></article>`;
+                }).join('') || '<p class="text-xs text-slate-400">Nenhum programa disponível para configurar.</p>';
+            }
             const themeToggle = document.getElementById('profileAmoledToggle');
             if (themeToggle) {
                 themeToggle.setAttribute('aria-checked', String(AppState.theme === 'amoled'));
@@ -3649,8 +3667,8 @@
                                     const loadedTargetDays = getConfiguredWeeklyTargetDays(defaultProg.phases[defaultProg.currentPhaseIndex || 0]);
                                     defaultProg.currentDayInWeek = loadedTargetDays ? Math.min((defaultProg.daysCompletedInPhase || 0) + 1, loadedTargetDays) : null;
 
-                                    if (matchingLoaded.reminderTimes && Array.isArray(matchingLoaded.reminderTimes)) {
-                                        defaultProg.reminderTimes = matchingLoaded.reminderTimes.filter(time => isValidReminderTime(time));
+                                    if (Array.isArray(matchingLoaded.reminderTimes)) {
+                                        defaultProg.reminderTimes = Array.from(matchingLoaded.reminderTimes, time => isValidReminderTime(time) ? time : '');
                                     }
                                     if (typeof matchingLoaded.remindersEnabled !== 'undefined') {
                                         defaultProg.remindersEnabled = matchingLoaded.remindersEnabled;
@@ -3688,7 +3706,7 @@
                     AppState.programs.forEach(program => {
                         const setting = reminderSettings[program.id];
                         if (!setting) return;
-                        if (Array.isArray(setting.times)) program.reminderTimes = setting.times.filter(time => isValidReminderTime(time));
+                        if (Array.isArray(setting.times)) program.reminderTimes = Array.from(setting.times, time => isValidReminderTime(time) ? time : '');
                         if (typeof setting.enabled === 'boolean') program.remindersEnabled = setting.enabled;
                     });
                 }
@@ -10091,7 +10109,6 @@
                 const targetSessions = prog.dailyTarget || 2;
                 const activePhaseIdx = prog.currentPhaseIndex || 0;
                 const activePhase = prog.phases[activePhaseIdx] || prog.phases[0];
-                const reminderTimes = Array.isArray(prog.reminderTimes) ? prog.reminderTimes.filter(time => typeof time === 'string' && time.trim()) : [];
                 const targetDays = getConfiguredWeeklyTargetDays(activePhase);
                 const currentDay = targetDays ? Math.min((prog.currentDayInWeek || Math.max(1, (prog.daysCompletedInPhase || 0) + 1)), targetDays) : null;
                 const daysCompleted = Math.max(0, Number(prog.daysCompletedInPhase) || 0);
@@ -10144,7 +10161,7 @@
                     const isDone = sessionsToday >= number;
                     const label = number === 1 ? '1ª' : `${number}ª`;
                     return `<div class="p-2.5 rounded-xl border flex items-center justify-between ${isDone ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' : 'bg-slate-800/80 border-slate-700 text-slate-400'}">
-                        <span>${label} Sessão (${reminderTimes[index] || reminderTimes[0] || 'Horário não configurado'})</span>
+                        <span>${label} Sessão (${reminderTimeAt(prog, index) || 'Horário não configurado'})</span>
                         <i class="fa-solid ${isDone ? 'fa-circle-check text-emerald-400' : 'fa-circle text-slate-600'}"></i>
                     </div>`;
                 }).join('');
@@ -10245,7 +10262,7 @@
                                     </div>
                                     <button onclick="openReminderConfigModal('${prog.id}')" class="text-[11px] text-amber-400 hover:underline flex items-center gap-1 font-semibold">
                                         <i class="fa-solid fa-clock text-[10px]"></i>
-                                        <span>${targetSessions === 1 ? (reminderTimes[0] || 'Horário não configurado') : `${reminderTimes[0] || 'Horário não configurado'} e ${reminderTimes[1] || reminderTimes[0] || 'Horário não configurado'}`}</span>
+                                        <span>${targetSessions === 1 ? (reminderTimeAt(prog, 0) || 'Horário não configurado') : `${reminderTimeAt(prog, 0) || 'Horário não configurado'} e ${reminderTimeAt(prog, 1) || 'Horário não configurado'}`}</span>
                                     </button>
                                 </div>
 
@@ -11374,6 +11391,12 @@
             return typeof value === 'string' && /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
         }
 
+        function reminderTimeAt(program, index) {
+            if (!Number.isInteger(index) || index < 0 || !Array.isArray(program?.reminderTimes)) return '';
+            const time = program.reminderTimes[index];
+            return isValidReminderTime(time) ? time : '';
+        }
+
         function isStrictNonNegativeInteger(value) {
             return typeof value === 'number' && Number.isInteger(value) && value >= 0;
         }
@@ -11381,19 +11404,17 @@
         function isReminderScheduleComplete(program) {
             if (!program || !Array.isArray(program.reminderTimes)) return false;
             const target = Number.isInteger(program.dailyTarget) && program.dailyTarget > 0 ? program.dailyTarget : 2;
-            return program.reminderTimes.filter(time => isValidReminderTime(time)).length >= target;
+            return Array.from({ length: target }, (_, index) => program.reminderTimes[index]).every(isValidReminderTime);
         }
 
         function syncProgramNativeReminder(prog, showConfirmation = false) {
             if (!prog || !window.AndroidBridge?.scheduleProgramReminders) return;
-            const configuredTimes = Array.isArray(prog.reminderTimes) ? prog.reminderTimes.filter(time => isValidReminderTime(time)) : [];
-            const hasRealSchedule = configuredTimes.length > 0;
-            const enabled = hasRealSchedule && prog.remindersEnabled === true && hasSystemReminderPermission();
+            const enabled = isReminderScheduleComplete(prog) && prog.remindersEnabled === true && hasSystemReminderPermission();
             window.AndroidBridge.scheduleProgramReminders(
                 String(prog.id),
                 prog.title,
-                configuredTimes[0] || '',
-                configuredTimes[1] || '',
+                reminderTimeAt(prog, 0),
+                reminderTimeAt(prog, 1),
                 prog.dailyTarget || 2,
                 enabled,
                 showConfirmation
@@ -11479,6 +11500,7 @@
                 AppState.pushNotificationsEnabled = false;
                 saveState();
             }
+            renderProfilePreferences();
             updateSmartMiddayReminderUI();
             updatePushNotificationButton();
             syncAllNativeReminders();
@@ -11505,9 +11527,8 @@
 
             const targetSessions = prog.dailyTarget || 2;
             document.getElementById('reminderProgramNameSubtitle').innerText = `${prog.title} (${targetSessions}x ao dia)`;
-            const times = Array.isArray(prog.reminderTimes) ? prog.reminderTimes.filter(time => isValidReminderTime(time)) : [];
-            document.getElementById('reminderTimeInput1').value = times[0] || '';
-            document.getElementById('reminderTimeInput2').value = times[1] || '';
+            document.getElementById('reminderTimeInput1').value = reminderTimeAt(prog, 0);
+            document.getElementById('reminderTimeInput2').value = reminderTimeAt(prog, 1);
             document.getElementById('reminderTimeBlock2').classList.toggle('hidden', targetSessions === 1);
             document.getElementById('reminderEnabledToggle').checked = prog.remindersEnabled === true && hasSystemReminderPermission();
 
@@ -11532,15 +11553,14 @@
                 }
                 const enabled = requestedEnabled && await requestSystemReminderPermission();
 
-                prog.reminderTimes = targetSessions === 1
-                    ? (isValidReminderTime(t1) ? [t1] : [])
-                    : [t1, t2].filter(time => isValidReminderTime(time));
+                prog.reminderTimes = Array.from(targetSessions === 1 ? [t1] : [t1, t2], time => isValidReminderTime(time) ? time : '');
                 prog.remindersEnabled = enabled;
                 AppState.pushNotificationsEnabled = AppState.programs.some(program =>
                     program.remindersEnabled === true && isReminderScheduleComplete(program)
                 ) && hasSystemReminderPermission();
                 saveState();
                 renderProgramsList();
+                renderProfilePreferences();
                 updatePushNotificationButton();
                 syncProgramNativeReminder(prog, true);
                 if (requestedEnabled && !enabled) {
@@ -11653,11 +11673,9 @@
             const currentHm = `${hours}:${minutes}`;
 
             AppState.programs.forEach(prog => {
-                const configuredTimes = Array.isArray(prog.reminderTimes) ? prog.reminderTimes.filter(time => isValidReminderTime(time)) : [];
-                if (prog.remindersEnabled === true && configuredTimes.length > 0 && (prog.sessionsToday || 0) < (prog.dailyTarget || 2)) {
-                    const times = configuredTimes;
+                if (prog.remindersEnabled === true && isReminderScheduleComplete(prog) && (prog.sessionsToday || 0) < (prog.dailyTarget || 2)) {
                     const targetSession = (prog.sessionsToday || 0) + 1;
-                    const scheduledTime = targetSession === 1 ? times[0] : times[1];
+                    const scheduledTime = reminderTimeAt(prog, targetSession - 1);
 
                     const fireKey = `${prog.id}-${targetSession}-${currentHm}`;
                     if (currentHm === scheduledTime && lastFiredReminderKey !== fireKey) {
@@ -12958,7 +12976,7 @@
                     savedSessionsToday <= (Number.isInteger(defaultProg.dailyTarget) && defaultProg.dailyTarget > 0 ? defaultProg.dailyTarget : 1);
                 defaultProg.progressInvalid = !isNewDay && savedSessionsToday !== undefined && !validSessionsToday;
                 defaultProg.sessionsToday = isNewDay ? 0 : (validSessionsToday ? savedSessionsToday : 0);
-                if (Array.isArray(saved.reminderTimes)) defaultProg.reminderTimes = saved.reminderTimes.filter(value => isValidReminderTime(value));
+                if (Array.isArray(saved.reminderTimes)) defaultProg.reminderTimes = Array.from(saved.reminderTimes, time => isValidReminderTime(time) ? time : '');
                 if (typeof saved.remindersEnabled === 'boolean') defaultProg.remindersEnabled = saved.remindersEnabled;
                 if (saved.lastManualAdjustment && typeof saved.lastManualAdjustment === 'object') defaultProg.lastManualAdjustment = saved.lastManualAdjustment;
                 if (saved.progressionReview && typeof saved.progressionReview === 'object') defaultProg.progressionReview = { ...saved.progressionReview };
@@ -13094,7 +13112,7 @@
                 programs.forEach(program => {
                     const setting = reminderSettings[String(program.id)];
                     if (setting) {
-                        if (Array.isArray(setting.times)) program.reminderTimes = setting.times.filter(time => isValidReminderTime(time));
+                        if (Array.isArray(setting.times)) program.reminderTimes = Array.from(setting.times, time => isValidReminderTime(time) ? time : '');
                         if (typeof setting.enabled === 'boolean') program.remindersEnabled = setting.enabled;
                     }
                 });
@@ -13275,7 +13293,7 @@
                 const knownTargetDays = getConfiguredWeeklyTargetDays(known.phases[program.currentPhaseIndex]);
                 if (knownTargetDays && program.daysCompletedInPhase > knownTargetDays) throw new Error('Dias da semana fora do limite.');
                 if (!program.phases.every(phase => object(phase) && typeof phase.completed === 'boolean')) throw new Error('Semanas inválidas.');
-                if (program.reminderTimes !== undefined && (!Array.isArray(program.reminderTimes) || !program.reminderTimes.every(time => typeof time === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(time)))) throw new Error('Horários de lembrete inválidos.');
+                if (program.reminderTimes !== undefined && (!Array.isArray(program.reminderTimes) || !program.reminderTimes.every(time => time === '' || (typeof time === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(time))))) throw new Error('Horários de lembrete inválidos.');
             });
             if (!data.schedule.every(item => object(item) && typeof item.title === 'string' && typeof item.sub === 'string' && typeof item.time === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(item.time) && typeof item.completed === 'boolean' && Number.isFinite(item.id))) throw new Error('Agenda inválida.');
             for (const [date, entry] of Object.entries(data.activityLog)) {

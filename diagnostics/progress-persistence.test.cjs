@@ -26,6 +26,10 @@ const source = [
     extractFunction('isStrictNonNegativeInteger'),
     extractFunction('isValidReminderTime'),
     extractFunction('isReminderScheduleComplete'),
+    extractFunction('reminderTimeAt'),
+    extractFunction('syncProgramNativeReminder'),
+    extractFunction('syncAllNativeReminders'),
+    extractFunction('syncSmartMiddayReminderNative'),
     extractFunction('synchronizeProgramProgress'),
     extractFunction('applyProgramProgressAdjustment'),
     html.slice(persistenceStart, persistenceEnd)
@@ -36,11 +40,12 @@ const noopNames = [
     'renderAchievements', 'renderMenteHistory', 'renderCorpoHistory', 'updateTimeOfDayStretchRecommendation',
     'updateWeeklyMobilityMetrics', 'updateStretchDurationUI', 'loadCustomPresets', 'updateBreathDurationUI',
     'updateBreathLevelUI', 'updateTimeOfDayRecommendation', 'updateWeeklyCalmMetrics',
-    'updatePushNotificationButton', 'syncAllNativeReminders', 'renderCustomPresetsList'
+    'updatePushNotificationButton', 'renderCustomPresetsList'
 ];
 
-function setup({ failReadOnce = false, failSnapshotWrite = false, nativeCurrent = null } = {}) {
+function setup({ failReadOnce = false, failSnapshotWrite = false, nativeCurrent = null, nativeScheduler = false } = {}) {
     const values = new Map();
+    const bridgeCalls = [];
     let reads = 0;
     const context = vm.createContext({
         console: { log() {} },
@@ -55,7 +60,11 @@ function setup({ failReadOnce = false, failSnapshotWrite = false, nativeCurrent 
         },
         document: { getElementById() { return null; } },
         hasSystemReminderPermission() { return false; },
-        window: nativeCurrent === null ? {} : { AndroidBridge: { getProgressSnapshot() { return nativeCurrent; } } },
+        hasNativeReminderScheduler() { return nativeScheduler; },
+        window: { AndroidBridge: {
+            getProgressSnapshot: nativeCurrent === null ? undefined : () => nativeCurrent,
+            scheduleProgramReminders(...args) { bridgeCalls.push(args); }
+        } },
         localStorage: {
             getItem(key) {
                 if (failReadOnce && reads++ === 0) throw new Error('falha de leitura simulada');
@@ -75,7 +84,7 @@ function setup({ failReadOnce = false, failSnapshotWrite = false, nativeCurrent 
     const schedule = JSON.parse(vm.runInContext('JSON.stringify(AppState.schedule)', context));
     schedule.forEach(item => { item.completed = true; });
     const log = { [today]: { minutes: 30, sessions: 3, sources: { program: 3 } } };
-    return { context, values, today, programs, schedule, log };
+    return { context, values, today, programs, schedule, log, bridgeCalls };
 }
 function seedLegacy(env) {
     env.values.set('coreflow_data_version', '3');
@@ -100,6 +109,32 @@ function result(env) {
     assert.equal(vm.runInContext('loadSavedState()', env.context), true);
     assert.deepEqual({ ...result(env) }, { status: 'ready', phase: 2, days: 3, sessions: 1, minutes: 30 });
     assert.ok(env.values.has('coreflow_progress_snapshot_v4'), 'legado válido deve migrar para snapshot');
+}
+{
+    const seed = setup();
+    seed.programs[0].reminderTimes = ['', '16:00'];
+    seed.programs[0].remindersEnabled = true;
+    seedLegacy(seed);
+    assert.equal(vm.runInContext('loadSavedState()', seed.context), true, 'migração legada deve carregar os horários posicionais');
+    assert.deepEqual(
+        JSON.parse(vm.runInContext('JSON.stringify(AppState.programs[0].reminderTimes)', seed.context)),
+        ['', '16:00'],
+        'migração legada não deve compactar slots'
+    );
+
+    const restarted = setup({ nativeScheduler: true });
+    restarted.values.set('coreflow_progress_snapshot_v4', seed.values.get('coreflow_progress_snapshot_v4'));
+    assert.equal(vm.runInContext('loadSavedState()', restarted.context), true, 'novo contexto deve reabrir o snapshot persistido');
+    assert.deepEqual(
+        JSON.parse(vm.runInContext('JSON.stringify(AppState.programs[0].reminderTimes)', restarted.context)),
+        ['', '16:00'],
+        'reabertura real deve manter o mesmo índice e cardinalidade'
+    );
+    const nativeCall = restarted.bridgeCalls.find(args => String(args[0]) === String(seed.programs[0].id));
+    assert.ok(nativeCall, 'restore deve sincronizar o programa com a bridge nativa');
+    assert.equal(nativeCall[2], '', 'bridge não pode mover o slot 2 para a Sessão 1 após restart');
+    assert.equal(nativeCall[3], '16:00', 'bridge deve preservar o horário da Sessão 2 após restart');
+    assert.equal(nativeCall[5], false, 'sem permissão efetiva, restore não deve ativar o alarme nativo');
 }
 for (const damagedKey of ['coreflow_schedule', 'coreflow_programs', 'coreflow_activity_log']) {
     const env = setup(); seedLegacy(env);
