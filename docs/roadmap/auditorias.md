@@ -76,3 +76,21 @@ existe por causa do segundo; a classificação ENUMERÁVEL/ABERTA, por causa do 
 -->
 
 _Nenhuma entrada ainda. A primeira auditoria após a integração da E08 abre esta seção._
+
+### 2026-09-23 — t_47ab1fd4 — E09.4 — rodada 1/3 — FAIL
+
+- target_sha: `a1e405d2c8c51937ec73ac5892f2a22f31873831`
+- classe: ENUMERÁVEL (par saveState/loadSavedState duplicado, causa única e localizada)
+- achados_confirmados: 1 (F1 — AC-1 violado: persistência de voz/hápticos/Watch escrita em função `saveState`/`loadSavedState` morta, nunca executada)
+- achados_retirados: 1 (hipótese de que a UI condicional expunha dados mock — refutada: `available` deriva de `Boolean(window.AndroidBridge?.isWatchHapticsEnabled)`, fonte real; AC-2/AC-3/AC-4 sustentados por leitura + diagnóstico)
+- achados_tardios: 0
+- causa_raiz: `index.html` tem dois `<script>` no mesmo escopo global; cada um declara `function saveState()`/`function loadSavedState()`. Por hoisting de function declaration, a segunda declaração (linha ~13188/13507, parte do pipeline real `CorePersistence`/`collectProgressData`) sobrescreve a primeira (linha ~3876/3610). O Builder implementou AC-1 na primeira definição, que nunca é chamada em runtime — confirmado por execução real em `vm` (Node), não apenas leitura estática.
+- gates_mecanicos: `bash scripts/check.sh` → PASS (build+equivalência); `node diagnostics/e09-4-voice-haptics-watch.test.cjs` → PASS, mas o teste só faz regex/string-match no código-fonte, não executa — não detecta shadowing; `cmp -s index.html app/src/main/assets/index.html` → idêntico; `sha256sum` idênticos; `git diff --check` limpo.
+- familia_builder: gemini-3.8-flash-high (antigravity) / familia_auditor: claude sonnet 5 (anthropic) — famílias diferentes, sem ponto cego compartilhado declarado.
+- cobertura: leitura completa do diff `d9af749..a1e405d` em `index.html`; execução real via Node `vm` do bloco `<script>` de produção (`saveState`, `loadSavedState`, `toggleVoice`) contra `localStorage` simulado, provando que `coreflow_voice_enabled`/`coreflow_haptics_enabled`/`coreflow_watch_haptics_enabled` nunca são escritos nem lidos pelo runtime real; leitura de `syncWatchHapticsSetting`/`toggleWatchHaptics` e da condição `available` (AC-2/AC-3/AC-4). NÃO coberto: Android físico, Galaxy Watch físico, TalkBack (limitação já declarada pelo Builder, sem cobertura obrigatória automatizável nesta rodada).
+- tempo_espera: desconhecido (rodada iniciada já com handoff pronto; sem quota/crash observado nesta sessão).
+- regressao_pos_pass: n/a (FAIL, não chegou a PASS).
+
+**Achado bloqueador F1:**
+`F1 | BLOQUEADOR | alta confiança (execução real via vm.runInContext reproduz o defeito) | viola AC "Desligar voz/hápticos altera execução real, não só UI, e sobrevive à reabertura" | index.html:3876 (saveState morta) e index.html:3610 (loadSavedState morta) vs. index.html:13188/13507 (definições reais que sobrescrevem as anteriores) | condição alcançável: qualquer toggle de voz/hápticos/Watch em uso normal do app | esperado: coreflow_voice_enabled/coreflow_haptics_enabled/coreflow_watch_haptics_enabled persistidos e restaurados | observado: saveState() real (a que executa) nunca grava essas chaves; loadSavedState() real nunca as lê — reproduzido em script Node com vm simulando localStorage | resultado mínimo para fechar: mover a lógica de persistência/restauração de voz-hápticos-Watch para dentro do saveState()/loadSavedState() que efetivamente executam (linhas ~13188 e ~13507, dentro do pipeline collectProgressData/applyProgressData), remover ou consolidar a duplicata morta, e atualizar/reforçar o diagnóstico e09-4 para executar o script real (não apenas checar strings) de modo a detectar shadowing futuro.`
+
