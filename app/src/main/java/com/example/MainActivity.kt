@@ -883,6 +883,41 @@ class AndroidBridge(
         }
     }
 
+    /**
+     * E09.5: Exporta snapshot criptografado com AES-256-CBC + SHA-256
+     */
+    @JavascriptInterface
+    fun exportSecureSnapshot(plainJson: String, password: String): String = runCatching {
+        SecureBackupBridge.exportSecureSnapshot(context, plainJson, password)
+    }.getOrElse { error ->
+        org.json.JSONObject().apply {
+            put("error", error.message ?: "Erro ao criptografar backup")
+        }.toString()
+    }
+
+    /**
+     * E09.5: Importa e descriptografa snapshot com verificação SHA-256
+     */
+    @JavascriptInterface
+    fun importSecureSnapshot(encryptedJson: String, password: String): String = runCatching {
+        val plainJson = SecureBackupBridge.importSecureSnapshot(encryptedJson, password)
+        // Validar se é snapshot válido
+        org.json.JSONObject(plainJson)
+        plainJson
+    }.getOrElse { error ->
+        throw IllegalArgumentException(error.message ?: "Falha ao descriptografar backup")
+    }
+
+    /**
+     * E09.5: Salva backup criptografado em Downloads
+     */
+    @JavascriptInterface
+    fun saveEncryptedBackupToDownloads(encryptedJson: String): String = runCatching {
+        SecureBackupBridge.saveEncryptedBackupToDownloads(context, encryptedJson)
+    }.getOrElse { error ->
+        "Erro ao salvar backup: ${error.message}"
+    }
+
     private companion object {
         const val PROGRESS_PREFS = "coreflow_progress_store"
         const val PROGRESS_CURRENT = "current_snapshot"

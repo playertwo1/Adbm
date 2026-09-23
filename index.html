@@ -242,6 +242,8 @@
             }
         }
     </style>
+    <!-- E09.5: Secure Backup Manager -->
+    <script src="scripts/encryption.js"></script>
 </head>
 <body class="cf-app bg-slate-900 text-slate-100 min-h-screen pb-24 overflow-x-hidden antialiased selection:bg-emerald-500 selection:text-white">
 
@@ -1999,6 +2001,11 @@
                 <div class="grid grid-cols-2 gap-3">
                     <button onclick="openProgressProtection(); exportProgressCopy()" class="rounded-xl bg-emerald-500 px-3 py-3 text-sm font-bold text-slate-950">Exportar backup</button>
                     <button onclick="openProgressProtection(); chooseProgressImport()" class="rounded-xl border border-sky-400/40 bg-sky-500/10 px-3 py-3 text-sm font-bold text-sky-200">Importar backup</button>
+                </div>
+                <!-- E09.5: Backup Seguro com Criptografia -->
+                <div class="grid grid-cols-2 gap-3 mt-3">
+                    <button onclick="openProgressProtection(); exportProgressSecure()" class="rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 px-3 py-3 text-xs font-bold text-white flex items-center justify-center gap-1"><i class="fa-solid fa-lock mr-1"></i>Backup criptografado</button>
+                    <button onclick="openProgressProtection(); document.getElementById('progressImportFile').accept='.cbk'; document.getElementById('progressImportFile').onchange=async (e)=>{const f=e.target.files?.[0]; if(f?.name.endsWith('.cbk'))await importProgressSecure(f);else await readProgressImportFile(e.target)}; document.getElementById('progressImportFile').click()" class="rounded-xl border border-violet-500/40 bg-violet-500/10 px-3 py-3 text-xs font-bold text-violet-200 flex items-center justify-center gap-1"><i class="fa-solid fa-key mr-1"></i>Importar seguro</button>
                 </div>
                 <button onclick="openProgressProtection()" class="text-xs text-emerald-300 underline">Ver última gravação e cópia anterior</button>
             </div>
@@ -13601,6 +13608,107 @@
             if (document.hidden && responsivePause.status === 'running') pauseResponsivePause();
             if (!document.hidden) syncNativeWorkoutState();
         });
+
+        // ============ E09.5: Backup Seguro com Criptografia ============
+
+        /**
+         * Integração com SecureBackupManager para exportação criptografada
+         */
+        async function exportProgressSecure() {
+            const password = prompt('Digite a senha de proteção (mín. 8 caracteres):', '');
+            if (!password) return;
+            if (password.length < 8) {
+                alert('Senha deve ter no mínimo 8 caracteres');
+                return;
+            }
+
+            const message = document.getElementById('progressProtectionMessage');
+            try {
+                if (CorePersistence.status === 'ready' && !saveState()) return;
+                const snapshot = readProgressSnapshot(CORE_PROGRESS_SNAPSHOT_KEY);
+                if (!snapshot) {
+                    if (message) message.innerText = 'Nenhuma cópia íntegra está disponível para exportar.';
+                    return;
+                }
+
+                const plainJson = JSON.stringify(snapshot, null, 2);
+
+                // Usar SecureBackupManager (JavaScript) ou bridge nativo
+                if (window.SecureBackupManager) {
+                    const encryptedData = await SecureBackupManager.exportSecure(plainJson, password);
+
+                    if (window.AndroidBridge?.saveEncryptedBackupToDownloads) {
+                        const result = window.AndroidBridge.saveEncryptedBackupToDownloads(JSON.stringify(encryptedData));
+                        if (message) message.innerText = result;
+                        return;
+                    }
+
+                    // Fallback: download como .cbk
+                    const blob = new Blob([JSON.stringify(encryptedData, null, 2)], { type: 'application/octet-stream' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `coreflow-backup-secure-${localDateKey()}.cbk`;
+                    link.click();
+                    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+                    if (message) message.innerText = 'Backup criptografado exportado.';
+                } else {
+                    if (message) message.innerText = 'Criptografia indisponível. Use backup padrão.';
+                }
+            } catch (error) {
+                if (message) message.innerText = `Erro ao exportar backup seguro: ${error.message}`;
+            }
+        }
+
+        /**
+         * Integração com SecureBackupManager para importação com verificação
+         */
+        async function importProgressSecure(encryptedFile) {
+            const password = prompt('Digite a senha de proteção:', '');
+            if (!password) return;
+
+            const message = document.getElementById('progressProtectionMessage');
+            try {
+                const encryptedJson = await encryptedFile.text();
+                const encryptedData = JSON.parse(encryptedJson);
+
+                if (!window.SecureBackupManager) {
+                    throw new Error('Criptografia indisponível');
+                }
+
+                const plainJson = await SecureBackupManager.importSecure(encryptedData, password);
+                receiveProgressImport(plainJson);
+            } catch (error) {
+                if (message) message.innerText = `Erro ao importar backup: ${error.message}`;
+            }
+        }
+
+        /**
+         * Estende chooseProgressImport para aceitar arquivos .cbk criptografados
+         */
+        const originalChooseProgressImport = window.chooseProgressImport;
+        window.chooseProgressImport = function() {
+            cancelProgressImport();
+            if (window.AndroidBridge?.importProgressSnapshot) {
+                window.AndroidBridge.importProgressSnapshot();
+            } else {
+                const input = document.getElementById('progressImportFile');
+                input.value = '';
+                input.accept = '.json,.cbk,application/json,application/octet-stream';
+                input.onchange = async function(event) {
+                    const file = event.target.files?.[0];
+                    if (!file) return;
+
+                    if (file.name.endsWith('.cbk')) {
+                        // Arquivo criptografado
+                        await importProgressSecure(file);
+                    } else {
+                        // Arquivo JSON padrão
+                        await readProgressImportFile(this);
+                    }
+                };
+                input.click();
+            }
+        };
     </script>
 </body>
 </html>
