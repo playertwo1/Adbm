@@ -6141,11 +6141,11 @@
                 if (!card) continue;
                 const cat = card.getAttribute('data-category');
                 if (filterKey === 'all' || cat === filterKey) {
-                    card.classList.remove('opacity-30');
+                    card.classList.remove('hidden', 'opacity-30');
                     card.classList.add('border-emerald-500/60', 'shadow-md', 'shadow-emerald-500/10');
                 } else {
-                    card.classList.add('opacity-30');
-                    card.classList.remove('border-emerald-500/60', 'shadow-md', 'shadow-emerald-500/10');
+                    card.classList.add('hidden');
+                    card.classList.remove('opacity-30', 'border-emerald-500/60', 'shadow-md', 'shadow-emerald-500/10');
                 }
             }
             triggerHaptic([20]);

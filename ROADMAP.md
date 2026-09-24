@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 22/09/2026. Status: E00–E03, E05, E06 e E07 concluídas conforme as evidências registradas; E04 permanece em execução, com o item "Mais descanso" resolvido por remoção do produto (decisão registrada, sem incremento clínico inventado); E08.7 recebeu PASS independente em 22/09/2026 e E08 está encerrada; a linha foi integrada em `main` no mesmo dia (local, sem push). E04 permanece ABERTA com verificação diferida para E13 (decisão de Rafael, 22/09/2026): E06 foi entregue sobre ela sem que sua dependência fosse verificada, e os oito itens em aberto exigem evidência própria em E13, sem marcação por inferência. A consolidação E08.7 usa `base_sha=666e24a6f64c84c265fa46644efbaa089847823c` e `behavioral_target_sha=666e24a6f64c84c265fa46644efbaa089847823c`; esta atualização documental parte de `documentation_parent_sha=51041a9c95cd329a9b67dfbfb13f74ed07e573f5`, e o commit documental é o filho imediato desse SHA (convenção verificável sem auto-referência). Próxima etapa: nenhuma até o PASS independente e a retrospectiva do Diretor; E09 permanece pendente.
+Atualizado: 24/09/2026. Status: E00–E03 e E05–E09 implementadas conforme evidências; E04 permanece aberta para verificação em E13. E09 está no commit `8afdd67`, aguardando auditoria independente e validação integrada. E10 está em andamento por decisão de Rafael, conduzida diretamente por chat e sem Kanban; o item de parâmetros revisados permanece diferido. Próxima ação: continuar os itens independentes de E10.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -186,7 +186,7 @@ Aceite: preferências sobrevivem à reabertura; importação cancelada preserva 
 - [ ] Posição/intensidade selecionam parâmetros revisados; prévia corresponde à execução.
 - [ ] Sem áudio cumpre regra documentada; manter orientação visual.
 - [ ] Iniciar/pausar/retomar/encerrar funcionam e registram executado.
-- [ ] Filtros de região alteram catálogo; Ver todos restaura lista.
+- [x] Filtros de região alteram o catálogo; Ver todos restaura lista. Evidência E10.4: `diagnostics/e10-stretch-filter.test.cjs` confirma que o filtro exibe somente a região selecionada e `all` restaura os quatro cards.
 - [ ] Card abre exercício certo com instruções; Começar pausa inicia item exibido.
 - [ ] Recomendação tem regra explícita; sem contexto permite escolher.
 - [ ] Preservar Pausa de Resposta de três estágios, modo silencioso e histórico opcional.
