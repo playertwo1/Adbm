@@ -197,7 +197,7 @@ Limitações: a auditoria final identificou e corrigiu a divergência de duraç�
 [Referência](assets/design/coreflow-s25-ultra/08-mindfulness-player.png)
 - [ ] Usar faixas existentes e duração real.
 - [x] Play/pausa, ±15s e busca controlam áudio; limitar posição aos extremos. Evidência: `diagnostics/e11-playback-controls.test.cjs` + validação AVD Pixel_9.
-- [ ] Próxima faixa corresponde ao arquivo anunciado; fim da lista tem comportamento definido.
+- [x] Próxima faixa corresponde ao arquivo anunciado; fim da lista tem comportamento definido. Evidência: `diagnostics/e11-track-announced-end-of-list.test.cjs` (verificação, sem bug encontrado).
 - [ ] Notificação/tela sincronizam posição em segundo plano; apenas uma reprodução.
 - [ ] Distinguir silenciar avisos de silenciar narração.
 - [ ] Hápticos cancelados ao encerrar.

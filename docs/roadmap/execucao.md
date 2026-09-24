@@ -1,5 +1,15 @@
 # Registro de execução
 
+## 2026-09-24 — E11 / Mindfulness — FAIXA ANUNCIADA E FIM DA LISTA VERIFICADOS
+
+- Base: commit local `c34bdd1` (tranche anterior de E11 já commitada, sem push).
+- Escopo: verificar que a faixa anunciada (título exibido) corresponde ao arquivo realmente carregado, e que concluir a última semana (Semana 8, fim da lista) tem comportamento seguro e definido.
+- Resultado: **nenhum bug encontrado** — `mindfulnessTrackMeta()` é a fonte única de path/título usada tanto na abertura do modal quanto na seleção manual (`selectMindfulnessTrack`), sempre sincronizada. Em `completeMindfulnessAudio()`, o guard `mindfulnessPlayer.phaseIndex < prog.phases.length - 1` já impede tentar avançar `currentPhaseIndex` além do fim da lista; a última fase é marcada `completed: true` normalmente, sem erro.
+- Regressão: `diagnostics/e11-track-announced-end-of-list.test.cjs` (novo) — 3 casos: `mindfulnessTrackMeta` retorna path/título corretos (inclusive fallback para faixa desconhecida); `selectMindfulnessTrack` troca src+título+trackPath juntos, sem dessincronização; concluir a Semana 8 (índice 7, última fase) não lança erro, marca `completed`, fecha o modal e salva o progresso, sem definir `currentPhaseIndex` para um índice inexistente.
+- Verificação: todos os `diagnostics/*.test.cjs` (individualmente) → PASS; `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → `CHECK PASS`.
+- Sem alteração de HTML/produto nesta tranche (apenas teste de verificação) — não repetida a validação visual no AVD, já coberta pela tranche anterior desta sessão.
+- Limitações: alterações E11 ainda sem novo commit/push.
+
 ## 2026-09-24 — E11 / Mindfulness — CONTROLES DE REPRODUÇÃO (PLAY/PAUSA, ±15S, BUSCA) VALIDADOS
 
 - Base: `7da1a47e7ab370c70e7107e951fd681454261091` já publicado em `main`; tranche E11 segue sem commit.
