@@ -9895,6 +9895,10 @@
         }
 
         function openMindfulnessAudioModal(programId = '4', phaseIndex = null, trackType = 'formal') {
+            if (typeof responsivePause !== 'undefined' && ['running', 'paused'].includes(responsivePause.status)) {
+                showInlineToast('Há outra sessão em andamento (Pausa de Resposta). Encerre-a antes de iniciar esta prática.');
+                return;
+            }
             const prog = AppState.programs.find(p => p.id === programId);
             if (!prog) return;
             const idx = phaseIndex === null ? (prog.currentPhaseIndex || 0) : phaseIndex;
@@ -12720,6 +12724,13 @@
             if (AppState.mente?.isRunning || AppState.pausas?.isRunning || AppState.pausas?.circuitActive || AppState.pausas?.activeTimerId || AppState.dailyExecution?.isRunning) {
                 showInlineToast('Há outra sessão em andamento. Encerre-a antes de iniciar esta pausa.');
                 return;
+            }
+            if (typeof mindfulnessPlayer !== 'undefined' && mindfulnessPlayer?.trackPath && !document.getElementById('mindfulnessAudioModal')?.classList.contains('hidden')) {
+                const audio = document.getElementById('mindfulnessAudio');
+                if (audio && !audio.paused) {
+                    showInlineToast('Há uma prática de Mindfulness em andamento. Encerre-a antes de iniciar esta pausa.');
+                    return;
+                }
             }
             if (responsivePause.status === 'paused' && responsivePause.sessionId) {
                 openResponsivePauseModal();

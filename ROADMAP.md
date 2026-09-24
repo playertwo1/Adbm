@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 24/09/2026. Status: E00–E03 e E05–E09 implementadas conforme evidências; E04 permanece aberta para verificação em E13. E09 está no commit `8afdd67`, aguardando auditoria independente e validação integrada. E10 segue em execução diretamente por chat e sem Kanban: E10.2–E10.7 foram publicadas no commit `7da1a47`; E10.1 continua diferida até referência revisada, e a validação física permanece pendente. E11 está em andamento local; erro/retentativa de áudio e controles de reprodução (play/pausa, ±15s, busca, extremos) passaram no gate integrado e validação AVD. Próxima ação: continuar os itens restantes de E11, sem inventar parâmetros.
+Atualizado: 24/09/2026. Status: E00–E03 e E05–E09 implementadas conforme evidências; E04 permanece aberta para verificação em E13. E09 está no commit `8afdd67`, aguardando auditoria independente e validação integrada. E10 segue em execução diretamente por chat e sem Kanban: E10.2–E10.7 foram publicadas no commit `7da1a47`; E10.1 continua diferida até referência revisada, e a validação física permanece pendente. E11 concluída localmente: 7/7 itens do checklist implementados e validados (erro/retentativa, controles de reprodução, faixa/fim de lista, silenciar avisos, hápticos ao encerrar, MediaSession/notificação em segundo plano publicada em `0e747a1`, bloqueio mútuo Pausa de Resposta↔Mindfulness). Próxima ação: revisar, publicar a tranche final de E11 e planejar E12.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -202,7 +202,7 @@ Limitações: a auditoria final identificou e corrigiu a divergência de duraç�
 - [x] Distinguir silenciar avisos de silenciar narração. Evidência: `diagnostics/e11-mute-alerts.test.cjs` + validação AVD Pixel_9 (toggle "Avisos ativos"/"Avisos silenciados" testado na UI real).
 - [x] Hápticos cancelados ao encerrar. Evidência: `diagnostics/e11-cancel-haptics-on-close.test.cjs` + validação AVD Pixel_9 (fechar via X, sem crash).
 - [x] Arquivo ausente oferece erro acessível e nova tentativa; falha/metadados ausentes não geram conclusão. Evidência: `diagnostics/e11-audio-error-retry.test.cjs`.
-- [ ] Pausa de Resposta abre seu fluxo próprio, sem áudio fictício do mockup.
+- [x] Pausa de Resposta abre fluxo próprio, sem áudio fictício do mockup; bloqueio mútuo de sessão concorrente com Mindfulness. Evidência: `diagnostics/e11-responsive-pause-mindfulness-guard.test.cjs` (2 cenários: abrir Mindfulness com Pausa de Resposta ativa/pausada é bloqueado com aviso; iniciar Pausa de Resposta com Mindfulness tocando é bloqueado com aviso).
 Aceite: controles na tela/notificação, extremos da busca, bloqueio e arquivo ausente verificados.
 
 ### E12 — Tela 09: Evolução

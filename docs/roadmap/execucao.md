@@ -1,6 +1,17 @@
 # Registro de execução
 
-## 2026-09-24 — E11 / Mindfulness — NOTIFICAÇÃO/MEDIASESSION SINCRONIZADAS
+## 2026-09-24 — E11 / Mindfulness — PAUSA DE RESPOSTA: FLUXO PRÓPRIO E BLOQUEIO MÚTUO (7/7 CONCLUÍDO)
+
+- Base: commit local `0e747a1` (MediaSession/notificação, publicado em `main`).
+- Escopo: último item do checklist E11 — "Pausa de Resposta abre seu fluxo próprio, sem áudio fictício do mockup".
+- Investigação: a Pausa de Resposta já era um fluxo real e silencioso (`startResponsivePause`/`pauseResponsivePause`/`resumeResponsivePause`, histórico, sem áudio — diferente do mockup `08-mindfulness-player.png`, que mostra a prática dentro de um player de áudio de 3 min). Não havia áudio fictício.
+- Bug real encontrado: `openMindfulnessAudioModal` não verificava se a Pausa de Resposta estava `running`/`paused`, e `startResponsivePause` não verificava se o Mindfulness estava tocando — permitindo duas sessões de atenção simultâneas, o que a lógica existente de bloqueio de sessão (`AppState.mente/pausas/dailyExecution`) já deveria impedir de forma consistente.
+- Correção: bloqueio mútuo — `openMindfulnessAudioModal` agora recusa abrir com aviso ("Há outra sessão em andamento (Pausa de Resposta)...") se `responsivePause.status` for `running` ou `paused`; `startResponsivePause` agora recusa iniciar com aviso ("Há uma prática de Mindfulness em andamento...") se o player de Mindfulness estiver com áudio tocando e o modal visível.
+- Teste: `diagnostics/e11-responsive-pause-mindfulness-guard.test.cjs` (novo, RED→GREEN) cobre 3 cenários no sentido Mindfulness→Pausa (bloqueado em running, bloqueado em paused, permitido em idle) e 1 cenário no sentido inverso (Pausa bloqueada com Mindfulness tocando).
+- Gate: `scripts/check.sh` → CHECK PASS (diagnostics, equivalência HTML, build debug). HTMLs `index.html`/`app/src/main/assets/index.html` re-sincronizados e confirmados idênticos via `cmp -s`.
+- Validação AVD: pendente nesta tranche (emulador Pixel_9 ficou OFFLINE durante a sessão; reiniciado em background, aguardando boot para validação visual do bloqueio mútuo antes do push).
+- **Checklist E11: 7/7 itens concluídos** (implementação + testes automatizados). Falta apenas a validação manual no AVD deste último item antes do commit/push final.
+
 
 - Base: commit local `b61f0a7` (tranches anteriores de E11, sem push).
 - Escopo: notificação de mindfulness era estática (só título/texto, sem controle real). Faltava sincronizar posição/estado com notificação e sistema (MediaSession), e permitir controle a partir da notificação sem abrir o app.
