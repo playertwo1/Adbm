@@ -1,5 +1,16 @@
 # Registro de execução
 
+## 2026-09-24 — E10.2–E10.7 / Discreto e Pausas — IMPLEMENTADAS LOCALMENTE, auditoria independente PASS, push pendente
+
+- Base: `47e406bc7dd922b4b07798c3bc9423cb835991f9`, branch `main`; alterações da continuação mantidas sem commit/push.
+- Escopo: modo silencioso preservando orientação visual; pausa/retomada do timer individual; duração/histórico de circuito e bloqueio de conclusão parcial; filtros para quatro regiões; catálogo/recomendação; Pausa de Resposta de três estágios, silenciosa, com histórico opcional e bloqueio de sessões concorrentes.
+- Regressões E10: `e10-discreto-silent-mode`, `e10-pause-audio-off`, `e10-pause-voice-off`, `e10-stretch-pause-resume`, `e10-circuit-duration`, `e10-circuit-completed-steps`, `e10-circuit-skip-not-complete`, `e10-circuit-cancel-resume`, `e10-stretch-filter`, `e10-stretch-catalog-recommendation`, `e10-responsive-pause` e `e10-responsive-pause-session-guard` — todas passaram pelo gate integrado.
+- Revisão independente: primeiro veredito FAIL identificou `activeTimerId` residual ao pular a última etapa. Adicionados `activeTimerId`/`pausedTimerId = null` ao encerramento e regressão para ambos. A revisão final detectou que a duração do histórico usava a última configuração multiplicada por quatro; correção passou a somar os tempos efetivos por etapa, com diagnóstico para durações diferentes, timer retomado e limpeza do estado parcial. A origem de `ROADMAP.md` foi confirmada por Rafael e o diff local foi inspecionado.
+- Verificação: `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → `CHECK PASS` após a correção de contabilidade, incluindo diagnósticos, testes unitários e builds debug Android/Wear; equivalência byte a byte e `git diff --check` também passaram.
+- AVD `Pixel_9`: APK debug instalado antes da última correção de limpeza de timer; o build atualizado após essa correção não foi reinstalado. A captura ADB mostrava a tela Pausas/catalogo. Toques por ADB não produziram mudança visual; captura do window do Emulator via Computer Use permaneceu em uma tela “Updating…” divergente. Logcat sem FATAL, erro de console, ANR ou OOM. Portanto, a interação E10 no AVD não foi confirmada.
+- Limitações: E10.1 (posição/intensidade) continua diferida até referência revisada; a opção preexistente `∞ Livre` é mapeada pelo código a 300s por exercício (não alterada nesta tarefa) e sua semântica exige confirmação; sem validação física, TalkBack ou Watch. Nenhuma publicação remota.
+- Próximo passo: publicar E10 no remoto e avançar a E11; confirmar `∞ Livre` e concluir validação de interação em AVD quando captura/input estiver confiável. E10 continua aberta.
+
 ## 2026-09-24 — E10.4 / filtro de região no catálogo de Pausas — IMPLEMENTADA
 
 - Base: `8afdd671dabd583957cfad483a6df918147366bc` (`main`, worktree limpa antes da tarefa); sem Kanban, conforme orientação de Rafael.

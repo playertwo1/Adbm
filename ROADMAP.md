@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 24/09/2026. Status: E00–E03 e E05–E09 implementadas conforme evidências; E04 permanece aberta para verificação em E13. E09 está no commit `8afdd67`, aguardando auditoria independente e validação integrada. E10 está em andamento por decisão de Rafael, conduzida diretamente por chat e sem Kanban; o item de parâmetros revisados permanece diferido. Próxima ação: continuar os itens independentes de E10.
+Atualizado: 24/09/2026. Status: E00–E03 e E05–E09 implementadas conforme evidências; E04 permanece aberta para verificação em E13. E09 está no commit `8afdd67`, aguardando auditoria independente e validação integrada. E10 segue em execução diretamente por chat e sem Kanban: E10.2–E10.7 têm implementação e regressões locais; E10.1 continua diferida até referência revisada. A auditoria independente final deu PASS após correção da contabilidade de durações por etapa; push autorizado está pendente. A interação no AVD recente não foi verificável. Próxima ação: publicar E10 e avançar a E11, sem inventar parâmetros.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -183,14 +183,15 @@ Aceite: preferências sobrevivem à reabertura; importação cancelada preserva 
 
 ### E10 — Telas 04/05: Discreto e Pausas
 [Discreto](assets/design/coreflow-s25-ultra/04-modo-discreto.png) · [Pausas](assets/design/coreflow-s25-ultra/05-pausas-ativas.png)
-- [ ] Posição/intensidade selecionam parâmetros revisados; prévia corresponde à execução.
-- [ ] Sem áudio cumpre regra documentada; manter orientação visual.
-- [ ] Iniciar/pausar/retomar/encerrar funcionam e registram executado.
-- [x] Filtros de região alteram o catálogo; Ver todos restaura lista. Evidência E10.4: `diagnostics/e10-stretch-filter.test.cjs` confirma que o filtro exibe somente a região selecionada e `all` restaura os quatro cards.
-- [ ] Card abre exercício certo com instruções; Começar pausa inicia item exibido.
-- [ ] Recomendação tem regra explícita; sem contexto permite escolher.
-- [ ] Preservar Pausa de Resposta de três estágios, modo silencioso e histórico opcional.
-Aceite: testar todos os filtros/cards; parcial não vira sequência completa; catálogo disponível sem recomendação.
+- [ ] Posição/intensidade selecionam parâmetros revisados; prévia corresponde à execução. **Diferido por Rafael** até existir referência revisada; nenhum parâmetro foi inventado.
+- [x] Sem áudio cumpre regra documentada; orientação visual permanece ativa. Evidência: `diagnostics/e10-discreto-silent-mode.test.cjs`, `e10-pause-audio-off.test.cjs` e `e10-pause-voice-off.test.cjs`.
+- [x] Iniciar/pausar/retomar/encerrar funcionam e registram executado; circuito parcial/pulado não vira concluído. Evidência: `e10-stretch-pause-resume.test.cjs`, `e10-circuit-completed-steps.test.cjs`, `e10-circuit-duration.test.cjs`, `e10-circuit-skip-not-complete.test.cjs` e `e10-circuit-cancel-resume.test.cjs`.
+- [x] Filtros de região alteram o catálogo; Ver todos restaura lista. Evidência: `diagnostics/e10-stretch-filter.test.cjs` exercita as quatro regiões e restaura os quatro cards.
+- [x] Card abre exercício certo com instruções; Começar pausa inicia item exibido. Evidência: `diagnostics/e10-stretch-catalog-recommendation.test.cjs` compara nome, categoria, instrução e handler do card ao catálogo.
+- [x] Recomendação tem regra explícita; catálogo permanece disponível sem depender dela. Evidência: `e10-stretch-catalog-recommendation.test.cjs` verifica a regra por horário e mantém os quatro cards.
+- [x] Preservar Pausa de Resposta de três estágios, modo silencioso e histórico opcional. Evidência: `e10-responsive-pause.test.cjs` e `e10-responsive-pause-session-guard.test.cjs`.
+Aceite local: diagnósticos E10 e `scripts/check.sh` passaram; parcial não é contabilizado como circuito completo, as métricas somam as durações efetivamente concluídas por etapa e todos os filtros/cards foram exercitados nos testes.
+Limitações: a auditoria final identificou e corrigiu a divergência de duração do histórico quando a configuração muda entre etapas; os diagnósticos verificam durações individuais e retomadas. A origem da atualização de `ROADMAP.md` foi confirmada por Rafael e o diff local contém a atualização desta tarefa. Interação recente no AVD não foi verificável (captura inconsistente/taps sem efeito confirmado), sem teste físico/TalkBack/Watch. E10.1 (posição/intensidade) segue diferida até referência revisada; `∞ Livre` continua usando 300s por exercício e sua semântica precisa ser confirmada.
 
 ### E11 — Tela 08: Mindfulness
 [Referência](assets/design/coreflow-s25-ultra/08-mindfulness-player.png)

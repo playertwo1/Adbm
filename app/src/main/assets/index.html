@@ -3149,11 +3149,14 @@
             // Pausas ativas timers & bloco corpo
             pausas: {
                 activeTimerId: null,
+                pausedTimerId: null,
                 remainingSec: 60,
                 intervalId: null,
                 corpoExpanded: true,
                 circuitActive: false,
                 circuitStep: 1,
+                circuitCompletedSteps: [],
+                circuitStepDurations: {},
                 circuitPaused: false,
                 selectedDuration: 60,
                 selectedIntensity: 'padrao',
@@ -3938,7 +3941,7 @@
 
         // Web Audio Synth Beeper
         function playBeep(freq = 600, duration = 0.15, type = 'sine') {
-            if (!AppState.voiceEnabled && AppState.desk.silentMode) return;
+            if (AppState.activeTab === 'discreto' && AppState.desk.silentMode) return;
             try {
                 const ctx = getAudioContext();
                 const osc = ctx.createOscillator();
@@ -3955,6 +3958,7 @@
         }
 
         function playTibetanChime() {
+            if (AppState.activeTab === 'discreto' && AppState.desk.silentMode) return;
             try {
                 const ctx = getAudioContext();
                 [528, 660, 792].forEach((freq, idx) => {
@@ -5492,6 +5496,7 @@
             const sub = document.getElementById('kegelResSub');
             const timer = document.getElementById('kegelResTimer');
             const ring = document.getElementById('kegelResRing');
+            timer.innerText = AppState.desk.res.timer;
 
             if (AppState.desk.res.isContract) {
                 state.innerText = 'CONTRAIA';
@@ -6112,7 +6117,9 @@
             setStretchDuration(60);
             toggleStretchTimer(2); // Torção de Coluna para descompressão express
 
-            speakVoice('SOS Coluna iniciado. Coluna longa, segure o encosto da cadeira e gire o tronco com calma.');
+            if (AppState.pausas.voiceGuideEnabled) {
+                speakVoice('SOS Coluna iniciado. Coluna longa, segure o encosto da cadeira e gire o tronco com calma.');
+            }
             triggerHaptic([60, 40, 100]);
         }
 
@@ -6305,20 +6312,27 @@
 
             if (AppState.pausas.activeTimerId === cardId) {
                 pauseStretchTimer(cardId);
-            } else {
-                if (AppState.pausas.activeTimerId) {
-                    pauseStretchTimer(AppState.pausas.activeTimerId);
-                }
-                startStretchTimer(cardId, false);
+                return;
             }
+
+            if (AppState.pausas.activeTimerId) {
+                pauseStretchTimer(AppState.pausas.activeTimerId);
+            }
+
+            const isResume = AppState.pausas.pausedTimerId === cardId;
+            startStretchTimer(cardId, false, isResume);
         }
 
-        function startStretchTimer(cardId, isFromCircuit = false) {
+        function startStretchTimer(cardId, isFromCircuit = false, resume = false) {
             AppState.pausas.activeTimerId = cardId;
+            AppState.pausas.pausedTimerId = null;
             const durationSetting = AppState.pausas.selectedDuration;
-            const totalSec = durationSetting === 'infinite' ? 300 : (durationSetting || 60);
-            AppState.pausas.remainingSec = totalSec;
-            AppState.pausas.totalCardSec = totalSec;
+            const configuredSec = durationSetting === 'infinite' ? 300 : (durationSetting || 60);
+            const totalSec = resume ? (AppState.pausas.totalCardSec || configuredSec) : configuredSec;
+            if (!resume) {
+                AppState.pausas.remainingSec = totalSec;
+                AppState.pausas.totalCardSec = totalSec;
+            }
 
             const ex = STRETCH_EXERCISES.find(e => e.id === cardId);
             const icon = document.getElementById('stretch-icon-' + cardId);
@@ -6329,7 +6343,7 @@
             if (icon) icon.className = 'fa-solid fa-pause';
             if (disp) disp.classList.remove('hidden');
             triggerHaptic([60]);
-            playBeep(600, 0.1);
+            if (AppState.pausas.soundEnabled) playBeep(600, 0.1);
 
             // Abre o display visual ativo
             showStretchActiveDisplay(cardId, totalSec);
@@ -6376,6 +6390,13 @@
                     clearInterval(AppState.pausas.intervalId);
                     AppState.pausas.intervalId = null;
                     AppState.pausas.activeTimerId = null;
+                    AppState.pausas.pausedTimerId = null;
+                    if (AppState.pausas.circuitActive) {
+                        const completed = AppState.pausas.circuitCompletedSteps || (AppState.pausas.circuitCompletedSteps = []);
+                        if (!completed.includes(cardId)) completed.push(cardId);
+                        const durations = AppState.pausas.circuitStepDurations || (AppState.pausas.circuitStepDurations = {});
+                        durations[cardId] = totalSec;
+                    }
 
                     if (icon) icon.className = 'fa-solid fa-check';
                     if (label) label.innerText = 'Feito!';
@@ -6424,6 +6445,7 @@
                 AppState.pausas.intervalId = null;
             }
             AppState.pausas.activeTimerId = null;
+            AppState.pausas.pausedTimerId = cardId;
             const icon = document.getElementById('stretch-icon-' + cardId);
             if (icon) icon.className = 'fa-solid fa-play';
         }
@@ -6495,6 +6517,8 @@
                 return;
             }
 
+            AppState.pausas.circuitCompletedSteps = [];
+            AppState.pausas.circuitStepDurations = {};
             startStretchCircuitStep(1);
         }
 
@@ -6560,7 +6584,7 @@
                 if (countEl) countEl.innerText = c;
                 if (c > 0) {
                     triggerHaptic([30]);
-                    playBeep(600, 0.08);
+                    if (AppState.pausas.soundEnabled) playBeep(600, 0.08);
                 } else {
                     clearInterval(AppState.pausas.resumeTimerId);
                     AppState.pausas.resumeTimerId = null;
@@ -6639,6 +6663,12 @@
                     clearInterval(AppState.pausas.intervalId);
                     AppState.pausas.intervalId = null;
                     AppState.pausas.activeTimerId = null;
+                    if (AppState.pausas.circuitActive) {
+                        const completed = AppState.pausas.circuitCompletedSteps || (AppState.pausas.circuitCompletedSteps = []);
+                        if (!completed.includes(activeCard)) completed.push(activeCard);
+                        const durations = AppState.pausas.circuitStepDurations || (AppState.pausas.circuitStepDurations = {});
+                        durations[activeCard] = totalSec;
+                    }
 
                     const icon = document.getElementById('stretch-icon-' + activeCard);
                     if (icon) icon.className = 'fa-solid fa-check';
@@ -6725,28 +6755,42 @@
         }
 
         function finishStretchCircuit() {
+            if (!AppState.pausas.circuitActive) return;
+            const completedSteps = Array.isArray(AppState.pausas.circuitCompletedSteps) ? AppState.pausas.circuitCompletedSteps : [];
+            const isComplete = [1, 2, 3, 4].every(stepId => completedSteps.includes(stepId));
+
             AppState.pausas.circuitActive = false;
             AppState.pausas.circuitPaused = false;
             AppState.pausas.circuitStep = 1;
+            AppState.pausas.activeTimerId = null;
+            AppState.pausas.pausedTimerId = null;
 
             if (AppState.pausas.intervalId) {
                 clearInterval(AppState.pausas.intervalId);
                 AppState.pausas.intervalId = null;
             }
 
-            speakVoice('Circuito completo do corpo concluído com sucesso! Excelente pausa ativa.');
-            triggerHaptic([300, 150, 400]);
+            if (isComplete) {
+                if (AppState.pausas.voiceGuideEnabled) {
+                    speakVoice('Circuito completo do corpo concluído com sucesso! Excelente pausa ativa.');
+                }
+                triggerHaptic([300, 150, 400]);
 
-            if (window.AndroidBridge?.playConfetti) {
-                try {
-                    window.AndroidBridge.playConfetti();
-                } catch(e) {}
+                if (window.AndroidBridge?.playConfetti) {
+                    try {
+                        window.AndroidBridge.playConfetti();
+                    } catch(e) {}
+                }
+
+                const durations = AppState.pausas.circuitStepDurations || {};
+                const actualDurationSec = [1, 2, 3, 4].reduce((total, stepId) => total + (Number(durations[stepId]) || 0), 0);
+                const totalMin = Math.max(1, Math.round(actualDurationSec / 60));
+                recordCorpoSession('Circuito Completo Ergonômico (4 exercícios)', totalMin);
+                markScheduleDone(5, true);
+                addMinutesToday(totalMin, 'stretch');
             }
-
-            const totalMin = Math.max(1, Math.round(((AppState.pausas.selectedDuration || 60) * 4) / 60));
-            recordCorpoSession('Circuito Completo Ergonômico (4 exercícios)', totalMin);
-            markScheduleDone(5, true);
-            addMinutesToday(totalMin, 'stretch');
+            AppState.pausas.circuitCompletedSteps = [];
+            AppState.pausas.circuitStepDurations = {};
 
             const btnLabel = document.getElementById('circuit-corpo-label');
             const btnIcon = document.getElementById('circuit-corpo-icon');
@@ -6762,6 +6806,7 @@
         }
 
         function cancelStretchCircuit(announce = true) {
+            cancelSoftResumeCorpo();
             if (AppState.pausas.intervalId) {
                 clearInterval(AppState.pausas.intervalId);
                 AppState.pausas.intervalId = null;
@@ -6770,6 +6815,9 @@
             AppState.pausas.circuitPaused = false;
             AppState.pausas.circuitStep = 1;
             AppState.pausas.activeTimerId = null;
+            AppState.pausas.pausedTimerId = null;
+            AppState.pausas.circuitCompletedSteps = [];
+            AppState.pausas.circuitStepDurations = {};
 
             const btnLabel = document.getElementById('circuit-corpo-label');
             const btnIcon = document.getElementById('circuit-corpo-icon');
@@ -6788,7 +6836,7 @@
                 }
             }
 
-            if (announce) {
+            if (announce && AppState.pausas.voiceGuideEnabled) {
                 speakVoice('Circuito cancelado.');
             }
         }
@@ -12572,7 +12620,7 @@
         }
 
         function startResponsivePause() {
-            if (AppState.mente?.isRunning || AppState.pausas?.isRunning || AppState.dailyExecution?.isRunning) {
+            if (AppState.mente?.isRunning || AppState.pausas?.isRunning || AppState.pausas?.circuitActive || AppState.pausas?.activeTimerId || AppState.dailyExecution?.isRunning) {
                 showInlineToast('Há outra sessão em andamento. Encerre-a antes de iniciar esta pausa.');
                 return;
             }

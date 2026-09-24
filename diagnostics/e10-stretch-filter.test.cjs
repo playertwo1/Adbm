@@ -55,15 +55,17 @@ const context = vm.createContext({
 });
 vm.runInContext(extractFunction('setStretchIntentFilter'), context);
 
-context.setStretchIntentFilter('coluna');
-for (let id = 1; id <= 4; id += 1) {
-    const card = elements.get(`stretch-card-${id}`);
-    const isColumnCard = id === 2;
-    assert.equal(card.classList.contains('hidden'), !isColumnCard, `filtro coluna deve ${isColumnCard ? 'mostrar' : 'ocultar'} o card ${id}`);
-    assert.equal(card.classList.contains('border-emerald-500/60'), isColumnCard, `destaque visual do card ${id} deve acompanhar o filtro`);
+for (const [filter, expectedId] of [['gluteos', 1], ['coluna', 2], ['peitoral', 3], ['cervical', 4]]) {
+    context.setStretchIntentFilter(filter);
+    for (let id = 1; id <= 4; id += 1) {
+        const card = elements.get(`stretch-card-${id}`);
+        const isSelected = id === expectedId;
+        assert.equal(card.classList.contains('hidden'), !isSelected, `filtro ${filter} deve ${isSelected ? 'mostrar' : 'ocultar'} o card ${id}`);
+        assert.equal(card.classList.contains('border-emerald-500/60'), isSelected, `destaque visual do card ${id} deve acompanhar o filtro ${filter}`);
+    }
+    assert.equal(elements.get(`tag-stretch-${filter}`).className.includes('bg-emerald-500/20'), true, `tag ${filter} deve receber o estado visual ativo`);
+    assert.equal(elements.get('stretch-filter-status').innerText, `Foco em: ${filter}`, `status deve indicar a região ${filter}`);
 }
-assert.match(elements.get('tag-stretch-coluna').className, /bg-emerald-500\/20/, 'tag selecionada deve receber o estado visual ativo');
-assert.equal(elements.get('stretch-filter-status').innerText, 'Foco em: coluna', 'status deve indicar a região selecionada');
 
 context.setStretchIntentFilter('all');
 for (let id = 1; id <= 4; id += 1) {
