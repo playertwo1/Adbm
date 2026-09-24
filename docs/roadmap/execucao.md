@@ -1,5 +1,17 @@
 # Registro de execução
 
+## 2026-09-24 — E12 / Smoke visual no Pixel_9 — PARCIAL; bloqueio visual aberto
+
+- Base: implementação local na worktree `work/e12-2-day-session-20260924`, base `65a5efa`, ainda sem commit/push; app ID `com.aistudio.coreflow.vdfpkw`.
+- AVD: `Pixel_9`, Android 17 / API 37; `adb devices -l` → `device`; `sys.boot_completed=1`.
+- Instalação: `cmp -s index.html app/src/main/assets/index.html` passou; `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' ./gradlew.bat :app:installDebug --console=plain` → BUILD SUCCESSFUL, instalado em Pixel_9.
+- Lançamento: `am force-stop` + `monkey -p com.aistudio.coreflow.vdfpkw 1`; `dumpsys activity` confirmou `MainActivity` em foco e `pidof` retornou processo ativo.
+- Cenário E12 (diário vazio): seletores `Esta semana`, `Semana anterior` e `Últimos 7 dias` atualizaram o título do total; os três mostraram 0 min e “Comparação indisponível”. No período de sete dias, gráfico/lista mostraram dias sem sessão; expandir `Sex, 18` exibiu “Nenhuma sessão registrada neste dia”. Insight informou ausência de horários individuais e não inferiu desempenho.
+- Relatório: `Exportar Relatório PDF` abriu o preview nativo com período `Últimos 7 dias`, 0 min e comparação indisponível. Preview cancelado sem imprimir ou salvar; app voltou à tela e a seleção foi restaurada para `Esta semana`.
+- Bloqueio: quadrados pretos/artefatos de renderização apareceram repetidamente em Home, Evolução, gráfico, conquistas e histórico, por vezes sobre texto e cards. Causa não identificada; aceite visual E12 permanece pendente. A primeira captura após cancelar o preview ficou vazia, mas a tela foi redesenhada após ~3s.
+- Integridade: scan de logcat após o cenário encontrou 0 `FATAL EXCEPTION`, `ERROR:CONSOLE` ou `Uncaught`; sem alteração de dados de treino nem concessão manual de permissões. O fluxo de permissão não era alvo.
+- Resultado: smoke funcional parcial no AVD; critérios do estado vazio exercitados. Não valida estados parcial/completo em aparelho, não substitui auditoria independente nem prova causa dos artefatos. Próximo passo: investigar renderização; repetir inspeção visual após esclarecimento, depois auditoria independente de E12.
+
 ## 2026-09-24 — E12.1 / Períodos da Evolução — IMPLEMENTADA E AUDITADA
 
 - Base: `65a5efa` (HEAD/origin/main antes da tranche), branch `work/e12-period-dashboard-20260924`.
