@@ -9986,7 +9986,31 @@
             document.getElementById('mindfulnessRemaining').innerText = `-${formatMindfulnessTime(duration - (audio.currentTime || 0))}`;
             document.getElementById('mindfulnessPlayIcon').className = `fa-solid ${audio.paused ? 'fa-play' : 'fa-pause'}`;
             document.getElementById('mindfulnessPulse').classList.toggle('animate-pulse', !audio.paused);
+            syncMindfulnessNativeState();
         }
+
+        let mindfulnessLastNativeSync = 0;
+        function syncMindfulnessNativeState(force = false) {
+            if (!window.AndroidBridge?.updateMindfulnessAudioState) return;
+            const now = Date.now();
+            if (!force && now - mindfulnessLastNativeSync < 900) return;
+            mindfulnessLastNativeSync = now;
+            const audio = document.getElementById('mindfulnessAudio');
+            const title = document.getElementById('mindfulnessTrackTitle')?.innerText || 'Prática de Mindfulness';
+            const positionMs = Math.round((audio.currentTime || 0) * 1000);
+            const durationMs = Number.isFinite(audio.duration) ? Math.round(audio.duration * 1000) : 0;
+            window.AndroidBridge.updateMindfulnessAudioState(title, !audio.paused, positionMs, durationMs);
+        }
+
+        window.onNativeMindfulnessMediaControl = function(type) {
+            const audio = document.getElementById('mindfulnessAudio');
+            if (!audio) return;
+            if (type === 'play' && audio.paused) {
+                toggleMindfulnessAudio();
+            } else if (type === 'pause' && !audio.paused) {
+                toggleMindfulnessAudio();
+            }
+        };
 
         function handleMindfulnessAudioError() {
             const audio = document.getElementById('mindfulnessAudio');

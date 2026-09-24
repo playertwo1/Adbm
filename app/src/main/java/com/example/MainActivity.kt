@@ -116,10 +116,23 @@ class MainActivity : ComponentActivity() {
     private var pendingQuickBreathPattern: String? = null
     private var pendingQuickBreathDuration: Int = 0
     private var workoutReceiverRegistered = false
+    private var mindfulnessMediaReceiverRegistered = false
     private val workoutStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action != WorkoutForegroundService.ACTION_STATE_CHANGED) return
             intent.getStringExtra(WorkoutForegroundService.EXTRA_STATE_JSON)?.let(::deliverWorkoutState)
+        }
+    }
+    private val mindfulnessMediaControlReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action != MindfulnessAudioService.ACTION_MEDIA_CONTROL) return
+            val type = intent.getStringExtra(MindfulnessAudioService.EXTRA_MEDIA_CONTROL_TYPE) ?: return
+            webView?.post {
+                webView?.evaluateJavascript(
+                    "if (window.onNativeMindfulnessMediaControl) window.onNativeMindfulnessMediaControl(${JSONObject.quote(type)});",
+                    null
+                )
+            }
         }
     }
 
@@ -136,6 +149,15 @@ class MainActivity : ComponentActivity() {
             registerReceiver(workoutStateReceiver, workoutFilter)
         }
         workoutReceiverRegistered = true
+
+        val mindfulnessMediaFilter = IntentFilter(MindfulnessAudioService.ACTION_MEDIA_CONTROL)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(mindfulnessMediaControlReceiver, mindfulnessMediaFilter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            @Suppress("DEPRECATION")
+            registerReceiver(mindfulnessMediaControlReceiver, mindfulnessMediaFilter)
+        }
+        mindfulnessMediaReceiverRegistered = true
 
         createNotificationChannel()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -235,6 +257,10 @@ class MainActivity : ComponentActivity() {
         if (workoutReceiverRegistered) {
             unregisterReceiver(workoutStateReceiver)
             workoutReceiverRegistered = false
+        }
+        if (mindfulnessMediaReceiverRegistered) {
+            unregisterReceiver(mindfulnessMediaControlReceiver)
+            mindfulnessMediaReceiverRegistered = false
         }
         tts?.stop()
         tts?.shutdown()
@@ -405,6 +431,17 @@ class AndroidBridge(
     fun stopMindfulnessAudioSession() {
         context.startService(Intent(context, MindfulnessAudioService::class.java).apply {
             action = MindfulnessAudioService.ACTION_STOP
+        })
+    }
+
+    @JavascriptInterface
+    fun updateMindfulnessAudioState(title: String, isPlaying: Boolean, positionMs: Long, durationMs: Long) {
+        context.startService(Intent(context, MindfulnessAudioService::class.java).apply {
+            action = MindfulnessAudioService.ACTION_UPDATE_STATE
+            putExtra(MindfulnessAudioService.EXTRA_TITLE, title)
+            putExtra(MindfulnessAudioService.EXTRA_IS_PLAYING, isPlaying)
+            putExtra(MindfulnessAudioService.EXTRA_POSITION_MS, positionMs)
+            putExtra(MindfulnessAudioService.EXTRA_DURATION_MS, durationMs)
         })
     }
 

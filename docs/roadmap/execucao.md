@@ -1,5 +1,17 @@
 # Registro de execução
 
+## 2026-09-24 — E11 / Mindfulness — NOTIFICAÇÃO/MEDIASESSION SINCRONIZADAS
+
+- Base: commit local `b61f0a7` (tranches anteriores de E11, sem push).
+- Escopo: notificação de mindfulness era estática (só título/texto, sem controle real). Faltava sincronizar posição/estado com notificação e sistema (MediaSession), e permitir controle a partir da notificação sem abrir o app.
+- Implementação nativa (`MindfulnessAudioService.kt`): `MediaSession` real com callback `onPlay()`/`onPause()` que emite broadcast interno (`ACTION_MEDIA_CONTROL`, restrito ao próprio pacote via `setPackage`); `PlaybackState` atualizado a cada mudança de estado; notificação ganhou ação real "Pausar"/"Reproduzir" (`NotificationCompat.Action` com `PendingIntent.getService`), atualizada via `manager.notify()` sem duplicar a notificação. Nova ação `ACTION_UPDATE_STATE` recebe título/isPlaying/posição/duração do JS.
+- Bridge (`MainActivity.kt`): novo `@JavascriptInterface updateMindfulnessAudioState(title, isPlaying, positionMs, durationMs)` encaminha estado para a Service; novo `BroadcastReceiver` (`mindfulnessMediaControlReceiver`) registrado/desregistrado no ciclo de vida da Activity, repassa o controle da notificação para o JS via `window.onNativeMindfulnessMediaControl(type)`.
+- JS (`index.html`): `updateMindfulnessAudioUI()` agora chama `syncMindfulnessNativeState()` (throttled a 900ms) que envia o estado atual para a bridge nativa; `window.onNativeMindfulnessMediaControl(type)` traduz "play"/"pause" vindos da notificação em chamadas reais a `toggleMindfulnessAudio()`, evitando dupla reprodução (só age se o estado atual diverge do comando).
+- Regressão: `diagnostics/e11-mediasession-sync.test.cjs` (novo) — cobre presença da bridge de sincronização e que os controles nativos "pause"/"play" acionam o áudio real sem duplicar. Ajustes de compatibilidade em `diagnostics/e11-playback-controls.test.cjs` (stub de `updateMindfulnessAudioState` e extração de `syncMindfulnessNativeState` no mock).
+- Verificação: todos os `diagnostics/*.test.cjs` (individualmente) → PASS; `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → `CHECK PASS` (compilação Kotlin nova incluída, sem erros).
+- Validação AVD: `Pixel_9` — `:app:installDebug`, abri Meditar, dei play (player e notificação real na barra de status confirmados via `uiautomator dump`, sem estimar coordenadas visualmente). Toquei no botão real "Pausar" da notificação expandida (bounds exatos via UI Automator) — áudio pausou de fato, e ao reabrir o app o player mostrou ícone de play e tempo travado em 01:00, confirmando sincronização bidirecional completa. Logcat sem `FATAL EXCEPTION`/crash em nenhuma etapa.
+- Limitações: não testado o botão "Reproduzir" manualmente na notificação (mesmo código do "Pausar", coberto pelo teste automatizado); não testado em Galaxy Watch, Bluetooth ou Google Assistant (consumidores adicionais do `MediaSession` do sistema); sem teste em aparelho físico ou TalkBack.
+
 ## 2026-09-24 — E11 / Mindfulness — HÁPTICOS CANCELADOS AO ENCERRAR
 
 - Base: commit local `e9de711` (tranches anteriores de E11, sem push).

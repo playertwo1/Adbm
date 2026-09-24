@@ -93,10 +93,13 @@ function buildContext(audio) {
         window: { AndroidBridge: {
             startMindfulnessAudioSession() { sessionsStarted += 1; },
             stopMindfulnessAudioSession() { sessionsStopped += 1; },
-            setKeepScreenOn(value) { keepScreenOnCalls.push(value); }
+            setKeepScreenOn(value) { keepScreenOnCalls.push(value); },
+            updateMindfulnessAudioState() {}
         } },
         showInlineToast(msg) { toastMessages.push(msg); },
-        formatMindfulnessTime(s) { return String(Math.max(0, Math.floor(s))); }
+        formatMindfulnessTime(s) { return String(Math.max(0, Math.floor(s))); },
+        mindfulnessLastNativeSync: 0,
+        Date
     });
     return { context, els };
 }
@@ -147,7 +150,8 @@ function buildContext(audio) {
     const { context } = buildContext(audio);
     vm.runInContext([
         extractAsyncFunction('toggleMindfulnessAudio'),
-        extractFunction('updateMindfulnessAudioUI')
+        extractFunction('updateMindfulnessAudioUI'),
+        extractFunction('syncMindfulnessNativeState')
     ].join('\n'), context);
 
     return context.toggleMindfulnessAudio().then(() => {
