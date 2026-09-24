@@ -10077,6 +10077,7 @@
             mindfulnessPlayer.wakeLock = null;
             window.AndroidBridge?.setKeepScreenOn?.(false);
             window.AndroidBridge?.stopMindfulnessAudioSession?.();
+            cancelPendingSignals();
             const modal = document.getElementById('mindfulnessAudioModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');

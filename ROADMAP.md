@@ -200,7 +200,7 @@ Limitações: a auditoria final identificou e corrigiu a divergência de duraç�
 - [x] Próxima faixa corresponde ao arquivo anunciado; fim da lista tem comportamento definido. Evidência: `diagnostics/e11-track-announced-end-of-list.test.cjs` (verificação, sem bug encontrado).
 - [ ] Notificação/tela sincronizam posição em segundo plano; apenas uma reprodução.
 - [x] Distinguir silenciar avisos de silenciar narração. Evidência: `diagnostics/e11-mute-alerts.test.cjs` + validação AVD Pixel_9 (toggle "Avisos ativos"/"Avisos silenciados" testado na UI real).
-- [ ] Hápticos cancelados ao encerrar.
+- [x] Hápticos cancelados ao encerrar. Evidência: `diagnostics/e11-cancel-haptics-on-close.test.cjs` + validação AVD Pixel_9 (fechar via X, sem crash).
 - [x] Arquivo ausente oferece erro acessível e nova tentativa; falha/metadados ausentes não geram conclusão. Evidência: `diagnostics/e11-audio-error-retry.test.cjs`.
 - [ ] Pausa de Resposta abre seu fluxo próprio, sem áudio fictício do mockup.
 Aceite: controles na tela/notificação, extremos da busca, bloqueio e arquivo ausente verificados.

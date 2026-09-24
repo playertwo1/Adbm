@@ -1,5 +1,15 @@
 # Registro de execução
 
+## 2026-09-24 — E11 / Mindfulness — HÁPTICOS CANCELADOS AO ENCERRAR
+
+- Base: commit local `e9de711` (tranches anteriores de E11, sem push).
+- Escopo: `closeMindfulnessAudioModal()` (botão X) não chamava `cancelPendingSignals()` — ao fechar o player durante um háptico em andamento (ex.: padrão `[60,100,160]` da conclusão, ou qualquer vibração nativa via `AndroidBridge.vibratePattern`), o sinal podia continuar mesmo com o modal fechado.
+- Correção: adicionada chamada a `cancelPendingSignals()` (helper já existente, usado em outros fluxos) dentro de `closeMindfulnessAudioModal()`, que cancela `AndroidBridge.cancelHaptics()`, `speechSynthesis.cancel()` e `navigator.vibrate(0)` como fallback web.
+- Regressão: `diagnostics/e11-cancel-haptics-on-close.test.cjs` (novo) — RED confirmado (fechar não cancelava nada); GREEN após a correção. Cobre: fechar chama `cancelHaptics` na bridge nativa, cancela fala pendente e zera vibração web.
+- Verificação: todos os `diagnostics/*.test.cjs` (individualmente) → PASS; `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → `CHECK PASS`.
+- Validação AVD: `Pixel_9` — `:app:installDebug`, abri Hoje → Meditar, dei play e +15s, fechei via X. Modal fechou normalmente, voltando à tela Hoje. Logcat sem `FATAL EXCEPTION`/crash; único registro relacionado a haptics foi `WearHapticsRelay` falhando a conexão com Google Play Services (esperado — sem Galaxy Watch pareado no emulador, limitação já documentada).
+- Limitações: não é possível confirmar visualmente/fisicamente a vibração real do emulador (sem hardware háptico); a evidência de cancelamento vem do teste unitário sobre a chamada `cancelHaptics`. Sem teste em aparelho físico, Galaxy Watch ou TalkBack. Alterações E11 ainda sem novo commit/push.
+
 ## 2026-09-24 — E11 / Mindfulness — SILENCIAR AVISOS DISTINTO DE NARRAÇÃO
 
 - Base: commit local `1c28d34` (tranches anteriores de E11, sem push).
