@@ -2261,6 +2261,7 @@
                 <p id="mindfulnessTrackSubtitle" class="mt-1 text-xs text-slate-400">Encontre uma postura confortável e permita-se estar presente.</p>
                 <div id="mindfulnessAudioError" role="alert" aria-live="assertive" class="hidden mt-3 rounded-xl border border-rose-400/30 bg-rose-500/10 p-3 text-xs text-rose-200">Não foi possível carregar esta faixa.</div>
                 <button id="mindfulnessAudioRetry" type="button" onclick="retryMindfulnessAudio()" class="hidden mt-2 w-full rounded-xl border border-rose-400/30 bg-rose-500/10 py-2 text-xs font-bold text-rose-200">Tentar carregar novamente</button>
+                <button id="mindfulnessMuteAlertsBtn" type="button" onclick="toggleMindfulnessMuteAlerts()" aria-pressed="false" class="mt-3 inline-flex items-center gap-1.5 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-[11px] font-bold text-violet-200"><i id="mindfulnessMuteAlertsIcon" class="fa-solid fa-bell"></i><span id="mindfulnessMuteAlertsLabel">Avisos ativos</span></button>
                 <select id="mindfulnessTrackSelect" onchange="selectMindfulnessTrack(this.value)" class="mt-4 hidden w-full rounded-xl border border-violet-400/30 bg-slate-900 px-3 py-2 text-sm text-violet-100"></select>
                 <div class="mt-7">
                     <input id="mindfulnessScrubber" type="range" min="0" value="0" step="1" oninput="seekMindfulnessAudio(this.value)" class="w-full accent-violet-500">
@@ -3062,6 +3063,7 @@
             voiceEnabled: true,
             hapticsEnabled: true,
             watchHapticsEnabled: true,
+            mindfulnessMuteAlerts: false,
             streak: 0,
             totalMinutesToday: 0,
             dailyGoal: 30,
@@ -3753,6 +3755,10 @@
                 const savedVoiceEnabled = localStorage.getItem('coreflow_voice_enabled');
                 if (savedVoiceEnabled !== null) {
                     AppState.voiceEnabled = savedVoiceEnabled === 'true';
+                }
+                const savedMindfulnessMuteAlerts = localStorage.getItem('coreflow_mindfulness_mute_alerts');
+                if (savedMindfulnessMuteAlerts !== null) {
+                    AppState.mindfulnessMuteAlerts = savedMindfulnessMuteAlerts === 'true';
                 }
                 const savedHapticsEnabled = localStorage.getItem('coreflow_haptics_enabled');
                 if (savedHapticsEnabled !== null) {
@@ -9909,6 +9915,12 @@
             document.getElementById('mindfulnessWeekLabel').innerText = `Semana ${idx + 1} de 8`;
             document.getElementById('mindfulnessTrackTitle').innerText = title;
             document.getElementById('mindfulnessTrackSubtitle').innerText = phase.details;
+            const muteBtn = document.getElementById('mindfulnessMuteAlertsBtn');
+            const muteIcon = document.getElementById('mindfulnessMuteAlertsIcon');
+            const muteLabel = document.getElementById('mindfulnessMuteAlertsLabel');
+            if (muteBtn) muteBtn.setAttribute('aria-pressed', String(AppState.mindfulnessMuteAlerts));
+            if (muteIcon) muteIcon.className = AppState.mindfulnessMuteAlerts ? 'fa-solid fa-bell-slash' : 'fa-solid fa-bell';
+            if (muteLabel) muteLabel.innerText = AppState.mindfulnessMuteAlerts ? 'Avisos silenciados' : 'Avisos ativos';
             const selector = document.getElementById('mindfulnessTrackSelect');
             const choices = idx === 6 ? [1,2,3,5,6,7] : (idx === 2 && !isSecondary ? [3,1] : []);
             if (choices.length) {
@@ -10006,6 +10018,17 @@
             audio.load();
         }
 
+        function toggleMindfulnessMuteAlerts() {
+            AppState.mindfulnessMuteAlerts = !AppState.mindfulnessMuteAlerts;
+            try { localStorage.setItem('coreflow_mindfulness_mute_alerts', String(AppState.mindfulnessMuteAlerts)); } catch(e) {}
+            const btn = document.getElementById('mindfulnessMuteAlertsBtn');
+            const icon = document.getElementById('mindfulnessMuteAlertsIcon');
+            const label = document.getElementById('mindfulnessMuteAlertsLabel');
+            if (btn) btn.setAttribute('aria-pressed', String(AppState.mindfulnessMuteAlerts));
+            if (icon) icon.className = AppState.mindfulnessMuteAlerts ? 'fa-solid fa-bell-slash' : 'fa-solid fa-bell';
+            if (label) label.innerText = AppState.mindfulnessMuteAlerts ? 'Avisos silenciados' : 'Avisos ativos';
+        }
+
         function completeMindfulnessAudio() {
             const audio = document.getElementById('mindfulnessAudio');
             if (!mindfulnessPlayer.audioReady || mindfulnessPlayer.audioUnavailable || audio?.error || !Number.isFinite(audio?.duration) || audio.duration <= 0) {
@@ -10038,8 +10061,10 @@
                 const mindfulnessSaved = saveState();
                 if (!mindfulnessSaved) showInlineToast('Sessão concluída, mas ainda não foi salva.');
             }
-            playTibetanChime?.();
-            triggerHaptic([60, 100, 160]);
+            if (!AppState.mindfulnessMuteAlerts) {
+                playTibetanChime?.();
+                triggerHaptic([60, 100, 160]);
+            }
             closeMindfulnessAudioModal();
             renderProgramsList();
             showInlineToast(isFormal ? 'Prática de mindfulness registrada.' : 'Espaço de respiração concluído.');

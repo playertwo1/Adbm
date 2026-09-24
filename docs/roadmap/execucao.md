@@ -1,5 +1,15 @@
 # Registro de execução
 
+## 2026-09-24 — E11 / Mindfulness — SILENCIAR AVISOS DISTINTO DE NARRAÇÃO
+
+- Base: commit local `1c28d34` (tranches anteriores de E11, sem push).
+- Escopo: referência visual (`assets/design/coreflow-s25-ultra/08-mindfulness-player.png`) mostra um toggle "Modo silencioso" separado do controle de narração/voz — ausente no player real. Adicionado botão "Avisos ativos"/"Avisos silenciados" no modal de mindfulness.
+- Implementação: novo estado `AppState.mindfulnessMuteAlerts` (persistido em `coreflow_mindfulness_mute_alerts`), botão `#mindfulnessMuteAlertsBtn` no modal, função `toggleMindfulnessMuteAlerts()`. Ao concluir a prática, `playTibetanChime()`/`triggerHaptic()` só disparam se `mindfulnessMuteAlerts` for `false`; o áudio/narração principal (elemento `<audio>`) não é afetado pelo toggle. Botão sincroniza seu rótulo/ícone ao abrir o modal, refletindo o estado salvo.
+- Regressão: `diagnostics/e11-mute-alerts.test.cjs` (novo) — RED confirmado (controle inexistente); GREEN após implementação. Cobre: com avisos ativos, concluir toca sino+háptico; alternar ativa o silenciamento; com avisos silenciados, concluir NÃO toca sino/háptico; em nenhum dos casos o estado de reprodução do áudio principal é afetado.
+- Verificação: todos os `diagnostics/*.test.cjs` (individualmente) → PASS; `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → `CHECK PASS`.
+- Validação AVD: `Pixel_9` — `:app:installDebug`, abri Hoje → Meditar → player "Meditação do Corpo e da Respiração". Botão "Avisos ativos" (sino) visível abaixo do subtítulo; toque alternou para "Avisos silenciados" (ícone sino cortado) na UI real. Logcat sem `FATAL EXCEPTION`/crash do app.
+- Limitações: não testado o efeito real do silenciamento sobre o sino/háptico no dispositivo (apenas a alternância visual do botão); sem teste em aparelho físico, Galaxy Watch ou TalkBack. Alterações E11 ainda sem novo commit/push.
+
 ## 2026-09-24 — E11 / Mindfulness — FAIXA ANUNCIADA E FIM DA LISTA VERIFICADOS
 
 - Base: commit local `c34bdd1` (tranche anterior de E11 já commitada, sem push).

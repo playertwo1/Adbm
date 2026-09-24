@@ -199,7 +199,7 @@ Limitações: a auditoria final identificou e corrigiu a divergência de duraç�
 - [x] Play/pausa, ±15s e busca controlam áudio; limitar posição aos extremos. Evidência: `diagnostics/e11-playback-controls.test.cjs` + validação AVD Pixel_9.
 - [x] Próxima faixa corresponde ao arquivo anunciado; fim da lista tem comportamento definido. Evidência: `diagnostics/e11-track-announced-end-of-list.test.cjs` (verificação, sem bug encontrado).
 - [ ] Notificação/tela sincronizam posição em segundo plano; apenas uma reprodução.
-- [ ] Distinguir silenciar avisos de silenciar narração.
+- [x] Distinguir silenciar avisos de silenciar narração. Evidência: `diagnostics/e11-mute-alerts.test.cjs` + validação AVD Pixel_9 (toggle "Avisos ativos"/"Avisos silenciados" testado na UI real).
 - [ ] Hápticos cancelados ao encerrar.
 - [x] Arquivo ausente oferece erro acessível e nova tentativa; falha/metadados ausentes não geram conclusão. Evidência: `diagnostics/e11-audio-error-retry.test.cjs`.
 - [ ] Pausa de Resposta abre seu fluxo próprio, sem áudio fictício do mockup.
