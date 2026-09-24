@@ -7,8 +7,10 @@
 - Arquivos: `index.html`, `app/src/main/assets/index.html`, `diagnostics/e10-stretch-filter.test.cjs`, `ROADMAP.md`.
 - RED: `node diagnostics/e10-stretch-filter.test.cjs` falhou como esperado porque o filtro apenas destacava cards não correspondentes, sem removê-los do catálogo visível.
 - GREEN: `node diagnostics/e10-stretch-filter.test.cjs` → `E10 stretch filter: PASS`; cobre seleção de região, restauração de todos os cards e equivalência byte a byte dos HTMLs.
-- Verificação integrada: `bash scripts/check.sh` com JDK/Android SDK configurados → `CHECK PASS`, todos os diagnósticos, testes unitários e builds app/Wear concluídos (`BUILD SUCCESSFUL`); `git diff --check` → exit 0; `cmp -s index.html app/src/main/assets/index.html` → exit 0.
-- Limitações: validação visual/física Android, TalkBack e Galaxy Watch não foi executada; parâmetros de posição/intensidade seguem diferidos até haver referência revisada. E09 ainda aguarda auditoria independente e validação E13.
+- Validação integrada: `bash scripts/check.sh` com JDK/Android SDK configurados → `CHECK PASS`, diagnósticos, testes unitários e builds app/Wear (`BUILD SUCCESSFUL`); `git diff --check` → exit 0; `cmp -s index.html app/src/main/assets/index.html` → exit 0.
+- Validação AVD: `Pixel_9`, Android 17/API 37 (`emulator-5554`); `:app:installDebug` instalou o APK e `com.example.MainActivity` permaneceu em foco. Na UI, Coluna & Lombar deixou visível o card Torção de Coluna; selecionar Todos restaurou os quatro cards de várias regiões. Nenhuma permissão foi solicitada no cenário.
+- Logcat após interação: sem `FATAL EXCEPTION`, `ERROR:CONSOLE`, `Uncaught`, ANR ou OutOfMemoryError. Não foi iniciada sessão de exercício.
+- Limitações: não houve validação física em celular/Watch nem TalkBack; screenshots do emulador exibiram pequenos artefatos pretos de renderização, causa não investigada. Parâmetros de posição/intensidade seguem diferidos até haver referência revisada. E09 ainda aguarda auditoria independente e validação E13.
 - Próximo passo: avançar outra parte independente de E10, sem inventar parâmetros, diretamente por esta sessão e sem Kanban.
 
 ## 2026-09-24 — E09.6–E09.8 / Perfil: backup embarcado e exclusão explícita — IMPLEMENTADAS, aguardando auditoria
