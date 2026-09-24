@@ -1,5 +1,17 @@
 # Registro de execução
 
+## 2026-09-24 — E11 / Mindfulness — FAIXAS COM DURAÇÃO REAL (8/8 CONCLUÍDO, CHECKLIST COMPLETO)
+
+- Base: commit local `a9f1e18` (Pausa de Resposta + bloqueio mútuo, publicado em `main`).
+- Escopo: item do checklist E11 que havia sido deixado pendente por engano em rodadas anteriores — "Usar faixas existentes e duração real."
+- Confirmado: as 8 faixas `.mp3` (`app/src/main/assets/audio/mindfulness/1track.mp3`...`8track.mp3`) existem de fato (nenhuma referência a arquivo fictício).
+- Bug real encontrado: `formalTrackDuration`/`secondaryTrackDuration` no array `AppState.programs` (fases do programa de Mindfulness) eram valores hardcoded (480/840/600/180s) que não batiam com a duração real dos arquivos, medida via `ffprobe -show_entries format=duration`: 1track=574s, 2track=1085s, 3track=579s, 4track=524s, 5track=430s, 6track=662s, 7track=558s, 8track=241s. Diferenças de até 245s (quase 4 minutos) em alguns casos. O player principal (`audio.duration` real via evento `loadedmetadata`) já exibia a duração correta na tela; o problema estava nos metadados usados como (a) fallback de minutos registrados quando `currentTime` é 0 ao concluir sem tocar, e (b) rótulo de texto "(3 min)" da faixa 8 que dizia 3 min mas o arquivo tem 4:01.
+- Correção: todos os `formalTrackDuration`/`secondaryTrackDuration` das 8 fases atualizados para os valores reais medidos; rótulo da faixa 8 corrigido de "(3 min)" para "(4 min)" em `mindfulnessTrackMeta()` e nos títulos de `secondaryTrackTitle`.
+- Teste: `diagnostics/e11-track-real-duration.test.cjs` (novo, RED→GREEN) — compara os valores declarados no código contra uma tabela de durações reais medidas via `ffprobe` (constantes fixas no teste, com tolerância de 5s), falha se algum arquivo novo for adicionado sem duração revisada.
+- Gate: `scripts/check.sh` → CHECK PASS. HTMLs `index.html`/`app/src/main/assets/index.html` re-sincronizados e confirmados idênticos via `cmp -s`.
+- Validação AVD Pixel_9: reinstalado, abri Semana 1 (Meditação do Corpo e da Respiração) — player mostra `-09:34` restante (574s), batendo exatamente com a duração real medida do `1track.mp3`. Fechado sem crash no logcat.
+- **Checklist E11 (`ROADMAP.md`): 8 de 8 itens concluídos.** E11 está de fato completo agora.
+
 ## 2026-09-24 — E11 / Mindfulness — PAUSA DE RESPOSTA: FLUXO PRÓPRIO E BLOQUEIO MÚTUO (7/7 CONCLUÍDO)
 
 - Base: commit local `0e747a1` (MediaSession/notificação, publicado em `main`).

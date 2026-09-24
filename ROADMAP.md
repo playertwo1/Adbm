@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 24/09/2026. Status: E00–E03 e E05–E09 implementadas conforme evidências; E04 permanece aberta para verificação em E13. E09 está no commit `8afdd67`, aguardando auditoria independente e validação integrada. E10 segue em execução diretamente por chat e sem Kanban: E10.2–E10.7 foram publicadas no commit `7da1a47`; E10.1 continua diferida até referência revisada, e a validação física permanece pendente. E11 concluída localmente: 7/7 itens do checklist implementados e validados (erro/retentativa, controles de reprodução, faixa/fim de lista, silenciar avisos, hápticos ao encerrar, MediaSession/notificação em segundo plano publicada em `0e747a1`, bloqueio mútuo Pausa de Resposta↔Mindfulness). Próxima ação: revisar, publicar a tranche final de E11 e planejar E12.
+Atualizado: 24/09/2026. Status: E00–E03 e E05–E09 implementadas conforme evidências; E04 permanece aberta para verificação em E13. E09 está no commit `8afdd67`, aguardando auditoria independente e validação integrada. E10 segue em execução diretamente por chat e sem Kanban: E10.2–E10.7 foram publicadas no commit `7da1a47`; E10.1 continua diferida até referência revisada, e a validação física permanece pendente. E11 concluída localmente: 8/8 itens do checklist implementados e validados (faixas com duração real, erro/retentativa, controles de reprodução, faixa/fim de lista, silenciar avisos, hápticos ao encerrar, MediaSession/notificação em segundo plano publicada em `a9f1e18`, bloqueio mútuo Pausa de Resposta↔Mindfulness). Próxima ação: revisar, publicar a tranche final de E11 (duração real) e planejar E12.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -195,7 +195,7 @@ Limitações: a auditoria final identificou e corrigiu a divergência de duraç�
 
 ### E11 — Tela 08: Mindfulness
 [Referência](assets/design/coreflow-s25-ultra/08-mindfulness-player.png)
-- [ ] Usar faixas existentes e duração real.
+- [x] Usar faixas existentes e duração real. Evidência: `diagnostics/e11-track-real-duration.test.cjs` compara `formalTrackDuration`/`secondaryTrackDuration` hardcoded contra a duração real medida via `ffprobe` nos 8 arquivos `.mp3` existentes — 7 de 8 fases divergiam (até 245s de diferença); corrigido para os valores reais. Validação AVD Pixel_9: player mostra `-09:34` (574s) na Semana 1, batendo com a duração real do arquivo.
 - [x] Play/pausa, ±15s e busca controlam áudio; limitar posição aos extremos. Evidência: `diagnostics/e11-playback-controls.test.cjs` + validação AVD Pixel_9.
 - [x] Próxima faixa corresponde ao arquivo anunciado; fim da lista tem comportamento definido. Evidência: `diagnostics/e11-track-announced-end-of-list.test.cjs` (verificação, sem bug encontrado).
 - [x] Notificação/tela sincronizam posição em segundo plano; apenas uma reprodução. Evidência: `diagnostics/e11-mediasession-sync.test.cjs` + `MindfulnessAudioService` (MediaSession nativa + notificação com ação Pausar/Reproduzir) + validação AVD Pixel_9 (botão real da notificação pausou o áudio, sincronizado com o player).
