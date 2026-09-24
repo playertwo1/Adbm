@@ -565,6 +565,14 @@ class AndroidBridge(
         .orEmpty()
 
     @JavascriptInterface
+    fun clearProgressSnapshot(): Boolean = runCatching {
+        context.getSharedPreferences(PROGRESS_PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .clear()
+            .commit()
+    }.getOrDefault(false)
+
+    @JavascriptInterface
     fun preserveProgressBeforeImport(): Boolean = runCatching {
         val prefs = context.getSharedPreferences(PROGRESS_PREFS, Context.MODE_PRIVATE)
         val archive = JSONObject().apply {

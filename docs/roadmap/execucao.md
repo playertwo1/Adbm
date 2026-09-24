@@ -1,6 +1,16 @@
 # Registro de execução
 
+## 2026-09-24 — E09.6–E09.8 / Perfil: backup embarcado e exclusão explícita — IMPLEMENTADAS, aguardando auditoria
+
+- Base local: `99f2c07` (`main` sem commit novo e sem push). Escopo limitado à conclusão funcional de E09; nenhum GitHub Actions foi usado.
+- Correções: `index.html` e `app/src/main/assets/index.html` voltaram a ficar byte a byte idênticos, incluindo a UI e os caminhos E09.5; `app/src/main/assets/scripts/encryption.js` foi adicionado para que o WebView Android carregue o gerenciador de backup criptografado; `MainActivity.kt` ganhou `clearProgressSnapshot()` para apagar as cópias nativas.
+- Perfil: a seção de dados mantém exportação/importação com prévia, cancelamento e mensagens de erro; o perfil não exibe bateria/sensores externos como conectados; a exclusão informa escopo, oferece exportação antes da ação, exige confirmação explícita, bloqueia sessão ativa e limpa localStorage + SharedPreferences de progresso.
+- Regressão nova: `diagnostics/e09-6-profile-data-controls.test.cjs` cobre equivalência dos HTMLs, carregamento do script no asset Android, ausência de métricas mockadas, controles de backup e exclusão real com chamada à bridge.
+- Verificação: `node diagnostics/e09-2-profile.test.cjs`, `node diagnostics/e09-3-reminders.test.cjs`, `node diagnostics/e09-4-voice-haptics-watch.test.cjs`, `node diagnostics/e09-6-profile-data-controls.test.cjs` e `node scripts/e095-tests.js` → exit 0; `bash scripts/check.sh` com `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr'` e `ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk'` → `CHECK PASS`, `BUILD SUCCESSFUL`, testes unitários e builds app/Wear; `cmp -s index.html app/src/main/assets/index.html` → exit 0, SHA-256 idêntico `6440cc19d1c835cce0120e672da0146f8a53056340920fc879466125f7e8b452`; `git diff --check` → exit 0.
+- Limitações: não houve validação em aparelho físico, Galaxy Watch físico ou TalkBack. E09 aguarda auditoria independente e a validação integrada E13 antes de publicação.
+
 ## 2026-09-23 — Consolidação histórica dos targets aprovados divergentes (t_ce21c966) — IMPLEMENTADA, aguardando auditoria
+
 
 - Base obrigatória: `d9af749ee64b0d155629574ee43c81b405e5d0a3` (`main` e worktree limpos antes da integração). O `target_sha` é o filho novo desta base e foi registrado no handoff do card; não é repetido neste arquivo para evitar auto-referência documental.
 - Contrato observável e inventário completo: `docs/roadmap/integracao-targets-aprovados.md` registra AC-1–AC-5, a ordem dos oito SHAs, a decisão por alvo, equivalentes posteriores, conflitos, exclusões e limitações.

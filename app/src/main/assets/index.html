@@ -242,6 +242,8 @@
             }
         }
     </style>
+    <!-- E09.5: Secure Backup Manager -->
+    <script src="scripts/encryption.js"></script>
 </head>
 <body class="cf-app bg-slate-900 text-slate-100 min-h-screen pb-24 overflow-x-hidden antialiased selection:bg-emerald-500 selection:text-white">
 
@@ -2000,6 +2002,11 @@
                     <button onclick="openProgressProtection(); exportProgressCopy()" class="rounded-xl bg-emerald-500 px-3 py-3 text-sm font-bold text-slate-950">Exportar backup</button>
                     <button onclick="openProgressProtection(); chooseProgressImport()" class="rounded-xl border border-sky-400/40 bg-sky-500/10 px-3 py-3 text-sm font-bold text-sky-200">Importar backup</button>
                 </div>
+                <!-- E09.5: Backup Seguro com Criptografia -->
+                <div class="grid grid-cols-2 gap-3 mt-3">
+                    <button onclick="openProgressProtection(); exportProgressSecure()" class="rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 px-3 py-3 text-xs font-bold text-white flex items-center justify-center gap-1"><i class="fa-solid fa-lock mr-1"></i>Backup criptografado</button>
+                    <button onclick="openProgressProtection(); document.getElementById('progressImportFile').accept='.cbk'; document.getElementById('progressImportFile').onchange=async (e)=>{const f=e.target.files?.[0]; if(f?.name.endsWith('.cbk'))await importProgressSecure(f);else await readProgressImportFile(e.target)}; document.getElementById('progressImportFile').click()" class="rounded-xl border border-violet-500/40 bg-violet-500/10 px-3 py-3 text-xs font-bold text-violet-200 flex items-center justify-center gap-1"><i class="fa-solid fa-key mr-1"></i>Importar seguro</button>
+                </div>
                 <button onclick="openProgressProtection()" class="text-xs text-emerald-300 underline">Ver última gravação e cópia anterior</button>
             </div>
 
@@ -2981,7 +2988,7 @@
             <button type="button" class="flex w-full items-center justify-between gap-4 p-4 text-left" onclick="toggleAmoledTheme()" aria-label="Alternar Tema AMOLED"><span><strong class="block text-sm text-white">Tema AMOLED</strong><span class="text-xs text-slate-400">Preto puro para reduzir luz emitida</span></span><span id="profileAmoledToggle" class="cf-toggle" role="switch" aria-checked="false" aria-label="Tema AMOLED desativado"></span></button>
             <button type="button" id="profileAccessibilityButton" class="flex w-full items-center justify-between gap-4 p-4 text-left" onclick="openAccessibilitySettings()" aria-label="Abrir ajustes de acessibilidade"><span><strong class="block text-sm text-white">Acessibilidade</strong><span class="text-xs text-slate-400">Tamanho do texto, contraste e movimento</span></span><i class="fa-solid fa-chevron-right text-slate-500" aria-hidden="true"></i></button>
         </div>
-        <div class="cf-card p-4 space-y-3"><h3 class="text-sm font-bold text-white">Dados e segurança</h3><p class="text-xs text-slate-400">Exporte uma cópia antes de importar ou apagar dados.</p><div class="grid grid-cols-2 gap-3"><button type="button" class="cf-btn bg-emerald-500 px-3 py-3 text-xs text-slate-950" onclick="openProgressProtection(); exportProgressCopy()">Exportar</button><button type="button" class="cf-btn border border-cyan-400/40 px-3 py-3 text-xs text-cyan-100" onclick="openProgressProtection(); chooseProgressImport()">Importar</button></div><button type="button" class="cf-btn w-full border border-slate-700 px-3 py-3 text-xs text-slate-200" onclick="openSmartwatchCompanionModal()"><i class="fa-solid fa-clock" aria-hidden="true"></i> Estado do Watch</button></div>
+        <div class="cf-card p-4 space-y-3"><h3 class="text-sm font-bold text-white">Dados e segurança</h3><p class="text-xs text-slate-400">Exporte uma cópia antes de importar ou apagar dados.</p><div class="grid grid-cols-2 gap-3"><button type="button" class="cf-btn bg-emerald-500 px-3 py-3 text-xs text-slate-950" onclick="openProgressProtection(); exportProgressCopy()">Exportar</button><button type="button" class="cf-btn border border-cyan-400/40 px-3 py-3 text-xs text-cyan-100" onclick="openProgressProtection(); chooseProgressImport()">Importar</button></div><button type="button" class="cf-btn w-full border border-slate-700 px-3 py-3 text-xs text-slate-200" onclick="openSmartwatchCompanionModal()"><i class="fa-solid fa-clock" aria-hidden="true"></i> Estado do Watch</button><button type="button" class="cf-btn w-full border border-rose-500/40 bg-rose-500/10 px-3 py-3 text-xs text-rose-200" onclick="openDeleteProgressModal()"><i class="fa-solid fa-trash" aria-hidden="true"></i> Apagar dados deste aparelho</button></div>
         <div class="cf-empty p-4 text-center text-xs" aria-live="polite">Nenhum dado de saúde externo está conectado.</div>
         <div id="profileEditorModal" role="dialog" aria-modal="true" aria-labelledby="profileEditorTitle" class="cf-modal fixed inset-0 bg-black/75 backdrop-blur-sm z-[65] hidden flex items-center justify-center p-4 no-print">
             <div class="w-full max-w-sm rounded-3xl border border-cyan-400/25 bg-slate-900 p-5 shadow-2xl">
@@ -13402,6 +13409,56 @@
             }
         }
 
+        function openDeleteProgressModal() {
+            document.getElementById('deleteProgressModal')?.remove();
+            const modal = document.createElement('div');
+            modal.id = 'deleteProgressModal';
+            modal.className = 'fixed inset-0 z-[125] flex items-end justify-center bg-slate-950/80 p-4 backdrop-blur-sm';
+            modal.innerHTML = `
+                <div role="dialog" aria-modal="true" aria-labelledby="deleteProgressTitle" class="w-full max-w-md rounded-3xl border border-rose-500/30 bg-slate-900 p-5 shadow-2xl">
+                    <h2 id="deleteProgressTitle" class="text-lg font-black text-white">Apagar dados deste aparelho?</h2>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-300">Isso remove programas, histórico, agenda, preferências, cópias locais e sessões salvas neste aparelho. Essa ação não pode ser desfeita.</p>
+                    <div class="mt-4 grid gap-2">
+                        <button type="button" onclick="openProgressProtection(); document.getElementById('deleteProgressModal')?.remove()" class="cf-btn border border-emerald-500/40 bg-emerald-500/10 px-3 py-3 text-sm text-emerald-200">Exportar uma cópia antes</button>
+                        <button type="button" onclick="deleteProgressData()" class="cf-btn border border-rose-500/50 bg-rose-500/15 px-3 py-3 text-sm font-black text-rose-200">Apagar tudo deste aparelho</button>
+                        <button type="button" onclick="document.getElementById('deleteProgressModal')?.remove()" class="cf-btn border border-slate-700 bg-slate-800 px-3 py-3 text-sm text-slate-200">Cancelar</button>
+                    </div>
+                    <p id="deleteProgressMessage" class="mt-3 min-h-5 text-center text-xs text-slate-400" role="status" aria-live="polite"></p>
+                </div>`;
+            modal.addEventListener('click', event => { if (event.target === modal) modal.remove(); });
+            document.body.appendChild(modal);
+        }
+
+        function deleteProgressData() {
+            if (AppState.vacuo?.isRunning || AppState.dailyExecution?.isRunning) {
+                const message = document.getElementById('deleteProgressMessage');
+                if (message) message.innerText = 'Encerre a sessão ativa antes de apagar os dados.';
+                return false;
+            }
+            if (!confirm('Confirme: apagar todos os dados e cópias do CoreFlow deste aparelho?')) return false;
+            let nativeCleared = true;
+            try {
+                localStorage.clear();
+            } catch (error) {
+                nativeCleared = false;
+            }
+            if (window.AndroidBridge?.clearProgressSnapshot) {
+                nativeCleared = window.AndroidBridge.clearProgressSnapshot() === true && nativeCleared;
+            }
+            CorePersistence.status = 'ready';
+            CorePersistence.revision = 0;
+            CorePersistence.lastSavedAt = null;
+            CorePersistence.completedSessionIds = [];
+            CorePersistence.sessionHistory = [];
+            AppState.userName = null;
+            AppState.onboardingCompleted = false;
+            document.getElementById('deleteProgressModal')?.remove();
+            if (typeof setPersistenceStatus === 'function') setPersistenceStatus('ready', nativeCleared ? 'Dados apagados deste aparelho.' : 'Dados locais apagados; não foi possível limpar a cópia nativa.');
+            if (typeof showInlineToast === 'function') showInlineToast(nativeCleared ? 'Dados apagados deste aparelho.' : 'A cópia nativa não pôde ser apagada.');
+            if (typeof window.location?.reload === 'function') window.location.reload();
+            return nativeCleared;
+        }
+
         function openProgressProtection() {
             pendingProgressImport = null;
             document.getElementById('progressProtectionModal')?.remove();
@@ -13601,6 +13658,107 @@
             if (document.hidden && responsivePause.status === 'running') pauseResponsivePause();
             if (!document.hidden) syncNativeWorkoutState();
         });
+
+        // ============ E09.5: Backup Seguro com Criptografia ============
+
+        /**
+         * Integração com SecureBackupManager para exportação criptografada
+         */
+        async function exportProgressSecure() {
+            const password = prompt('Digite a senha de proteção (mín. 8 caracteres):', '');
+            if (!password) return;
+            if (password.length < 8) {
+                alert('Senha deve ter no mínimo 8 caracteres');
+                return;
+            }
+
+            const message = document.getElementById('progressProtectionMessage');
+            try {
+                if (CorePersistence.status === 'ready' && !saveState()) return;
+                const snapshot = readProgressSnapshot(CORE_PROGRESS_SNAPSHOT_KEY);
+                if (!snapshot) {
+                    if (message) message.innerText = 'Nenhuma cópia íntegra está disponível para exportar.';
+                    return;
+                }
+
+                const plainJson = JSON.stringify(snapshot, null, 2);
+
+                // Usar SecureBackupManager (JavaScript) ou bridge nativo
+                if (window.SecureBackupManager) {
+                    const encryptedData = await SecureBackupManager.exportSecure(plainJson, password);
+
+                    if (window.AndroidBridge?.saveEncryptedBackupToDownloads) {
+                        const result = window.AndroidBridge.saveEncryptedBackupToDownloads(JSON.stringify(encryptedData));
+                        if (message) message.innerText = result;
+                        return;
+                    }
+
+                    // Fallback: download como .cbk
+                    const blob = new Blob([JSON.stringify(encryptedData, null, 2)], { type: 'application/octet-stream' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `coreflow-backup-secure-${localDateKey()}.cbk`;
+                    link.click();
+                    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+                    if (message) message.innerText = 'Backup criptografado exportado.';
+                } else {
+                    if (message) message.innerText = 'Criptografia indisponível. Use backup padrão.';
+                }
+            } catch (error) {
+                if (message) message.innerText = `Erro ao exportar backup seguro: ${error.message}`;
+            }
+        }
+
+        /**
+         * Integração com SecureBackupManager para importação com verificação
+         */
+        async function importProgressSecure(encryptedFile) {
+            const password = prompt('Digite a senha de proteção:', '');
+            if (!password) return;
+
+            const message = document.getElementById('progressProtectionMessage');
+            try {
+                const encryptedJson = await encryptedFile.text();
+                const encryptedData = JSON.parse(encryptedJson);
+
+                if (!window.SecureBackupManager) {
+                    throw new Error('Criptografia indisponível');
+                }
+
+                const plainJson = await SecureBackupManager.importSecure(encryptedData, password);
+                receiveProgressImport(plainJson);
+            } catch (error) {
+                if (message) message.innerText = `Erro ao importar backup: ${error.message}`;
+            }
+        }
+
+        /**
+         * Estende chooseProgressImport para aceitar arquivos .cbk criptografados
+         */
+        const originalChooseProgressImport = window.chooseProgressImport;
+        window.chooseProgressImport = function() {
+            cancelProgressImport();
+            if (window.AndroidBridge?.importProgressSnapshot) {
+                window.AndroidBridge.importProgressSnapshot();
+            } else {
+                const input = document.getElementById('progressImportFile');
+                input.value = '';
+                input.accept = '.json,.cbk,application/json,application/octet-stream';
+                input.onchange = async function(event) {
+                    const file = event.target.files?.[0];
+                    if (!file) return;
+
+                    if (file.name.endsWith('.cbk')) {
+                        // Arquivo criptografado
+                        await importProgressSecure(file);
+                    } else {
+                        // Arquivo JSON padrão
+                        await readProgressImportFile(this);
+                    }
+                };
+                input.click();
+            }
+        };
     </script>
 </body>
 </html>

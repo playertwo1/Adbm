@@ -170,15 +170,16 @@ Evidência E08.1–E08.7: os seis diagnósticos E08 (`e08-onboarding`, `e08-exis
 
 ### E09 — Tela 10: Perfil
 [Referência](assets/design/coreflow-s25-ultra/10-perfil-preferencias.png)
-- [ ] Nome/meta com salvar/cancelar e persistência.
+Estado: E09.2–E09.8 IMPLEMENTADAS; aguardando auditoria independente e validação física na E13.
+- [x] Nome/meta com salvar/cancelar e persistência.
 - [x] Lembretes configuram horários reais; permissão negada não aparece ativa (implementada em E09.3; auditoria independente pendente).
-- [ ] Voz/hápticos controlam motor; tema AMOLED altera aparência e persiste.
-- [ ] Acessibilidade abre ajustes com efeito verificável.
-- [ ] Watch mostra disponibilidade real e teste de vibração com retorno de falha.
-- [ ] Remover dados de sensores/bateria do mockup quando integração não existir.
-- [ ] Backup/exportação/importação usam arquivo real, prévia, cancelamento e erro.
-- [ ] Exclusão informa escopo, oferece exportação e exige confirmação explícita.
-Aceite: preferências sobrevivem à reabertura; importação cancelada preserva dados; desconexão não aparece conectada.
+- [x] Voz/hápticos controlam motor; tema AMOLED altera aparência e persiste.
+- [x] Acessibilidade abre ajustes com efeito verificável.
+- [x] Watch mostra disponibilidade real e teste de vibração com retorno de falha.
+- [x] Remover dados de sensores/bateria do mockup quando integração não existir.
+- [x] Backup/exportação/importação usam arquivo real, prévia, cancelamento e erro.
+- [x] Exclusão informa escopo, oferece exportação e exige confirmação explícita.
+Aceite: preferências sobrevivem à reabertura; importação cancelada preserva dados; desconexão não aparece conectada. Evidência local: diagnósticos E09.2, E09.3, E09.4, E09.5 e E09.6, `scripts/check.sh`, equivalência byte a byte e build Android passaram; validação física permanece pendente.
 
 ### E10 — Telas 04/05: Discreto e Pausas
 [Discreto](assets/design/coreflow-s25-ultra/04-modo-discreto.png) · [Pausas](assets/design/coreflow-s25-ultra/05-pausas-ativas.png)
