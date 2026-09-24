@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 24/09/2026. Status: E00–E03 e E05–E09 implementadas conforme evidências; E04 permanece aberta para verificação em E13. E09 aguarda auditoria independente e validação integrada. E10 segue publicada parcialmente no commit `7da1a47`; E10.1 permanece diferida até referência revisada e validação física pendente. E11 concluída e publicada na `main` (8/8 itens). E12.1 (períodos na Evolução) implementada na branch `work/e12-period-dashboard-20260924`, auditoria independente PASS e `scripts/check.sh` aprovado; os demais critérios E12 continuam abertos. Próxima ação: publicar a branch E12.1 e continuar a E12 sem declarar a fase completa.
+Atualizado: 24/09/2026. Status: E00–E03 e E05–E09 implementadas conforme evidências; E04 permanece aberta para verificação em E13. E09 aguarda auditoria independente e validação integrada. E10 segue publicada parcialmente no commit `7da1a47`; E10.1 permanece diferida até referência revisada e validação física pendente. E11 concluída e publicada na `main` (8/8 itens). E12 está implementada e validada localmente (8/8 critérios) no worktree `work/e12-2-day-session-20260924`; auditoria independente das mudanças posteriores à E12.1 e integração Git continuam pendentes. Próximo: concluir smoke visual no Pixel_9 estável e solicitar auditoria independente; E13 permanece pendente.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -208,14 +208,16 @@ Aceite: controles na tela/notificação, extremos da busca, bloqueio e arquivo a
 ### E12 — Tela 09: Evolução
 [Referência](assets/design/coreflow-s25-ultra/09-evolucao.png)
 - [x] Período altera totais, comparação, gráfico e histórico juntos. Evidência E12.1: `diagnostics/e12-period-consistency.test.cjs` cobre semana atual, semana anterior e últimos 7 dias, atualizando os componentes pela mesma janela.
-- [ ] Dia abre sessões; soma dos dias confere com total.
-- [ ] Separar retenção, recuperação e tempo total; feedback ausente identificado.
-- [ ] Mostrar interrupção sem conclusão integral.
-- [ ] Conquistas abrem critérios e estado real.
+- [x] Dia abre sessões; soma dos dias confere com total. Evidência local: `diagnostics/e12-day-session-details.test.cjs`.
+- [x] Separar retenção, recuperação e tempo total; feedback ausente identificado. Evidência local: `diagnostics/e12-day-session-details.test.cjs` e `diagnostics/session-engine.test.cjs`.
+- [x] Mostrar interrupção sem conclusão integral. Evidência local: `diagnostics/e12-day-session-details.test.cjs`.
+- [x] Conquistas abrem critérios e estado real. Evidência local: `diagnostics/e12-achievements.test.cjs`.
 - [x] Sem base anterior, comparação indisponível; não inventar percentual. Evidência E12.1: o diagnóstico verifica períodos sem base real e impede percentual fabricado.
-- [ ] Insight de horário descreve frequência, não rendimento não medido.
-- [ ] Exportar relatório usa mesmo período/dados; backup permanece acessível em Perfil.
+- [x] Insight de horário descreve frequência, não rendimento não medido. Evidência local: `diagnostics/e12-day-session-details.test.cjs`.
+- [x] Exportar relatório usa mesmo período/dados; backup permanece acessível em Perfil. Evidência local: `diagnostics/e12-period-report.test.cjs`.
 Aceite: períodos vazio/parcial/completo conferem com diário e exportação.
+
+Estado local (24/09/2026): os oito critérios E12 foram exercitados no worktree `work/e12-2-day-session-20260924` (base `65a5efa`, mudanças ainda sem commit/push). `session-engine.test.cjs`, `progress-persistence.test.cjs` e os quatro diagnósticos E12 passaram; `scripts/check.sh` → `CHECK PASS`; `git diff --check` limpo e HTML principal/asset Android idênticos. No AVD Pixel_9, o app abriu e Home/topo de Evolução foram vistos; o ADB desconectou durante o scroll, portanto insight/modal/PDF não foram confirmados visualmente. Artefatos pretos persistem, com origem não identificada. A auditoria independente das mudanças posteriores à E12.1 não foi executada. E12 está IMPLEMENTADA localmente, mas não integrada; não declarar DONE antes da auditoria e decisão de integração.
 
 ### E13 — Integração e Android
 **Inclui a verificação diferida de E04** (oito itens em aberto do motor de sessão, ver E04). Cada um exige evidência própria e não pode ser marcado por inferência a partir de E06/E07/E08.
