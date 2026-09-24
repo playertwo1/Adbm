@@ -1,15 +1,33 @@
 # Registro de execução
 
-## 2026-09-24 — E10.2–E10.7 / Discreto e Pausas — IMPLEMENTADAS LOCALMENTE, auditoria independente PASS, push pendente
+## 2026-09-24 — E11 / Mindfulness — CONTROLES DE REPRODUÇÃO (PLAY/PAUSA, ±15S, BUSCA) VALIDADOS
 
-- Base: `47e406bc7dd922b4b07798c3bc9423cb835991f9`, branch `main`; alterações da continuação mantidas sem commit/push.
+- Base: `7da1a47e7ab370c70e7107e951fd681454261091` já publicado em `main`; tranche E11 segue sem commit.
+- Escopo: `seekMindfulnessAudio` não limitava a posição ao mínimo (0) — um valor negativo do slider gerava `currentTime` negativo. Corrigido para `Math.max(0, Math.min(duration, valor))`, em paralelo ao `skipMindfulnessAudio` (±15s) que já limitava corretamente.
+- Regressão: `diagnostics/e11-playback-controls.test.cjs` (novo) — RED confirmado (busca negativa não travava em 0); GREEN após a correção. Cobre: -15s no início trava em 0; +15s no fim trava na duração; avanço dentro dos limites soma o delta exato; busca negativa trava em 0; busca além da duração trava no fim; busca sem metadados carregados não move a posição; play/pause reais alternam estado, sessão de mídia nativa e wake lock.
+- Nota de escopo: pausar não encerra a sessão nativa de mídia no comportamento atual (só `closeMindfulnessAudioModal()`/`handleMindfulnessAudioError()` fazem isso) — documentado no teste como comportamento existente, não alterado; sincronizar sessão/posição em segundo plano é item separado do checklist E11, ainda não implementado.
+- Verificação: `node diagnostics/e11-playback-controls.test.cjs` e `node diagnostics/e11-audio-error-retry.test.cjs` → PASS; `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → `CHECK PASS` (diagnósticos, testes unitários, builds debug app/Wear, equivalência HTML).
+- Validação AVD: emulador `Pixel_9` (estava `offline`, reiniciado do zero) — `:app:installDebug` instalou `com.aistudio.coreflow.vdfpkw`. Abri a tela Hoje → Meditar → player "Meditação do Corpo e da Respiração" (Semana 1 de 8, duração real `-09:34`). Play iniciou reprodução (ícone virou pause, tempo avançou 00:00→00:01), +15s avançou a posição (00:01→00:10). Logcat sem `FATAL EXCEPTION` do app, sem crash — só um `SIGABRT` genérico em `android.hardwar` (processo de sensores simulados do emulador, não relacionado ao app) e avisos esperados de `AudioFocusDelegate`/foreground service de mídia.
+- Limitações: não testado ±15s completo até o fim da faixa nem busca por arraste do scrubber no dispositivo (só os testes unitários cobrem os extremos); sem teste em aparelho físico, Galaxy Watch ou TalkBack. Alterações E11 ainda sem commit/push.
+
+## 2026-09-24 — E11 / Mindfulness — ERRO DE ÁUDIO E RETENTATIVA IMPLEMENTADOS LOCALMENTE
+
+- Base: `7da1a47e7ab370c70e7107e951fd681454261091` já publicado em `main`; esta tranche E11 ainda não foi commitada nem publicada.
+- Escopo: tratar falha do elemento de áudio com aviso acessível, botão de nova tentativa para a fonte selecionada, encerramento do estado nativo/tela ligada e bloqueio de conclusão até `loadedmetadata` válido.
+- Regressão: `diagnostics/e11-audio-error-retry.test.cjs` falhou primeiro pela ausência do fluxo; após implementação passa e confirma que áudio indisponível ou metadados não carregados não contaminam sessões/progresso e que a tentativa recarrega a mesma faixa.
+- Verificação: `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → `CHECK PASS`, incluindo regressões E07–E11, testes unitários, builds debug Android/Wear e equivalência dos HTMLs.
+- Limitações: controles de notificação/segundo plano, busca/±15s, estados de pausa, sincronização de posição, sinais hápticos e validação manual no dispositivo ainda permanecem abertos em E11.
+
+## 2026-09-24 — E10.2–E10.7 / Discreto e Pausas — COMMIT 7da1a47 PUBLICADO, auditoria independente PASS
+
+- Base: `47e406bc7dd922b4b07798c3bc9423cb835991f9`, branch `main`; alterações da continuação foram commitadas em `7da1a47` e publicadas no remoto.
 - Escopo: modo silencioso preservando orientação visual; pausa/retomada do timer individual; duração/histórico de circuito e bloqueio de conclusão parcial; filtros para quatro regiões; catálogo/recomendação; Pausa de Resposta de três estágios, silenciosa, com histórico opcional e bloqueio de sessões concorrentes.
 - Regressões E10: `e10-discreto-silent-mode`, `e10-pause-audio-off`, `e10-pause-voice-off`, `e10-stretch-pause-resume`, `e10-circuit-duration`, `e10-circuit-completed-steps`, `e10-circuit-skip-not-complete`, `e10-circuit-cancel-resume`, `e10-stretch-filter`, `e10-stretch-catalog-recommendation`, `e10-responsive-pause` e `e10-responsive-pause-session-guard` — todas passaram pelo gate integrado.
 - Revisão independente: primeiro veredito FAIL identificou `activeTimerId` residual ao pular a última etapa. Adicionados `activeTimerId`/`pausedTimerId = null` ao encerramento e regressão para ambos. A revisão final detectou que a duração do histórico usava a última configuração multiplicada por quatro; correção passou a somar os tempos efetivos por etapa, com diagnóstico para durações diferentes, timer retomado e limpeza do estado parcial. A origem de `ROADMAP.md` foi confirmada por Rafael e o diff local foi inspecionado.
 - Verificação: `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` → `CHECK PASS` após a correção de contabilidade, incluindo diagnósticos, testes unitários e builds debug Android/Wear; equivalência byte a byte e `git diff --check` também passaram.
 - AVD `Pixel_9`: APK debug instalado antes da última correção de limpeza de timer; o build atualizado após essa correção não foi reinstalado. A captura ADB mostrava a tela Pausas/catalogo. Toques por ADB não produziram mudança visual; captura do window do Emulator via Computer Use permaneceu em uma tela “Updating…” divergente. Logcat sem FATAL, erro de console, ANR ou OOM. Portanto, a interação E10 no AVD não foi confirmada.
 - Limitações: E10.1 (posição/intensidade) continua diferida até referência revisada; a opção preexistente `∞ Livre` é mapeada pelo código a 300s por exercício (não alterada nesta tarefa) e sua semântica exige confirmação; sem validação física, TalkBack ou Watch. Nenhuma publicação remota.
-- Próximo passo: publicar E10 no remoto e avançar a E11; confirmar `∞ Livre` e concluir validação de interação em AVD quando captura/input estiver confiável. E10 continua aberta.
+- Próximo passo: continuar os itens restantes de E11; confirmar `∞ Livre` e concluir validação de interação em AVD quando captura/input estiver confiável. E10 continua aberta.
 
 ## 2026-09-24 — E10.4 / filtro de região no catálogo de Pausas — IMPLEMENTADA
 

@@ -105,12 +105,12 @@ const context = vm.createContext({
         getElementById: id => id === 'dailyExecutionSessionTag'
             ? context.nativeSessionTag
             : id === 'mindfulnessAudio'
-                ? { currentTime: 0, pause: () => {} }
+                ? { currentTime: 0, duration: 180, error: null, paused: true, pause: () => {} }
                 : { innerText: '', classList: { add: () => {}, remove: () => {}, toggle: () => {} } }
     },
     nativeCompletionHandled: false,
     nativeSessionTag: { innerText: '' },
-    mindfulnessPlayer: { programId: '4', phaseIndex: 0, trackType: 'formal', completed: false, sessionId: 'mindfulness-test' },
+    mindfulnessPlayer: { programId: '4', phaseIndex: 0, trackType: 'formal', completed: false, audioReady: true, sessionId: 'mindfulness-test' },
     window: { AndroidBridge: { scheduleProgramReminders: (...args) => { context.__lastReminderCall = args; }, updateProgramReminderProgress: () => {} } }
 });
 vm.runInContext(`${schedule}; ${renderWeeklyAgendaLabel}; ${synchronize}; ${strictInteger}; ${validReminderTime}; ${reminderTimeAt}; ${reminderScheduleComplete}; ${merge}; ${collect}; ${apply}; ${nativeWorkoutState}; ${completeMindfulness}; ${renderMindfulness}; ${getConfigured}; ${applyAdjustment}; ${syncNativeReminder}`, context);

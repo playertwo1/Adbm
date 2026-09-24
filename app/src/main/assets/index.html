@@ -2259,6 +2259,8 @@
                 <span id="mindfulnessWeekLabel" class="rounded-full border border-violet-400/30 bg-violet-500/15 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-violet-200">Semana 1</span>
                 <h2 id="mindfulnessTrackTitle" class="mt-4 text-xl font-black text-white">Meditação</h2>
                 <p id="mindfulnessTrackSubtitle" class="mt-1 text-xs text-slate-400">Encontre uma postura confortável e permita-se estar presente.</p>
+                <div id="mindfulnessAudioError" role="alert" aria-live="assertive" class="hidden mt-3 rounded-xl border border-rose-400/30 bg-rose-500/10 p-3 text-xs text-rose-200">Não foi possível carregar esta faixa.</div>
+                <button id="mindfulnessAudioRetry" type="button" onclick="retryMindfulnessAudio()" class="hidden mt-2 w-full rounded-xl border border-rose-400/30 bg-rose-500/10 py-2 text-xs font-bold text-rose-200">Tentar carregar novamente</button>
                 <select id="mindfulnessTrackSelect" onchange="selectMindfulnessTrack(this.value)" class="mt-4 hidden w-full rounded-xl border border-violet-400/30 bg-slate-900 px-3 py-2 text-sm text-violet-100"></select>
                 <div class="mt-7">
                     <input id="mindfulnessScrubber" type="range" min="0" value="0" step="1" oninput="seekMindfulnessAudio(this.value)" class="w-full accent-violet-500">
@@ -9839,7 +9841,7 @@
             return [];
         }
 
-        let mindfulnessPlayer = { programId: '4', phaseIndex: 0, trackType: 'formal', completed: false, wakeLock: null, sessionId: null };
+        let mindfulnessPlayer = { programId: '4', phaseIndex: 0, trackType: 'formal', completed: false, wakeLock: null, sessionId: null, trackPath: null, audioUnavailable: false, audioReady: false };
 
         function formatMindfulnessTime(seconds) {
             const safe = Math.max(0, Math.floor(Number(seconds) || 0));
@@ -9892,11 +9894,16 @@
             const idx = phaseIndex === null ? (prog.currentPhaseIndex || 0) : phaseIndex;
             const phase = prog.phases[idx];
             if (!phase) return;
-            mindfulnessPlayer = { programId, phaseIndex: idx, trackType, completed: false, wakeLock: null, sessionId: `mindfulness-${programId}-${idx}-${trackType}-${Date.now()}` };
+            mindfulnessPlayer = { programId, phaseIndex: idx, trackType, completed: false, wakeLock: null, sessionId: `mindfulness-${programId}-${idx}-${trackType}-${Date.now()}`, trackPath: null, audioUnavailable: false, audioReady: false };
             const isSecondary = trackType === 'secondary';
             const trackPath = isSecondary ? phase.secondaryTrack : phase.formalTrack;
             const title = isSecondary ? phase.secondaryTrackTitle : phase.formalTrackTitle;
             const audio = document.getElementById('mindfulnessAudio');
+            mindfulnessPlayer.trackPath = trackPath;
+            mindfulnessPlayer.audioUnavailable = false;
+            mindfulnessPlayer.audioReady = false;
+            document.getElementById('mindfulnessAudioError')?.classList.add('hidden');
+            document.getElementById('mindfulnessAudioRetry')?.classList.add('hidden');
             audio.src = trackPath;
             audio.load();
             document.getElementById('mindfulnessWeekLabel').innerText = `Semana ${idx + 1} de 8`;
@@ -9918,6 +9925,11 @@
             const meta = mindfulnessTrackMeta(trackNumber);
             const audio = document.getElementById('mindfulnessAudio');
             const wasPlaying = !audio.paused;
+            mindfulnessPlayer.trackPath = meta.path;
+            mindfulnessPlayer.audioUnavailable = false;
+            mindfulnessPlayer.audioReady = false;
+            document.getElementById('mindfulnessAudioError')?.classList.add('hidden');
+            document.getElementById('mindfulnessAudioRetry')?.classList.add('hidden');
             audio.src = meta.path;
             document.getElementById('mindfulnessTrackTitle').innerText = meta.title;
             audio.load();
@@ -9949,7 +9961,7 @@
 
         function seekMindfulnessAudio(value) {
             const audio = document.getElementById('mindfulnessAudio');
-            if (Number.isFinite(audio.duration)) audio.currentTime = Math.min(audio.duration, Number(value));
+            if (Number.isFinite(audio.duration)) audio.currentTime = Math.max(0, Math.min(audio.duration, Number(value)));
         }
 
         function updateMindfulnessAudioUI() {
@@ -9964,13 +9976,47 @@
             document.getElementById('mindfulnessPulse').classList.toggle('animate-pulse', !audio.paused);
         }
 
+        function handleMindfulnessAudioError() {
+            const audio = document.getElementById('mindfulnessAudio');
+            audio?.pause();
+            mindfulnessPlayer.audioUnavailable = true;
+            mindfulnessPlayer.audioReady = false;
+            mindfulnessPlayer.wakeLock?.release?.();
+            mindfulnessPlayer.wakeLock = null;
+            window.AndroidBridge?.setKeepScreenOn?.(false);
+            window.AndroidBridge?.stopMindfulnessAudioSession?.();
+            document.getElementById('mindfulnessAudioError')?.classList.remove('hidden');
+            document.getElementById('mindfulnessAudioRetry')?.classList.remove('hidden');
+            showInlineToast('Faixa indisponível. Tente carregar novamente.');
+        }
+
+        function handleMindfulnessAudioLoaded() {
+            mindfulnessPlayer.audioReady = true;
+            updateMindfulnessAudioUI();
+        }
+
+        function retryMindfulnessAudio() {
+            const audio = document.getElementById('mindfulnessAudio');
+            if (!audio || !mindfulnessPlayer.trackPath) return;
+            mindfulnessPlayer.audioUnavailable = false;
+            mindfulnessPlayer.audioReady = false;
+            document.getElementById('mindfulnessAudioError')?.classList.add('hidden');
+            document.getElementById('mindfulnessAudioRetry')?.classList.add('hidden');
+            audio.src = mindfulnessPlayer.trackPath;
+            audio.load();
+        }
+
         function completeMindfulnessAudio() {
+            const audio = document.getElementById('mindfulnessAudio');
+            if (!mindfulnessPlayer.audioReady || mindfulnessPlayer.audioUnavailable || audio?.error || !Number.isFinite(audio?.duration) || audio.duration <= 0) {
+                showInlineToast('O áudio ainda não está disponível; carregue a faixa antes de concluir.');
+                return;
+            }
             if (mindfulnessPlayer.completed) return;
             if (CorePersistence.completedSessionIds.includes(mindfulnessPlayer.sessionId)) return;
             mindfulnessPlayer.completed = true;
             const prog = AppState.programs.find(p => p.id === mindfulnessPlayer.programId);
             const phase = prog?.phases[mindfulnessPlayer.phaseIndex];
-            const audio = document.getElementById('mindfulnessAudio');
             const isFormal = mindfulnessPlayer.trackType === 'formal';
             if (prog && isFormal) {
                 prog.sessionsToday = (prog.sessionsToday || 0) + 1;
@@ -10022,10 +10068,11 @@
         }
 
         document.getElementById('mindfulnessAudio')?.addEventListener('timeupdate', updateMindfulnessAudioUI);
-        document.getElementById('mindfulnessAudio')?.addEventListener('loadedmetadata', updateMindfulnessAudioUI);
+        document.getElementById('mindfulnessAudio')?.addEventListener('loadedmetadata', handleMindfulnessAudioLoaded);
         document.getElementById('mindfulnessAudio')?.addEventListener('play', updateMindfulnessAudioUI);
         document.getElementById('mindfulnessAudio')?.addEventListener('pause', updateMindfulnessAudioUI);
         document.getElementById('mindfulnessAudio')?.addEventListener('ended', completeMindfulnessAudio);
+        document.getElementById('mindfulnessAudio')?.addEventListener('error', handleMindfulnessAudioError);
 
         function renderMindfulnessProgramCard(prog, pIdx) {
             const phaseIdx = prog.currentPhaseIndex || 0;
