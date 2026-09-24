@@ -1,5 +1,15 @@
 # Registro de execução
 
+## 2026-09-24 — E12.1 / Períodos da Evolução — IMPLEMENTADA E AUDITADA
+
+- Base: `65a5efa` (HEAD/origin/main antes da tranche), branch `work/e12-period-dashboard-20260924`.
+- Escopo: o seletor `Esta semana` / `Semana anterior` / `Últimos 7 dias` atualiza de forma unificada o total, comparação com janela equivalente, gráfico por dia, resumo diário e indicador de consistência, usando `AppState.activityLog` e datas locais.
+- Comparação: quando a janela anterior não tem atividade real, a UI informa “Comparação indisponível”; nenhum percentual é fabricado.
+- Regressão: `diagnostics/e12-period-consistency.test.cjs`, 8 cenários cobrindo estado vazio, atividade parcial, comparações positiva/negativa, três períodos, fallback inválido e chamadores legados.
+- Verificação: `scripts/check.sh` → CHECK PASS (diagnósticos, equivalência HTML, build app/Wear); `git diff --check` passou; `index.html` e `app/src/main/assets/index.html` idênticos.
+- Auditoria independente: PASS, sem achados de segurança ou lógica. Sugestões não bloqueantes: ampliar cobertura de DST/virada de mês e exibir mês nos rótulos; demais critérios E12 permanecem em aberto.
+- Limites: nenhuma validação visual em AVD/aparelho nesta tranche. E12 não está concluída; esta entrega cobre apenas a seleção de período e a indisponibilidade de comparação sem base.
+
 ## 2026-09-24 — E11 / Mindfulness — FAIXAS COM DURAÇÃO REAL (8/8 CONCLUÍDO, CHECKLIST COMPLETO)
 
 - Base: commit local `a9f1e18` (Pausa de Resposta + bloqueio mútuo, publicado em `main`).

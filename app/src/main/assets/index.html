@@ -2010,6 +2010,22 @@
                 <button onclick="openProgressProtection()" class="text-xs text-emerald-300 underline">Ver última gravação e cópia anterior</button>
             </div>
 
+            <!-- Header com Seletor de Período da Evolução -->
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <h2 class="text-xl font-heading font-extrabold text-white tracking-tight">Sua evolução</h2>
+                    <p class="text-xs text-slate-400">Pequenos passos, grandes resultados.</p>
+                </div>
+                <div>
+                    <label for="evolutionPeriodSelect" class="sr-only">Período de evolução</label>
+                    <select id="evolutionPeriodSelect" onchange="setEvolutionPeriod(this.value)" class="cf-selector px-3 py-2 text-xs font-bold text-slate-200 focus:border-emerald-500 focus:outline-none">
+                        <option value="this_week" selected>Esta semana</option>
+                        <option value="last_week">Semana anterior</option>
+                        <option value="last_7_days">Últimos 7 dias</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- 0. RESUMO DE TEMPO DA SEMANA (NOVO) -->
             <div id="weeklyTimeSummaryCardContainer"></div>
 
@@ -2055,6 +2071,16 @@
                     <div class="flex items-end justify-between h-[125px] px-2" id="weeklyBarsContainer">
                         <!-- Gerado dinamicamente via JS -->
                     </div>
+                </div>
+            </div>
+
+            <!-- E12.1: Resumo Diário do Período Selecionado -->
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-base font-heading font-bold text-white tracking-tight">Histórico do período</h3>
+                </div>
+                <div id="evolutionDailySummaryContainer" class="space-y-2">
+                    <!-- Gerado dinamicamente via JS -->
                 </div>
             </div>
 
@@ -3069,6 +3095,7 @@
             dailyGoal: 30,
             weeklyHistory: [0, 0, 0, 0, 0, 0, 0], // Seg - Dom, derivado do diário real
             previousWeeklyHistory: [0, 0, 0, 0, 0, 0, 0],
+            evolutionPeriod: 'this_week',
             activityLog: {},
             unlockedAchievements: [],
             pushNotificationsEnabled: false,
@@ -12386,107 +12413,215 @@
             }, 4000);
         }
 
-        function renderWeeklyTimeSummary() {
-            const container = document.getElementById('weeklyTimeSummaryCardContainer');
-            if (!container) return;
+        function getEvolutionPeriodConfig(period) {
+            const validPeriods = ['this_week', 'last_week', 'last_7_days'];
+            const p = validPeriods.includes(period) ? period : 'this_week';
+            const dayLabels = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-            const currentTotal = AppState.weeklyHistory.reduce((acc, curr) => acc + curr, 0);
-            const previousTotal = AppState.previousWeeklyHistory.reduce((acc, curr) => acc + curr, 0);
+            const today = new Date();
+            today.setHours(12, 0, 0, 0);
 
-            // Calculate hours and minutes for current
-            const hours = Math.floor(currentTotal / 60);
-            const mins = currentTotal % 60;
-            const timeString = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+            let currentKeys = [];
+            let previousKeys = [];
+            let label = 'Esta semana';
+            let comparisonLabel = 'a semana anterior';
 
-            // Calculate diff
-            const diff = currentTotal - previousTotal;
-            let pctDiff = 0;
-            if (previousTotal > 0) {
-                pctDiff = Math.round((Math.abs(diff) / previousTotal) * 100);
-            } else if (currentTotal > 0) {
-                pctDiff = 100;
+            if (p === 'this_week') {
+                label = 'Esta semana';
+                comparisonLabel = 'a semana anterior';
+                currentKeys = weekDateKeys(0);
+                previousKeys = weekDateKeys(-1);
+            } else if (p === 'last_week') {
+                label = 'Semana anterior';
+                comparisonLabel = 'a semana retrasada';
+                currentKeys = weekDateKeys(-1);
+                previousKeys = weekDateKeys(-2);
+            } else if (p === 'last_7_days') {
+                label = 'Últimos 7 dias';
+                comparisonLabel = 'os 7 dias anteriores';
+                currentKeys = Array.from({ length: 7 }, (_, i) => {
+                    const d = new Date(today);
+                    d.setDate(today.getDate() - (6 - i));
+                    return localDateKey(d);
+                });
+                previousKeys = Array.from({ length: 7 }, (_, i) => {
+                    const d = new Date(today);
+                    d.setDate(today.getDate() - (13 - i));
+                    return localDateKey(d);
+                });
             }
 
-            let diffHtml = '';
+            const days = currentKeys.map(key => {
+                const parts = key.split('-').map(Number);
+                const dt = new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0, 0);
+                return {
+                    key,
+                    dayLabel: dayLabels[dt.getDay()],
+                    dayNumber: String(parts[2]).padStart(2, '0'),
+                    date: dt
+                };
+            });
 
-            if (diff > 0) {
-                diffHtml = `<div class="flex items-center gap-1 text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 text-xs font-bold">
-                                <i class="fa-solid fa-arrow-trend-up"></i>
-                                <span>+${pctDiff}% vs sem. anterior</span>
-                            </div>`;
-            } else if (diff < 0) {
-                diffHtml = `<div class="flex items-center gap-1 text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20 text-xs font-bold">
-                                <i class="fa-solid fa-arrow-trend-down"></i>
-                                <span>-${pctDiff}% vs sem. anterior</span>
-                            </div>`;
-            } else {
-                diffHtml = `<div class="flex items-center gap-1 text-slate-400 bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700 text-xs font-bold">
-                                <i class="fa-solid fa-minus"></i>
-                                <span>Igual à sem. anterior</span>
-                            </div>`;
+            return {
+                id: p,
+                label,
+                comparisonLabel,
+                currentKeys,
+                previousKeys,
+                days
+            };
+        }
+
+        function setEvolutionPeriod(period) {
+            const config = getEvolutionPeriodConfig(period);
+            AppState.evolutionPeriod = config.id;
+            const selectEl = document.getElementById('evolutionPeriodSelect');
+            if (selectEl) {
+                selectEl.value = config.id;
             }
+            renderEvolutionPeriod(config.id);
+        }
 
-            container.innerHTML = `
-                <div class="bg-gradient-to-br from-indigo-900/40 to-slate-800/90 rounded-3xl p-5 border border-indigo-500/30 shadow-xl relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
+        function renderEvolutionPeriod(period) {
+            const selectEl = document.getElementById('evolutionPeriodSelect');
+            const targetPeriod = period || (selectEl ? selectEl.value : (AppState.evolutionPeriod || 'this_week'));
+            const config = getEvolutionPeriodConfig(targetPeriod);
+            if (selectEl && selectEl.value !== config.id) {
+                selectEl.value = config.id;
+            }
+            AppState.evolutionPeriod = config.id;
 
-                    <div class="flex items-center justify-between mb-2 relative z-10">
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
-                                <i class="fa-solid fa-stopwatch text-sm"></i>
+            // 1. Resumo Total e Comparação
+            const totalContainer = document.getElementById('weeklyTimeSummaryCardContainer');
+            if (totalContainer) {
+                const currentTotal = config.currentKeys.reduce((acc, k) => acc + Math.max(0, AppState.activityLog?.[k]?.minutes || 0), 0);
+                const previousTotal = config.previousKeys.reduce((acc, k) => acc + Math.max(0, AppState.activityLog?.[k]?.minutes || 0), 0);
+
+                let diffHtml = '';
+                if (previousTotal <= 0) {
+                    diffHtml = `<div class="flex items-center gap-1 text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-700 text-xs font-semibold">
+                                    <i class="fa-solid fa-circle-info text-[10px]"></i>
+                                    <span>Comparação indisponível</span>
+                                </div>`;
+                } else {
+                    const diff = currentTotal - previousTotal;
+                    const pctDiff = Math.round((Math.abs(diff) / previousTotal) * 100);
+                    if (diff > 0) {
+                        diffHtml = `<div class="flex items-center gap-1 text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 text-xs font-bold">
+                                        <i class="fa-solid fa-arrow-trend-up"></i>
+                                        <span>+${pctDiff}% vs ${config.comparisonLabel}</span>
+                                    </div>`;
+                    } else if (diff < 0) {
+                        diffHtml = `<div class="flex items-center gap-1 text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20 text-xs font-bold">
+                                        <i class="fa-solid fa-arrow-trend-down"></i>
+                                        <span>-${pctDiff}% vs ${config.comparisonLabel}</span>
+                                    </div>`;
+                    } else {
+                        diffHtml = `<div class="flex items-center gap-1 text-slate-400 bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700 text-xs font-bold">
+                                        <i class="fa-solid fa-minus"></i>
+                                        <span>0% (Igual a ${config.comparisonLabel})</span>
+                                    </div>`;
+                    }
+                }
+
+                totalContainer.innerHTML = `
+                    <div class="bg-gradient-to-br from-indigo-900/40 to-slate-800/90 rounded-3xl p-5 border border-indigo-500/30 shadow-xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
+
+                        <div class="flex items-center justify-between mb-2 relative z-10">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-stopwatch text-sm"></i>
+                                </div>
+                                <span class="text-slate-300 text-sm font-semibold">Tempo Total (${config.label})</span>
                             </div>
-                            <span class="text-slate-300 text-sm font-semibold">Tempo Total na Semana</span>
                         </div>
-                    </div>
 
-                    <div class="flex items-end justify-between mt-2 relative z-10">
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-4xl font-black text-white tracking-tight">${timeString}</span>
+                        <div class="flex items-end justify-between mt-2 relative z-10">
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-4xl font-black text-white tracking-tight">${currentTotal} min</span>
+                            </div>
+                            ${diffHtml}
                         </div>
-                        ${diffHtml}
                     </div>
-                </div>
-            `;
+                `;
+            }
+
+            // 2. Gráfico de Barras do Período
+            const chartContainer = document.getElementById('weeklyBarsContainer');
+            if (chartContainer) {
+                const dayMins = config.days.map(d => Math.max(0, AppState.activityLog?.[d.key]?.minutes || 0));
+                const maxMins = Math.max(...dayMins, 60);
+                const totalMins = dayMins.reduce((a, b) => a + b, 0);
+                const avgMins = Math.round(totalMins / config.days.length);
+                const todayKey = localDateKey();
+
+                chartContainer.innerHTML = config.days.map((d, idx) => {
+                    const mins = dayMins[idx];
+                    const pct = Math.min((mins / maxMins) * 100, 100);
+                    const isActive = mins > 0;
+                    const isToday = d.key === todayKey;
+                    const isAboveAvg = mins > avgMins && isActive;
+
+                    let barColor = 'bg-slate-700';
+                    if (isActive) {
+                        barColor = isToday ? 'bg-cyan-400' : 'bg-emerald-500';
+                    }
+
+                    return `
+                        <div class="flex flex-col items-center justify-end h-full w-9 group">
+                            <div class="flex flex-col items-center justify-end h-6 mb-0.5">
+                                ${isAboveAvg ? '<i class="fa-solid fa-star text-amber-400 text-[10px] animate-pulse drop-shadow-[0_0_3px_rgba(251,191,36,0.6)]"></i>' : ''}
+                            </div>
+                            <span class="text-[10px] ${isActive ? 'text-slate-200' : 'text-slate-500'} font-mono font-medium mb-1 transition-opacity">${mins > 0 ? mins + 'm' : ''}</span>
+                            <div class="w-5 h-full rounded-t-lg bg-slate-900/60 flex items-end overflow-hidden border-b border-slate-700/50 relative">
+                                <div class="w-full ${barColor} rounded-t-lg transition-all duration-700 group-hover:brightness-125" style="height: ${pct}%;"></div>
+                            </div>
+                            <span class="text-xs ${isToday ? 'text-cyan-400 font-bold' : (isActive ? 'text-slate-300' : 'text-slate-500')} font-medium mt-2">${d.dayLabel}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // 3. Resumo por Dia do Período
+            const summaryContainer = document.getElementById('evolutionDailySummaryContainer');
+            if (summaryContainer) {
+                summaryContainer.innerHTML = config.days.map(d => {
+                    const mins = Math.max(0, AppState.activityLog?.[d.key]?.minutes || 0);
+                    const sessions = Math.max(0, AppState.activityLog?.[d.key]?.sessions || 0);
+                    return `
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-800/60 border border-slate-700/60">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-lg ${mins > 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-700/40 text-slate-500'} flex items-center justify-center font-bold text-xs">
+                                    ${d.dayLabel}
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-white">${d.dayLabel}, ${d.dayNumber}</div>
+                                    <div class="text-[11px] text-slate-400">${sessions} ${sessions === 1 ? 'sessão' : 'sessões'}</div>
+                                </div>
+                            </div>
+                            <div class="text-xs font-bold ${mins > 0 ? 'text-emerald-400' : 'text-slate-500'}">
+                                ${mins} min
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Atualiza contador de consistência se presente
+            const consistencyEl = document.getElementById('weeklyConsistencyValue');
+            if (consistencyEl) {
+                const activeDays = config.days.filter(d => Math.max(0, AppState.activityLog?.[d.key]?.minutes || 0) > 0).length;
+                consistencyEl.textContent = `${activeDays}/${config.days.length} dias ativos`;
+            }
+        }
+
+        function renderWeeklyTimeSummary() {
+            renderEvolutionPeriod(AppState.evolutionPeriod || 'this_week');
         }
 
         function renderWeeklyChart() {
-            const container = document.getElementById('weeklyBarsContainer');
-            if (!container) return;
-
-            const days = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-            // Para não quebrar o layout se os valores forem pequenos, fixa um teto visual mínimo de 60 mins
-            const maxMins = Math.max(...AppState.weeklyHistory, 60);
-
-            const currentDayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
-
-            // Calcular média semanal
-            const totalWeekMins = AppState.weeklyHistory.reduce((a, b) => a + b, 0);
-            const avgMins = Math.round(totalWeekMins / 7);
-
-            container.innerHTML = AppState.weeklyHistory.map((mins, idx) => {
-                const pct = Math.min((mins / maxMins) * 100, 100);
-                const isActive = mins > 0;
-                const isToday = idx === currentDayIdx;
-                const isAboveAvg = mins > avgMins && isActive;
-
-                let barColor = 'bg-slate-700';
-                if (isActive) {
-                    barColor = isToday ? 'bg-cyan-400' : 'bg-emerald-500';
-                }
-
-                return `
-                    <div class="flex flex-col items-center justify-end h-full w-9 group">
-                        <div class="flex flex-col items-center justify-end h-6 mb-0.5">
-                            ${isAboveAvg ? '<i class="fa-solid fa-star text-amber-400 text-[10px] animate-pulse drop-shadow-[0_0_3px_rgba(251,191,36,0.6)]"></i>' : ''}
-                        </div>
-                        <span class="text-[10px] ${isActive ? 'text-slate-200' : 'text-slate-500'} font-mono font-medium mb-1 transition-opacity">${mins > 0 ? mins + 'm' : ''}</span>
-                        <div class="w-5 h-full rounded-t-lg bg-slate-900/60 flex items-end overflow-hidden border-b border-slate-700/50 relative">
-                            <div class="w-full ${barColor} rounded-t-lg transition-all duration-700 group-hover:brightness-125" style="height: ${pct}%;"></div>
-                        </div>
-                        <span class="text-xs ${isToday ? 'text-cyan-400 font-bold' : (isActive ? 'text-slate-300' : 'text-slate-500')} font-medium mt-2">${days[idx]}</span>
-                    </div>
-                `;
-            }).join('');
+            renderEvolutionPeriod(AppState.evolutionPeriod || 'this_week');
         }
 
         // Render visual monthly progress bars

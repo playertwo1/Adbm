@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 24/09/2026. Status: E00–E03 e E05–E09 implementadas conforme evidências; E04 permanece aberta para verificação em E13. E09 está no commit `8afdd67`, aguardando auditoria independente e validação integrada. E10 segue em execução diretamente por chat e sem Kanban: E10.2–E10.7 foram publicadas no commit `7da1a47`; E10.1 continua diferida até referência revisada, e a validação física permanece pendente. E11 concluída localmente: 8/8 itens do checklist implementados e validados (faixas com duração real, erro/retentativa, controles de reprodução, faixa/fim de lista, silenciar avisos, hápticos ao encerrar, MediaSession/notificação em segundo plano publicada em `a9f1e18`, bloqueio mútuo Pausa de Resposta↔Mindfulness). Próxima ação: revisar, publicar a tranche final de E11 (duração real) e planejar E12.
+Atualizado: 24/09/2026. Status: E00–E03 e E05–E09 implementadas conforme evidências; E04 permanece aberta para verificação em E13. E09 aguarda auditoria independente e validação integrada. E10 segue publicada parcialmente no commit `7da1a47`; E10.1 permanece diferida até referência revisada e validação física pendente. E11 concluída e publicada na `main` (8/8 itens). E12.1 (períodos na Evolução) implementada na branch `work/e12-period-dashboard-20260924`, auditoria independente PASS e `scripts/check.sh` aprovado; os demais critérios E12 continuam abertos. Próxima ação: publicar a branch E12.1 e continuar a E12 sem declarar a fase completa.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -207,12 +207,12 @@ Aceite: controles na tela/notificação, extremos da busca, bloqueio e arquivo a
 
 ### E12 — Tela 09: Evolução
 [Referência](assets/design/coreflow-s25-ultra/09-evolucao.png)
-- [ ] Período altera totais, comparação, gráfico e histórico juntos.
+- [x] Período altera totais, comparação, gráfico e histórico juntos. Evidência E12.1: `diagnostics/e12-period-consistency.test.cjs` cobre semana atual, semana anterior e últimos 7 dias, atualizando os componentes pela mesma janela.
 - [ ] Dia abre sessões; soma dos dias confere com total.
 - [ ] Separar retenção, recuperação e tempo total; feedback ausente identificado.
 - [ ] Mostrar interrupção sem conclusão integral.
 - [ ] Conquistas abrem critérios e estado real.
-- [ ] Sem base anterior, comparação indisponível; não inventar percentual.
+- [x] Sem base anterior, comparação indisponível; não inventar percentual. Evidência E12.1: o diagnóstico verifica períodos sem base real e impede percentual fabricado.
 - [ ] Insight de horário descreve frequência, não rendimento não medido.
 - [ ] Exportar relatório usa mesmo período/dados; backup permanece acessível em Perfil.
 Aceite: períodos vazio/parcial/completo conferem com diário e exportação.
