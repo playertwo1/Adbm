@@ -20,7 +20,11 @@
 - `:app:installDebug` → `Installed on 1 device` (`Pixel_9`, Android 17/API 37), **sem limpeza dos dados**. `MainActivity` em foco; Hoje carregou e Evolução exibiu o seletor E12 `Esta semana`. Programa Stomach Vacuum (semana 1) aberto via UI real; após `Iniciar Sessão`, `coreflow_workout_service.xml` registrou `status=running`, `currentStepIndex=0`, `phase=prepara`, 17 etapas. Depois observou `phase=vacuo` no passo 3 e `phase=descanso` no passo 5; a fase curta `retorno` consta na sequência gerada e no teste, mas não foi capturada ao vivo nesta rodada.
 - Interromper treino abriu confirmação; ao confirmar, voltou aos Programas com `0/1` sessões feitas e o serviço persistido em `idle`. Logcat do cenário: zero `FATAL EXCEPTION`, `ERROR:CONSOLE` ou `Uncaught`. Não declarar item E04 concluído por estes dados: ainda falta inspeção de todas as fases ao vivo, semântica de `Encerrar retenção`, comportamento em aparelho/Watch/TalkBack.
 - Antes da correção da base, o player rápido Vácuo foi exercitado no AVD: Iniciar → retenção → `Encerrar retenção` levou a descanso pausado, snapshot com 17s de retenção; Encerrar mostrou resumo interrompido (1/5), feedback não respondido; após salvar, serviço `idle`, sem crash. Esse cenário não prova a semântica do botão na sessão programada.
-- Artefatos de captura em `C:\Users\notefael\AppData\Local\hermes\cache\scratch\adbm-e13-*.png` são temporários. Próximo: testar `Encerrar retenção` na sessão programada e persistência associada, sem presumir aceite pelo fluxo rápido.
+- Artefatos de captura em `C:\Users\notefael\AppData\Local\hermes\cache\scratch\adbm-e13-*.png` são temporários. Próximo à época: testar `Encerrar retenção` na sessão programada e persistência associada, sem presumir aceite pelo fluxo rápido.
+
+## 2026-09-25 — E12 reconciliada para main (auditoria posterior pendente)
+
+- Integração local de `77bf1e0` sobre `284a0b9`; HTML e teste de períodos E12 preservados, `ROADMAP.md` e histórico E12.1/smoke anterior da main preservados. Esta nota precedeu o push; o SHA remoto confirmado posteriormente foi `716c297`.
 
 ## 2026-09-25 — E12 / modal de conquistas e smoke visual no Pixel_9 — IMPLEMENTADA localmente
 
@@ -31,6 +35,29 @@
 - Smoke AVD em diário vazio: Esta semana/Semana anterior/Últimos 7 dias exibiram 0 min e comparação indisponível. Seg, 21 expandiu “Nenhuma sessão registrada neste dia”; insight horário não inventou desempenho. Exportar Relatório PDF abriu preview nativo da tela com Esta semana, 0 min e comparação indisponível; cancelado sem salvar/imprimir. `MainActivity` voltou em foco e redesenhou, app permaneceu ativo, logcat pós-cenário sem `FATAL EXCEPTION`, `ERROR:CONSOLE` ou `Uncaught`. Período padrão Esta semana restaurado. Sem artefatos pretos nas capturas com SwiftShader.
 - Limites: sessões parciais/completas não simuladas no AVD; preview de impressão inclui outros controles do dashboard, não apenas o relatório — melhoria separada. Sem aparelho físico/Watch/TalkBack. Auditoria independente E12 adiada por decisão explícita de Rafael em 25/09/2026; dossiê completo no Vault: `01_Projetos/Adbm - Dossiê E12 para auditoria futura.md`. Nenhum push/merge/Actions.
 - Próximo: continuar verificações locais seguras da E13 com evidência própria para os itens diferidos da E04; E12 permanece IMPLEMENTADA localmente, não DONE. Antes de integrar, reconciliar com `origin/main`, auditar a árvore efetiva posteriormente e obter decisão de Rafael.
+
+
+## 2026-09-24 — E12 / Smoke visual no Pixel_9 — PARCIAL; bloqueio visual aberto
+
+- Base: implementação local na worktree `work/e12-2-day-session-20260924`, base `65a5efa`, ainda sem commit/push; app ID `com.aistudio.coreflow.vdfpkw`.
+- AVD: `Pixel_9`, Android 17 / API 37; `adb devices -l` → `device`; `sys.boot_completed=1`.
+- Instalação: `cmp -s index.html app/src/main/assets/index.html` passou; `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' ./gradlew.bat :app:installDebug --console=plain` → BUILD SUCCESSFUL, instalado em Pixel_9.
+- Lançamento: `am force-stop` + `monkey -p com.aistudio.coreflow.vdfpkw 1`; `dumpsys activity` confirmou `MainActivity` em foco e `pidof` retornou processo ativo.
+- Cenário E12 (diário vazio): seletores `Esta semana`, `Semana anterior` e `Últimos 7 dias` atualizaram o título do total; os três mostraram 0 min e “Comparação indisponível”. No período de sete dias, gráfico/lista mostraram dias sem sessão; expandir `Sex, 18` exibiu “Nenhuma sessão registrada neste dia”. Insight informou ausência de horários individuais e não inferiu desempenho.
+- Relatório: `Exportar Relatório PDF` abriu o preview nativo com período `Últimos 7 dias`, 0 min e comparação indisponível. Preview cancelado sem imprimir ou salvar; app voltou à tela e a seleção foi restaurada para `Esta semana`.
+- Bloqueio: quadrados pretos/artefatos de renderização apareceram repetidamente em Home, Evolução, gráfico, conquistas e histórico, por vezes sobre texto e cards. Causa não identificada; aceite visual E12 permanece pendente. A primeira captura após cancelar o preview ficou vazia, mas a tela foi redesenhada após ~3s.
+- Integridade: scan de logcat após o cenário encontrou 0 `FATAL EXCEPTION`, `ERROR:CONSOLE` ou `Uncaught`; sem alteração de dados de treino nem concessão manual de permissões. O fluxo de permissão não era alvo.
+- Resultado: smoke funcional parcial no AVD; critérios do estado vazio exercitados. Não valida estados parcial/completo em aparelho, não substitui auditoria independente nem prova causa dos artefatos. Próximo passo: investigar renderização; repetir inspeção visual após esclarecimento, depois auditoria independente de E12.
+
+## 2026-09-24 — E12.1 / Períodos da Evolução — IMPLEMENTADA E AUDITADA
+
+- Base: `65a5efa` (HEAD/origin/main antes da tranche), branch `work/e12-period-dashboard-20260924`.
+- Escopo: o seletor `Esta semana` / `Semana anterior` / `Últimos 7 dias` atualiza de forma unificada o total, comparação com janela equivalente, gráfico por dia, resumo diário e indicador de consistência, usando `AppState.activityLog` e datas locais.
+- Comparação: quando a janela anterior não tem atividade real, a UI informa “Comparação indisponível”; nenhum percentual é fabricado.
+- Regressão: `diagnostics/e12-period-consistency.test.cjs`, 8 cenários cobrindo estado vazio, atividade parcial, comparações positiva/negativa, três períodos, fallback inválido e chamadores legados.
+- Verificação: `scripts/check.sh` → CHECK PASS (diagnósticos, equivalência HTML, build app/Wear); `git diff --check` passou; `index.html` e `app/src/main/assets/index.html` idênticos.
+- Auditoria independente: PASS, sem achados de segurança ou lógica. Sugestões não bloqueantes: ampliar cobertura de DST/virada de mês e exibir mês nos rótulos; demais critérios E12 permanecem em aberto.
+- Limites: nenhuma validação visual em AVD/aparelho nesta tranche. E12 não está concluída; esta entrega cobre apenas a seleção de período e a indisponibilidade de comparação sem base.
 
 ## 2026-09-24 — E11 / Mindfulness — FAIXAS COM DURAÇÃO REAL (8/8 CONCLUÍDO, CHECKLIST COMPLETO)
 

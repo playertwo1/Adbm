@@ -1,7 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualização local 25/09/2026: E12 publicada somente em `origin/work/e12-2-day-session-20260924` (`77bf1e0`), auditoria posterior pendente. E13 em `work/e13-after-e12-20260925` baseada nessa E12: `prepara`/`retorno` explícitas (RED→GREEN, check PASS), APK combinado instalado no Pixel_9; sessão programada observou `prepara` persistida, retenção e descanso, depois cancelamento com serviço `idle`/0 de 1 sessões. `retorno` ao vivo e `Encerrar retenção` na sessão programada ainda pendentes. Oito itens E04 abertos; E13 local sem commit/push, E12 não mesclada à `main`. Registro em `docs/roadmap/execucao.md`; o estado anterior abaixo é histórico, não aceite E13.
-
-Atualizado: 24/09/2026. Status: E00–E03 e E05–E09 implementadas conforme evidências; E04 permanece aberta para verificação em E13. E09 está no commit `8afdd67`, aguardando auditoria independente e validação integrada. E10 segue em execução diretamente por chat e sem Kanban: E10.2–E10.7 foram publicadas no commit `7da1a47`; E10.1 continua diferida até referência revisada, e a validação física permanece pendente. E11 concluída localmente: 8/8 itens do checklist implementados e validados (faixas com duração real, erro/retentativa, controles de reprodução, faixa/fim de lista, silenciar avisos, hápticos ao encerrar, MediaSession/notificação em segundo plano publicada em `a9f1e18`, bloqueio mútuo Pausa de Resposta↔Mindfulness). Próxima ação: revisar, publicar a tranche final de E11 (duração real) e planejar E12.
+Atualizado: 25/09/2026. E11 publicada (8/8). E12 integrada à `origin/main` em `716c297`, auditoria independente posterior à E12.1 adiada. E13 em `work/e13-after-e12-20260925` reconciliada com a main: seis fases observadas no Pixel_9 e `Encerrar retenção` programado validado até `retorno` pausado com retenção parcial registrada; regressões e check local PASS. Os oito itens E04 e E13 permanecem abertos até evidência integral, incluindo diário, retomada e dispositivos físicos. Ver `docs/roadmap/execucao.md`.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
@@ -209,15 +207,17 @@ Aceite: controles na tela/notificação, extremos da busca, bloqueio e arquivo a
 
 ### E12 — Tela 09: Evolução
 [Referência](assets/design/coreflow-s25-ultra/09-evolucao.png)
-- [ ] Período altera totais, comparação, gráfico e histórico juntos.
-- [ ] Dia abre sessões; soma dos dias confere com total.
-- [ ] Separar retenção, recuperação e tempo total; feedback ausente identificado.
-- [ ] Mostrar interrupção sem conclusão integral.
-- [ ] Conquistas abrem critérios e estado real.
-- [ ] Sem base anterior, comparação indisponível; não inventar percentual.
-- [ ] Insight de horário descreve frequência, não rendimento não medido.
-- [ ] Exportar relatório usa mesmo período/dados; backup permanece acessível em Perfil.
+- [x] Período altera totais, comparação, gráfico e histórico juntos. Evidência E12.1: `diagnostics/e12-period-consistency.test.cjs` cobre semana atual, semana anterior e últimos 7 dias, atualizando os componentes pela mesma janela.
+- [x] Dia abre sessões; soma dos dias confere com total. Evidência local: `diagnostics/e12-day-session-details.test.cjs`.
+- [x] Separar retenção, recuperação e tempo total; feedback ausente identificado. Evidência local: `diagnostics/e12-day-session-details.test.cjs` e `diagnostics/session-engine.test.cjs`.
+- [x] Mostrar interrupção sem conclusão integral. Evidência local: `diagnostics/e12-day-session-details.test.cjs`.
+- [x] Conquistas abrem critérios e estado real. Evidência local: `diagnostics/e12-achievements.test.cjs`.
+- [x] Sem base anterior, comparação indisponível; não inventar percentual. Evidência E12.1: o diagnóstico verifica períodos sem base real e impede percentual fabricado.
+- [x] Insight de horário descreve frequência, não rendimento não medido. Evidência local: `diagnostics/e12-day-session-details.test.cjs`.
+- [x] Exportar relatório usa mesmo período/dados; backup permanece acessível em Perfil. Evidência local: `diagnostics/e12-period-report.test.cjs`.
 Aceite: períodos vazio/parcial/completo conferem com diário e exportação.
+
+Estado local (24/09/2026): os oito critérios E12 foram exercitados no worktree `work/e12-2-day-session-20260924` (base `65a5efa`, mudanças ainda sem commit/push). `session-engine.test.cjs`, `progress-persistence.test.cjs` e os quatro diagnósticos E12 passaram; `scripts/check.sh` → `CHECK PASS`; `git diff --check` limpo e HTML principal/asset Android idênticos. Smoke AVD Pixel_9 (Android 17/API 37): `:app:installDebug` instalou a build e `MainActivity` abriu. Testados `Esta semana`, `Semana anterior` e `Últimos 7 dias` com diário vazio: todos mostram 0 min e comparação indisponível; histórico diário expande para “Nenhuma sessão registrada neste dia”; gráfico de sete dias e insight não inventam atividade/desempenho. O preview nativo de impressão mostrou `Últimos 7 dias`, 0 min e comparação indisponível; foi cancelado sem imprimir/salvar, e o app retornou à tela. A seleção foi restaurada para `Esta semana`. Artefatos em forma de quadrados pretos repetiram-se em Home, Evolução, gráfico e histórico, às vezes cobrindo conteúdo; causa não identificada e qualidade visual permanece BLOQUEADA. A primeira captura logo após cancelar a impressão foi um frame vazio; conteúdo reapareceu após ~3s. Processo permaneceu ativo; varredura de logcat encontrou 0 `FATAL EXCEPTION`, `ERROR:CONSOLE` ou `Uncaught`. Sem alteração de dados de treino nem concessão de permissões nesta validação. A auditoria independente das mudanças posteriores à E12.1 não foi executada. E12 está IMPLEMENTADA localmente, mas não integrada; não declarar DONE antes de esclarecer o bloqueio visual, auditar e decidir integração.
 
 ### E13 — Integração e Android
 Evidência parcial 25/09/2026: seis fases observadas no Pixel_9; `Encerrar retenção` na sessão programada percorreu `vacuo → retorno` pausado com retenção executada (1s) e série interrompida no estado nativo. Regressão RED→GREEN, `scripts/check.sh` PASS. Itens abaixo permanecem abertos até evidência integral, incluindo diário, retomada e dispositivos reais; ver `docs/roadmap/execucao.md`.
