@@ -194,6 +194,10 @@ class WorkoutForegroundService : Service() {
 
     private fun pauseSession() {
         if (steps.isEmpty()) return
+        if (steps.getOrNull(currentStepIndex)?.phase == "vacuo") {
+            safeExitRetention()
+            return
+        }
         paused = true
         cancelActiveSignals()
         releaseWakeLock()

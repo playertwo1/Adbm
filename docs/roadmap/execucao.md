@@ -1,5 +1,13 @@
 # Registro de execução
 
+## 2026-09-25 — E13 / pausa segura e restauração após bloqueio — AVD PARCIAL
+
+- AVD Pixel_9, APK debug E13 sem limpar dados. Defeito real reproduzido ao tocar **Pausar** durante `vacuo`: estado nativo `paused`, passo 3 `vacuo`, 9s congelados e nenhuma série interrompida; a UI oferecia **Continuar** sobre a retenção. Captura antes da correção: `C:\Users\notefael\AppData\Local\hermes\cache\scratch\e13-pause-vacuo-current.png`.
+- Causa: `WorkoutForegroundService.pauseSession()` pausava qualquer fase sem acionar `safeExitRetention()`; a ação segura já existia para o botão separado, mas não para pausa do serviço. Regressão `diagnostics/e13-vacuum-native-pause.test.cjs` RED→GREEN; durante `vacuo`, a pausa nativa agora delega à saída segura (aplicável a UI/notificação/Watch que usem o mesmo ACTION_PAUSE). Demais fases preservam pausa normal. `scripts/check.sh` PASS (app/Wear debug, regressões e equivalência HTML); diff limpo. Kotlin compilou com avisos de deprecação existentes.
+- APK atualizado via `adb install -r`. Nova sessão programada: tocar **Pausar** com retenção em andamento → `paused`, passo 4 `retorno`, 5s, `retentionElapsedSeconds=1`, `retentionInterruptedSeries=[1]`; a tela orienta soltar a sucção antes de inspirar. **Continuar** → `running` no passo 4 `retorno`, não no vácuo congelado. Capturas `e13-safe-pause-result.png` e `e13-safe-resume-result.png` no scratch Hermes. Cancelamento via UI → serviço `idle`, sem fatal/erro JS no logcat.
+- Outro cenário, durante `prepara`: bloqueio de tela por 3s e desbloqueio; serviço permaneceu `running` e elapsed foi 0→3→6→9 em janelas sucessivas, sem incremento duplo observado; UI voltou em passo 2 `inspira`. Captura `e13-after-lock.png`; cancelamento subsequente → `idle`, sem fatal/JS. É smoke AVD, não prova recriação de processo, Watch, TalkBack ou dispositivo físico.
+- Encerramento após retomada: `sessionHistory` passou de 6 para 7 registros, último `status=interrupted`, `interrupted=true`, `feedback=null`; `completedSessionIds` permaneceu vazio, Programas mostrava 0/1. Na ocasião o fluxo já avançara além da primeira série, portanto os 10s no registro final **não** são atribuídos só ao primeiro vácuo de 1s. Ainda falta uma validação isolada de interrupção imediata e comparação do progresso/diário com IDs antes/depois.
+
 ## 2026-09-25 — E13 / saída segura da retenção no programa — VALIDAÇÃO PARCIAL
 
 - Inspeção dos oito itens E04 diferidos mostrou que o comando visível `Encerrar retenção` só existia no player avulso; a sessão programada oferecia apenas `Pular Passo`, que não pausa no retorno. A ação nativa `exitRetentionSafely` já existia em `MainActivity`/`WorkoutForegroundService`, marca série interrompida e avança ao próximo passo pausado.
