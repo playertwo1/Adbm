@@ -1,5 +1,10 @@
 # Registro de execução
 
+## 2026-09-25 — E13 / bloquear postura e carga durante programa ativo — REGRESSÃO
+
+- `setPosture` e `setVacuumDuration` já recusavam alteração durante o player rápido ativo, mas não consideravam a sessão programada em execução ou pausada. Um teste comportamental em `diagnostics/session-engine.test.cjs` falhou com `true !== false` antes da correção. Ambos agora recusam alteração se `AppState.dailyExecution.isRunning` ou `.isPaused`, sem tocar na postura/duração; a regra foi aplicada nos dois HTMLs. Regressão passou nos dois arquivos; `scripts/check.sh` passou com build app/Wear e diagnósticos.
+- Cobertura é do contrato JS; alteração durante série no aparelho físico, acessibilidade e demais parâmetros não foram verificados. O item E04 continua aberto até o aceite integral.
+
 ## 2026-09-25 — E13 / diário parcial e feedback por ID — AVD + regressão
 
 - Regressão integrada em `diagnostics/session-engine.test.cjs`: sessão programada interrompida após pausar em `vacuo`, já posicionada em `retorno`/descanso com `retentionInterruptedSeries=[1]`; `abortDailySession` e callback nativo devem produzir **um** registro `interrupted`, `completedSeries=0`, retenção executada de 1s (não os 10s planejados) e nenhum ID de conclusão. O caso falhou antes da correção e passou depois. Snapshot nativo inválido agora cai no estado web em vez de perder o registro.

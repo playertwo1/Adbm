@@ -4942,7 +4942,7 @@
         }
 
         function setPosture(posture, vacSec) {
-            if (AppState.vacuo.isRunning || AppState.vacuo.nativeManaged) return false;
+            if (AppState.vacuo.isRunning || AppState.vacuo.nativeManaged || AppState.dailyExecution.isRunning || AppState.dailyExecution.isPaused) return false;
             AppState.vacuo.posture = posture;
             AppState.vacuo.vacDuration = vacSec;
 
@@ -4981,7 +4981,7 @@
         }
 
         function setVacuumDuration(sec) {
-            if (AppState.vacuo.isRunning || AppState.vacuo.nativeManaged) return false;
+            if (AppState.vacuo.isRunning || AppState.vacuo.nativeManaged || AppState.dailyExecution.isRunning || AppState.dailyExecution.isPaused) return false;
             AppState.vacuo.vacDuration = sec;
             updateVacDurationPills(sec);
             updateVacuumPlayerUI();

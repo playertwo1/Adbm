@@ -75,7 +75,7 @@ const context = vm.createContext({
     }),
     document: {
         getElementById() {
-            return { classList: { remove(){}, add(){}, contains(){return false;} }, className: '', innerText: '', style: {} };
+            return { classList: { remove(){}, add(){}, contains(){return false;} }, className: '', innerText: '', innerHTML: '', style: {}, setAttribute(){} };
         },
         querySelectorAll() { return []; }
     },
@@ -182,6 +182,23 @@ vm.runInContext(`
 `, context);
 assert.equal(vm.runInContext('AppState.vacuo.posture', context), 'deitado', 'active session must keep posture');
 assert.equal(vm.runInContext('AppState.vacuo.vacDuration', context), 15, 'active session must keep vacuum duration');
+
+// The programmed workout also owns the session: quick-player settings cannot
+// change silently while it is running or paused.
+vm.runInContext(`
+    AppState.vacuo = { posture: 'deitado', vacDuration: 15, isRunning: false, nativeManaged: false };
+    AppState.dailyExecution.isRunning = true;
+`, context);
+assert.equal(vm.runInContext("setPosture('empe', 30)", context), false);
+assert.equal(vm.runInContext('setVacuumDuration(30)', context), false);
+assert.equal(vm.runInContext('AppState.vacuo.posture', context), 'deitado');
+assert.equal(vm.runInContext('AppState.vacuo.vacDuration', context), 15);
+vm.runInContext('AppState.dailyExecution.isRunning = false; AppState.dailyExecution.isPaused = true', context);
+assert.equal(vm.runInContext("setPosture('empe', 30)", context), false);
+assert.equal(vm.runInContext('setVacuumDuration(30)', context), false);
+assert.equal(vm.runInContext('AppState.vacuo.posture', context), 'deitado');
+assert.equal(vm.runInContext('AppState.vacuo.vacDuration', context), 15);
+vm.runInContext('AppState.dailyExecution.isPaused = false', context);
 
 // Ending a partial session through the real UI path is an interruption.
 vm.runInContext(`
