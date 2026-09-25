@@ -9805,6 +9805,7 @@
                         isRest: true,
                         voice: `Série ${set}. Ajuste a posição.`,
                         badge: `PREPARE ${set}/${setCount}`,
+                        phase: 'prepara',
                         haptic: 'relax',
                         series: set
                     });
@@ -9848,6 +9849,7 @@
                         isRest: true,
                         voice: 'Solte a sucção antes de inspirar calmamente.',
                         badge: 'RETORNO CONTROLADO',
+                        phase: 'retorno',
                         haptic: 'relax',
                         series: set
                     });
@@ -10931,6 +10933,9 @@
 
             // 4. Action Buttons Container
             const btnContainer = document.getElementById('dailyExecutionActionContainer');
+            const retentionExitButton = isRunning && currentStep.phase === 'vacuo' && window.AndroidBridge?.exitRetentionSafely
+                ? '<button onclick="endDailyVacuumRetention()" class="px-3 py-4 bg-cyan-500/20 border border-cyan-400/30 rounded-2xl text-cyan-200 font-semibold text-sm" title="Encerrar retenção">Encerrar retenção</button>'
+                : '';
             if (!isRunning) {
                 btnContainer.innerHTML = `
                     <button onclick="startDailySession()" class="flex-1 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 rounded-2xl text-slate-950 font-bold text-base transition shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
@@ -10942,6 +10947,7 @@
                     <button onclick="resumeDailySession()" class="flex-1 py-4 bg-emerald-500 hover:bg-emerald-400 rounded-2xl text-slate-950 font-bold text-base transition shadow-lg flex items-center justify-center gap-2">
                         <i class="fa-solid fa-play"></i> Continuar
                     </button>
+                    ${retentionExitButton}
                     <button onclick="skipWorkoutStep()" class="px-4 py-4 bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-2xl text-slate-300 font-semibold text-sm transition flex items-center justify-center gap-1.5" title="Pular Passo">
                         <i class="fa-solid fa-forward-step"></i>
                     </button>
@@ -10955,6 +10961,7 @@
                     <button onclick="pauseDailySession()" class="flex-1 py-4 bg-amber-500 hover:bg-amber-400 rounded-2xl text-slate-950 font-bold text-base transition shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-pause"></i> Pausar
                     </button>
+                    ${retentionExitButton}
                     <button onclick="skipWorkoutStep()" class="px-4 py-4 bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-2xl text-slate-300 font-semibold text-sm transition flex items-center justify-center gap-1.5" title="Pular Passo">
                         <i class="fa-solid fa-forward-step"></i>
                     </button>
@@ -11345,6 +11352,13 @@
                 }
             }, 1000);
             renderDailyExecutionUI();
+        }
+
+        function endDailyVacuumRetention() {
+            const execution = AppState.dailyExecution;
+            if (!execution.isRunning || execution.steps[execution.currentStepIndex]?.phase !== 'vacuo' || !window.AndroidBridge?.exitRetentionSafely) return false;
+            window.AndroidBridge.exitRetentionSafely();
+            return true;
         }
 
         function skipWorkoutStep() {
