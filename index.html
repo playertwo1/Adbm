@@ -4866,6 +4866,10 @@
                 if (step?.phase === 'vacuo') retentionSeconds += elapsed;
                 if (step?.phase === 'descanso') recoverySeconds += elapsed;
             });
+            if (execution && Object.prototype.hasOwnProperty.call(execution, 'retentionElapsedSeconds')) {
+                const nativeRetention = Number(execution.retentionElapsedSeconds);
+                if (Number.isFinite(nativeRetention) && nativeRetention >= 0) retentionSeconds = nativeRetention;
+            }
             return {
                 retentionSeconds,
                 recoverySeconds,
@@ -11029,6 +11033,8 @@
             }
 
             if (state.status === 'interrupted' || state.status === 'canceled') {
+                const nativeId = state.session?.sessionId;
+                if (nativeId && AppState.dailyExecution.sessionId && nativeId !== AppState.dailyExecution.sessionId) return;
                 AppState.dailyExecution.isRunning = false;
                 AppState.dailyExecution.isPaused = false;
                 AppState.dailyExecution.intervalId = null;
@@ -11047,13 +11053,13 @@
                         date: localDateKey(),
                         status: 'interrupted',
                         plannedSeries: state.steps ? countWorkoutSeries(state.steps) : 1,
-                        completedSeries: state.steps ? countCompletedSeries(state.steps, state.currentStepIndex) : 0,
+                        completedSeries: state.steps ? countCompletedSeries(state.steps, state.currentStepIndex, state.retentionInterruptedSeries) : 0,
                         retentionSeconds: metrics.retentionSeconds,
                         recoverySeconds: metrics.recoverySeconds,
                         totalElapsedSeconds: metrics.totalElapsedSeconds,
                         pausedSeconds: metrics.pausedSeconds,
                         interrupted: true,
-                        feedback: null
+                        feedback: CorePersistence.sessionHistory.find(record => record.id === AppState.dailyExecution.sessionId)?.feedback ?? null
                     });
                     saveState();
                 } catch(e) { console.error(e); }
@@ -11574,7 +11580,15 @@
             }
 
             try {
-                const metrics = deriveDailySessionMetrics(AppState.dailyExecution);
+                let execution = AppState.dailyExecution;
+                if (window.AndroidBridge?.getWorkoutState) {
+                    try {
+                        const nativeState = JSON.parse(window.AndroidBridge.getWorkoutState());
+                        if (nativeState.session?.sessionId === execution.sessionId &&
+                            ['running', 'paused'].includes(nativeState.status)) execution = nativeState;
+                    } catch (_) { /* Preserva o registro parcial Web se o snapshot nativo falhar. */ }
+                }
+                const metrics = deriveDailySessionMetrics(execution);
                 upsertSessionRecord({
                     id: AppState.dailyExecution.sessionId,
                     schemaVersion: 1,
@@ -11582,14 +11596,14 @@
                     phaseIndex: AppState.dailyExecution.phaseIndex || 0,
                     date: localDateKey(),
                     status: isInterrupted ? 'interrupted' : 'cancelled',
-                    plannedSeries: AppState.dailyExecution.steps ? countWorkoutSeries(AppState.dailyExecution.steps) : 1,
-                    completedSeries: AppState.dailyExecution.steps ? countCompletedSeries(AppState.dailyExecution.steps, AppState.dailyExecution.currentStepIndex) : 0,
+                    plannedSeries: execution.steps ? countWorkoutSeries(execution.steps) : 1,
+                    completedSeries: execution.steps ? countCompletedSeries(execution.steps, execution.currentStepIndex, execution.retentionInterruptedSeries) : 0,
                     retentionSeconds: metrics.retentionSeconds,
                     recoverySeconds: metrics.recoverySeconds,
                     totalElapsedSeconds: metrics.totalElapsedSeconds,
                     pausedSeconds: metrics.pausedSeconds,
                     interrupted: isInterrupted,
-                    feedback: null
+                    feedback: CorePersistence.sessionHistory.find(record => record.id === AppState.dailyExecution.sessionId)?.feedback ?? null
                 });
                 saveState();
             } catch(e) {

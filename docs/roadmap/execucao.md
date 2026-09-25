@@ -1,5 +1,12 @@
 # Registro de execução
 
+## 2026-09-25 — E13 / diário parcial e feedback por ID — AVD + regressão
+
+- Regressão integrada em `diagnostics/session-engine.test.cjs`: sessão programada interrompida após pausar em `vacuo`, já posicionada em `retorno`/descanso com `retentionInterruptedSeries=[1]`; `abortDailySession` e callback nativo devem produzir **um** registro `interrupted`, `completedSeries=0`, retenção executada de 1s (não os 10s planejados) e nenhum ID de conclusão. O caso falhou antes da correção e passou depois. Snapshot nativo inválido agora cai no estado web em vez de perder o registro.
+- Feedback `comfortable` ou `difficult` altera só o registro com ID correspondente e permanece após callback nativo repetido; callback atrasado com ID de sessão diferente é ignorado, sem sobrescrever o registro da sessão mais recente. Também há teste de não resposta (`null`) no segundo registro. A associação/idempotência é teste JS, **não** interação manual de feedback no AVD.
+- `scripts/check.sh` PASS, HTMLs byte a byte idênticos e `git diff --check` limpo. APK debug reinstalado no Pixel_9 **sem limpar dados**. Fluxo real: `prepara` → `inspira` → `expira` → `vacuo` (9s restantes) → **Pausar** → `paused/retorno`, 1s executado e `[1]`; cancelar imediatamente gravou um único novo registro `interrupted`, `plannedSeries=3`, `completedSeries=0`, `retentionSeconds=1`, `feedback=null`; `completedSessionIds` permaneceu vazio (0), serviço `idle`, nenhum fatal/erro JS no logcat. Contagens do teste final: `sessionHistory` 9→10. Um toque errado no AVD alterou temporariamente o progresso do programa para semana 5; restaurado pela interface **Ajustar progresso** para semana 1/dia 1/0 sessões, confirmado na tela antes da execução final. O histórico de testes do AVD não foi apagado.
+- Isso cobre parcial imediato, contagem e retenção programada no AVD; ainda faltam evidências próprias para os demais itens E04 e E13, restauração após recriação do serviço, interface de feedback e sinais. Aparelho físico, Galaxy Watch e TalkBack ficam em observação para Rafael; não converter indisponibilidade em PASS.
+
 ## 2026-09-25 — E13 / pausa segura e restauração após bloqueio — AVD PARCIAL
 
 - AVD Pixel_9, APK debug E13 sem limpar dados. Defeito real reproduzido ao tocar **Pausar** durante `vacuo`: estado nativo `paused`, passo 3 `vacuo`, 9s congelados e nenhuma série interrompida; a UI oferecia **Continuar** sobre a retenção. Captura antes da correção: `C:\Users\notefael\AppData\Local\hermes\cache\scratch\e13-pause-vacuo-current.png`.

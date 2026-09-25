@@ -51,6 +51,7 @@ const source = [
     extractFunction('advanceVacuoSeries'),
     extractFunction('finishDailySession'),
     extractFunction('abortDailySession'),
+    html.slice(html.indexOf('        window.onNativeWorkoutState = function('), html.indexOf('        function handleNativeVacuumState(')),
     extractFunction('handleNativeVacuumState'),
     extractFunction('resetVacuo'),
     extractFunction('setPosture'),
@@ -743,5 +744,74 @@ const deliverWearPattern = generation => {
 deliverWearPattern(3);
 deliverWearPattern(1);
 assert.deepEqual(deliveredGenerations, [3], 'Wear must reject an older pattern delivered after a newer one');
+
+// Programmed vacuum: safe exit may advance past the interrupted retention.
+// Neither the elapsed metric nor the completed-series counter may assume the
+// entire earlier step ran. The native stop callback must be idempotent by ID.
+const beforeProgramAbort = vm.runInContext('CorePersistence.sessionHistory.length', context);
+const beforeCompletedIds = vm.runInContext('CorePersistence.completedSessionIds.length', context);
+vm.runInContext(`
+    const partialSteps = [
+        { phase: 'prepara', series: 1, duration: 8 },
+        { phase: 'inspira', series: 1, duration: 4 },
+        { phase: 'expira', series: 1, duration: 6 },
+        { phase: 'vacuo', series: 1, duration: 10 },
+        { phase: 'retorno', series: 1, duration: 5 },
+        { phase: 'descanso', series: 1, isRest: true, duration: 60 },
+        { phase: 'prepara', series: 2, duration: 8 }
+    ];
+    const partialNativeState = {
+        status: 'paused', session: { type: 'daily', sessionId: 'test-program-partial', programId: '3' },
+        steps: partialSteps, currentStepIndex: 5, stepTimeLeft: 60,
+        totalSessionElapsed: 24, retentionElapsedSeconds: 1, retentionInterruptedSeries: [1]
+    };
+    AppState.dailyExecution = {
+        sessionId: 'test-program-partial', programId: '3', phaseIndex: 0,
+        isRunning: true, isPaused: true, steps: partialSteps, currentStepIndex: 5,
+        stepTimeLeft: 60, totalSessionElapsed: 24
+    };
+    window.AndroidBridge = {
+        getWorkoutState() { return JSON.stringify(partialNativeState); },
+        stopWorkoutSession() {}, acknowledgeWorkoutState() {}
+    };
+    abortDailySession();
+`, context);
+const partialRecord = vm.runInContext('CorePersistence.sessionHistory.find(r => r.id === "test-program-partial")', context);
+assert.equal(partialRecord.status, 'interrupted');
+assert.equal(partialRecord.retentionSeconds, 1, 'program abort must use native executed retention, not planned 10s');
+assert.equal(partialRecord.completedSeries, 0, 'interrupted first series must not be credited after return');
+assert.equal(vm.runInContext('CorePersistence.completedSessionIds.length', context), beforeCompletedIds, 'abort must not complete a program');
+vm.runInContext('window.onNativeWorkoutState({ ...partialNativeState, status: "interrupted" })', context);
+assert.equal(vm.runInContext('CorePersistence.sessionHistory.length', context), beforeProgramAbort + 1, 'native stop callback must upsert the same ID');
+const recordAfterNativeStop = vm.runInContext('CorePersistence.sessionHistory.find(r => r.id === "test-program-partial")', context);
+assert.equal(recordAfterNativeStop.retentionSeconds, 1, 'native callback must not overwrite actual retention with planned time');
+assert.equal(recordAfterNativeStop.completedSeries, 0, 'native callback must not credit the interrupted series');
+
+// An unavailable/corrupt native snapshot must not make an aborted session vanish.
+vm.runInContext(`
+    AppState.dailyExecution = {
+        sessionId: 'test-program-fallback', programId: '3', phaseIndex: 0,
+        isRunning: true, isPaused: false, steps: partialSteps,
+        currentStepIndex: 3, stepTimeLeft: 9, totalSessionElapsed: 19
+    };
+    window.AndroidBridge.getWorkoutState = () => 'invalid native snapshot';
+    abortDailySession();
+`, context);
+assert.equal(vm.runInContext('CorePersistence.sessionHistory.find(r => r.id === "test-program-fallback")?.status', context), 'interrupted', 'native snapshot failure must fall back to Web progress');
+
+// Replayed native state must not erase answered feedback or attach it to a
+// different interrupted session whose feedback was deliberately left empty.
+vm.runInContext(`
+    updateSessionFeedback('test-program-partial', 'difficult');
+    window.onNativeWorkoutState({ ...partialNativeState, status: 'interrupted' });
+`, context);
+assert.equal(vm.runInContext('CorePersistence.sessionHistory.find(r => r.id === "test-program-partial")?.feedback', context), 'difficult', 'duplicate native callback must preserve answered feedback by ID');
+assert.equal(vm.runInContext('CorePersistence.sessionHistory.find(r => r.id === "test-program-fallback")?.feedback', context), null, 'unanswered second session must remain unanswered');
+assert.equal(vm.runInContext('CorePersistence.sessionHistory.find(r => r.id === "test-program-fallback")?.totalElapsedSeconds', context), 19, 'stale callback from another ID must not overwrite the current session');
+vm.runInContext(`
+    AppState.dailyExecution.sessionId = 'test-program-partial';
+    window.onNativeWorkoutState({ ...partialNativeState, status: 'interrupted' });
+`, context);
+assert.equal(vm.runInContext('CorePersistence.sessionHistory.find(r => r.id === "test-program-partial")?.feedback', context), 'difficult', 'replayed native stop must preserve answered feedback');
 
 console.log("session-engine tests passed!");

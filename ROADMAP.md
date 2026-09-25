@@ -1,5 +1,5 @@
 # CoreFlow — roadmap de execução
-Atualizado: 25/09/2026. E11 publicada (8/8). E12 integrada à `origin/main` em `716c297`, auditoria independente posterior à E12.1 adiada. E13 em `work/e13-after-e12-20260925` reconciliada com a main: seis fases observadas no Pixel_9 e `Encerrar retenção` programado validado até `retorno` pausado com retenção parcial registrada; regressões e check local PASS. Os oito itens E04 e E13 permanecem abertos até evidência integral, incluindo diário, retomada e dispositivos físicos. Ver `docs/roadmap/execucao.md`.
+Atualizado: 25/09/2026. E11 publicada (8/8). E12 integrada à `origin/main` em `716c297`, auditoria independente posterior à E12.1 adiada. E13 em `work/e13-after-e12-20260925` reconciliada com a main: seis fases observadas no Pixel_9, saída/pausa segura em `vacuo`, retomada em `retorno` e diário parcial imediato com 1s executado, zero série concluída e nenhum ID de conclusão; regressões e check local PASS. Os oito itens E04 e E13 permanecem abertos até evidência integral, incluindo feedback na interface, recriação do serviço e dispositivos físicos. Ver `docs/roadmap/execucao.md`.
 Objetivo: melhorar Stomach Vacuum e implementar as 10 telas AMOLED com funções reais.
 Histórico anterior preservado em [histórico](docs/roadmap/historico-2026-09-19.md).
 
