@@ -114,6 +114,7 @@ function setupContext(mockDateStr = '2026-09-24T12:00:00') {
 
     const fnsToLoad = [
         appStateCode,
+        'const CorePersistence = { sessionHistory: [] };',
         'const CORE_DATA_VERSION = 3;',
         extractFunction(source, 'localDateKey'),
         extractFunction(source, 'weekDateKeys'),
@@ -126,8 +127,8 @@ function setupContext(mockDateStr = '2026-09-24T12:00:00') {
     ].join('\n\n');
 
     vm.runInContext(fnsToLoad, context);
-    // Const declarations remain lexical in a VM context; expose state for scenario fixtures.
-    vm.runInContext('globalThis.AppState = AppState;', context);
+    // Const declarations remain lexical in a VM context; expose fixture state for scenarios.
+    vm.runInContext('globalThis.AppState = AppState; globalThis.CorePersistence = CorePersistence;', context);
 
     return { context, elements, getElementById };
 }

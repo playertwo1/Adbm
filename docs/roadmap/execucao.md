@@ -1,5 +1,20 @@
 # Registro de execução
 
+## 2026-09-25 — E12 reconciliada para main (auditoria posterior pendente)
+
+- Integração local de `77bf1e0` sobre `284a0b9`; HTML e teste de períodos E12 preservados, `ROADMAP.md` e histórico E12.1/smoke anterior da main preservados. Esta nota precede push; não declarar remoto atualizado antes da confirmação.
+
+## 2026-09-25 — E12 / modal de conquistas e smoke visual no Pixel_9 — IMPLEMENTADA localmente
+
+- Branch/worktree: `work/e12-2-day-session-20260924`, base `65a5efa`; alterações E12 permanecem sem commit/push e sem auditoria independente posterior à E12.1. O roadmap atualizado está em `origin/main`; este registro local precisa ser reconciliado antes de integração.
+- Defeito reproduzido no AVD `Pixel_9` com `-gpu swiftshader`: tocar em Primeiro Passo mostrava o backdrop, mas o conteúdo do modal ficava fora da viewport. DevTools: modal aberto com altura ~2353 CSS px, conteúdo em y≈2166, viewport de 845 CSS px. Causa: `position: fixed` dentro da aba `.tab-content.active`, que usa `transform` e cria o containing block; distinto dos quadrados pretos do renderizador padrão.
+- Regressão RED→GREEN: `diagnostics/e12-achievements.test.cjs` exige que o modal saia da aba transformada para `document.body` ao abrir. Correção pontual nos dois HTMLs: reparentar antes de exibir; `aria-hidden` preservado. AVD após `adb install -r`: modal Primeiro Passo visível, critério “Concluir a primeira sessão”, status não desbloqueada e progresso 0/1; botão fechar funcionou.
+- `bash scripts/check.sh` → `CHECK PASS`, builds app/Wear, diagnósticos e equivalência dos HTMLs; `git diff --check` limpo. Sem mudança de contrato de dados.
+- Smoke AVD em diário vazio: Esta semana/Semana anterior/Últimos 7 dias exibiram 0 min e comparação indisponível. Seg, 21 expandiu “Nenhuma sessão registrada neste dia”; insight horário não inventou desempenho. Exportar Relatório PDF abriu preview nativo da tela com Esta semana, 0 min e comparação indisponível; cancelado sem salvar/imprimir. `MainActivity` voltou em foco e redesenhou, app permaneceu ativo, logcat pós-cenário sem `FATAL EXCEPTION`, `ERROR:CONSOLE` ou `Uncaught`. Período padrão Esta semana restaurado. Sem artefatos pretos nas capturas com SwiftShader.
+- Limites: sessões parciais/completas não simuladas no AVD; preview de impressão inclui outros controles do dashboard, não apenas o relatório — melhoria separada. Sem aparelho físico/Watch/TalkBack. Auditoria independente E12 adiada por decisão explícita de Rafael em 25/09/2026; dossiê completo no Vault: `01_Projetos/Adbm - Dossiê E12 para auditoria futura.md`. Nenhum push/merge/Actions.
+- Próximo: continuar verificações locais seguras da E13 com evidência própria para os itens diferidos da E04; E12 permanece IMPLEMENTADA localmente, não DONE. Antes de integrar, reconciliar com `origin/main`, auditar a árvore efetiva posteriormente e obter decisão de Rafael.
+
+
 ## 2026-09-24 — E12 / Smoke visual no Pixel_9 — PARCIAL; bloqueio visual aberto
 
 - Base: implementação local na worktree `work/e12-2-day-session-20260924`, base `65a5efa`, ainda sem commit/push; app ID `com.aistudio.coreflow.vdfpkw`.

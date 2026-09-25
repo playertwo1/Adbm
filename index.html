@@ -2034,6 +2034,14 @@
                 <h3 class="text-lg font-heading font-extrabold text-white tracking-tight">Suas Conquistas</h3>
                 <div id="achievementsContainer" class="flex items-start gap-3 overflow-x-auto pb-2 pt-3 no-scrollbar"></div>
             </div>
+            <div id="achievementDetailsModal" class="hidden fixed inset-0 z-[130] flex items-end justify-center bg-slate-950/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="achievementDetailsTitle">
+                <div class="w-full max-w-md rounded-3xl border border-slate-700 bg-slate-900 p-5 shadow-2xl">
+                    <div class="flex items-start justify-between gap-4">
+                        <div id="achievementDetailsContent" class="min-w-0 flex-1"></div>
+                        <button type="button" onclick="hideAchievementDetails()" aria-label="Fechar detalhes da conquista" class="h-10 w-10 flex-shrink-0 rounded-full bg-slate-800 text-slate-300"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+            </div>
 
             <!-- 2. DICA DE SAÚDE DO DIA -->
             <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-4 shadow-xl relative overflow-hidden">
@@ -2079,6 +2087,7 @@
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="text-base font-heading font-bold text-white tracking-tight">Histórico do período</h3>
                 </div>
+                <div id="evolutionTimeInsight" class="mb-3 rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-3 text-xs text-slate-300" role="status" aria-live="polite"></div>
                 <div id="evolutionDailySummaryContainer" class="space-y-2">
                     <!-- Gerado dinamicamente via JS -->
                 </div>
@@ -2891,33 +2900,33 @@
     <!-- Hidden Printable Report for PDF Export -->
     <div id="printReportContainer" class="hidden print-only p-8 text-black bg-white">
         <div style="border-bottom: 2px solid #059669; padding-bottom: 12px; margin-bottom: 16px;">
-            <h1 style="font-size: 24px; font-weight: 800; color: #065f46; margin: 0;">Relatório Diário de Desempenho - CoreFlow</h1>
-            <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0;">Treinamento de Vácuo Abdominal, Bracing, Kegel & Ergonomia no Trabalho</p>
+            <h1 id="printReportTitle" style="font-size: 24px; font-weight: 800; color: #065f46; margin: 0;">Relatório de Evolução - CoreFlow</h1>
+            <p id="printReportSubtitle" style="font-size: 12px; color: #475569; margin: 4px 0 0 0;">Resumo do período selecionado, com base nos registros locais.</p>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
             <div style="border: 1px solid #cbd5e1; padding: 10px; border-radius: 8px; text-align: center;">
-                <span style="font-size: 11px; color: #64748b;">Ofensiva Atual</span>
-                <p id="printStreak" style="font-size: 18px; font-weight: bold; color: #d97706; margin: 2px 0;">0 Dias</p>
+                <span style="font-size: 11px; color: #64748b;">Dias ativos no período</span>
+                <p id="printStreak" style="font-size: 18px; font-weight: bold; color: #d97706; margin: 2px 0;">0 / 7 dias</p>
             </div>
             <div style="border: 1px solid #cbd5e1; padding: 10px; border-radius: 8px; text-align: center;">
-                <span style="font-size: 11px; color: #64748b;">Exercícios Concluídos</span>
-                <p id="printCompleted" style="font-size: 18px; font-weight: bold; color: #059669; margin: 2px 0;">0 / 0</p>
+                <span style="font-size: 11px; color: #64748b;">Sessões no período</span>
+                <p id="printCompleted" style="font-size: 18px; font-weight: bold; color: #059669; margin: 2px 0;">0 sessões</p>
             </div>
             <div style="border: 1px solid #cbd5e1; padding: 10px; border-radius: 8px; text-align: center;">
-                <span style="font-size: 11px; color: #64748b;">Tempo Total</span>
-                <p id="printTime" style="font-size: 18px; font-weight: bold; color: #0284c7; margin: 2px 0;">0 Minutos</p>
+                <span style="font-size: 11px; color: #64748b;">Tempo registrado no período</span>
+                <p id="printTime" style="font-size: 18px; font-weight: bold; color: #0284c7; margin: 2px 0;">0 min</p>
             </div>
         </div>
 
-        <h3 style="font-size: 14px; font-weight: bold; color: #1e293b; margin-bottom: 8px;">Rotina do Dia & Metas Cumpridas:</h3>
+        <h3 style="font-size: 14px; font-weight: bold; color: #1e293b; margin-bottom: 8px;">Atividade diária no período:</h3>
         <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px;">
             <thead>
                 <tr style="background: #f1f5f9; text-align: left;">
-                    <th style="padding: 8px; border-bottom: 1px solid #cbd5e1;">Horário</th>
-                    <th style="padding: 8px; border-bottom: 1px solid #cbd5e1;">Exercício / Bloco</th>
-                    <th style="padding: 8px; border-bottom: 1px solid #cbd5e1;">Detalhes</th>
-                    <th style="padding: 8px; border-bottom: 1px solid #cbd5e1;">Status</th>
+                    <th style="padding: 8px; border-bottom: 1px solid #cbd5e1;">Dia</th>
+                    <th style="padding: 8px; border-bottom: 1px solid #cbd5e1;">Sessões</th>
+                    <th style="padding: 8px; border-bottom: 1px solid #cbd5e1;">Registro</th>
+                    <th style="padding: 8px; border-bottom: 1px solid #cbd5e1;">Minutos</th>
                 </tr>
             </thead>
             <tbody id="printTableBody">
@@ -2926,10 +2935,9 @@
         </table>
 
         <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; font-size: 11px; color: #475569;">
-            <strong style="color: #0f172a;">Recomendações Clínicas & Posturais:</strong><br>
-            • Mantenha o Bracing abdominal a 20-30% durante longas jornadas sentado para proteger a região L4-L5-S1.<br>
-            • Realize pausas ativas a cada 90 minutos para oxigenação do assoalho pélvico e descompressão do nervo ciático.<br>
-            • A prática de Vácuo Abdominal diária reduz a pressão intra-abdominal e tonifica o transverso profundo.
+            <strong style="color: #0f172a;">Comparação do período:</strong>
+            <p id="printPeriodNote" style="margin-top: 4px;">Comparação indisponível sem base anterior.</p>
+            <p style="margin-top: 6px;">Os totais refletem o diário local. O aplicativo não infere horários nem resultados de saúde a partir de minutos ou sessões.</p>
         </div>
     </div>
 
@@ -4767,6 +4775,7 @@
             return {
                 retentionSeconds: Math.max(0, Number(state.retentionElapsedSec) || 0),
                 recoverySeconds: Math.max(0, Number(state.recoveryElapsedSec) || 0),
+                totalElapsedSeconds: Number.isFinite(Number(state.totalElapsedSec)) ? Math.max(0, Number(state.totalElapsedSec)) : null,
                 pausedSeconds: Math.max(0, Number(state.pausedSeconds) || 0)
             };
         }
@@ -4846,6 +4855,7 @@
             const steps = Array.isArray(execution?.steps) ? execution.steps : [];
             const currentIndex = Math.max(0, Math.min(steps.length, Number(execution?.currentStepIndex) || 0));
             const hasCurrentTime = Number.isFinite(Number(execution?.stepTimeLeft));
+            const totalElapsed = Number(execution?.totalSessionElapsed);
             let retentionSeconds = 0;
             let recoverySeconds = 0;
             steps.forEach((step, index) => {
@@ -4856,7 +4866,12 @@
                 if (step?.phase === 'vacuo') retentionSeconds += elapsed;
                 if (step?.phase === 'descanso') recoverySeconds += elapsed;
             });
-            return { retentionSeconds, recoverySeconds, pausedSeconds: 0 };
+            return {
+                retentionSeconds,
+                recoverySeconds,
+                totalElapsedSeconds: Number.isFinite(totalElapsed) && totalElapsed >= 0 ? Math.round(totalElapsed) : null,
+                pausedSeconds: 0
+            };
         }
 
         function finalizeVacuumPause() {
@@ -4873,6 +4888,7 @@
             const currentIndex = Math.max(0, Number(state?.currentStepIndex) || 0);
             const currentRemaining = Math.max(0, Number(state?.stepTimeLeft) || 0);
             const explicitRetention = Number(state?.retentionElapsedSeconds);
+            const totalElapsed = Number(state?.totalSessionElapsed);
             let retentionSeconds = 0;
             let recoverySeconds = 0;
             steps.forEach((step, index) => {
@@ -4887,6 +4903,7 @@
             return {
                 retentionSeconds,
                 recoverySeconds,
+                totalElapsedSeconds: Number.isFinite(totalElapsed) && totalElapsed >= 0 ? Math.round(totalElapsed) : null,
                 pausedSeconds: Math.max(0, Number(state?.pausedSeconds) || 0)
             };
         }
@@ -4913,6 +4930,7 @@
                 completedSeries: Math.min(completedSeries, AppState.vacuo.seriesTotal || 1),
                 retentionSeconds: metrics.retentionSeconds,
                 recoverySeconds: metrics.recoverySeconds,
+                totalElapsedSeconds: metrics.totalElapsedSeconds,
                 pausedSeconds: metrics.pausedSeconds,
                 interrupted,
                 feedback: null
@@ -11025,6 +11043,7 @@
                         completedSeries: state.steps ? countCompletedSeries(state.steps, state.currentStepIndex) : 0,
                         retentionSeconds: metrics.retentionSeconds,
                         recoverySeconds: metrics.recoverySeconds,
+                        totalElapsedSeconds: metrics.totalElapsedSeconds,
                         pausedSeconds: metrics.pausedSeconds,
                         interrupted: true,
                         feedback: null
@@ -11393,6 +11412,7 @@
                     completedSeries: AppState.dailyExecution.steps ? countCompletedSeries(AppState.dailyExecution.steps, AppState.dailyExecution.steps.length) : 1,
                     retentionSeconds: metrics.retentionSeconds,
                     recoverySeconds: metrics.recoverySeconds,
+                    totalElapsedSeconds: metrics.totalElapsedSeconds,
                     pausedSeconds: metrics.pausedSeconds,
                     interrupted: false,
                     feedback: null
@@ -11552,6 +11572,7 @@
                     completedSeries: AppState.dailyExecution.steps ? countCompletedSeries(AppState.dailyExecution.steps, AppState.dailyExecution.currentStepIndex) : 0,
                     retentionSeconds: metrics.retentionSeconds,
                     recoverySeconds: metrics.recoverySeconds,
+                    totalElapsedSeconds: metrics.totalElapsedSeconds,
                     pausedSeconds: metrics.pausedSeconds,
                     interrupted: isInterrupted,
                     feedback: null
@@ -12191,7 +12212,7 @@
         const ACHIEVEMENTS = [
             { id: 'first_session', title: 'Primeiro Passo', description: 'Concluir a primeira sessão', icon: 'fa-shoe-prints', color: 'emerald', test: m => m.totalSessions >= 1 },
             { id: 'thirty_minutes', title: 'Meia Hora de Foco', description: 'Acumular 30 minutos reais', icon: 'fa-stopwatch', color: 'sky', test: m => m.totalMinutes >= 30 },
-            { id: 'daily_goal', title: 'Meta Batida', description: 'Atingir 30 minutos em um dia', icon: 'fa-bullseye', color: 'amber', test: m => m.bestDayMinutes >= AppState.dailyGoal },
+            { id: 'daily_goal', title: 'Meta Batida', description: 'Atingir a meta diária em um dia', icon: 'fa-bullseye', color: 'amber', test: m => Number(AppState.dailyGoal) > 0 && m.bestDayMinutes >= AppState.dailyGoal },
             { id: 'streak_3', title: 'Ritmo Criado', description: 'Treinar 3 dias seguidos', icon: 'fa-fire-flame-curved', color: 'orange', test: () => AppState.streak >= 3 },
             { id: 'streak_7', title: 'Chama Acesa', description: 'Treinar 7 dias seguidos', icon: 'fa-fire', color: 'rose', test: () => AppState.streak >= 7 },
             { id: 'sessions_10', title: 'Dez Sessões', description: 'Concluir 10 sessões', icon: 'fa-medal', color: 'violet', test: m => m.totalSessions >= 10 },
@@ -12247,6 +12268,39 @@
             };
         }
 
+        function achievementProgress(achievement, metrics = activityMetrics()) {
+            const definitions = {
+                first_session: { current: metrics.totalSessions, target: 1, unit: 'sessões', criterion: 'Concluir a primeira sessão' },
+                thirty_minutes: { current: metrics.totalMinutes, target: 30, unit: 'min', criterion: 'Acumular 30 minutos reais' },
+                daily_goal: {
+                    current: metrics.bestDayMinutes,
+                    target: Math.max(0, Number(AppState.dailyGoal) || 0),
+                    unit: 'min',
+                    criterion: Number(AppState.dailyGoal) > 0 ? `Atingir ${AppState.dailyGoal} min em um dia` : 'Configurar uma meta diária primeiro'
+                },
+                streak_3: { current: AppState.streak, target: 3, unit: 'dias seguidos', criterion: 'Treinar 3 dias seguidos' },
+                streak_7: { current: AppState.streak, target: 7, unit: 'dias seguidos', criterion: 'Treinar 7 dias seguidos' },
+                sessions_10: { current: metrics.totalSessions, target: 10, unit: 'sessões', criterion: 'Concluir 10 sessões' },
+                sessions_25: { current: metrics.totalSessions, target: 25, unit: 'sessões', criterion: 'Concluir 25 sessões' },
+                minutes_100: { current: metrics.totalMinutes, target: 100, unit: 'min', criterion: 'Acumular 100 minutos reais' },
+                minutes_300: { current: metrics.totalMinutes, target: 300, unit: 'min', criterion: 'Acumular 300 minutos' },
+                week_5: { current: metrics.currentWeekActiveDays, target: 5, unit: 'dias ativos', criterion: 'Treinar em 5 dias da semana' },
+                week_7: { current: metrics.currentWeekActiveDays, target: 7, unit: 'dias ativos', criterion: 'Treinar nos 7 dias da semana' },
+                vacuum_5: { current: metrics.sources.vacuum, target: 5, unit: 'sessões', criterion: 'Concluir 5 treinos de vácuo' },
+                kegel_10: { current: metrics.sources.kegel, target: 10, unit: 'sessões', criterion: 'Concluir 10 treinos de Kegel' },
+                bracing_10: { current: metrics.sources.bracing, target: 10, unit: 'sessões', criterion: 'Concluir 10 treinos de Bracing' },
+                program_10: { current: metrics.sources.program, target: 10, unit: 'sessões', criterion: 'Concluir 10 sessões dos programas' }
+            };
+            const definition = definitions[achievement?.id];
+            if (!definition) return null;
+            return {
+                current: Math.max(0, Math.round(Number(definition.current) || 0)),
+                target: Math.max(0, Math.round(Number(definition.target) || 0)),
+                unit: definition.unit,
+                criterion: definition.criterion
+            };
+        }
+
         function evaluateAchievements(notify = true) {
             const metrics = activityMetrics();
             const newAchievements = ACHIEVEMENTS.filter(achievement =>
@@ -12265,18 +12319,62 @@
         function renderAchievements() {
             const container = document.getElementById('achievementsContainer');
             if (!container) return;
+            const metrics = activityMetrics();
             container.innerHTML = ACHIEVEMENTS.map(achievement => {
                 const unlocked = AppState.unlockedAchievements.includes(achievement.id);
                 const unlockedClasses = ACHIEVEMENT_COLOR_CLASSES[achievement.color] || ACHIEVEMENT_COLOR_CLASSES.emerald;
+                const progress = achievementProgress(achievement, metrics);
                 return `
-                    <div class="flex flex-col items-center text-center w-[108px] flex-shrink-0 ${unlocked ? '' : 'opacity-40'}">
+                    <button type="button" onclick="showAchievementDetails('${achievement.id}')" aria-haspopup="dialog" aria-controls="achievementDetailsModal" aria-expanded="false" class="flex flex-col items-center text-center w-[108px] flex-shrink-0 rounded-xl bg-transparent p-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-400 ${unlocked ? '' : 'opacity-50'}">
                         <div class="w-16 h-16 rounded-full ${unlocked ? `${unlockedClasses} shadow-inner` : 'bg-slate-800/80 border-slate-700/60 text-slate-500'} border flex items-center justify-center text-2xl mb-2">
                             <i class="fa-solid ${achievement.icon}"></i>
                         </div>
                         <span class="text-xs font-bold ${unlocked ? 'text-slate-100' : 'text-slate-400'} leading-tight">${achievement.title}</span>
-                        <span class="text-[10px] text-slate-500 leading-tight mt-0.5">${achievement.description}</span>
-                    </div>`;
+                        <span class="text-[10px] text-slate-500 leading-tight mt-0.5">${progress?.criterion || achievement.description}</span>
+                    </button>`;
             }).join('');
+        }
+
+        function showAchievementDetails(achievementId) {
+            const achievement = ACHIEVEMENTS.find(item => item.id === achievementId);
+            if (!achievement) return false;
+            const modal = document.getElementById('achievementDetailsModal');
+            const content = document.getElementById('achievementDetailsContent');
+            const metrics = activityMetrics();
+            const progress = achievementProgress(achievement, metrics);
+            if (!modal || !content || !progress) return false;
+
+            const unlocked = AppState.unlockedAchievements.includes(achievement.id);
+            const criterionMet = progress.target > 0 && achievement.test(metrics);
+            const statusLabel = unlocked
+                ? 'Desbloqueada'
+                : criterionMet
+                    ? 'Critério atingido, mas desbloqueio não registrado'
+                    : 'Ainda não desbloqueada';
+            const progressPercent = progress.target > 0 ? Math.min(100, Math.round((progress.current / progress.target) * 100)) : 0;
+            content.innerHTML = `
+                <p class="text-[10px] font-black uppercase tracking-[.18em] text-emerald-300">Critério da conquista</p>
+                <h2 id="achievementDetailsTitle" class="mt-1 text-xl font-black text-white">${achievement.title}</h2>
+                <p class="mt-2 text-sm text-slate-300">${progress.criterion}</p>
+                <p class="mt-3 text-xs font-bold ${unlocked ? 'text-emerald-300' : criterionMet ? 'text-amber-300' : 'text-slate-300'}">${statusLabel}</p>
+                <p class="mt-1 text-xs text-slate-400">Progresso real: ${progress.current} / ${progress.target} ${progress.unit}</p>
+                <div class="mt-2 h-2 overflow-hidden rounded-full bg-slate-800" role="progressbar" aria-label="Progresso da conquista" aria-valuemin="0" aria-valuemax="${progress.target}" aria-valuenow="${Math.min(progress.current, progress.target)}">
+                    <div class="h-full rounded-full ${unlocked ? 'bg-emerald-400' : 'bg-cyan-400'}" style="width:${progressPercent}%"></div>
+                </div>
+            `;
+            // A aba usa transform; fixed dentro dela fica preso ao scroll e fora da viewport.
+            if (modal.parentNode !== document.body) document.body.appendChild(modal);
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+            return true;
+        }
+
+        function hideAchievementDetails() {
+            const modal = document.getElementById('achievementDetailsModal');
+            if (!modal) return false;
+            modal.classList.add('hidden');
+            modal.setAttribute('aria-hidden', 'true');
+            return true;
         }
 
         function showNextAchievement() {
@@ -12583,25 +12681,176 @@
                 }).join('');
             }
 
-            // 3. Resumo por Dia do Período
+            // 3. Insight de frequência horária, somente quando o ID preserva um timestamp real
+            const timeInsightContainer = document.getElementById('evolutionTimeInsight');
+            if (timeInsightContainer) {
+                const selectedDateKeys = new Set(config.days.map(day => day.key));
+                const timestampFromId = id => {
+                    if (typeof id === 'number') return Number.isFinite(id) && id > 0 ? Math.trunc(id) : null;
+                    if (typeof id !== 'string') return null;
+                    const directTimestamp = id.replace(/^corpo_/, '');
+                    if (/^\d{10,13}$/.test(directTimestamp)) return Number(directTimestamp);
+                    const match = id.match(/(?:^|[-_])(\d{13})(?:$|[-_])/);
+                    return match ? Number(match[1]) : null;
+                };
+                const timestampDateKey = id => {
+                    const timestamp = timestampFromId(id);
+                    return timestamp ? localDateKey(new Date(timestamp)) : null;
+                };
+                const timedRecords = [];
+                const addTimedRecord = (id, dateKey) => {
+                    if (!selectedDateKeys.has(dateKey)) return;
+                    const timestamp = timestampFromId(id);
+                    if (!timestamp || localDateKey(new Date(timestamp)) !== dateKey) return;
+                    timedRecords.push(timestamp);
+                };
+                (Array.isArray(CorePersistence.sessionHistory) ? CorePersistence.sessionHistory : [])
+                    .filter(record => record?.status === 'completed')
+                    .forEach(record => addTimedRecord(record.id, record.date));
+                (Array.isArray(AppState.pausas?.history) ? AppState.pausas.history : [])
+                    .forEach(record => record && addTimedRecord(record.id, timestampDateKey(record.id)));
+                (Array.isArray(AppState.mente?.history) ? AppState.mente.history : [])
+                    .forEach(record => record && addTimedRecord(record.id, timestampDateKey(record.id)));
+
+                const hourCounts = new Map();
+                timedRecords.forEach(timestamp => {
+                    const hour = new Date(timestamp).getHours();
+                    hourCounts.set(hour, (hourCounts.get(hour) || 0) + 1);
+                });
+                const totalSessionsInPeriod = config.days.reduce((sum, day) =>
+                    sum + Math.max(0, Number(AppState.activityLog?.[day.key]?.sessions) || 0), 0);
+                const disclaimer = 'Frequência observada, não desempenho.';
+                let insightText = '';
+                if (timedRecords.length === 0) {
+                    insightText = `Sem horários individuais preservados neste período. O diário registra ${totalSessionsInPeriod} sessões, sem hora por sessão. ${disclaimer}`;
+                } else {
+                    const highestCount = Math.max(...hourCounts.values());
+                    const peakHours = [...hourCounts.entries()].filter(([, count]) => count === highestCount).map(([hour]) => hour).sort((a, b) => a - b);
+                    if (timedRecords.length === 1) {
+                        insightText = `1 registro com horário às ${String(peakHours[0]).padStart(2, '0')}h; dado pontual, sem padrão de frequência. ${disclaimer}`;
+                    } else if (highestCount === 1) {
+                        insightText = `${timedRecords.length} registros com horário preservado, sem repetição de hora. ${disclaimer}`;
+                    } else if (peakHours.length > 1) {
+                        insightText = `Frequência empatada às ${peakHours.map(hour => `${String(hour).padStart(2, '0')}h`).join(' e ')} (${highestCount} registros com horário cada). ${disclaimer}`;
+                    } else {
+                        insightText = `Maior frequência registrada: ${String(peakHours[0]).padStart(2, '0')}h (${highestCount} registros com horário). ${disclaimer}`;
+                    }
+                }
+                timeInsightContainer.innerHTML = `<strong class="text-cyan-200">Horário</strong><p class="mt-1">${insightText}</p>`;
+            }
+
+            // 4. Resumo e detalhe por Dia do Período
             const summaryContainer = document.getElementById('evolutionDailySummaryContainer');
             if (summaryContainer) {
                 summaryContainer.innerHTML = config.days.map(d => {
-                    const mins = Math.max(0, AppState.activityLog?.[d.key]?.minutes || 0);
-                    const sessions = Math.max(0, AppState.activityLog?.[d.key]?.sessions || 0);
-                    return `
-                        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-800/60 border border-slate-700/60">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-lg ${mins > 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-700/40 text-slate-500'} flex items-center justify-center font-bold text-xs">
-                                    ${d.dayLabel}
+                    const activityEntry = AppState.activityLog?.[d.key] || {};
+                    const mins = Math.max(0, Number(activityEntry.minutes) || 0);
+                    const sessions = Math.max(0, Number(activityEntry.sessions) || 0);
+                    const coreRecords = (Array.isArray(CorePersistence.sessionHistory) ? CorePersistence.sessionHistory : [])
+                        .filter(record => record && record.date === d.key);
+                    const historyDateKey = item => {
+                        const rawId = typeof item?.id === 'string' ? item.id.replace(/^corpo_/, '') : item?.id;
+                        const timestamp = Number(rawId);
+                        return Number.isFinite(timestamp) && timestamp > 0 ? localDateKey(new Date(timestamp)) : null;
+                    };
+                    const bodyRecords = (Array.isArray(AppState.pausas?.history) ? AppState.pausas.history : [])
+                        .filter(item => item && historyDateKey(item) === d.key);
+                    const breathRecords = (Array.isArray(AppState.mente?.history) ? AppState.mente.history : [])
+                        .filter(item => item && historyDateKey(item) === d.key);
+                    const escapeDetailText = value => String(value ?? '').replace(/[&<>\"']/g, char => ({
+                        '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;'
+                    }[char]));
+
+                    const formatSessionDuration = seconds => {
+                        const minutes = Math.floor(seconds / 60);
+                        const remainingSeconds = seconds % 60;
+                        return minutes > 0 ? `${minutes}m ${remainingSeconds}s` : `${remainingSeconds}s`;
+                    };
+                    const coreDetailsMarkup = coreRecords.map(record => {
+                        const statusLabels = { completed: 'Concluída', interrupted: 'Interrompida', cancelled: 'Cancelada' };
+                        const feedbackLabels = { comfortable: 'Confortável', difficult: 'Difícil', interrupted: 'Interrompido' };
+                        const statusLabel = statusLabels[record.status] || 'Estado indisponível';
+                        const sessionLabel = String(record.programId) === '3' ? 'Vácuo' : 'Treino';
+                        const completedSeries = Math.max(0, Math.round(Number(record.completedSeries) || 0));
+                        const plannedSeries = Math.max(0, Math.round(Number(record.plannedSeries) || 0));
+                        const retentionSeconds = Math.max(0, Math.round(Number(record.retentionSeconds) || 0));
+                        const recoverySeconds = Math.max(0, Math.round(Number(record.recoverySeconds) || 0));
+                        const totalElapsedSeconds = Number.isInteger(record.totalElapsedSeconds) && record.totalElapsedSeconds >= 0
+                            ? record.totalElapsedSeconds
+                            : null;
+                        const totalTimeLabel = totalElapsedSeconds === null
+                            ? 'Tempo total não registrado'
+                            : `Tempo total: ${formatSessionDuration(totalElapsedSeconds)}`;
+                        const feedbackLabel = record.feedback == null
+                            ? 'Não registrado'
+                            : (feedbackLabels[record.feedback] || 'Indisponível');
+                        return `
+                            <div class="rounded-lg bg-slate-900/70 border border-slate-700/60 p-3">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-xs font-bold text-white">${sessionLabel}</span>
+                                    <span class="text-[11px] text-slate-300">${statusLabel}</span>
                                 </div>
-                                <div>
-                                    <div class="text-xs font-bold text-white">${d.dayLabel}, ${d.dayNumber}</div>
-                                    <div class="text-[11px] text-slate-400">${sessions} ${sessions === 1 ? 'sessão' : 'sessões'}</div>
-                                </div>
+                                <div class="mt-1 text-[11px] text-slate-400">${completedSeries}/${plannedSeries} séries • Retenção ${retentionSeconds}s • Recuperação ${recoverySeconds}s</div>
+                                <div class="text-[11px] text-slate-400">${totalTimeLabel}</div>
+                                <div class="text-[11px] text-slate-400">Feedback: ${feedbackLabel}</div>
                             </div>
-                            <div class="text-xs font-bold ${mins > 0 ? 'text-emerald-400' : 'text-slate-500'}">
-                                ${mins} min
+                        `;
+                    }).join('');
+                    const bodyDetailsMarkup = bodyRecords.map(item => {
+                        const title = escapeDetailText(item.title || 'Mobilidade');
+                        const durationMin = Math.max(0, Math.round(Number(item.durationMin) || 0));
+                        return `<div class="rounded-lg bg-slate-900/70 border border-slate-700/60 p-3 text-xs text-white">Mobilidade • ${title}<div class="mt-1 text-[11px] text-slate-400">Registrada • ${durationMin} min</div></div>`;
+                    }).join('');
+                    const breathDetailsMarkup = breathRecords.map(item => {
+                        const patternName = escapeDetailText(item.patternName || 'Respiração');
+                        const durationMin = Math.max(0, Math.round(Number(item.durationMin) || 0));
+                        const cycles = Math.max(0, Math.round(Number(item.cycles) || 0));
+                        return `<div class="rounded-lg bg-slate-900/70 border border-slate-700/60 p-3 text-xs text-white">Respiração • ${patternName}<div class="mt-1 text-[11px] text-slate-400">Registrada • ${durationMin} min • ${cycles} ciclos</div></div>`;
+                    }).join('');
+                    const detailedMarkup = `${coreDetailsMarkup}${bodyDetailsMarkup}${breathDetailsMarkup}`;
+                    const completedCoreCount = coreRecords.filter(record => record.status === 'completed').length;
+                    const detailedCompletedCount = completedCoreCount + bodyRecords.length + breathRecords.length;
+                    const aggregateOnlySessions = Math.max(0, sessions - detailedCompletedCount);
+
+                    const sourceLabels = { kegel: 'Kegel', bracing: 'Bracing', mindfulness: 'Mindfulness', general: 'Outras atividades' };
+                    const sourceCounts = activityEntry.sources && typeof activityEntry.sources === 'object' ? activityEntry.sources : {};
+                    const aggregateSources = Object.entries(sourceLabels)
+                        .map(([source, label]) => ({ label, count: Math.max(0, Math.round(Number(sourceCounts[source]) || 0)) }))
+                        .filter(item => item.count > 0);
+                    const stretchSourceCount = Math.max(0, Math.round(Number(sourceCounts.stretch) || 0));
+                    const missingStretchDetails = Math.max(0, stretchSourceCount - bodyRecords.length - breathRecords.length);
+                    if (missingStretchDetails > 0) aggregateSources.push({ label: 'Mobilidade/respiração sem detalhe', count: missingStretchDetails });
+
+                    const aggregateMarkup = aggregateOnlySessions > 0
+                        ? `<p class="text-[11px] text-amber-300">Sessões sem detalhe individual: ${aggregateOnlySessions}</p>`
+                            + (aggregateSources.length > 0
+                                ? `<div class="rounded-lg bg-slate-900/50 p-3 text-[11px] text-slate-300"><p class="mb-1 font-bold">Contagens por origem já incluídas no total:</p>${aggregateSources.map(item => `<div>${item.label} — ${item.count} ${item.count === 1 ? 'sessão' : 'sessões'}</div>`).join('')}</div>`
+                                : '')
+                        : '';
+                    const detailSummary = detailedMarkup
+                        ? `<p class="mb-2 text-[11px] text-slate-400">Diário agregado: ${sessions} ${sessions === 1 ? 'sessão' : 'sessões'} • ${mins} min. Registros detalhados preservados: ${coreRecords.length + bodyRecords.length + breathRecords.length}.</p>`
+                        : '';
+                    const emptyMarkup = !detailedMarkup && sessions > 0
+                        ? `<p class="text-xs text-slate-400">Detalhes individuais indisponíveis para esta data. O diário agregado registra ${sessions} ${sessions === 1 ? 'sessão' : 'sessões'} e ${mins} min.</p>`
+                        : (!detailedMarkup ? '<p class="text-xs text-slate-400">Nenhuma sessão registrada neste dia.</p>' : '');
+
+                    return `
+                        <div class="overflow-hidden rounded-xl bg-slate-800/60 border border-slate-700/60">
+                            <button type="button" class="cf-selector flex w-full items-center justify-between gap-3 p-3 text-left text-slate-200" data-evolution-day="${d.key}" aria-expanded="false" aria-controls="evolutionDayDetails-${d.key}" data-evolution-day-total="${mins}" onclick="toggleEvolutionDay(this)">
+                                <span class="flex min-w-0 items-center gap-2.5">
+                                    <span class="w-8 h-8 flex-shrink-0 rounded-lg ${mins > 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-700/40 text-slate-500'} flex items-center justify-center font-bold text-xs">${d.dayLabel}</span>
+                                    <span class="min-w-0">
+                                        <span class="block text-xs font-bold text-white">${d.dayLabel}, ${d.dayNumber}</span>
+                                        <span class="block text-[11px] text-slate-400">${sessions} ${sessions === 1 ? 'sessão' : 'sessões'}</span>
+                                    </span>
+                                </span>
+                                <span class="flex flex-shrink-0 items-center gap-2">
+                                    <span class="text-xs font-bold ${mins > 0 ? 'text-emerald-400' : 'text-slate-500'}">${mins} min</span>
+                                    <i class="fa-solid fa-chevron-down text-[10px] text-slate-400" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                            <div id="evolutionDayDetails-${d.key}" class="hidden space-y-2 px-3 pb-3" aria-label="Sessões de ${d.dayLabel}, ${d.dayNumber}">
+                                ${detailSummary}${detailedMarkup || emptyMarkup}${aggregateMarkup}
                             </div>
                         </div>
                     `;
@@ -12614,6 +12863,17 @@
                 const activeDays = config.days.filter(d => Math.max(0, AppState.activityLog?.[d.key]?.minutes || 0) > 0).length;
                 consistencyEl.textContent = `${activeDays}/${config.days.length} dias ativos`;
             }
+        }
+
+        function toggleEvolutionDay(button) {
+            const dateKey = button?.dataset?.evolutionDay;
+            if (typeof dateKey !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) return;
+            const details = document.getElementById(`evolutionDayDetails-${dateKey}`);
+            if (!details) return;
+
+            const isExpanded = button.getAttribute('aria-expanded') === 'true';
+            button.setAttribute('aria-expanded', String(!isExpanded));
+            details.classList.toggle('hidden', isExpanded);
         }
 
         function renderWeeklyTimeSummary() {
@@ -12651,36 +12911,63 @@
             `).join('');
         }
 
-        // EXPORT PDF / PRINT PERFORMANCE REPORT
+        // EXPORTA O RESUMO DO PERÍODO SELECIONADO
         function exportPerformancePDF() {
             triggerHaptic([60]);
+            const selectEl = document.getElementById('evolutionPeriodSelect');
+            const selectedPeriod = selectEl?.value || AppState.evolutionPeriod || 'this_week';
+            const config = getEvolutionPeriodConfig(selectedPeriod);
+            const dailyRows = config.days.map(day => {
+                const entry = AppState.activityLog?.[day.key] || {};
+                const minutes = Math.max(0, Number(entry.minutes) || 0);
+                const sessions = Math.max(0, Number(entry.sessions) || 0);
+                return { day, minutes, sessions };
+            });
+            const totalMinutes = dailyRows.reduce((sum, row) => sum + row.minutes, 0);
+            const totalSessions = dailyRows.reduce((sum, row) => sum + row.sessions, 0);
+            const activeDays = dailyRows.filter(row => row.minutes > 0 || row.sessions > 0).length;
+            const previousMinutes = config.previousKeys.reduce((sum, key) => {
+                const entry = AppState.activityLog?.[key] || {};
+                return sum + Math.max(0, Number(entry.minutes) || 0);
+            }, 0);
+            const comparisonText = previousMinutes > 0
+                ? (() => {
+                    const changePercent = Math.round(((totalMinutes - previousMinutes) / previousMinutes) * 100);
+                    const sign = changePercent > 0 ? '+' : '';
+                    return `Comparação com ${config.comparisonLabel}: ${sign}${changePercent}% em minutos.`;
+                })()
+                : `Comparação indisponível: sem atividade registrada em ${config.comparisonLabel}.`;
+            const setText = (id, value) => {
+                const element = document.getElementById(id);
+                if (element) element.innerText = value;
+            };
 
-            // Populate printable table
+            setText('printReportTitle', `Relatório de Evolução — ${config.label}`);
+            setText('printReportSubtitle', `Período: ${config.days[0]?.key || '—'} a ${config.days[config.days.length - 1]?.key || '—'}. Dados do diário local.`);
+            setText('printStreak', `${activeDays} / ${config.days.length} dias ativos`);
+            setText('printCompleted', `${Math.round(totalSessions)} sessões`);
+            setText('printTime', `${Math.round(totalMinutes)} min`);
+            setText('printPeriodNote', comparisonText);
+
             const tbody = document.getElementById('printTableBody');
-            tbody.innerHTML = AppState.schedule.map(s => `
-                <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 8px; font-weight: bold; color: #0f172a;">${s.time}</td>
-                    <td style="padding: 8px; font-weight: 600; color: #1e293b;">
-                        ${s.title}
-                        ${s.note ? `<div style="font-size: 11px; color: #047857; font-style: italic; margin-top: 2px;">Nota: "${s.note}"</div>` : ''}
-                    </td>
-                    <td style="padding: 8px; color: #64748b;">${s.sub}</td>
-                    <td style="padding: 8px; font-weight: bold; color: ${s.completed ? '#059669' : '#d97706'};">${s.completed ? '✓ Concluído' : 'Pendente'}</td>
-                </tr>
-            `).join('');
+            if (tbody) {
+                tbody.innerHTML = dailyRows.map(({ day, minutes, sessions }) => {
+                    const status = sessions > 0 || minutes > 0 ? 'Atividade registrada' : 'Sem atividade registrada';
+                    return `
+                        <tr style="border-bottom: 1px solid #e2e8f0;">
+                            <td style="padding: 8px; font-weight: bold; color: #0f172a;">${day.dayLabel}, ${day.key}</td>
+                            <td style="padding: 8px; font-weight: 600; color: #1e293b;">${Math.round(sessions)}</td>
+                            <td style="padding: 8px; color: #64748b;">${status}</td>
+                            <td style="padding: 8px; font-weight: bold; color: #0284c7;">${Math.round(minutes)} min</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
 
-            const completedCount = AppState.schedule.filter(s => s.completed).length;
-            document.getElementById('printStreak').innerText = AppState.streak + ' Dias';
-            document.getElementById('printCompleted').innerText = `${completedCount} / ${AppState.schedule.length}`;
-            document.getElementById('printTime').innerText = AppState.totalMinutesToday + ' Minutos';
-
-            // Check if Android Native bridge is present
             if (window.AndroidBridge && window.AndroidBridge.printPdf) {
                 window.AndroidBridge.printPdf();
                 return;
             }
-
-            // Web native print dialog (can save as PDF on mobile & desktop)
             window.print();
         }
 
@@ -13184,6 +13471,7 @@
                 status: record.status, plannedSeries, completedSeries,
                 retentionSeconds: integer(record.retentionSeconds, 'retentionSeconds'),
                 recoverySeconds: integer(record.recoverySeconds, 'recoverySeconds'),
+                totalElapsedSeconds: record.totalElapsedSeconds == null ? null : integer(record.totalElapsedSeconds, 'totalElapsedSeconds'),
                 pausedSeconds: integer(record.pausedSeconds, 'pausedSeconds'),
                 interrupted: record.interrupted === true, feedback: record.feedback ?? null
             };

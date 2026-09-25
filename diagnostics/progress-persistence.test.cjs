@@ -347,6 +347,9 @@ console.log('Semana/sessão e migração/variedade do Bracing: passaram.');
         interrupted: false, feedback: null
     };
     assert.equal(vm.runInContext('normalizeSessionRecord(rawRecord).id', Object.assign(env.context, { rawRecord: record })), record.id);
+    assert.equal(vm.runInContext('normalizeSessionRecord(rawRecord).totalElapsedSeconds', Object.assign(env.context, { rawRecord: record })), null, 'registro legado sem tempo total deve permanecer explicitamente desconhecido');
+    const timedRecord = { ...record, totalElapsedSeconds: 123 };
+    assert.equal(vm.runInContext('normalizeSessionRecord(rawRecord).totalElapsedSeconds', Object.assign(env.context, { rawRecord: timedRecord })), 123, 'normalização deve preservar o tempo total real');
     assert.equal(vm.runInContext('upsertSessionRecord(rawRecord)', env.context), true);
     assert.equal(vm.runInContext('upsertSessionRecord(rawRecord)', env.context), false, 'mesmo ID não pode duplicar histórico');
     assert.equal(vm.runInContext('CorePersistence.sessionHistory.length', env.context), 1);

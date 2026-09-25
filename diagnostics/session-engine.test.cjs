@@ -151,6 +151,7 @@ const snapshot1 = JSON.parse(storage['coreflow_progress_snapshot_v4'] || '{}');
 assert.equal(snapshot1.data?.sessionHistory?.length, 1, 'sessionHistory must be saved to localStorage v4');
 assert.equal(snapshot1.data?.dailyExecution?.sessionId, 'test-session-1', 'dailyExecution state must be persisted');
 assert.equal(history1[0].retentionSeconds, 0, 'daily session retention must not use total elapsed time');
+assert.equal(history1[0].totalElapsedSeconds, 120, 'daily session must persist the actual elapsed total separately');
 
 // Daily vacuum steps share one logical series across preparation, breathing,
 // retention, return, and recovery phases.
@@ -289,6 +290,7 @@ const history6 = vm.runInContext('CorePersistence.sessionHistory', context);
 assert.equal(history6.length, 4, 'abortDailySession(true) should add a record');
 assert.equal(history6[3].interrupted, true, 'record status should be interrupted');
 assert.equal(history6[3].status, 'interrupted', 'interrupted session must use the interrupted status');
+assert.equal(history6[3].totalElapsedSeconds, 15, 'interrupted daily session must preserve actual elapsed time');
 
 // Session metrics must keep retention, recovery, and pause time separate.
 vm.runInContext(`
@@ -311,6 +313,7 @@ const metricsRecord = history7.find(record => record.id === 'test-vacuum-metrics
 assert.equal(metricsRecord.status, 'interrupted', 'vacuum interruption must use interrupted status');
 assert.equal(metricsRecord.retentionSeconds, 15, 'retention metric must exclude recovery time');
 assert.equal(metricsRecord.recoverySeconds, 60, 'recovery metric must be recorded separately');
+assert.equal(metricsRecord.totalElapsedSeconds, 90, 'vacuum total time must preserve its independent runtime counter');
 assert.equal(metricsRecord.pausedSeconds, 15, 'pause metric must be recorded separately');
 
 // Pausing during retention must leave the breath hold safely in recovery,
