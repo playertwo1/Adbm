@@ -75,6 +75,28 @@ existe por causa do segundo; a classificação ENUMERÁVEL/ABERTA, por causa do 
 - regressao_pos_pass: <preencher depois, ou "nenhuma até <data>">
 -->
 
+### 2026-09-26 — registro de evidência AVD — E04/E13 “Encerrar retenção” (não é veredito de auditoria)
+
+- target_sha: `b2a69a61c0d8dcf7ba5977839ec665eec9dc58d7` (código inalterado)
+- classe: n/a (validação funcional no AVD; nenhum achado de código foi auditado)
+- resultado observado: o botão real levou a `paused/retorno`; 1s e série 1 interrompida foram persistidos; após cancelamento, um registro `interrupted` ficou no diário, sem ID concluído nem crédito de progresso.
+- cobertura: Pixel_9/API 37, UI + serviço nativo + snapshot do diário. NÃO coberto: repetição, retomada, recriação do serviço, físico, Watch e TalkBack.
+- auditoria independente deste critério: não executada. O PASS de 26/09 abaixo é restrito às seis fases e não é reutilizado aqui.
+
+### 2026-09-26 — direto no chat — E04/E13: identificação das seis fases — rodada 1/3 — PASS
+
+- target_sha: `b2a69a61c0d8dcf7ba5977839ec665eec9dc58d7`
+- classe: n/a (PASS sem achados)
+- achados_confirmados: 0
+- achados_retirados: 0 (nenhuma hipótese de defeito levantada)
+- achados_tardios: 0
+- causa_raiz: sem causa comum (PASS restrito ao critério)
+- gates_mecanicos: `node diagnostics/e13-e04-vacuum-phases.test.cjs` → PASS; `scripts/check.sh` → CHECK PASS; `cmp -s index.html app/src/main/assets/index.html` e `git diff --check` → PASS.
+- familia_builder: desconhecida (alterações preexistentes na branch; família não registrada) / familia_auditor: desconhecida (subagente independente, modelo não informado no resultado).
+- cobertura: diagnóstico, fases explícitas no HTML/serviço e registros AVD das transições/descanso. NÃO coberto: demais critérios E04/E13, AVD nesta rodada, físico, Watch, TalkBack e recriação do serviço.
+- tempo_espera: desconhecido (não medido como espera operacional)
+- regressao_pos_pass: nenhuma conhecida até 2026-09-26; outros critérios continuam em aberto.
+
 ### 2026-09-22 — t_4061fe58 — E09.2 (re-auditoria cross-family) — rodada 1/3 — PASS
 
 - target_sha: `61dec44716e139e3a006840b1d6302ea80784b91`

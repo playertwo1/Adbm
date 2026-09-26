@@ -1,5 +1,30 @@
 # Registro de execução
 
+## 2026-09-26 — E13 / tentativa de validar pausa no AVD — INCIDENTE DE TESTE
+
+- Alvo: código inalterado em `b2a69a61c0d8dcf7ba5977839ec665eec9dc58d7`; AVD `Pixel_9` (`emulator-5554`). Baseline lido antes: revision 67, 11 registros, zero IDs concluídos, diário sem atividade e programa 3 em semana 1/dia 1 com 0 sessões.
+- Ao avançar a sessão pela interface para testar pausa durante `vacuo`, a automação não acionou **Pausar**: a árvore UI expôs o rótulo com um ícone antes do texto, incompatível com o seletor ancorado usado. A sessão prosseguiu até completar as três séries; esse cenário **não valida** pausa/retomada.
+- Leitura posterior: serviço nativo `idle`, snapshot revision 71, 12 registros; novo ID `program-3-0-1790400545838`, `status=completed`, `completedSeries=3`, `retentionSeconds=30`, `totalElapsedSeconds=219`; `completedSessionIds` passou a 1, `activityLog` ganhou `2026-09-26` e o programa 3 passou a `sessionsToday=1`.
+- Nenhum código foi alterado. O registro de teste permanece no AVD; não foi removido nem restaurado o snapshot, pois o app pode continuar aberto. Não foi feita leitura de logcat após esse cenário. Distinguir este registro acidental da validação controlada anterior (`program-3-0-1790395668409`, `interrupted`, 1s), que segue sendo a evidência válida para `Encerrar retenção`.
+- Próximo: publicar a branch E13 com os documentos de execução/roadmap/auditoria; Rafael compilará e fará a validação em aparelho real. A pausa/retomada e os demais critérios E04/E13 continuam pendentes; nenhum aceite novo foi marcado.
+
+## 2026-09-26 — E04/E13 / “Encerrar retenção” e persistência parcial — VALIDADO NO AVD
+
+- Alvo: código inalterado em `b2a69a61c0d8dcf7ba5977839ec665eec9dc58d7` (`work/e13-after-e12-20260925`); APK instalado byte a byte igual ao build local (SHA-256 `e5ee0f35f0bb90e45af2b0337c51dc2cd26d7d0f60be17d704cd3da532611e12`). AVD `Pixel_9`, Android 17/API 37.
+- Baseline antes do cenário controlado: revision 65, 10 registros, sem IDs concluídos nem atividade no diário; Stomach Vacuum em semana 1/dia 1, 0 sessões. Nenhum dado foi apagado.
+- Cenário: sessão programada real; pulei somente preparação/inspiração para chegar à retenção. Na tela `VÁCUO 10s · 1/3` (00:09), toquei no botão visível **Encerrar retenção**. O serviço persistiu `paused`, fase `retorno`, 5s, `retentionElapsedSeconds=1` e `retentionInterruptedSeries=[1]`. Capturas `AppData/Local/hermes/cache/scratch/adbm-e13/before-safe-exit.png` e `after-safe-exit.png` mostram o botão e **RETORNO CONTROLADO** com **Continuar**.
+- Cancelamento confirmado pela interface persistiu exatamente um novo registro `program-3-0-1790395668409`: `status=interrupted`, `completedSeries=0`, `retentionSeconds=1`, `feedback=null`. Snapshot atual/backup (revisions 67/66): 11 registros, zero IDs concluídos, diário sem minutos/sessões, programa ainda 0/1; serviço voltou a `idle`. Captura final: `AppData/Local/hermes/cache/scratch/adbm-e13/after-cancel.png`.
+- Incidente de teste: uma tentativa anterior não monitorada correu até a conclusão e gerou falsamente o registro `program-3-0-1790393958405` (4 min). Após autorização explícita de Rafael, removi somente esse registro e seus efeitos diretos usando `AndroidBridge.saveProgressSnapshot` e a cópia anterior como base; current/backup foram conferidos sem esse ID, e o baseline visual 0 min / 0/1 foi restaurado antes do cenário controlado. O registro parcial acima é o único resultado intencional do teste.
+- Verificações: hash do APK instalado = hash do build; estado nativo/diário lidos de volta após o teste; logcat sem `FATAL EXCEPTION` ou `ERROR:CONSOLE`. Não houve alteração de código, novo SHA, commit, push nem auditoria independente deste critério. `scripts/check.sh` não foi repetido nesta sessão; o gate já estava PASS no alvo e nenhum código foi alterado.
+- Resultado: concluído somente o critério E04/E13 de saída da retenção com persistência parcial; E04/E13 continuam abertas. Não cobertos: repetição por outras séries, retomada após retorno, recriação do serviço, interface de feedback, aparelho físico, Watch e TalkBack.
+
+## 2026-09-26 — E04/E13 / identificação das seis fases — CRITÉRIO CONCLUÍDO
+
+- Alvo revisado: `b2a69a61c0d8dcf7ba5977839ec665eec9dc58d7`, branch `work/e13-after-e12-20260925`, descendente de `origin/main` (`716c297bd051686650914d38684d54967ee90743`); worktree limpa antes do registro.
+- Teste: `node diagnostics/e13-e04-vacuum-phases.test.cjs` → PASS. `scripts/check.sh` → CHECK PASS; `git diff --check` e equivalência byte a byte dos HTMLs também passaram.
+- Evidência direta AVD já registrada em 25/09: serviço percorreu `prepara` → `inspira` → `expira` → `vacuo` → `retorno`; `descanso/recuperação` foi observado no cenário anterior. Auditoria independente restrita a este critério deu PASS, sem achados.
+- Resultado: marcado somente o critério “Identificar preparação, inspiração, expiração, retenção, retorno e recuperação” em E04/E13. E04 e E13 continuam abertas; não se inferem aprovação de outros critérios, teste físico, Watch, TalkBack ou recriação do serviço.
+
 ## 2026-09-25 — E13 / bloquear postura e carga durante programa ativo — REGRESSÃO
 
 - `setPosture` e `setVacuumDuration` já recusavam alteração durante o player rápido ativo, mas não consideravam a sessão programada em execução ou pausada. Um teste comportamental em `diagnostics/session-engine.test.cjs` falhou com `true !== false` antes da correção. Ambos agora recusam alteração se `AppState.dailyExecution.isRunning` ou `.isPaused`, sem tocar na postura/duração; a regra foi aplicada nos dois HTMLs. Regressão passou nos dois arquivos; `scripts/check.sh` passou com build app/Wear e diagnósticos.
