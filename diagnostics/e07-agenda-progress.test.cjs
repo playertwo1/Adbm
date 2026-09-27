@@ -45,6 +45,21 @@ assert.match(source, /Dia não configurado/);
 assert.doesNotMatch(source, /const reminderTimes = prog\.reminderTimes \|\| \['09:00', '16:00'\]/);
 assert.doesNotMatch(source, /weeklyTargetDays \|\| 7/);
 
+// Todo programa padrão do catálogo precisa ter weeklyTargetDays configurado (> 0) em todas as fases.
+const appStateSource = source.slice(source.indexOf('        const AppState = {'), source.indexOf('        const CORE_DATA_VERSION')).replace('const AppState', 'var AppState');
+const defaultProgramsContext = vm.createContext({});
+vm.runInContext(appStateSource, defaultProgramsContext);
+assert.equal(defaultProgramsContext.AppState.programs.length, 4, 'AppState deve conter exatamente 4 programas');
+defaultProgramsContext.AppState.programs.forEach(prog => {
+    assert.equal(prog.phases.length, 8, `Programa ${prog.id} (${prog.title}) deve ter 8 fases`);
+    prog.phases.forEach((ph, i) => {
+        assert.ok(
+            Number.isInteger(ph.weeklyTargetDays) && ph.weeklyTargetDays > 0,
+            `Programa ${prog.id} (${prog.title}) fase ${i + 1} (${ph.title}) deve ter weeklyTargetDays definido como inteiro positivo, mas recebeu: ${ph.weeklyTargetDays}`
+        );
+    });
+});
+
 const schedule = extractFunction(source, 'getProgramSchedule');
 const merge = extractFunction(source, 'mergeLoadedPrograms');
 const synchronize = extractFunction(source, 'synchronizeProgramProgress');

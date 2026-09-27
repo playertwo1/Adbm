@@ -1,5 +1,17 @@
 # Registro de execução
 
+## 2026-09-27 — Correção: Frequência semanal (weeklyTargetDays) do Programa 2 (Kegel)
+
+- **Problema Relatado:** No Programa 2 ("Cronograma Avançado de 8 Semanas" / Kegel), o cabeçalho e modal de execução exibiam "frequência não configurada" / "Dia não configurado" (ex.: `Meta Diária Concluída (2/2) ✓ • Dia não configurado/frequência não configurada` e `SEMANA 4 • DIA NÃO CONFIGURADO/FREQUÊNCIA NÃO CONFIGURADA (SESSÃO 2/2)`), e as pílulas de consistência semanal (`D1..D7`) não eram renderizadas.
+- **Causa Raiz:** Em `AppState.programs[1]` (ID `2`), as 8 fases estavam sem o atributo `weeklyTargetDays`. Desde a implementação da higienização de agenda em E07.5 (commit `0744689`), a função `getConfiguredWeeklyTargetDays(phase)` retornava `null` caso a fase não declarasse explicitamente sua frequência, removendo o fallback implícito `|| 7`. Sem `weeklyTargetDays`, os rótulos de dia e frequência eram formatados como não configurados e o progresso em dias concluídos ficava bloqueado.
+- **Solução Implementada:**
+  1. Configurado explicitamente `weeklyTargetDays: 7` em todas as 8 fases do Programa 2 em `index.html` e `app/src/main/assets/index.html`.
+  2. Adicionado teste de contrato e regressão em `diagnostics/e07-agenda-progress.test.cjs` para garantir que todos os programas padrão do catálogo declarem `weeklyTargetDays` como inteiro positivo em todas as suas fases (verificado RED antes e GREEN após a correção).
+- **Verificações e Gates:**
+  - Equivalência HTML (`index.html` e `app/src/main/assets/index.html`): byte a byte idênticos (SHA-256 equivalente).
+  - Regressões Node (`diagnostics/*.test.cjs`): 100% PASS.
+  - IDs de programas, armazenamento e protocolo clínico de 7 dias/semana (2x ao dia) preservados.
+
 ## 2026-09-27 — Adição ao Roadmap: FUTURA — Modo Treino Flutuante
 
 - **Contexto e Ação:** Inclusão no `ROADMAP.md` da especificação da etapa futura "Modo Treino Flutuante" (Status: NÃO INICIADO), com referência visual `assets/design/coreflow-s25-ultra/11-treino-flutuante-material3.png` e divisão em sete checkpoints (CP1 a CP7).
