@@ -1,5 +1,29 @@
 # Registro de execução
 
+## 2026-09-27 — Adição ao Roadmap: FUTURA — Modo Treino Flutuante
+
+- **Contexto e Ação:** Inclusão no `ROADMAP.md` da especificação da etapa futura "Modo Treino Flutuante" (Status: NÃO INICIADO), com referência visual `assets/design/coreflow-s25-ultra/11-treino-flutuante-material3.png` e divisão em sete checkpoints (CP1 a CP7).
+- **Diretrizes e Restrições Vinculadas:** Overlay flutuante (`SYSTEM_ALERT_WINDOW`) exibindo e controlando a sessão existente de `WorkoutForegroundService`. Proibido expressamente criar outro cronômetro, segundo `ForegroundService`, vibração própria, duplicar voz ou sinais do Wear OS.
+- **Checkpoints Arquitetados:** CP1 (Permissão e estrutura / `WorkoutOverlayController.kt`), CP2 (Sincronização com `WorkoutForegroundService`), CP3 (Três estados visuais: Mini, Compacta, Expandida), CP4 (Controles nativos existentes), CP5 (Preferência em Perfil), CP6 (Compatibilidade inicial de programas nativos) e CP7 (Suíte de regressões e gate final).
+- **Arquivos Alterados:** `ROADMAP.md` e inclusão do asset de referência `assets/design/coreflow-s25-ultra/11-treino-flutuante-material3.png`. Nenhum código funcional em execução foi modificado.
+
+## 2026-09-27 — Higienização do Roadmap e Arquivamento de Artefatos Obsoletos
+
+- **Contexto e Ação:** Atendimento à solicitação de limpeza do repositório. As etapas do roadmap já implementadas e consolidadas (E00–E03, E05–E09, E10 concluído, E11, E12 e as partes validadas de E04/E13) foram movidas para `docs/arquivados/roadmap-etapas-concluidas.md`.
+- **Limpeza do ROADMAP.md:** O arquivo raiz `ROADMAP.md` foi reescrito em formato enxuto, preservando os procedimentos obrigatórios do agente, a tabela resumida de status e listando exclusivamente o backlog ativo pendente para frente (E04 diferido, pendências clínicas de E10, qualidade visual de E12 e a validação integrada/aparelho físico de E13).
+- **Arquivamento de arquivos obsoletos:**
+  - `patch_main.py` (script pontual de patching de animação de 23/08/2026) movido da raiz para `docs/arquivados/patch_main.py`.
+  - `E09.5_IMPLEMENTACAO.md` (documento de entrega de branch anterior) movido da raiz para `docs/arquivados/E09.5_IMPLEMENTACAO.md`.
+  - `docs/e09-4-IMPLEMENTATION.md` (documento de implementação de E09.4) movido para `docs/arquivados/e09-4-IMPLEMENTATION.md`.
+  - `scripts/e095-tests.js` (script de teste de navegador de E09.5 fora de CI) movido para `docs/arquivados/e095-tests.js`.
+  - Criado `docs/arquivados/README.md` catalogando a origem e a função de cada item arquivado.
+- **Verificações e Gates:**
+  - Equivalência HTML (`index.html` e `app/src/main/assets/index.html`): byte a byte idênticos (SHA-256 preservado).
+  - Regressões Node (`diagnostics/*.test.cjs`): 100% PASS.
+  - Consistência documental de SHA (`scripts/check-doc-sha.sh`): PASS.
+  - Compilação Gradle (`:app:testDebugUnitTest`, `:app:assembleDebug`, `:wear:assembleDebug`): BUILD SUCCESSFUL.
+- **Código e Protocolo:** Nenhum ID de programa, chave de armazenamento, regra clínica ou código funcional de produto foi modificado.
+
 ## 2026-09-26 — E13 / tentativa de validar pausa no AVD — INCIDENTE DE TESTE
 
 - Alvo: código inalterado em `b2a69a61c0d8dcf7ba5977839ec665eec9dc58d7`; AVD `Pixel_9` (`emulator-5554`). Baseline lido antes: revision 67, 11 registros, zero IDs concluídos, diário sem atividade e programa 3 em semana 1/dia 1 com 0 sessões.
