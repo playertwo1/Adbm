@@ -20,6 +20,7 @@
 - [E11 — Tela 08: Mindfulness](#e11--tela-08-mindfulness)
 - [E12 — Tela 09: Evolução](#e12--tela-09-evolução)
 - [E13 (Itens Concluídos) — Validação das Seis Fases e Saída Segura](#e13-itens-concluídos--validação-das-seis-fases-e-saída-segura)
+- [FUTURA — Modo Treino Flutuante (Overlay)](#futura--modo-treino-flutuante-overlay)
 
 ---
 
@@ -209,3 +210,31 @@ Convenção de SHA: `base_sha=666e24a6f64c84c265fa46644efbaa089847823c`, `behavi
 ### E13 (Itens Concluídos) — Validação das Seis Fases e Saída Segura
 - [x] E04 diferido: identificar preparação, inspiração, expiração, retenção, retorno e recuperação. Auditoria restrita PASS em `docs/roadmap/auditorias.md` (target `b2a69a6`).
 - [x] E04 diferido: “Encerrar retenção” registra executado e vai ao retorno/recuperação. AVD + diário parcial persistido (1s); ver `docs/roadmap/execucao.md`.
+
+---
+
+### FUTURA — Modo Treino Flutuante (Overlay)
+[Referência Visual](../../assets/design/coreflow-s25-ultra/11-treino-flutuante-material3.png)  
+**Estado:** CONCLUÍDA (28/09/2026) — Auditada e aprovada em [`docs/roadmap/auditoria-treino-flutuante.md`](../roadmap/auditoria-treino-flutuante.md).
+
+#### Objetivo e Arquitetura
+Exibir a sessão cronometrada ativa sobre outros aplicativos Android através de uma janela flutuante nativa (`SYSTEM_ALERT_WINDOW`). O overlay é estritamente passivo e consome o estado de `WorkoutForegroundService.kt`:
+`WorkoutForegroundService` → timer → voz → hápticos → Galaxy Watch → notificação → `WorkoutOverlayController`.
+
+#### Regras Proibitivas Auditadas
+- [x] Proibido criar outro cronômetro (zero timers concorrentes).
+- [x] Proibido criar outro `ForegroundService`.
+- [x] Proibido disparar vibração própria.
+- [x] Proibido duplicar voz.
+- [x] Proibido duplicar sinais do Galaxy Watch.
+- [x] Proibido alterar regras dos exercícios.
+
+#### Checkpoints Concluídos
+- [x] **CP1 — Permissão e Estrutura:** `SYSTEM_ALERT_WINDOW` no manifesto; `WorkoutOverlayController.kt` criado; verificação de `canDrawOverlays` e abertura de configurações Android; degradação segura se permissão for negada.
+- [x] **CP2 — Sincronização:** Sincronizado via `WorkoutForegroundService.persistAndBroadcast()`; remoção imediata em conclusão/interrupção/destruição.
+- [x] **CP3 — Três Estados Visuais:** Mini (36dp, pílula AMOLED), Compacta (44dp, ação/timer/série) e Expandida (card M3 com controles, progresso circular e prévia do próximo passo); suporte a arrasto, encaixe lateral (`snap to edge`) e auto-recolhimento de 5s.
+- [x] **CP4 — Controles Nativos:** Botões chamam apenas `ACTION_PAUSE`, `ACTION_RESUME`, `ACTION_SKIP`, `ACTION_SAFE_EXIT_RETENTION` (saída segura de retenção do vácuo) e retorno à `MainActivity`.
+- [x] **CP5 — Preferências do Usuário:** Botão e modal `#floatingWorkoutSettingsModal` na aba Perfil; seleção de tamanho padrão (mini/compacto/expandido), auto-recolhimento e próximo passo; persistência em `SharedPreferences` e snapshot v4.
+- [x] **CP6 — Compatibilidade:** Vácuo, Kegel e Bracing com suporte a paletas dinâmicas por exercício (`resolveThemeColor`).
+- [x] **CP7 — Regressão e Verificações:** `diagnostics/floating-workout-overlay.test.cjs` e `WorkoutOverlayTest.kt` aprovados; equivalência de HTML e builds Android/Wear debug 100% funcionais.
+

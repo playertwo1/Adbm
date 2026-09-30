@@ -1,9 +1,9 @@
 # CoreFlow — Roadmap de Execução (Ativo e Enxuto)
 
-**Atualizado:** 27/09/2026.
-**Status Geral:** Etapas E00–E03, E05–E09, E11 e E12 foram implementadas e consolidadas na `main`. O checklist detalhado e os critérios de aceite das etapas concluídas estão arquivados em [`docs/arquivados/roadmap-etapas-concluidas.md`](docs/arquivados/roadmap-etapas-concluidas.md). Histórico anterior a 19/09 preservado em [`docs/roadmap/historico-2026-09-19.md`](docs/roadmap/historico-2026-09-19.md).
-**Foco Atual:** E13 (Validação integrada e Android), reconciliada com a `main`, englobando os itens pendentes diferidos de E04, validações de acessibilidade/hardware real e pendências técnicas de E10 e E12. Rafael conduzirá testes em aparelho físico real. Ver registros em [`docs/roadmap/execucao.md`](docs/roadmap/execucao.md) e auditorias em [`docs/roadmap/auditorias.md`](docs/roadmap/auditorias.md).
-**Planejamento Futuro:** Adicionada especificação da etapa futura "Modo Treino Flutuante" (overlay nativo sobre outros apps).
+**Atualizado:** 30/09/2026.
+**Status Geral:** Etapas E00–E03, E05–E09, E11, E12 e FUTURA 1 (Modo Treino Flutuante CP1–CP7) foram implementadas e consolidadas na `main`. O checklist detalhado e os critérios de aceite das etapas concluídas estão arquivados em [`docs/arquivados/roadmap-etapas-concluidas.md`](docs/arquivados/roadmap-etapas-concluidas.md). Histórico anterior a 19/09 preservado em [`docs/roadmap/historico-2026-09-19.md`](docs/roadmap/historico-2026-09-19.md).
+**Foco Atual:** E13 (Validação integrada e Android), reconciliada com a `main`, englobando os itens pendentes diferidos de E04, validações de acessibilidade/hardware real e pendências técnicas de E10 e E12. Rafael conduzirá testes em aparelho físico real. Ver registros em [`docs/roadmap/execucao.md`](docs/roadmap/execucao.md) e auditorias em [`docs/roadmap/auditorias.md`](docs/roadmap/auditorias.md) e [`docs/roadmap/auditoria-treino-flutuante.md`](docs/roadmap/auditoria-treino-flutuante.md).
+**Planejamento Futuro:** Modo Treino Flutuante Fase 2 (Áudio Ducking, Convivência Multimídia e Sessões JS) e Homologação em Hardware Real S25 Ultra + Requisitos Google Play.
 
 ---
 
@@ -30,6 +30,7 @@ Se documentação histórica divergir do código, registrar e confirmar antes de
 - **Interface:** `index.html` e `app/src/main/assets/index.html` (devem permanecer byte a byte idênticos).
 - **Bridge/WebView:** `app/src/main/java/com/example/MainActivity.kt`.
 - **Treino e Motor:** `app/src/main/java/com/example/WorkoutForegroundService.kt` e `WorkoutSessionPlayer.kt`.
+- **Overlay Flutuante:** `app/src/main/java/com/example/WorkoutOverlayController.kt`.
 - **Áudio:** `app/src/main/java/com/example/MindfulnessAudioService.kt`.
 - **Lembretes:** `app/src/main/java/com/example/ReminderScheduler.kt`.
 - **Watch:** `app/src/main/java/com/example/WearHapticsRelay.kt` e módulo `wear/`.
@@ -58,7 +59,9 @@ Se documentação histórica divergir do código, registrar e confirmar antes de
 | **E11** | Tela 08: Mindfulness | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e11--tela-08-mindfulness) |
 | **E12** | Tela 09: Evolução | **CONCLUÍDA (Integrada)** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e12--tela-09-evolução) e Seção 4.1 |
 | **E13** | Validação integrada e Android | **EM ANDAMENTO / ABERTA** | Ver Seção 4.1 abaixo |
-| **FUTURA** | Modo Treino Flutuante (Overlay) | **NÃO INICIADO** | Ver Seção 4.2 abaixo |
+| **FUTURA 1** | Modo Treino Flutuante (Overlay CP1–CP7) | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#futura--modo-treino-flutuante-overlay) e [Auditoria](docs/roadmap/auditoria-treino-flutuante.md) |
+| **FUTURA 2** | Treino Flutuante Fase 2 (Áudio Ducking e Sessões JS) | **PLANEJADO** | Ver Seção 4.3 abaixo |
+| **FUTURA 3** | Homologação Hardware Real (S25 Ultra / Google Play) | **PLANEJADO** | Ver Seção 4.4 abaixo |
 
 ---
 
@@ -99,136 +102,59 @@ Se documentação histórica divergir do código, registrar e confirmar antes de
 
 ---
 
-### 4.2 FUTURA — Modo Treino Flutuante
+### 4.2 FUTURA 1 — Modo Treino Flutuante (Overlay Nativo CP1 a CP7) — CONCLUÍDO
 
-**Status:** NÃO INICIADO
+**Status:** CONCLUÍDO (28/09/2026) — Detalhamento arquivado em [`docs/arquivados/roadmap-etapas-concluidas.md`](docs/arquivados/roadmap-etapas-concluidas.md#futura--modo-treino-flutuante-overlay) e auditado formalmente em [`docs/roadmap/auditoria-treino-flutuante.md`](docs/roadmap/auditoria-treino-flutuante.md).  
 **Referência visual:** `assets/design/coreflow-s25-ultra/11-treino-flutuante-material3.png`
 
-#### Objetivo
-Mostrar a sessão cronometrada atual sobre outros aplicativos Android usando um overlay flutuante. O overlay deve apenas exibir e controlar o estado existente.
+**Resumo da Implementação:**
+- Permissão `SYSTEM_ALERT_WINDOW` e controlador `WorkoutOverlayController.kt` com degradação graciosa caso negada.
+- Sincronização passiva 100% atrelada ao `WorkoutForegroundService` (zero timers adicionais, sem concorrência).
+- Três estados visuais AMOLED Material 3: Mini (pílula 36dp), Compacta (barra 44dp com fase/ação e timer) e Expandida (card com controles e saída segura).
+- Controles nativos (`ACTION_PAUSE`, `ACTION_RESUME`, `ACTION_SKIP`, `ACTION_SAFE_EXIT_RETENTION`) e retorno direto à `MainActivity`.
+- Painel de preferências integrado em Perfil (toggle, tamanho padrão, auto-recolhimento e próximo passo).
+- Compatibilidade universal com os programas nativos: Vácuo Abdominal, Kegel e Bracing.
 
-#### Regras Proibitivas
-- Proibido criar outro cronômetro;
-- Proibido criar outro `ForegroundService`;
-- Proibido disparar vibração própria;
-- Proibido duplicar voz;
-- Proibido duplicar sinais do Galaxy Watch;
-- Proibido alterar regras dos exercícios.
-`WorkoutForegroundService` continua sendo a fonte única da verdade do treino.
+---
 
-#### CP1 — Permissão e estrutura
-- Alterar: `app/src/main/AndroidManifest.xml` (adicionar `android.permission.SYSTEM_ALERT_WINDOW`).
-- Criar: `app/src/main/java/com/example/WorkoutOverlayController.kt`.
-- Implementar:
-  - verificar se permissão de overlay foi concedida;
-  - abrir tela Android de autorização quando necessário;
-  - nunca impedir o treino se a permissão for negada;
-  - permitir criar, atualizar e remover o overlay.
-- Checklist:
-  - [ ] `SYSTEM_ALERT_WINDOW` declarado.
-  - [ ] `WorkoutOverlayController.kt` criado.
-  - [ ] Overlay pode ser exibido.
-  - [ ] Overlay pode ser removido.
-  - [ ] Negar permissão não impede treino normal.
-  - [ ] Nenhum novo serviço ou timer criado.
-- **Gate CP1:** PASS somente se treino funciona normalmente com overlay permitido e também com overlay negado.
+### 4.3 FUTURA 2 — Modo Treino Flutuante Fase 2: Sessões JS, Áudio Ducking e Convivência Multimídia
 
-#### CP2 — Sincronizar com WorkoutForegroundService
-- Fonte obrigatória: Usar somente o estado de `WorkoutForegroundService.kt`.
-- Consumir: `status`, `currentStepIndex`, `stepTimeLeft`, `steps`, `session`.
-- Usar do passo atual: `title`, `instruction`, `badge`, `phase`, `series`, `isRest`.
-- Alterar `WorkoutForegroundService.kt`: após cada atualização de estado, atualizar notificação, atualizar overlay e continuar enviando broadcast existente.
-- Checklist:
-  - [ ] Overlay mostra `stepTimeLeft` real.
-  - [ ] Overlay mostra o passo real.
-  - [ ] Mudança de etapa atualiza overlay.
-  - [ ] Pausa atualiza overlay.
-  - [ ] Retomada atualiza overlay.
-  - [ ] Conclusão remove overlay.
-  - [ ] Interrupção remove overlay.
-  - [ ] Nenhum `setInterval`, `CountDownTimer` ou timer próprio no overlay.
-- **Gate CP2:** PASS somente se WebView, notificação e overlay mostram exatamente o mesmo passo e tempo.
+**Status:** PLANEJADO  
+**Objetivo:** Expandir a convivência do overlay flutuante com aplicações de entretenimento/mídia em segundo plano e incorporar os fluxos de treino baseados em timers web sem quebrar a unicidade do cronômetro.
 
-#### CP3 — Três estados visuais
-Seguir Material Design 3 + AMOLED do CoreFlow.
-- **Mini:** Mostrar somente ícone e `MM:SS` (exemplo: `◉ 00:14`).
-- **Compacta:** Mostrar fase/ação atual, programa, série ou repetição quando houver e `MM:SS` (exemplo: `RETENÇÃO 00:14`, `Vácuo · Série 2/4`).
-- **Expandida:** Mostrar programa, fase, série/repetição, ação atual, cronômetro, próximo passo e controles (Pausar/Continuar, Pular/Próximo, abrir CoreFlow; para retenção de Vácuo, usar ação segura existente).
-- Checklist:
-  - [ ] Mini implementada.
-  - [ ] Compacta implementada.
-  - [ ] Expandida implementada.
-  - [ ] Toque expande.
-  - [ ] Recolhimento funciona.
-  - [ ] Overlay pode ser arrastado.
-  - [ ] Overlay encaixa nas laterais.
-  - [ ] Texto continua legível em fundo claro e escuro.
-- **Gate CP3:** PASS somente se os três estados representam a mesma sessão sem alterar o estado do treino.
+#### Escopo e Itens:
+1. **Áudio Ducking e Foco de Áudio Nativos:**
+   - [ ] Implementar gestão de foco de áudio via `AudioFocusRequestCompat` no `WorkoutForegroundService`.
+   - [ ] Ao disparar avisos de voz do TTS nativo, solicitar `AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK` para reduzir o volume de reprodutores de mídia externos (Spotify, YouTube Music, podcasts).
+   - [ ] Restaurar o volume da mídia de terceiros imediatamente após a conclusão da fala.
+   - [ ] Respeitar a preferência de silenciamento de áudio do usuário (Modo Discreto / avisos desligados).
+2. **Compatibilidade com Sessões Web (JS Timers):**
+   - [ ] Estender suporte do overlay para Respiração Guiada, Pausas Ativas e Mindfulness.
+   - [ ] Integrar os ciclos de respiração e tempos de descanso ao `WorkoutForegroundService` através da bridge existente, garantindo que o overlay continue estritamente passivo e que nunca surja um segundo timer em segundo plano.
+3. **Persistência de Posição do Overlay:**
+   - [ ] Salvar a última posição (X, Y) ancorada na tela nas `SharedPreferences` para restaurar o overlay exatamente onde o usuário o posicionou na sessão anterior.
 
-#### CP4 — Controles
-Os botões do overlay devem chamar apenas ações existentes do serviço:
-- Usar: `ACTION_PAUSE`, `ACTION_RESUME`, `ACTION_SKIP`, `ACTION_SAFE_EXIT_RETENTION` e `ACTION_STOP` (somente se houver ação explícita de encerrar).
-- Regras: Overlay nunca altera diretamente `currentStepIndex`, `stepTimeLeft`, `steps`, histórico, minutos ou progresso.
-- Checklist:
-  - [ ] Pausar controla o serviço.
-  - [ ] Continuar controla o serviço.
-  - [ ] Pular controla o serviço.
-  - [ ] Retenção usa saída segura.
-  - [ ] Abrir app volta para `MainActivity`.
-  - [ ] Não existe lógica duplicada de exercício no overlay.
-- **Gate CP4:** PASS somente se controlar pelo overlay e controlar pelo CoreFlow produz o mesmo resultado.
+---
 
-#### CP5 — Preferência do usuário
-Adicionar em Perfil / Preferências: "Modo Treino Flutuante".
-- Opções: Ativar/desativar, tamanho padrão (Mini ou Compacta), recolher automaticamente e mostrar próximo passo.
-- Persistir configuração existente junto ao restante das preferências do CoreFlow.
-- Checklist:
-  - [ ] Toggle persistente.
-  - [ ] Tamanho persistente.
-  - [ ] Auto-recolhimento persistente.
-  - [ ] Próximo passo persistente.
-  - [ ] Overlay não aparece quando desativado.
-- **Gate CP5:** PASS somente se fechar e reabrir o app preserva todas as opções.
+### 4.4 FUTURA 3 — Homologação em Hardware Real (S25 Ultra), Doze Mode e Requisitos Google Play
 
-#### CP6 — Compatibilidade inicial
-Primeira versão suporta somente sessões executadas por `WorkoutForegroundService`:
-- Obrigatório validar:
-  - [ ] Vácuo.
-  - [ ] Kegel.
-  - [ ] Bracing.
-  - [ ] Demais programas que usam o mesmo contrato `steps`.
-- Não incluir nesta etapa: Respiração Guiada baseada em timer JS, Pausas Ativas baseadas em timer JS, Pausa de Resposta e Mindfulness (esses fluxos ficam para fase futura).
-- **Gate CP6:** PASS somente se todos os programas nativos suportados usam o mesmo overlay sem implementação específica de timer.
+**Status:** PLANEJADO  
+**Objetivo:** Homologação completa em dispositivo físico topo de linha (Galaxy S25 Ultra), validação sob restrições estritas de energia da One UI e atendimento a diretrizes da Google Play.
 
-#### CP7 — Regressão e Gate final
-Criar diagnóstico específico para overlay.
-- Verificar:
-  - [ ] não existe segundo timer;
-  - [ ] vibração continua vindo de `AdvancedHapticsManager`;
-  - [ ] Watch continua usando `WearHapticsRelay`;
-  - [ ] voz continua vindo do serviço;
-  - [ ] overlay não gera háptico;
-  - [ ] negar permissão não gera crash;
-  - [ ] pausar em uma interface pausa todas;
-  - [ ] concluir sessão remove overlay;
-  - [ ] reabrir app restaura o mesmo estado;
-  - [ ] nenhuma sessão é registrada duas vezes.
-- **Gate final:** PASS somente se:
-  1. iniciar treino;
-  2. minimizar CoreFlow;
-  3. abrir outro aplicativo;
-  4. overlay permanecer visível;
-  5. passo e cronômetro continuarem corretos;
-  6. vibração continuar funcionando;
-  7. Galaxy Watch continuar funcionando quando habilitado;
-  8. pausar pelo overlay pausar o mesmo treino;
-  9. voltar ao CoreFlow mostrar o mesmo estado;
-  10. finalizar treino remover imediatamente o overlay.
-
-#### Resultado esperado
-Arquitetura final:
-`WorkoutForegroundService` → timer → voz → hápticos → Galaxy Watch → notificação → `WorkoutOverlayController`.
-*Uma sessão. Um timer. Uma fonte de verdade.*
+#### Escopo e Itens:
+1. **Homologação em Hardware Físico (Galaxy S25 Ultra — Conduzida por Rafael):**
+   - [ ] Teste de encaixe e posicionamento em relação à câmera frontal (Infinity-O Punch Hole) e bordas da tela.
+   - [ ] Teste de fluidez a 120Hz dinâmicos (LTPO) durante o arrasto do overlay flutuante.
+   - [ ] Resposta háptica real no motor linear do S25 Ultra em conjunto com o Galaxy Watch.
+2. **Resiliência contra Doze Mode e Otimização de Bateria Samsung:**
+   - [ ] Validar permanência do serviço e do overlay quando o aparelho entra em Doze Mode profundo ou quando o CoreFlow é colocado em "Aplicativos suspensos" pela One UI.
+   - [ ] Garantir que o `WorkoutForegroundService` permaneça ininterrupto com o tipo de serviço apropriado.
+3. **Acessibilidade e Usabilidade:**
+   - [ ] Mapeamento e auditoria via TalkBack sobre a janela do overlay (`AccessibilityNodeInfo`, rótulos para leitores de tela em cada botão do card expandido).
+   - [ ] Suporte refinado para One Hand Operation+ (gestos de voltar da Samsung sobre o overlay).
+4. **Conformidade Google Play Store:**
+   - [ ] Declaração e justificativa de uso de `SYSTEM_ALERT_WINDOW` conforme políticas de experiência do usuário.
+   - [ ] Declaração de `FOREGROUND_SERVICE` com tipo compatível (`health` / `specialUse`).
 
 ---
 

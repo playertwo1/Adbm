@@ -94,6 +94,7 @@ class WorkoutForegroundService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onDestroy() {
+        WorkoutOverlayController.hideOverlay(this)
         tickerJob?.cancel()
         releaseWakeLock()
         cancelActiveSignals()
@@ -363,6 +364,7 @@ class WorkoutForegroundService : Service() {
         val state = stateJson("failed").put("errorMessage", message)
         preferences().edit().putString(PREF_STATE_JSON, state.toString()).apply()
         broadcastState(state)
+        WorkoutOverlayController.hideOverlay(this)
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
@@ -399,6 +401,9 @@ class WorkoutForegroundService : Service() {
         if (status == "running" || status == "paused") {
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.notify(NOTIFICATION_ID, buildNotification())
+            WorkoutOverlayController.onServiceStateChanged(this, state)
+        } else {
+            WorkoutOverlayController.hideOverlay(this)
         }
     }
 

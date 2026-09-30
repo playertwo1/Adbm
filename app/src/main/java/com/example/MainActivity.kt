@@ -590,6 +590,28 @@ class AndroidBridge(
     fun getWorkoutState(): String = WorkoutForegroundService.readStoredState(context)
 
     @JavascriptInterface
+    fun isOverlayPermissionGranted(): Boolean = WorkoutOverlayController.canDrawOverlays(context)
+
+    @JavascriptInterface
+    fun requestOverlayPermission() {
+        val activity = context as? Activity ?: return
+        activity.runOnUiThread {
+            WorkoutOverlayController.requestOverlayPermission(activity)
+        }
+    }
+
+    @JavascriptInterface
+    fun getOverlayPreferences(): String = WorkoutOverlayController.getPreferences(context).toJson().toString()
+
+    @JavascriptInterface
+    fun setOverlayPreferences(jsonStr: String): Boolean = runCatching {
+        val json = JSONObject(jsonStr)
+        val prefs = WorkoutOverlayController.OverlayPreferences.fromJson(json)
+        WorkoutOverlayController.savePreferences(context, prefs)
+        true
+    }.getOrDefault(false)
+
+    @JavascriptInterface
     fun getProgressSnapshot(): String = context
         .getSharedPreferences(PROGRESS_PREFS, Context.MODE_PRIVATE)
         .getString(PROGRESS_CURRENT, null)

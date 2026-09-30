@@ -1,5 +1,37 @@
 # Registro de execução
 
+## 2026-09-28 — Implementação e Auditoria: FUTURA — Modo Treino Flutuante (CP1 a CP7) — CONCLUÍDO
+
+- **Objetivo Realizado:** Implementação completa da etapa planejada "Modo Treino Flutuante" (Floating Workout Mode), permitindo exibir e controlar treinos ativos sobre outros aplicativos Android através de overlay de sistema (`SYSTEM_ALERT_WINDOW`).
+- **Conformidade com Regras Proibitivas:**
+  - Zero criação de cronômetros concorrentes; `WorkoutForegroundService` permanece como fonte única de verdade do treino.
+  - Zero duplicação de `ForegroundService`, vibração (`Vibrator`), voz (`TextToSpeech`) ou comandos do Wear OS (`WearHapticsRelay`).
+  - Overlay é estritamente reativo ao estado despachado pelo serviço nativo.
+- **Checkpoints Implementados e Auditados:**
+  - **CP1 (Permissão e Estrutura):** Declarado `SYSTEM_ALERT_WINDOW` no manifesto; criado `WorkoutOverlayController.kt`; bridge Android em `MainActivity.kt` (`isOverlayPermissionGranted`, `requestOverlayPermission`); degradação graciosa caso a permissão seja negada (treino prossegue normalmente).
+  - **CP2 (Sincronização):** Injeção de atualização do overlay em `WorkoutForegroundService.persistAndBroadcast()`; destruição/ocultação do overlay em `onDestroy()`, `failStart()`, `completeSession()` e `stopSession()`.
+  - **CP3 (Três Estados Visuais):** Implementados layouts puros Android Views Material 3 AMOLED para estados **Mini** (36dp, ícone + MM:SS), **Compacto** (44dp, ação + título/série + timer) e **Expandido** (card completo com progresso, próximo passo e botões de ação). Suporte a arrasto, encaixe automático nas bordas da tela (`snap to edge`) e temporizador de auto-recolhimento de 5 segundos.
+  - **CP4 (Controles Nativos):** Botões despacham exclusivamente intents do serviço (`ACTION_PAUSE`, `ACTION_RESUME`, `ACTION_SKIP`, `ACTION_SAFE_EXIT_RETENTION`); botão dedicado para encerramento seguro de retenção do vácuo; clique no card abre `MainActivity`.
+  - **CP5 (Preferências do Usuário):** Botão `#profileFloatingWorkoutButton` e modal `#floatingWorkoutSettingsModal` na aba Perfil; chaves para ativar overlay, tamanho padrão (mini/compacto/expandido), auto-recolhimento e exibição do próximo passo; persistência sincronizada em `SharedPreferences` (`coreflow_overlay_prefs`), snapshots v4 (`AppState.floatingWorkout`) e espelho local.
+  - **CP6 (Compatibilidade):** Suporte uniforme e validado para Vácuo Abdominal, Kegel e Bracing, com mapeamento dinâmico de paletas de cores temáticas (`resolveThemeColor`).
+  - **CP7 (Regressão e Gates):** Criados `diagnostics/floating-workout-overlay.test.cjs` e `app/src/test/java/com/example/WorkoutOverlayTest.kt`.
+- **Verificações e Gates Executados:**
+  - Equivalência HTML (`index.html` e `app/src/main/assets/index.html`): byte a byte idênticos (SHA-256 `47A7B5BC364C7E2ED4BDC6EE17487FC12DB717AADEC55CA3C2446866438BC9AD`).
+  - Regressões Node (`diagnostics/*.test.cjs`): 48 de 48 suítes aprovadas (100% PASS).
+  - Testes Unitários Android (`:app:testDebugUnitTest`): 13 testes aprovados (BUILD SUCCESSFUL).
+  - Compilação dos APKs debug (`:app:assembleDebug`, `:wear:assembleDebug`): BUILD SUCCESSFUL em 17s.
+  - Auditoria completa documentada em `docs/roadmap/auditoria-treino-flutuante.md`.
+- **Arquivos Alterados/Criados:**
+  - `app/src/main/AndroidManifest.xml`
+  - `app/src/main/java/com/example/WorkoutOverlayController.kt` (novo)
+  - `app/src/main/java/com/example/WorkoutForegroundService.kt`
+  - `app/src/main/java/com/example/MainActivity.kt`
+  - `index.html` e `app/src/main/assets/index.html`
+  - `diagnostics/floating-workout-overlay.test.cjs` (novo)
+  - `app/src/test/java/com/example/WorkoutOverlayTest.kt` (novo)
+  - `docs/roadmap/auditoria-treino-flutuante.md` (novo)
+  - `docs/roadmap/execucao.md` e `ROADMAP.md`
+
 ## 2026-09-27 — Correção: Frequência semanal (weeklyTargetDays) do Programa 2 (Kegel)
 
 - **Problema Relatado:** No Programa 2 ("Cronograma Avançado de 8 Semanas" / Kegel), o cabeçalho e modal de execução exibiam "frequência não configurada" / "Dia não configurado" (ex.: `Meta Diária Concluída (2/2) ✓ • Dia não configurado/frequência não configurada` e `SEMANA 4 • DIA NÃO CONFIGURADO/FREQUÊNCIA NÃO CONFIGURADA (SESSÃO 2/2)`), e as pílulas de consistência semanal (`D1..D7`) não eram renderizadas.
