@@ -1,188 +1,153 @@
 # CoreFlow — Roadmap de Execução (Ativo e Enxuto)
 
-**Atualizado:** 30/09/2026.
-**Status Geral:** Etapas E00–E03, E05–E09, E11, E12 e FUTURA 1 (Modo Treino Flutuante CP1–CP7) foram implementadas e consolidadas na `main`. O checklist detalhado e os critérios de aceite das etapas concluídas estão arquivados em [`docs/arquivados/roadmap-etapas-concluidas.md`](docs/arquivados/roadmap-etapas-concluidas.md). Histórico anterior a 19/09 preservado em [`docs/roadmap/historico-2026-09-19.md`](docs/roadmap/historico-2026-09-19.md).
-**Foco Atual:** E13 (Validação integrada e Android), reconciliada com a `main`, englobando os itens pendentes diferidos de E04, validações de acessibilidade/hardware real e pendências técnicas de E10 e E12. Rafael conduzirá testes em aparelho físico real. Ver registros em [`docs/roadmap/execucao.md`](docs/roadmap/execucao.md) e auditorias em [`docs/roadmap/auditorias.md`](docs/roadmap/auditorias.md) e [`docs/roadmap/auditoria-treino-flutuante.md`](docs/roadmap/auditoria-treino-flutuante.md).
-**Planejamento Futuro:** Modo Treino Flutuante Fase 2 (Áudio Ducking, Convivência Multimídia e Sessões JS) e Homologação em Hardware Real S25 Ultra + Requisitos Google Play.
+**Atualizado:** 08/10/2026.  
+**Estado Geral:** Todas as etapas fundacionais do aplicativo (E00–E03, E05–E09, E10 concluído, E11, E12) e a etapa **FUTURA 1 (Modo Treino Flutuante CP1 a CP7)** foram totalmente implementadas, auditadas e integradas na `main`. O checklist detalhado e os critérios de aceite dessas etapas estão arquivados em [`docs/arquivados/roadmap-etapas-concluidas.md`](docs/arquivados/roadmap-etapas-concluidas.md). Histórico anterior a 19/09 preservado em [`docs/roadmap/historico-2026-09-19.md`](docs/roadmap/historico-2026-09-19.md).  
+**Foco Imediato:** **E14 — Reformulação Clínica do Bracing no Banco e em Pé (McGill Adaptado)**.
 
 ---
 
-## 1. Procedimento obrigatório para o agente
-1. Ler este plano, verificar Git e ler o último registro de execução em [`docs/roadmap/execucao.md`](docs/roadmap/execucao.md).
-2. Escolher a primeira tarefa pendente com dependências satisfeitas.
-3. Confirmar arquivos, funções e comportamento no código antes de editar.
-4. Implementar uma tarefa por vez. Preservar alterações existentes.
-5. Executar seu aceite; registrar comando/cenário, resultado e evidência.
-6. Marcar checkbox somente após implementação e verificação.
-7. Ao encerrar, registrar próximo passo exato, arquivos alterados e bloqueios.
+## 1. Procedimento Obrigatório para o Agente (ou Desenvolvedor)
 
-**Estados:** PENDENTE, EM EXECUÇÃO, BLOQUEADA, CONCLUÍDA.
-Sem teste exigido, não declarar conclusão. Bloqueio de aparelho não equivale a teste aprovado.
-Código confirma comportamento; imagens orientam aparência; este plano define escopo.
-Não inventar APIs, sensores, histórico, resultados de teste ou protocolo clínico.
-Não mudar framework, IDs de programas ou armazenamento sem necessidade documentada.
-Não reduzir critérios de aceite para fazer uma tarefa passar.
-Se documentação histórica divergir do código, registrar e confirmar antes de mudar comportamento.
+1. Ler este roadmap, verificar o status do Git e consultar o último registro em [`docs/roadmap/execucao.md`](docs/roadmap/execucao.md).
+2. Selecionar a primeira tarefa pendente cujas dependências estejam satisfeitas.
+3. Confirmar arquivos, funções e regras no código antes de editar.
+4. Implementar uma tarefa por vez, preservando as funcionalidades existentes.
+5. Executar os testes automatizados e o gate de qualidade (`bash scripts/check.sh`).
+6. Marcar o item como concluído `[x]` somente após comprovação mecânica de teste.
+7. Ao concluir, registrar arquivos alterados, evidências e próximo passo exato em `docs/roadmap/execucao.md`.
+
+**Estados:** PENDENTE, EM EXECUÇÃO, BLOQUEADA, CONCLUÍDA.  
+*Regra de Ouro:* Sem teste executado, não declarar conclusão. Nunca inventar APIs, sensores, históricos ou protocolos clínicos.
 
 ---
 
-## 2. Arquivos confirmados
-- **Interface:** `index.html` e `app/src/main/assets/index.html` (devem permanecer byte a byte idênticos).
-- **Bridge/WebView:** `app/src/main/java/com/example/MainActivity.kt`.
-- **Treino e Motor:** `app/src/main/java/com/example/WorkoutForegroundService.kt` e `WorkoutSessionPlayer.kt`.
-- **Overlay Flutuante:** `app/src/main/java/com/example/WorkoutOverlayController.kt`.
-- **Áudio:** `app/src/main/java/com/example/MindfulnessAudioService.kt`.
-- **Lembretes:** `app/src/main/java/com/example/ReminderScheduler.kt`.
-- **Watch:** `app/src/main/java/com/example/WearHapticsRelay.kt` e módulo `wear/`.
-- **Regressão de progresso:** `diagnostics/progress-persistence.test.cjs`.
-- **Check do projeto:** `scripts/check.sh` (executa diagnósticos, equivalência HTML e builds debug).
-- **Registro de execução:** `docs/roadmap/execucao.md`.
-- **Imagens de design:** `assets/design/coreflow-s25-ultra/` (inclui `11-treino-flutuante-material3.png`).
+## 2. Arquivos Confirmados e Fontes de Verdade
+
+- **Interface Principal (WebView):** `index.html` e `app/src/main/assets/index.html` *(devem permanecer estritamente idênticos byte a byte)*.
+- **Bridge e Ciclo de Vida Android:** `app/src/main/java/com/example/MainActivity.kt`.
+- **Motor de Treino e Timer Central:** `app/src/main/java/com/example/WorkoutForegroundService.kt` e `WorkoutSessionPlayer.kt`.
+- **Overlay Flutuante Nativo:** `app/src/main/java/com/example/WorkoutOverlayController.kt`.
+- **Áudio em Segundo Plano:** `app/src/main/java/com/example/MindfulnessAudioService.kt`.
+- **Lembretes Nativos:** `app/src/main/java/com/example/ReminderScheduler.kt`.
+- **Módulo Wear OS (Galaxy Watch):** `app/src/main/java/com/example/WearHapticsRelay.kt` e módulo `wear/`.
+- **Script de Validação Completa:** `scripts/check.sh` (executa diagnósticos Node, paridade HTML e builds debug).
+- **Registro Contínuo de Execução:** `docs/roadmap/execucao.md`.
 
 ---
 
-## 3. Resumo de Etapas e Status
+## 3. Resumo Geral de Status do Projeto
 
 | Etapa | Escopo | Status | Referência |
 | :--- | :--- | :--- | :--- |
-| **E00** | Baseline e inventário | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e00--baseline) |
-| **E01** | Atalho e tempo real do vácuo | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e01--correções-do-vácuo) |
-| **E02** | Persistência e migração | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e02--persistência-e-migração) |
-| **E03** | Conteúdo e progressão clínica | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e03--conteúdo-e-progressão) |
-| **E04** | Motor de sessão e recuperação | **ABERTA (Diferida para E13)** | Ver Seção 4.1 abaixo |
-| **E05** | Componentes AMOLED e navegação | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e05--sistema-visual) |
-| **E06** | Tela 03: Player de vácuo | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e06--tela-03-vácuo) |
-| **E07** | Telas 06/07: Programas e detalhe | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e07--telas-0607-programas-e-detalhe) |
-| **E08** | Telas 01/02: Onboarding e Hoje | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e08--telas-0102-onboarding-e-hoje) |
-| **E09** | Tela 10: Perfil e preferências | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e09--tela-10-perfil) |
-| **E10** | Telas 04/05: Discreto e Pausas | **CONCLUÍDA (com diferidos)** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e10-itens-concluídos--telas-0405-discreto-e-pausas) e Seção 4.1 |
-| **E11** | Tela 08: Mindfulness | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e11--tela-08-mindfulness) |
-| **E12** | Tela 09: Evolução | **CONCLUÍDA (Integrada)** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#e12--tela-09-evolução) e Seção 4.1 |
-| **E13** | Validação integrada e Android | **EM ANDAMENTO / ABERTA** | Ver Seção 4.1 abaixo |
-| **FUTURA 1** | Modo Treino Flutuante (Overlay CP1–CP7) | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md#futura--modo-treino-flutuante-overlay) e [Auditoria](docs/roadmap/auditoria-treino-flutuante.md) |
-| **FUTURA 2** | Treino Flutuante Fase 2 (Áudio Ducking e Sessões JS) | **PLANEJADO** | Ver Seção 4.3 abaixo |
-| **FUTURA 3** | Homologação Hardware Real (S25 Ultra / Google Play) | **PLANEJADO** | Ver Seção 4.4 abaixo |
+| **E00 a E12** | Fundação, Telas 01 a 10, Vácuo, Kegel, Mindfulness e Evolução | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md) |
+| **FUTURA 1** | Modo Treino Flutuante Nativo (Overlay AMOLED CP1 a CP7) | **CONCLUÍDA** | [Auditoria Técnica](docs/roadmap/auditoria-treino-flutuante.md) |
+| **E14** | Reformulação Clínica do Bracing no Banco e em Pé (McGill) | **PLANEJADO (Foco Imediato)** | Ver Seção 4.1 |
+| **E13** | Validação Integrada e Conclusão Android (Físico / TalkBack) | **ABERTA** | Ver Seção 4.2 |
+| **FUTURA 2** | Treino Flutuante Fase 2 (Áudio Ducking e Convivência Multimídia) | **PLANEJADO** | Ver Seção 4.3 |
+| **FUTURA 3** | Homologação em Hardware Real (S25 Ultra / Google Play) | **PLANEJADO** | Ver Seção 4.4 |
 
 ---
 
-## 4. Backlog Ativo e Etapas Futuras
+## 4. Backlog Ativo (O que temos para fazer para frente)
 
-### 4.1 Pendências Ativas
+### 4.1 E14 — Reformulação Clínica do Bracing no Banco e em Pé (Foco Imediato)
 
-#### E04 / E13 — Motor de Sessão (Itens Pendentes Diferidos)
-*Contexto:* Seis fases e “Encerrar retenção” já foram validadas no Pixel_9 (detalhes no arquivo histórico e em `docs/roadmap/execucao.md`). Os seguintes itens permanecem abertos para validação integrada:
-- [ ] Pausa na retenção orienta sua saída; retomada não exige continuar apneia congelada.
-- [ ] Bloquear alteração silenciosa de carga/postura em série ativa (validado em JS; pendente verificação integrada/aparelho físico).
-- [ ] Encerrar salva parcial; não conclui automaticamente programa (validado registro parcial de 1s; pendente verificação de fluxo completo).
-- [ ] Feedback fica associado ao ID; permitir não responder (validado em JS; pendente teste de UI integrada).
-- [ ] Retomar estado do serviço após bloqueio, sem iniciar timer concorrente (validar ciclo de vida e recriação de processo).
+**Status:** PLANEJADO (Foco Imediato)  
+**Objetivo:** Substituir a repetição de exercício único por circuitos clínicos estruturados de 3 exercícios progressivos por sessão ao longo das 8 semanas do programa de Bracing (ID `1`), executáveis **estritamente em banco/cadeira ou em pé** (zero posições deitadas ou no chão), fundamentados nas diretrizes biomecânicas de rigidez espinhal do Dr. Stuart McGill e controle lombopélvico de Shirley Sahrmann.
+
+#### Restrições Clínicas e Posturais:
+- **Exclusividade Postural:** 100% dos exercícios devem ser executados em posição sentada (em banco/cadeira estável) ou em pé. Nenhuma variação pode exigir deitar no chão, quatro apoios no chão ou decúbito lateral.
+- **Estrutura por Sessão (Sessão A e Sessão B):** Cada sessão é composta por 1 etapa de preparação (15s), seguida por um circuito de 3 exercícios distintos (Ativação Base $\to$ Desafio Antimovimento $\to$ Integração Postural/Funcional), com 3 séries por exercício e intervalos de recuperação (20s), finalizando com checagem de qualidade (20s).
+- **Preservação de Dados e IDs:** Manter ID do programa (`1`), título (`Bracing: Controle e Automação (8 Semanas)`), 8 fases e persistência de histórico intactos.
+
+#### Matriz Clínica das 8 Semanas:
+- **Semana 1 (Consciência 360° e Ativação no Banco):**
+  - *Sessão A (Sentado):* Respiração 360° no banco (40s) $\to$ Pressão isométrica mão-coxa (35s) $\to$ Coluna neutra com bracing sustentado (35s).
+  - *Sessão B (Sentado/Em Pé):* Palpação lateral dos oblíquos de McGill (40s) $\to$ Extensão unilateral de perna no banco (35s) $\to$ Bracing em pé com apoio na mesa (40s).
+- **Semana 2 (Dissociação de Membros e Pelve Neutra):**
+  - *Sessão A (Sentado):* Marcha sentada de Sahrmann (40s) $\to$ Alcance alternado de braços sentado (40s) $\to$ Inclinação de tronco reto no banco (Torso Hinge) (45s).
+  - *Sessão B (Em Pé):* Bracing em pé alinhado (40s) $\to$ Marcha estacionária lenta com apoio (45s) $\to$ Sentar e levantar controlado (Sit-to-Stand) (45s).
+- **Semana 3 (Anti-Rotação e Resistência Isométrica):**
+  - *Sessão A (Sentado):* Pallof press isométrico no banco (45s) $\to$ Marcha com pressão cruzada mão-joelho (45s) $\to$ Dobradiça de tronco sustentada a 30° (45s).
+  - *Sessão B (Em Pé):* Bird Dog em pé com apoio no banco/mesa (45s) $\to$ Postura unipodal com pelve nivelada (40s) $\to$ Auto-perturbação tátil nas costelas (45s).
+- **Semana 4 (Anti-Extensão e Cadeia Lateral):**
+  - *Sessão A (Sentado):* Elevação bimanual acima da cabeça no banco (45s) $\to$ Inclinação lateral isométrica no banco (45s) $\to$ Pressão cruzada submáxima diagonal (50s).
+  - *Sessão B (Em Pé):* Prancha inclinada no banco (Incline plank) (45s) $\to$ Bird Dog em pé com braço e perna opostos (50s) $\to$ Sentar e levantar com pausa isométrica (50s).
+- **Semana 5 (Cargas Assimétricas e Antimovimento Bípede):**
+  - *Sessão A (Sentado):* Chop & Lift isométrico diagonal no banco (50s) $\to$ Extensão de perna com alcance de braço oposto (50s) $\to$ Carga assimétrica sentada (Suitcase hold no banco) (50s).
+  - *Sessão B (Em Pé):* Pallof press em pé sem apoio (50s) $\to$ Marcha do fazendeiro simulada (Suitcase carry no lugar) (55s) $\to$ Dobradiça de quadril em pé (Hip Hinge vertical) (50s).
+- **Semana 6 (Coordenação e Controle Reativo):**
+  - *Sessão A (Sentado):* Transição ativa de postura no banco (relaxa/ativa) (50s) $\to$ Pressão unilateral mão-joelho com fala/respiração livre (55s) $\to$ Equilíbrio isquiático sem encosto (55s).
+  - *Sessão B (Em Pé):* Equilíbrio unipodal com alcance funcional (50s) $\to$ Prancha inclinada no banco com toque no ombro (55s) $\to$ Passo à frente com parada brusca e core travado (55s).
+- **Semana 7 (Automação Cotidiana e Tarefas de Trabalho):**
+  - *Sessão A (Sentado):* Bracing submáximo durante tarefas/digitação (55s) $\to$ Torção resistida isométrica no banco (55s) $\to$ Transição sentar-levantar com pausa intermediária (60s).
+  - *Sessão B (Em Pé):* Agachamento com alcance simulando pegar objeto do chão (55s) $\to$ Empurrar isométrico contra a parede (60s) $\to$ Marcha com mudança rápida de direção (60s).
+- **Semana 8 (Consolidação e Protocolo Vitalício):**
+  - *Sessão A (Sentado/Em Pé):* Tríade McGill adaptada (Banco + Bird Dog em pé + Pallof em pé) (60s) $\to$ Bracing sob esforço respiratório e fala (60s) $\to$ Checagem postural expressa de 15s (60s).
+  - *Sessão B (Em Pé):* Teste de resistência do core em pé (60s) $\to$ Circuito integrado de trabalho (sentar, erguer peso, transportar e sentar) (60s) $\to$ Protocolo de manutenção diária vitalícia (60s).
+
+#### Checklist de Implementação:
+- [ ] Atualizar catálogo de fases do Programa `1` em `index.html` e `app/src/main/assets/index.html` com os novos detalhes e títulos clínicos.
+- [ ] Implementar novo gerador multi-exercício em `buildWorkoutSteps(progId, phaseIdx)` gerando os 3 exercícios reais em sequência por sessão A/B.
+- [ ] Criar suíte de teste de regressão `diagnostics/bracing-clinical-progression.test.cjs` validando as 48 variações, paridade HTML e ausência de regressão.
+- [ ] Garantir paridade byte a byte estrita entre `index.html` e `app/src/main/assets/index.html`.
+- [ ] Validar compatibilidade contínua com `WorkoutForegroundService` e `WorkoutOverlayController` nativo.
+
+---
+
+### 4.2 E13 — Validação Integrada e Conclusão Android
+
+**Status:** ABERTA  
+**Objetivo:** Validação integrada de ciclo de vida, restauração de estado e testes em aparelho físico real conduzidos por Rafael.
+
+#### Checklist de Itens:
+- [ ] Pausa na retenção orienta sua saída; retomada não exige continuar apneia congelada (itens diferidos E04).
+- [ ] Bloquear alteração silenciosa de carga/postura em série ativa.
+- [ ] Encerrar salva parcial sem concluir automaticamente o programa.
+- [ ] Feedback fica associado ao ID da sessão; permitir não responder.
+- [ ] Retomar estado do serviço após bloqueio do sistema operacional sem iniciar timer concorrente.
 - [ ] Cancelar sinais pendentes ao encerrar; evitar vibração duplicada.
-*Critério de Aceite:* Sequência, tempo e estado idênticos nos fluxos Web e nativo; interrupção permanece parcial após reabertura.
-
-#### E10 — Telas 04/05: Discreto e Pausas (Itens Pendentes/Diferidos)
-- [ ] Posição/intensidade selecionam parâmetros revisados; prévia corresponde à execução. *(Diferido por Rafael até existir referência clínica revisada; nenhum parâmetro inventado).*
-- [ ] Confirmar semântica e limites do modo `∞ Livre` (atualmente fixado em 300s por exercício).
-
-#### E12 — Tela 09: Evolução (Pós-Integração e Qualidade)
-- [ ] Investigar e solucionar artefatos visuais pretos observados no AVD Pixel_9 (qualidade visual bloqueada na validação smoke anterior).
-- [ ] Realizar auditoria independente das alterações posteriores à E12.1.
-
-#### E13 — Validação Integrada e Conclusão Android (Foco Ativo)
-- [ ] Verificar equivalência byte a byte dos HTMLs e integridade dos assets locais.
-- [ ] Executar regressões automatizadas novas e existentes (`for f in diagnostics/*.test.cjs; do node "$f"; done`).
-- [ ] Confirmar sintaxe JavaScript e integridade do build Android (`.\gradlew.bat testDebugUnitTest assembleDebug`).
-- [ ] Testar dez telas, navegação Voltar, fechamento de modais, teclado virtual, telas de erro, permissões em tempo de execução e operação offline.
-- [ ] Capturar telas e comparar visualmente às referências AMOLED em `assets/design/coreflow-s25-ultra/`, registrando desvios intencionais.
 - [ ] Validar acessibilidade: fonte ampliada do sistema, TalkBack, contraste AMOLED e redução de movimento.
-- [ ] Testar comportamento no perfil S25 Ultra: gestos, rotação, bloqueio de tela, execução em segundo plano e retomada.
-- [ ] Validar integração com Galaxy Watch: conexão, desconexão, reconexão, padrões de vibração e cancelamento.
-- [ ] Testar atualização sobre instalação anterior e verificar preservação de posição, diário, preferências e backups.
-- [ ] Compilação e validação em aparelho físico real (conduzida por Rafael).
-- [ ] Gerar release assinada conforme [`SIGNING.md`](SIGNING.md) quando ambiente de chaves estiver disponível; registrar versão e limitações.
-
----
-
-### 4.2 FUTURA 1 — Modo Treino Flutuante (Overlay Nativo CP1 a CP7) — CONCLUÍDO
-
-**Status:** CONCLUÍDO (28/09/2026) — Detalhamento arquivado em [`docs/arquivados/roadmap-etapas-concluidas.md`](docs/arquivados/roadmap-etapas-concluidas.md#futura--modo-treino-flutuante-overlay) e auditado formalmente em [`docs/roadmap/auditoria-treino-flutuante.md`](docs/roadmap/auditoria-treino-flutuante.md).  
-**Referência visual:** `assets/design/coreflow-s25-ultra/11-treino-flutuante-material3.png`
-
-**Resumo da Implementação:**
-- Permissão `SYSTEM_ALERT_WINDOW` e controlador `WorkoutOverlayController.kt` com degradação graciosa caso negada.
-- Sincronização passiva 100% atrelada ao `WorkoutForegroundService` (zero timers adicionais, sem concorrência).
-- Três estados visuais AMOLED Material 3: Mini (pílula 36dp), Compacta (barra 44dp com fase/ação e timer) e Expandida (card com controles e saída segura).
-- Controles nativos (`ACTION_PAUSE`, `ACTION_RESUME`, `ACTION_SKIP`, `ACTION_SAFE_EXIT_RETENTION`) e retorno direto à `MainActivity`.
-- Painel de preferências integrado em Perfil (toggle, tamanho padrão, auto-recolhimento e próximo passo).
-- Compatibilidade universal com os programas nativos: Vácuo Abdominal, Kegel e Bracing.
+- [ ] Testar no Galaxy S25 Ultra físico: gestos, rotação, bloqueio de tela, execução em segundo plano e One Hand Operation+.
+- [ ] Validar integração com Galaxy Watch: reconexão Bluetooth e padrões de vibração háptica.
 
 ---
 
 ### 4.3 FUTURA 2 — Modo Treino Flutuante Fase 2: Sessões JS, Áudio Ducking e Convivência Multimídia
 
 **Status:** PLANEJADO  
-**Objetivo:** Expandir a convivência do overlay flutuante com aplicações de entretenimento/mídia em segundo plano e incorporar os fluxos de treino baseados em timers web sem quebrar a unicidade do cronômetro.
+**Objetivo:** Expandir a convivência do overlay flutuante com reprodutores de mídia externos e incorporar sessões web sem timers duplicados.
 
-#### Escopo e Itens:
-1. **Áudio Ducking e Foco de Áudio Nativos:**
-   - [ ] Implementar gestão de foco de áudio via `AudioFocusRequestCompat` no `WorkoutForegroundService`.
-   - [ ] Ao disparar avisos de voz do TTS nativo, solicitar `AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK` para reduzir o volume de reprodutores de mídia externos (Spotify, YouTube Music, podcasts).
-   - [ ] Restaurar o volume da mídia de terceiros imediatamente após a conclusão da fala.
-   - [ ] Respeitar a preferência de silenciamento de áudio do usuário (Modo Discreto / avisos desligados).
-2. **Compatibilidade com Sessões Web (JS Timers):**
-   - [ ] Estender suporte do overlay para Respiração Guiada, Pausas Ativas e Mindfulness.
-   - [ ] Integrar os ciclos de respiração e tempos de descanso ao `WorkoutForegroundService` através da bridge existente, garantindo que o overlay continue estritamente passivo e que nunca surja um segundo timer em segundo plano.
-3. **Persistência de Posição do Overlay:**
-   - [ ] Salvar a última posição (X, Y) ancorada na tela nas `SharedPreferences` para restaurar o overlay exatamente onde o usuário o posicionou na sessão anterior.
+#### Checklist de Itens:
+- [ ] **Áudio Ducking Nativo:** Implementar `AudioFocusRequestCompat` no `WorkoutForegroundService` para atenuar músicas (Spotify, YouTube Music) durante a fala do TTS e restaurar o volume ao término.
+- [ ] **Compatibilidade com Sessões Web:** Integrar Respiração Guiada, Pausas Ativas e Mindfulness ao overlay flutuante via bridge de eventos.
+- [ ] **Persistência de Coordenadas:** Salvar última posição $(X, Y)$ do overlay nas `SharedPreferences`.
 
 ---
 
 ### 4.4 FUTURA 3 — Homologação em Hardware Real (S25 Ultra), Doze Mode e Requisitos Google Play
 
 **Status:** PLANEJADO  
-**Objetivo:** Homologação completa em dispositivo físico topo de linha (Galaxy S25 Ultra), validação sob restrições estritas de energia da One UI e atendimento a diretrizes da Google Play.
+**Objetivo:** Homologação completa em hardware físico topo de linha sob restrições da One UI e atendimento a diretrizes da Google Play.
 
-#### Escopo e Itens:
-1. **Homologação em Hardware Físico (Galaxy S25 Ultra — Conduzida por Rafael):**
-   - [ ] Teste de encaixe e posicionamento em relação à câmera frontal (Infinity-O Punch Hole) e bordas da tela.
-   - [ ] Teste de fluidez a 120Hz dinâmicos (LTPO) durante o arrasto do overlay flutuante.
-   - [ ] Resposta háptica real no motor linear do S25 Ultra em conjunto com o Galaxy Watch.
-2. **Resiliência contra Doze Mode e Otimização de Bateria Samsung:**
-   - [ ] Validar permanência do serviço e do overlay quando o aparelho entra em Doze Mode profundo ou quando o CoreFlow é colocado em "Aplicativos suspensos" pela One UI.
-   - [ ] Garantir que o `WorkoutForegroundService` permaneça ininterrupto com o tipo de serviço apropriado.
-3. **Acessibilidade e Usabilidade:**
-   - [ ] Mapeamento e auditoria via TalkBack sobre a janela do overlay (`AccessibilityNodeInfo`, rótulos para leitores de tela em cada botão do card expandido).
-   - [ ] Suporte refinado para One Hand Operation+ (gestos de voltar da Samsung sobre o overlay).
-4. **Conformidade Google Play Store:**
-   - [ ] Declaração e justificativa de uso de `SYSTEM_ALERT_WINDOW` conforme políticas de experiência do usuário.
-   - [ ] Declaração de `FOREGROUND_SERVICE` com tipo compatível (`health` / `specialUse`).
+#### Checklist de Itens:
+- [ ] **Hardware Físico:** Encaixe visual em relação à câmera frontal (Punch Hole) e fluidez a 120Hz dinâmicos (LTPO).
+- [ ] **Doze Mode / Samsung:** Resiliência contra suspensão agressiva da bateria pela One UI.
+- [ ] **Acessibilidade TalkBack no Overlay:** `AccessibilityNodeInfo` em todos os controles do card expandido.
+- [ ] **Conformidade Google Play:** Declaração de `SYSTEM_ALERT_WINDOW` e `FOREGROUND_SERVICE` (`health` / `specialUse`).
 
 ---
 
-## 5. Registro para Retomada
-Para cada tarefa executada, registrar detalhadamente em [`docs/roadmap/execucao.md`](docs/roadmap/execucao.md):
-- Data, tarefa e estado.
-- Referência Git e dependências confirmadas.
-- Arquivos e símbolos alterados.
-- Subitens concluídos.
-- Comando ou cenário → resultado → evidência.
-- Falhas anteriores versus novas.
-- Decisões e justificativas técnicas.
-- Bloqueios e dependentes afetados.
-- Arquivos pendentes de commit.
-- Próximo passo exato.
+## 5. Limites Inegociáveis
 
----
-
-## 6. Limites Inegociáveis
 - Preservar a arquitetura Android/WebView e módulo Wear OS.
-- Não adicionar login, nuvem, sensores fictícios ou monetização sem especificação explícita.
-- Não transformar números, fotos ou ícones ilustrativos dos mockups em informações falsas.
-- Não apagar histórico anterior nem assumir itens como resolvidos sem teste executado.
-- Manter paridade estrita entre `index.html` e `app/src/main/assets/index.html`.
+- Não alterar IDs de programas, armazenamento ou esquemas sem necessidade documentada.
+- Manter paridade estrita byte a byte entre `index.html` e `app/src/main/assets/index.html`.
+- Nunca utilizar assinatura debug para builds de release.
 
 ---
 
-## 7. Convenção de Rastreabilidade Documental
+## 6. Convenção de Rastreabilidade Documental
 <!-- Convenção de SHA verificada por scripts/check-doc-sha.sh -->
 - `base_sha=666e24a6f64c84c265fa46644efbaa089847823c`
 - `behavioral_target_sha=666e24a6f64c84c265fa46644efbaa089847823c`

@@ -1,78 +1,91 @@
 # CoreFlow
 
-Aplicativo Android de práticas guiadas para fortalecimento do core, postura, respiração, assoalho pélvico e atenção plena. A interface principal é executada em uma WebView local e integrada aos recursos nativos do Android.
+Aplicativo Android de práticas guiadas para fortalecimento do core, estabilização espinhal, postura, respiração, assoalho pélvico e atenção plena. A interface principal é executada em uma WebView local integrada aos recursos nativos do Android e com suporte complementar a relógios inteligentes Wear OS (Galaxy Watch).
 
-## Recursos
+---
 
-- Programa de bracing e automação postural em 6 semanas.
-- Programa de Kegel e assoalho pélvico em 8 semanas.
-- Programa progressivo de stomach vacuum em 8 semanas.
-- Programa de mindfulness/MBCT em 8 semanas com oito meditações em áudio.
-- Player de mindfulness com play/pausa, avanço e retrocesso de 15 segundos e seleção de faixas.
-- Reprodução durante o bloqueio da tela com serviço Android em primeiro plano.
-- Lembretes, acompanhamento diário, metas semanais, streak e histórico local.
-- Exercícios respiratórios, pausas ativas, hápticos e relatório de desempenho.
-- Vibração sincronizada dos exercícios em Galaxy Watch com Wear OS.
+## Recursos Principais
 
-## Versão atual
+- **Modo Treino Flutuante (Overlay Nativo):** Acompanhe e controle sua sessão ativa sobre qualquer outro aplicativo Android com janela flutuante Material 3 AMOLED (estados Mini, Compacto e Expandido, arrasto e recolhimento automático).
+- **Programa de Bracing e Automação Postural (8 Semanas):** Progressão funcional do core baseada no método McGill, executável sentado em banco ou em pé.
+- **Programa de Stomach Vacuum (8 Semanas):** Treino guiado de sucção abdominal com fases clínicas de preparação, inspiração, expiração, apneia/retenção, retorno controlado e recuperação.
+- **Programa de Kegel e Assoalho Pélvico (8 Semanas):** Foco em resistência, agilidade reflexa e suporte pélvico com agenda diária calibrada.
+- **Programa de Mindfulness / MBCT (8 Semanas):** Oito meditações guiadas em áudio nativo com reprodução contínua em segundo plano e tela bloqueada.
+- **Pausa de Resposta e Micro-Pausas Ativas:** Sessões rápidas para descompressão e alívio postural no trabalho.
+- **Sincronização com Galaxy Watch (Wear OS):** Vibrações táteis espelhadas no relógio em tempo real via Bluetooth.
+- **Privacidade e Operação 100% Offline:** Sem login obrigatório, sem telemetria externa; dados e histórico salvos localmente no dispositivo.
 
-`1.1.36` (`versionCode 36`) — adiciona a Pausa de Resposta de 3 Minutos, com três etapas visuais, modo silencioso, retomada segura, escolha do próximo passo e histórico local opcional.
+---
 
-O APK assinado está disponível na página de [Releases](https://github.com/playertwo1/Adbm/releases).
+## Versão Atual
 
-## Requisitos
+- **Versão base local:** `1.1.36` (`versionCode 36`)
+- **Última Release publicada:** `1.1.39` (`versionCode 39`) — traz a implementação completa do **Modo Treino Flutuante (Overlay Nativo CP1 a CP7)** com controles táteis diretos, saída segura de retenção e preferências personalizáveis no perfil.
+- **Downloads:** O APK assinado para celular e relógio está disponível na aba de [Releases](https://github.com/playertwo1/Adbm/releases).
+- **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.
 
-- Android Studio com JDK integrado.
-- Android SDK 36.
-- Gradle 9.3.1.
-- Android 7.0/API 24 ou superior.
-- Para vibração no relógio: Galaxy Watch4 ou mais recente com Wear OS e o APK `CoreFlow-Watch` instalado.
+---
 
-## Compilação
+## Requisitos de Desenvolvimento
 
-Antes de validar ou compilar, configure `JAVA_HOME` para o JDK do Android Studio e `ANDROID_HOME` para o Android SDK. O check reproduzível do projeto é:
+- **Android Studio** com JDK 17 integrado (JBR).
+- **Android SDK:** Compile SDK 36, Target SDK 36, Min SDK 24 (Android 7.0+).
+- **Gradle:** 9.3.1.
+- **Wear OS:** Android 11+ (API 30+) para o módulo complementar `wear/` (Galaxy Watch4 ou mais recente).
+- **Node.js:** v18+ para execução das suítes de diagnóstico e testes de regressão.
+
+---
+
+## Compilação e Validação
+
+Antes de validar ou compilar, configure `JAVA_HOME` para o JDK do Android Studio e `ANDROID_HOME` para o Android SDK:
 
 ```bash
+# Executa regressões Node, confirmação de integridade HTML e compilação debug
 bash scripts/check.sh
 ```
 
-Ele executa os diagnósticos Node, confirma a equivalência entre os dois HTMLs e gera os APKs debug do celular e do relógio.
-
-Para gerar apenas o APK de desenvolvimento:
-
+### Compilar APK de Desenvolvimento (Debug):
 ```powershell
 .\gradlew.bat :app:assembleDebug :wear:assembleDebug
 ```
 
-Para gerar uma release assinada, configure `KEYSTORE_PATH`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`, `BUILD_VERSION_CODE` e `BUILD_VERSION_NAME`, e execute:
+### Compilar APK de Produção (Release Assinado):
+Configure as credenciais de assinatura persistente e execute:
 
 ```powershell
+$env:KEYSTORE_PATH = "caminho/para/coreflow-upload.jks"
+$env:KEYSTORE_PASSWORD = "sua_senha_keystore"
+$env:KEY_ALIAS = "seu_alias"
+$env:KEY_PASSWORD = "sua_senha_chave"
+$env:BUILD_VERSION_CODE = "39"
+$env:BUILD_VERSION_NAME = "1.1.39"
+
 .\gradlew.bat :app:assembleRelease :wear:assembleRelease
 ```
 
-A release falha intencionalmente se qualquer credencial de assinatura persistente estiver ausente.
+Os pacotes gerados ficam localizados em:
+- Celular: `app/build/outputs/apk/release/app-release.apk`
+- Relógio: `wear/build/outputs/apk/release/wear-release.apk`
 
-Os arquivos serão criados em `app/build/outputs/apk/release/app-release.apk` e `wear/build/outputs/apk/release/wear-release.apk`.
+---
 
-## Galaxy Watch
+## Arquitetura do Projeto
 
-Instale o APK principal no celular e o APK `CoreFlow-Watch` no relógio. Ambos usam o mesmo identificador e certificado, como exigido pelo Wear OS. No CoreFlow, o botão com ícone de relógio ativa ou desativa o envio das vibrações. O relógio precisa estar pareado e conectado; a ausência dele não interrompe o exercício no celular.
+- `index.html`: Interface web principal e lógica de estado (fonte de verdade).
+- `app/src/main/assets/index.html`: Cópia idêntica byte a byte embarcada no build Android.
+- `app/src/main/java/com/example/WorkoutOverlayController.kt`: Controlador da janela flutuante nativa (`SYSTEM_ALERT_WINDOW`).
+- `app/src/main/java/com/example/WorkoutForegroundService.kt`: Motor de sessão e timer nativo (fonte única da verdade).
+- `app/src/main/java/com/example/MindfulnessAudioService.kt`: Serviço de reprodução de áudio em primeiro plano com `MediaSession`.
+- `app/src/main/java/com/example/WearHapticsRelay.kt`: Comunicação Bluetooth e retransmissão de vibrações para o Wear OS.
+- `wear/`: Módulo independente do aplicativo para Wear OS (Galaxy Watch).
+- `ROADMAP.md`: Planejamento ativo e backlog de desenvolvimento do projeto.
+- `docs/arquivados/roadmap-etapas-concluidas.md`: Histórico e critérios de aceite das etapas concluídas.
 
-## Estrutura principal
+---
 
-- `index.html`: interface e lógica do CoreFlow.
-- `app/src/main/assets/index.html`: interface embarcada no APK.
-- `app/src/main/assets/audio/mindfulness/`: oito faixas do programa de atenção plena.
-- `app/src/main/java/com/example/`: integração WebView, hápticos, notificações e serviço de áudio.
-- `wear/`: aplicativo complementar Wear OS que recebe e reproduz os padrões de vibração.
-- `ROADMAP.md`: especificação do programa de Mindfulness.
+## Licença e Privacidade
 
-## Assinatura e segurança
-
-Arquivos `.env`, keystores e senhas não devem ser enviados ao repositório. Consulte `SIGNING.md` para configurar uma chave persistente. Para atualizar uma instalação existente, todas as versões precisam ser assinadas com o mesmo certificado.
-
-Os dados de progresso usam armazenamento local e podem participar do backup automático do Android; consulte [PRIVACY.md](PRIVACY.md) para o escopo, a retenção e o controle do usuário.
-
-## Licença
-
-Este repositório não declara uma licença de código aberto. Todos os direitos permanecem com o proprietário do projeto.
+- Consulte [PRIVACY.md](PRIVACY.md) para a política de retenção local de dados.
+- Consulte [SIGNING.md](SIGNING.md) para diretrizes de assinatura criptográfica contínua.
+- Todos os direitos reservados.
