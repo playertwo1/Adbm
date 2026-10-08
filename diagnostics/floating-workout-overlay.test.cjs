@@ -77,7 +77,21 @@ assert(htmlContent.includes('toggleFloatingWorkoutShowNextStep'), 'index.html de
 // Verificar registro no closeTopmostOverlay
 assert(htmlContent.includes("'floatingWorkoutSettingsModal'"), 'floatingWorkoutSettingsModal deve estar registrado em closeTopmostOverlay');
 
-// 7. Verificar paridade estrita entre index.html e app/src/main/assets/index.html
+// 7. Verificar persistência de coordenadas (X, Y) no WorkoutOverlayController.kt
+assert(overlayCode.includes('KEY_POSITION_X'), 'WorkoutOverlayController deve definir KEY_POSITION_X');
+assert(overlayCode.includes('KEY_POSITION_Y'), 'WorkoutOverlayController deve definir KEY_POSITION_Y');
+assert(overlayCode.includes('getSavedPosition'), 'WorkoutOverlayController deve conter getSavedPosition');
+assert(overlayCode.includes('savePosition'), 'WorkoutOverlayController deve conter savePosition');
+console.log('✓ FUTURA 2: Persistência de coordenadas (X, Y) implementada no WorkoutOverlayController');
+
+// 8. Verificar Áudio Ducking nativo no WorkoutForegroundService.kt
+assert(serviceCode.includes('AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK'), 'WorkoutForegroundService deve solicitar foco de áudio com atenuação transitória');
+assert(serviceCode.includes('requestAudioDucking'), 'WorkoutForegroundService deve conter requestAudioDucking');
+assert(serviceCode.includes('releaseAudioDucking'), 'WorkoutForegroundService deve conter releaseAudioDucking');
+assert(serviceCode.includes('UtteranceProgressListener'), 'WorkoutForegroundService deve monitorar término da fala via UtteranceProgressListener');
+console.log('✓ FUTURA 2: Áudio Ducking nativo implementado no WorkoutForegroundService');
+
+// 9. Verificar paridade estrita entre index.html e app/src/main/assets/index.html
 assert(fs.existsSync(assetsHtmlPath), 'app/src/main/assets/index.html não encontrado');
 const assetsHtmlContent = fs.readFileSync(assetsHtmlPath, 'utf8');
 assert.strictEqual(

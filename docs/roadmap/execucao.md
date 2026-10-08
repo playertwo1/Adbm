@@ -1,5 +1,32 @@
 # Registro de execução
 
+## 2026-10-08 — Implementação FUTURA 2: Treino Flutuante Fase 2 (Áudio Ducking e Persistência de Coordenadas) — CONCLUÍDO
+
+- **Objetivos Realizados:**
+  1. **Áudio Ducking Nativo no `WorkoutForegroundService.kt`:**
+     - Implementada solicitação de foco de áudio transitório com permissão de atenuação (`AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK`) via `AudioManager` e `AudioFocusRequest`.
+     - Atenuação automática de reprodutores de mídia externos (Spotify, YouTube Music) durante a fala das instruções de voz do `TextToSpeech`.
+     - Registro de `UtteranceProgressListener` no TTS para detectar o término exato da fala (`onDone`, `onError`) e liberar o foco de áudio imediatamente (`abandonAudioFocusRequest` / `abandonAudioFocus`), restaurando o volume original das músicas.
+     - Liberação garantida do foco em pausas, cancelamentos, encerramento de sessão e destruição do serviço (`cancelActiveSignals`, `onDestroy`).
+  2. **Persistência de Coordenadas (X, Y) no `WorkoutOverlayController.kt`:**
+     - Suporte a persistência das coordenadas $(X, Y)$ da janela flutuante em `SharedPreferences` (`coreflow_overlay_prefs`).
+     - Novas chaves `KEY_POSITION_X` e `KEY_POSITION_Y` com valores padrão seguros (`24, 120`).
+     - Métodos `getSavedPosition` e `savePosition` integrados aos fluxos de criação de overlay e de encaixe nas bordas laterais (`snapToNearestEdge`).
+     - Limitação segura das coordenadas (*clamping*) evitando que o card seja posicionado fora da tela útil.
+     - Extensão de `OverlayPreferences` com serialização e desserialização de `positionX` e `positionY` em JSON.
+  3. **Validação de Testes e Gates:**
+     - Testes unitários adicionados em `WorkoutOverlayTest.kt` validando persistência e parsing JSON das coordenadas $(X, Y)$ (BUILD SUCCESSFUL).
+     - Teste de regressão `diagnostics/floating-workout-overlay.test.cjs` expandido e aprovado (100% PASS).
+     - Paridade HTML e conformidade geral do projeto preservadas.
+- **Arquivos Alterados:**
+  - `app/src/main/java/com/example/WorkoutOverlayController.kt`
+  - `app/src/main/java/com/example/WorkoutForegroundService.kt`
+  - `app/src/test/java/com/example/WorkoutOverlayTest.kt`
+  - `diagnostics/floating-workout-overlay.test.cjs`
+  - `ROADMAP.md`
+  - `docs/roadmap/execucao.md`
+  - `CHANGELOG.md`
+
 ## 2026-10-08 — E14 Bracing McGill Adaptado, Agenda 7 Dias, Renomeação Kegel & Aba Pausas Flutuante — CONCLUÍDO
 
 - **Objetivos Realizados:**

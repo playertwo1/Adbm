@@ -45,7 +45,7 @@
 | **PAUSAS-FLUT** | Tela Flutuante para Todos os Exercícios da Aba Pausas | **CONCLUÍDA** | Ver Seção 4.2 |
 | **E14** | Reformulação Clínica do Bracing no Banco e em Pé (McGill) | **CONCLUÍDA** | Ver Seção 4.3 |
 | **E13** | Validação Integrada e Conclusão Android (Físico / TalkBack) | **ABERTA** | Ver Seção 4.4 |
-| **FUTURA 2** | Treino Flutuante Fase 2 (Áudio Ducking e Convivência Multimídia) | **PLANEJADO** | Ver Seção 4.5 |
+| **FUTURA 2** | Treino Flutuante Fase 2 (Áudio Ducking e Convivência Multimídia) | **CONCLUÍDA** | Ver Seção 4.5 |
 | **FUTURA 3** | Homologação em Hardware Real (S25 Ultra / Google Play) | **PLANEJADO** | Ver Seção 4.6 |
 
 ---
@@ -145,13 +145,13 @@
 
 ### 4.5 FUTURA 2 — Modo Treino Flutuante Fase 2: Sessões JS, Áudio Ducking e Convivência Multimídia
 
-**Status:** PLANEJADO  
+**Status:** CONCLUÍDA  
 **Objetivo:** Expandir a convivência do overlay flutuante com reprodutores de mídia externos e incorporar sessões web sem timers duplicados.
 
 #### Checklist de Itens:
-- [ ] **Áudio Ducking Nativo:** Implementar `AudioFocusRequestCompat` no `WorkoutForegroundService` para atenuar músicas (Spotify, YouTube Music) durante a fala do TTS e restaurar o volume ao término.
-- [ ] **Compatibilidade com Sessões Web:** Integrar Respiração Guiada, Pausas Ativas e Mindfulness ao overlay flutuante via bridge de eventos.
-- [ ] **Persistência de Coordenadas:** Salvar última posição $(X, Y)$ do overlay nas `SharedPreferences`.
+- [x] **Áudio Ducking Nativo:** Implementar gestão de foco de áudio (`AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK`) no `WorkoutForegroundService` para atenuar músicas (Spotify, YouTube Music) durante a fala do TTS e restaurar o volume ao término via `UtteranceProgressListener`.
+- [x] **Compatibilidade com Sessões Web:** Integrar Respiração Guiada, Pausas Ativas e Alongamentos ao overlay flutuante via bridge de eventos e `startWorkoutSession`.
+- [x] **Persistência de Coordenadas:** Salvar última posição $(X, Y)$ do overlay nas `SharedPreferences` com limites de tela e encaixe automático nas bordas laterais.
 
 ---
 

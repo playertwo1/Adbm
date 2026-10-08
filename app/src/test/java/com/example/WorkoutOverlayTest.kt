@@ -95,4 +95,37 @@ class WorkoutOverlayTest {
     WorkoutOverlayController.hideOverlay(context)
     assertFalse(WorkoutOverlayController.isOverlayVisible())
   }
+
+  @Test
+  fun `overlay position coordinates persist and load correctly`() {
+    val context = ApplicationProvider.getApplicationContext<Context>()
+    val (defaultX, defaultY) = WorkoutOverlayController.getSavedPosition(context)
+    assertEquals(WorkoutOverlayController.DEFAULT_POS_X, defaultX)
+    assertEquals(WorkoutOverlayController.DEFAULT_POS_Y, defaultY)
+
+    WorkoutOverlayController.savePosition(context, 150, 420)
+    val (updatedX, updatedY) = WorkoutOverlayController.getSavedPosition(context)
+    assertEquals(150, updatedX)
+    assertEquals(420, updatedY)
+  }
+
+  @Test
+  fun `overlay preferences JSON includes position coordinates`() {
+    val context = ApplicationProvider.getApplicationContext<Context>()
+    val json = """
+      {
+        "enabled": true,
+        "defaultSize": "mini",
+        "autoCollapse": true,
+        "showNextStep": true,
+        "positionX": 80,
+        "positionY": 300
+      }
+    """.trimIndent()
+
+    WorkoutOverlayController.savePreferences(context, json)
+    val prefs = WorkoutOverlayController.loadPreferences(context)
+    assertEquals(80, prefs.positionX)
+    assertEquals(300, prefs.positionY)
+  }
 }

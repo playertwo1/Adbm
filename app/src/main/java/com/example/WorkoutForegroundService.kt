@@ -6,10 +6,14 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,6 +54,9 @@ class WorkoutForegroundService : Service() {
     private var ttsReady = false
     private var pendingSpeech: String? = null
     private var wakeLock: PowerManager.WakeLock? = null
+    private var audioManager: AudioManager? = null
+    private var audioFocusRequest: AudioFocusRequest? = null
+    private var hasAudioFocus = false
 
     private var steps: List<Step> = emptyList()
     private var currentStepIndex = 0
@@ -65,9 +72,26 @@ class WorkoutForegroundService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as? AudioManager
         tts = TextToSpeech(this) { status ->
             if (status == TextToSpeech.SUCCESS) {
                 configureTtsLanguage()
+                tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                    override fun onStart(utteranceId: String?) {}
+
+                    override fun onDone(utteranceId: String?) {
+                        releaseAudioDucking()
+                    }
+
+                    @Deprecated("Deprecated in Java")
+                    override fun onError(utteranceId: String?) {
+                        releaseAudioDucking()
+                    }
+
+                    override fun onError(utteranceId: String?, errorCode: Int) {
+                        releaseAudioDucking()
+                    }
+                })
                 ttsReady = true
                 pendingSpeech?.let { text ->
                     pendingSpeech = null
@@ -100,6 +124,7 @@ class WorkoutForegroundService : Service() {
         cancelActiveSignals()
         tts?.stop()
         tts?.shutdown()
+        releaseAudioDucking()
         scope.cancel()
         super.onDestroy()
     }
@@ -323,12 +348,60 @@ class WorkoutForegroundService : Service() {
             pendingSpeech = text
             return
         }
-        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "CoreFlowBackgroundWorkout")
+        requestAudioDucking()
+        val utteranceId = "CoreFlowWorkout_${System.currentTimeMillis()}"
+        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
+    }
+
+    private fun requestAudioDucking() {
+        if (hasAudioFocus) return
+        val am = audioManager ?: return
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val playbackAttributes = AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build()
+                val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+                    .setAudioAttributes(playbackAttributes)
+                    .setAcceptsDelayedFocusGain(false)
+                    .setOnAudioFocusChangeListener { /* Sem intervenção; fala é transitória */ }
+                    .build()
+                audioFocusRequest = focusRequest
+                val res = am.requestAudioFocus(focusRequest)
+                hasAudioFocus = (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
+            } else {
+                @Suppress("DEPRECATION")
+                val res = am.requestAudioFocus(
+                    null,
+                    AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK
+                )
+                hasAudioFocus = (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
+            }
+        } catch (_: Exception) {
+            hasAudioFocus = false
+        }
+    }
+
+    private fun releaseAudioDucking() {
+        if (!hasAudioFocus) return
+        val am = audioManager ?: return
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                audioFocusRequest?.let { am.abandonAudioFocusRequest(it) }
+            } else {
+                @Suppress("DEPRECATION")
+                am.abandonAudioFocus(null)
+            }
+        } catch (_: Exception) {}
+        hasAudioFocus = false
     }
 
     private fun cancelActiveSignals() {
         pendingSpeech = null
         tts?.stop()
+        releaseAudioDucking()
         AdvancedHapticsManager.cancel(this)
         WearHapticsRelay.cancel(this)
     }

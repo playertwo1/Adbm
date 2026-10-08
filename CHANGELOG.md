@@ -15,6 +15,9 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 - **Modo Treino Flutuante para Todos os Exercícios da Aba Pausas:**
   - Janela flutuante nativa AMOLED (`SYSTEM_ALERT_WINDOW`) acionada automaticamente ao iniciar Alongamentos (Circuito Ergonômico, individuais 1 a 4, SOS Coluna), Respiração Guiada do Bloco Mente e Pausa de Resposta de 3 Minutos.
   - Sincronização estrita de timers com o `WorkoutForegroundService` e eliminação de timers concorrentes no JavaScript.
+- **Treino Flutuante Fase 2 (FUTURA 2):**
+  - **Áudio Ducking Nativo:** Atenuação automática de players multimídia externos (Spotify, YouTube Music) durante instruções de voz do TTS via `AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK` e restauração de volume imediata ao concluir a fala via `UtteranceProgressListener`.
+  - **Persistência de Coordenadas (X, Y):** Memorização da última posição do overlay nas `SharedPreferences`, mantendo a janela flutuante ancorada onde o usuário a deixou com proteção contra saída dos limites da tela.
 - **Suíte de Testes de Regressão E14:** Criado `diagnostics/e14-bracing-pausas-floating.test.cjs` cobrindo matriz de bracing, agenda de 7 dias e conexão flutuante da aba Pausas.
 
 ### Modificado
@@ -24,7 +27,6 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 - **Correção da Agenda de 7 Dias Semanais:** Corrigido o erro que exibia 5 dias no Bracing (ID 1) e Stomach Vacuum (ID 3), configurando explicitamente `weeklyTargetDays: 7` em todas as fases do catálogo para exibição consistente de D1 a D7.
 
 ### Planejado
-- **FUTURA 2 — Treino Flutuante Fase 2:** Áudio Ducking nativo (`AudioFocusRequestCompat`), convivência multimídia com Spotify/YouTube Music.
 - **FUTURA 3 — Homologação em Hardware Real:** Validação em Galaxy S25 Ultra físico, Doze Mode/One UI e conformidade com políticas Google Play.
 
 ---

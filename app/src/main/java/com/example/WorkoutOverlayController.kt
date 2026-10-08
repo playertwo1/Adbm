@@ -50,13 +50,17 @@ object WorkoutOverlayController {
         val enabled: Boolean = false,
         val defaultSize: String = "compact", // "compact" ou "mini"
         val autoCollapse: Boolean = true,
-        val showNextStep: Boolean = true
+        val showNextStep: Boolean = true,
+        val positionX: Int = DEFAULT_POS_X,
+        val positionY: Int = DEFAULT_POS_Y
     ) {
         fun toJson(): JSONObject = JSONObject().apply {
             put("enabled", enabled)
             put("defaultSize", defaultSize)
             put("autoCollapse", autoCollapse)
             put("showNextStep", showNextStep)
+            put("positionX", positionX)
+            put("positionY", positionY)
         }
 
         companion object {
@@ -68,7 +72,9 @@ object WorkoutOverlayController {
                     else -> SIZE_COMPACT
                 },
                 autoCollapse = json.optBoolean("autoCollapse", true),
-                showNextStep = json.optBoolean("showNextStep", true)
+                showNextStep = json.optBoolean("showNextStep", true),
+                positionX = json.optInt("positionX", DEFAULT_POS_X),
+                positionY = json.optInt("positionY", DEFAULT_POS_Y)
             )
         }
     }
@@ -82,6 +88,10 @@ object WorkoutOverlayController {
     const val KEY_DEFAULT_SIZE = "overlay_default_size"
     const val KEY_AUTO_COLLAPSE = "overlay_auto_collapse"
     const val KEY_SHOW_NEXT_STEP = "overlay_show_next_step"
+    const val KEY_POSITION_X = "overlay_position_x"
+    const val KEY_POSITION_Y = "overlay_position_y"
+    const val DEFAULT_POS_X = 24
+    const val DEFAULT_POS_Y = 120
     private const val AUTO_COLLAPSE_DELAY_MS = 5_000L
 
     private var windowManager: WindowManager? = null
@@ -157,7 +167,9 @@ object WorkoutOverlayController {
             enabled = sp.getBoolean(KEY_ENABLED, false),
             defaultSize = size,
             autoCollapse = sp.getBoolean(KEY_AUTO_COLLAPSE, true),
-            showNextStep = sp.getBoolean(KEY_SHOW_NEXT_STEP, true)
+            showNextStep = sp.getBoolean(KEY_SHOW_NEXT_STEP, true),
+            positionX = sp.getInt(KEY_POSITION_X, DEFAULT_POS_X),
+            positionY = sp.getInt(KEY_POSITION_Y, DEFAULT_POS_Y)
         )
     }
 
@@ -170,6 +182,23 @@ object WorkoutOverlayController {
             .putString(KEY_DEFAULT_SIZE, prefs.defaultSize)
             .putBoolean(KEY_AUTO_COLLAPSE, prefs.autoCollapse)
             .putBoolean(KEY_SHOW_NEXT_STEP, prefs.showNextStep)
+            .putInt(KEY_POSITION_X, prefs.positionX)
+            .putInt(KEY_POSITION_Y, prefs.positionY)
+            .apply()
+    }
+
+    fun getSavedPosition(context: Context): Pair<Int, Int> {
+        val sp = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val x = sp.getInt(KEY_POSITION_X, DEFAULT_POS_X)
+        val y = sp.getInt(KEY_POSITION_Y, DEFAULT_POS_Y)
+        return Pair(x, y)
+    }
+
+    fun savePosition(context: Context, x: Int, y: Int) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putInt(KEY_POSITION_X, x)
+            .putInt(KEY_POSITION_Y, y)
             .apply()
     }
 
@@ -235,6 +264,14 @@ object WorkoutOverlayController {
             WindowManager.LayoutParams.TYPE_PHONE
         }
 
+        val (savedX, savedY) = getSavedPosition(context)
+        val displayMetrics = context.resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+        val minMargin = dpToPx(context, 16)
+        val clampedX = savedX.coerceIn(0, (screenWidth - dpToPx(context, 80)).coerceAtLeast(0))
+        val clampedY = savedY.coerceIn(minMargin, (screenHeight - dpToPx(context, 100)).coerceAtLeast(minMargin))
+
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -244,8 +281,8 @@ object WorkoutOverlayController {
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
-            x = 24
-            y = 120
+            x = clampedX
+            y = clampedY
         }
         layoutParams = params
 
@@ -306,15 +343,20 @@ object WorkoutOverlayController {
     private fun snapToNearestEdge(context: Context, params: WindowManager.LayoutParams, view: View) {
         val displayMetrics = context.resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
         val viewWidth = view.width.coerceAtLeast(100)
+        val viewHeight = view.height.coerceAtLeast(60)
         val margin = dpToPx(context, 16)
         val targetX = if (params.x + viewWidth / 2 < screenWidth / 2) {
             margin
         } else {
             (screenWidth - viewWidth - margin).coerceAtLeast(0)
         }
+        val targetY = params.y.coerceIn(margin, (screenHeight - viewHeight - margin).coerceAtLeast(margin))
         params.x = targetX
+        params.y = targetY
         runCatching { windowManager?.updateViewLayout(view, params) }
+        savePosition(context, targetX, targetY)
         scheduleAutoCollapse(context)
     }
 
