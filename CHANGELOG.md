@@ -7,12 +7,24 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ## [Não lançado]
 
-### Planejado
-- **E14 — Reformulação Clínica do Bracing no Banco e em Pé:**
-  - Substituição da repetição de exercício único por circuito progressivo de 3 exercícios distintos por sessão nas 8 semanas.
+### Adicionado
+- **E14 — Reformulação Clínica do Bracing no Banco e em Pé (McGill Adaptado):**
+  - Matriz clínica de 8 semanas com 2 sessões semanais (A e B) compostas por 3 exercícios distintos cada (total de 48 variações estruturadas).
   - Execução 100% restrita a posições sentado no banco/cadeira ou em pé (zero solo/chão).
-  - Fundamentação biomecânica baseada no método do Dr. Stuart McGill e controle lombopélvico de Shirley Sahrmann.
-- **FUTURA 2 — Treino Flutuante Fase 2:** Áudio Ducking nativo (`AudioFocusRequestCompat`), convivência multimídia com Spotify/YouTube Music e integração com sessões web.
+  - Circuito estruturado: Preparação (15s), 3 séries por exercício com intervalos de recuperação (20s), transição entre exercícios e checagem final de qualidade biomecânica (20s).
+- **Modo Treino Flutuante para Todos os Exercícios da Aba Pausas:**
+  - Janela flutuante nativa AMOLED (`SYSTEM_ALERT_WINDOW`) acionada automaticamente ao iniciar Alongamentos (Circuito Ergonômico, individuais 1 a 4, SOS Coluna), Respiração Guiada do Bloco Mente e Pausa de Resposta de 3 Minutos.
+  - Sincronização estrita de timers com o `WorkoutForegroundService` e eliminação de timers concorrentes no JavaScript.
+- **Suíte de Testes de Regressão E14:** Criado `diagnostics/e14-bracing-pausas-floating.test.cjs` cobrindo matriz de bracing, agenda de 7 dias e conexão flutuante da aba Pausas.
+
+### Modificado
+- **Renomeação para "Programa Kegel":** Programa ID `'2'` renomeado de `"Cronograma Avançado de 8 Semanas"` para `"Programa Kegel"`, com proteção de dados, integridade de histórico e compatibilidade retroativa.
+
+### Corrigido
+- **Correção da Agenda de 7 Dias Semanais:** Corrigido o erro que exibia 5 dias no Bracing (ID 1) e Stomach Vacuum (ID 3), configurando explicitamente `weeklyTargetDays: 7` em todas as fases do catálogo para exibição consistente de D1 a D7.
+
+### Planejado
+- **FUTURA 2 — Treino Flutuante Fase 2:** Áudio Ducking nativo (`AudioFocusRequestCompat`), convivência multimídia com Spotify/YouTube Music.
 - **FUTURA 3 — Homologação em Hardware Real:** Validação em Galaxy S25 Ultra físico, Doze Mode/One UI e conformidade com políticas Google Play.
 
 ---

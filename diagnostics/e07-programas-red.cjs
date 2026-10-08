@@ -9,7 +9,7 @@ const htmlPaths = [
 ];
 const expectedPrograms = [
   ['1', 'Bracing: Controle e Automação (8 Semanas)'],
-  ['2', 'Cronograma Avançado de 8 Semanas'],
+  ['2', 'Programa Kegel'],
   ['3', 'Stomach Vacuum: 8 Semanas no Escritório'],
   ['4', 'Mindfulness 8 Semanas']
 ];

@@ -41,18 +41,48 @@
 | :--- | :--- | :--- | :--- |
 | **E00 a E12** | Fundação, Telas 01 a 10, Vácuo, Kegel, Mindfulness e Evolução | **CONCLUÍDA** | [Arquivo Histórico](docs/arquivados/roadmap-etapas-concluidas.md) |
 | **FUTURA 1** | Modo Treino Flutuante Nativo (Overlay AMOLED CP1 a CP7) | **CONCLUÍDA** | [Auditoria Técnica](docs/roadmap/auditoria-treino-flutuante.md) |
-| **E14** | Reformulação Clínica do Bracing no Banco e em Pé (McGill) | **PLANEJADO (Foco Imediato)** | Ver Seção 4.1 |
-| **E13** | Validação Integrada e Conclusão Android (Físico / TalkBack) | **ABERTA** | Ver Seção 4.2 |
-| **FUTURA 2** | Treino Flutuante Fase 2 (Áudio Ducking e Convivência Multimídia) | **PLANEJADO** | Ver Seção 4.3 |
-| **FUTURA 3** | Homologação em Hardware Real (S25 Ultra / Google Play) | **PLANEJADO** | Ver Seção 4.4 |
+| **AJUSTES** | Correção 7 Dias (Bracing/Vacuum) e Renomeação "Programa Kegel" | **CONCLUÍDA** | Ver Seção 4.1 |
+| **PAUSAS-FLUT** | Tela Flutuante para Todos os Exercícios da Aba Pausas | **CONCLUÍDA** | Ver Seção 4.2 |
+| **E14** | Reformulação Clínica do Bracing no Banco e em Pé (McGill) | **CONCLUÍDA** | Ver Seção 4.3 |
+| **E13** | Validação Integrada e Conclusão Android (Físico / TalkBack) | **ABERTA** | Ver Seção 4.4 |
+| **FUTURA 2** | Treino Flutuante Fase 2 (Áudio Ducking e Convivência Multimídia) | **PLANEJADO** | Ver Seção 4.5 |
+| **FUTURA 3** | Homologação em Hardware Real (S25 Ultra / Google Play) | **PLANEJADO** | Ver Seção 4.6 |
 
 ---
 
 ## 4. Backlog Ativo (O que temos para fazer para frente)
 
-### 4.1 E14 — Reformulação Clínica do Bracing no Banco e em Pé (Foco Imediato)
+### 4.1 Ajustes de Agenda e Nomenclatura
 
-**Status:** PLANEJADO (Foco Imediato)  
+**Status:** CONCLUÍDA  
+**Objetivo:** Sanar inconsistências na exibição semanal dos programas e atualizar a nomenclatura oficial solicitada pelo usuário.
+
+#### Checklist de Itens:
+- [x] **Correção de 7 Dias Semanais no Bracing (ID 1):** Ajustar `weeklyTargetDays: 7` em todas as 8 semanas do catálogo de fases do Bracing em `index.html` e `app/src/main/assets/index.html`, garantindo que os 7 dias (D1 a D7) sejam renderizados na interface e na contagem de progresso.
+- [x] **Correção de 7 Dias Semanais no Stomach Vacuum (ID 3):** Ajustar `weeklyTargetDays: 7` em todas as semanas que constavam com 5 ou 6 dias, unificando a meta para 7 dias semanais (D1 a D7) com descrições consistentes.
+- [x] **Renomeação do Programa 2 para "Programa Kegel":** Atualizar o título do programa ID `2` de `"Cronograma Avançado de 8 Semanas"` para `"Programa Kegel"`, preservando o ID `'2'` intacto para histórico e integridade de dados.
+- [x] **Compatibilidade Retroativa de Armazenamento:** Assegurar que dados salvos com nomes antigos no `localStorage` sejam hidratados corretamente com o novo nome oficial `"Programa Kegel"`.
+- [x] **Atualização de Regressões:** Atualizar testes em `diagnostics/` (`e07-programas-red.cjs`, `e08-5-hoje-recommendation.test.cjs`) para validar o novo nome `"Programa Kegel"`.
+
+---
+
+### 4.2 Modo Treino Flutuante para a Aba Pausas (Todos os Exercícios)
+
+**Status:** CONCLUÍDA  
+**Objetivo:** Garantir que todos os exercícios e rotinas disparados na aba "Pausas" iniciem com o Modo Treino Flutuante nativo (`WorkoutForegroundService` e `WorkoutOverlayController`), permitindo acompanhamento com tela apagada ou sobre outros apps sem timers duplicados.
+
+#### Checklist de Itens:
+- [x] **Alongamentos do Bloco Corpo:** Conectar exercícios individuais (1 a 4), SOS Coluna & Postura e Recomendação Inteligente ao `WorkoutForegroundService` via `AndroidBridge.startWorkoutSession`.
+- [x] **Circuito Ergonômico Completo:** Fazer o circuito guiado de corpo executar seus 4 passos sequenciais através do serviço nativo com sincronização de timer e overlay flutuante.
+- [x] **Pausa Responsiva / Micro-Pausa:** Integrar as fases da pausa de descompressão ao motor de treino nativo para exibir o overlay com contagem regressiva e instrução da fase atual.
+- [x] **Respiração Guiada do Bloco Mente:** Conectar os ciclos de respiração (SOS Ansiedade, Caixa, 4-7-8 Longa, Respiração Igual, Custom e Circuito) ao foreground service para acionar a janela flutuante com feedback tátil e visual de expansão/retenção.
+- [x] **Sincronização Bidirecional e Sem Duplicidade:** Garantir que o `WorkoutForegroundService` seja a fonte única de verdade temporal, notificando a WebView via `onNativeWorkoutState` e prevenindo `setInterval` paralelos no JavaScript.
+
+---
+
+### 4.3 E14 — Reformulação Clínica do Bracing no Banco e em Pé
+
+**Status:** CONCLUÍDA  
 **Objetivo:** Substituir a repetição de exercício único por circuitos clínicos estruturados de 3 exercícios progressivos por sessão ao longo das 8 semanas do programa de Bracing (ID `1`), executáveis **estritamente em banco/cadeira ou em pé** (zero posições deitadas ou no chão), fundamentados nas diretrizes biomecânicas de rigidez espinhal do Dr. Stuart McGill e controle lombopélvico de Shirley Sahrmann.
 
 #### Restrições Clínicas e Posturais:
@@ -87,15 +117,15 @@
   - *Sessão B (Em Pé):* Teste de resistência do core em pé (60s) $\to$ Circuito integrado de trabalho (sentar, erguer peso, transportar e sentar) (60s) $\to$ Protocolo de manutenção diária vitalícia (60s).
 
 #### Checklist de Implementação:
-- [ ] Atualizar catálogo de fases do Programa `1` em `index.html` e `app/src/main/assets/index.html` com os novos detalhes e títulos clínicos.
-- [ ] Implementar novo gerador multi-exercício em `buildWorkoutSteps(progId, phaseIdx)` gerando os 3 exercícios reais em sequência por sessão A/B.
-- [ ] Criar suíte de teste de regressão `diagnostics/bracing-clinical-progression.test.cjs` validando as 48 variações, paridade HTML e ausência de regressão.
-- [ ] Garantir paridade byte a byte estrita entre `index.html` e `app/src/main/assets/index.html`.
-- [ ] Validar compatibilidade contínua com `WorkoutForegroundService` e `WorkoutOverlayController` nativo.
+- [x] Atualizar catálogo de fases do Programa `1` em `index.html` e `app/src/main/assets/index.html` com os novos detalhes e títulos clínicos.
+- [x] Implementar novo gerador multi-exercício em `getProgramSteps(progId, phaseIdx, sessionNum)` gerando os 3 exercícios reais em sequência por sessão A/B.
+- [x] Criar suíte de teste de regressão `diagnostics/e14-bracing-pausas-floating.test.cjs` validando as 48 variações, paridade HTML e ausência de regressão.
+- [x] Garantir paridade byte a byte estrita entre `index.html` e `app/src/main/assets/index.html`.
+- [x] Validar compatibilidade contínua com `WorkoutForegroundService` e `WorkoutOverlayController` nativo.
 
 ---
 
-### 4.2 E13 — Validação Integrada e Conclusão Android
+### 4.4 E13 — Validação Integrada e Conclusão Android
 
 **Status:** ABERTA  
 **Objetivo:** Validação integrada de ciclo de vida, restauração de estado e testes em aparelho físico real conduzidos por Rafael.
@@ -113,7 +143,7 @@
 
 ---
 
-### 4.3 FUTURA 2 — Modo Treino Flutuante Fase 2: Sessões JS, Áudio Ducking e Convivência Multimídia
+### 4.5 FUTURA 2 — Modo Treino Flutuante Fase 2: Sessões JS, Áudio Ducking e Convivência Multimídia
 
 **Status:** PLANEJADO  
 **Objetivo:** Expandir a convivência do overlay flutuante com reprodutores de mídia externos e incorporar sessões web sem timers duplicados.
@@ -125,7 +155,7 @@
 
 ---
 
-### 4.4 FUTURA 3 — Homologação em Hardware Real (S25 Ultra), Doze Mode e Requisitos Google Play
+### 4.6 FUTURA 3 — Homologação em Hardware Real (S25 Ultra), Doze Mode e Requisitos Google Play
 
 **Status:** PLANEJADO  
 **Objetivo:** Homologação completa em hardware físico topo de linha sob restrições da One UI e atendimento a diretrizes da Google Play.

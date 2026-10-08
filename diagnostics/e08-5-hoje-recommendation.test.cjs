@@ -119,7 +119,7 @@ console.log('E08.5 caso 1: programa já selecionado continua sendo a recomendaç
     assert.match(html, /id="todayProgramSelection"/, 'sem seleção prévia e sem progresso real, Hoje deve oferecer escolha explícita');
     assert.doesNotMatch(html, /todayRecommendationCard/, 'não pode fabricar uma recomendação sem base real');
     assert.match(html, /Bracing: Controle e Automação/);
-    assert.match(html, /Cronograma Avançado de 8 Semanas/);
+    assert.match(html, /Programa Kegel/);
     assert.match(html, /Stomach Vacuum: 8 Semanas no Escritório/);
     assert.doesNotMatch(html, /Mindfulness 8 Semanas/, 'Mindfulness não é candidato de seleção neste fluxo (fora do escopo desta fatia)');
 }
@@ -132,7 +132,7 @@ console.log('E08.5 caso 2: sem programa selecionado, Hoje oferece seleção expl
     vm.runInContext(`selectTodayProgram('2')`, env.context);
     assert.equal(vm.runInContext('AppState.programDetailState.programId', env.context), '2');
     const html = env.getElementById('todayRecommendationContainer').innerHTML;
-    assert.match(html, /Cronograma Avançado de 8 Semanas/, 'após seleção explícita, a recomendação passa a ser o programa escolhido');
+    assert.match(html, /Programa Kegel/, 'após seleção explícita, a recomendação passa a ser o programa escolhido');
 }
 console.log('E08.5 caso 3: seleção explícita do usuário é gravada e vira a recomendação exibida.');
 

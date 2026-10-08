@@ -1,5 +1,37 @@
 # Registro de execução
 
+## 2026-10-08 — E14 Bracing McGill Adaptado, Agenda 7 Dias, Renomeação Kegel & Aba Pausas Flutuante — CONCLUÍDO
+
+- **Objetivos Realizados:**
+  1. **E14 Reformulação Clínica do Bracing no Banco e em Pé (McGill Adaptado):**
+     - Substituição da repetição de exercício único por matriz progressiva de 8 semanas x 2 sessões (Sessão A e Sessão B) x 3 exercícios distintos por sessão (totalizando 48 variações estruturadas).
+     - Execução estritamente restrita a posições sentada (em banco/cadeira estável) ou em pé (zero solo/chão).
+     - Cada sessão inclui preparação (15s), 3 exercícios clínicos com 3 séries cada e descansos (20s), transição entre exercícios e checagem final de qualidade (20s).
+  2. **Correção de 7 Dias Semanais no Bracing (ID 1) e Stomach Vacuum (ID 3):**
+     - Todas as 8 semanas do Programa 1 (Bracing) e Programa 3 (Vacuum) agora declaram explicitamente `weeklyTargetDays: 7` no catálogo do `AppState`.
+     - Exibição de consistência semanal uniforme (D1 a D7) em todos os programas de treino.
+  3. **Renomeação Oficial para "Programa Kegel" (ID 2):**
+     - Programa ID `2` atualizado de `"Cronograma Avançado de 8 Semanas"` para `"Programa Kegel"`.
+     - Preservação estrita do ID `'2'`, regras de dados e compatibilidade com snapshots salvos no `localStorage`.
+  4. **Modo Treino Flutuante Nativo em Todos os Exercícios da Aba Pausas:**
+     - Rotinas de Alongamentos (Circuito Ergonômico, exercícios 1 a 4, SOS Coluna) conectadas a `AndroidBridge.startWorkoutSession`.
+     - Pausa de Resposta de 3 Minutos conectada ao serviço com contagem unificada e controle de ciclo.
+     - Sessões de Respiração Guiada do Bloco Mente integradas ao `WorkoutForegroundService` e `WorkoutOverlayController`.
+     - Implementados handlers nativos (`handleNativeStretchState`, `completeStretchFromNative`, `handleNativeBreathState`, `handleNativeResponsivePauseState`) garantindo fonte única de verdade temporal e zero timers concorrentes.
+- **Verificações e Gates:**
+  - Equivalência HTML (`index.html` e `app/src/main/assets/index.html`): byte a byte idênticos (`cmp -s`).
+  - Novo teste de regressão criado: `diagnostics/e14-bracing-pausas-floating.test.cjs` cobrindo 100% das novas regras e restrições posturais.
+  - Testes em `diagnostics/e07-programas-red.cjs` e `diagnostics/e08-5-hoje-recommendation.test.cjs` atualizados para reconhecer "Programa Kegel".
+  - Execução de toda a suíte `diagnostics/*.test.cjs`: 100% PASS.
+  - Consistência de SHAs (`scripts/check-doc-sha.sh`): PASS.
+- **Arquivos Alterados/Criados:**
+  - `index.html` e `app/src/main/assets/index.html`
+  - `ROADMAP.md`
+  - `docs/roadmap/execucao.md`
+  - `diagnostics/e14-bracing-pausas-floating.test.cjs` (novo)
+  - `diagnostics/e07-programas-red.cjs`
+  - `diagnostics/e08-5-hoje-recommendation.test.cjs`
+
 ## 2026-09-28 — Implementação e Auditoria: FUTURA — Modo Treino Flutuante (CP1 a CP7) — CONCLUÍDO
 
 - **Objetivo Realizado:** Implementação completa da etapa planejada "Modo Treino Flutuante" (Floating Workout Mode), permitindo exibir e controlar treinos ativos sobre outros aplicativos Android através de overlay de sistema (`SYSTEM_ALERT_WINDOW`).
