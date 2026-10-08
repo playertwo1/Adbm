@@ -19,8 +19,8 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, estabiliza�
 
 ## Versão Atual
 
-- **Versão base local:** `1.1.36` (`versionCode 36`)
-- **Última Release publicada:** `1.1.39` (`versionCode 39`) — traz a implementação completa do **Modo Treino Flutuante (Overlay Nativo CP1 a CP7)** com controles táteis diretos, saída segura de retenção e preferências personalizáveis no perfil.
+- **Versão base local:** `1.1.40` (`versionCode 40`)
+- **Última Release publicada:** `1.1.40` (`versionCode 40`) — traz a reformulação do **Bracing McGill em Banco e em Pé (E14)**, correção da agenda de 7 dias, renomeação do **Programa Kegel**, Modo Treino Flutuante em todas as pausas, áudio ducking e acessibilidade TalkBack.
 - **Downloads:** O APK assinado para celular e relógio está disponível na aba de [Releases](https://github.com/playertwo1/Adbm/releases).
 - **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.
 

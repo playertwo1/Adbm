@@ -3,9 +3,11 @@
 Todas as mudanças notáveis deste projeto são documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e adota o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [Não lançado]
+
 ---
 
-## [Não lançado]
+## [1.1.40] - 2026-10-08
 
 ### Adicionado
 - **E14 — Reformulação Clínica do Bracing no Banco e em Pé (McGill Adaptado):**
