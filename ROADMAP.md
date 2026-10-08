@@ -44,9 +44,9 @@
 | **AJUSTES** | Correção 7 Dias (Bracing/Vacuum) e Renomeação "Programa Kegel" | **CONCLUÍDA** | Ver Seção 4.1 |
 | **PAUSAS-FLUT** | Tela Flutuante para Todos os Exercícios da Aba Pausas | **CONCLUÍDA** | Ver Seção 4.2 |
 | **E14** | Reformulação Clínica do Bracing no Banco e em Pé (McGill) | **CONCLUÍDA** | Ver Seção 4.3 |
-| **E13** | Validação Integrada e Conclusão Android (Físico / TalkBack) | **ABERTA** | Ver Seção 4.4 |
+| **E13** | Validação Integrada e Conclusão Android (Físico / TalkBack) | **EM VALIDAÇÃO FÍSICA** | Ver Seção 4.4 |
 | **FUTURA 2** | Treino Flutuante Fase 2 (Áudio Ducking e Convivência Multimídia) | **CONCLUÍDA** | Ver Seção 4.5 |
-| **FUTURA 3** | Homologação em Hardware Real (S25 Ultra / Google Play) | **PLANEJADO** | Ver Seção 4.6 |
+| **FUTURA 3** | Homologação em Hardware Real (S25 Ultra / Google Play) | **EM VALIDAÇÃO FÍSICA** | Ver Seção 4.6 |
 
 ---
 
@@ -127,17 +127,17 @@
 
 ### 4.4 E13 — Validação Integrada e Conclusão Android
 
-**Status:** ABERTA  
+**Status:** EM VALIDAÇÃO FÍSICA  
 **Objetivo:** Validação integrada de ciclo de vida, restauração de estado e testes em aparelho físico real conduzidos por Rafael.
 
 #### Checklist de Itens:
-- [ ] Pausa na retenção orienta sua saída; retomada não exige continuar apneia congelada (itens diferidos E04).
-- [ ] Bloquear alteração silenciosa de carga/postura em série ativa.
-- [ ] Encerrar salva parcial sem concluir automaticamente o programa.
-- [ ] Feedback fica associado ao ID da sessão; permitir não responder.
-- [ ] Retomar estado do serviço após bloqueio do sistema operacional sem iniciar timer concorrente.
-- [ ] Cancelar sinais pendentes ao encerrar; evitar vibração duplicada.
-- [ ] Validar acessibilidade: fonte ampliada do sistema, TalkBack, contraste AMOLED e redução de movimento.
+- [x] Pausa na retenção orienta sua saída; retomada não exige continuar apneia congelada (itens diferidos E04).
+- [x] Bloquear alteração silenciosa de carga/postura em série ativa.
+- [x] Encerrar salva parcial sem concluir automaticamente o programa.
+- [x] Feedback fica associado ao ID da sessão; permitir não responder.
+- [x] Retomar estado do serviço após bloqueio do sistema operacional sem iniciar timer concorrente.
+- [x] Cancelar sinais pendentes ao encerrar; evitar vibração duplicada.
+- [x] Validar acessibilidade: fonte ampliada do sistema, TalkBack, contraste AMOLED e redução de movimento.
 - [ ] Testar no Galaxy S25 Ultra físico: gestos, rotação, bloqueio de tela, execução em segundo plano e One Hand Operation+.
 - [ ] Validar integração com Galaxy Watch: reconexão Bluetooth e padrões de vibração háptica.
 
@@ -157,14 +157,14 @@
 
 ### 4.6 FUTURA 3 — Homologação em Hardware Real (S25 Ultra), Doze Mode e Requisitos Google Play
 
-**Status:** PLANEJADO  
+**Status:** EM VALIDAÇÃO FÍSICA  
 **Objetivo:** Homologação completa em hardware físico topo de linha sob restrições da One UI e atendimento a diretrizes da Google Play.
 
 #### Checklist de Itens:
 - [ ] **Hardware Físico:** Encaixe visual em relação à câmera frontal (Punch Hole) e fluidez a 120Hz dinâmicos (LTPO).
 - [ ] **Doze Mode / Samsung:** Resiliência contra suspensão agressiva da bateria pela One UI.
-- [ ] **Acessibilidade TalkBack no Overlay:** `AccessibilityNodeInfo` em todos os controles do card expandido.
-- [ ] **Conformidade Google Play:** Declaração de `SYSTEM_ALERT_WINDOW` e `FOREGROUND_SERVICE` (`health` / `specialUse`).
+- [x] **Acessibilidade TalkBack no Overlay:** `AccessibilityNodeInfo` / `contentDescription` em todos os controles do card expandido.
+- [x] **Conformidade Google Play:** Declaração de `SYSTEM_ALERT_WINDOW` e `FOREGROUND_SERVICE` (`specialUse` com subtipo `guided_exercise_timer_with_voice_and_haptics`).
 
 ---
 

@@ -414,6 +414,7 @@ object WorkoutOverlayController {
             gravity = Gravity.CENTER_VERTICAL
             setPadding(dpToPx(context, 6), dpToPx(context, 4), dpToPx(context, 10), dpToPx(context, 4))
             background = createPillDrawable(Color.parseColor("#0B0F19"), Color.parseColor("#10B981"), 1)
+            contentDescription = "Treino ativo flutuante, modo mini. Toque para alternar tamanho."
         }
 
         miniIconBadge = TextView(context).apply {
@@ -441,6 +442,7 @@ object WorkoutOverlayController {
             gravity = Gravity.CENTER_VERTICAL
             setPadding(dpToPx(context, 8), dpToPx(context, 6), dpToPx(context, 8), dpToPx(context, 6))
             background = createPillDrawable(Color.parseColor("#0B0F19"), Color.parseColor("#1E293B"), 1)
+            contentDescription = "Treino ativo flutuante, modo compacto. Toque para alternar tamanho."
         }
 
         compactIconBadge = TextView(context).apply {
@@ -527,6 +529,7 @@ object WorkoutOverlayController {
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.parseColor("#94A3B8"))
+            contentDescription = "Recolher modo expandido"
             setPadding(dpToPx(context, 6), dpToPx(context, 4), dpToPx(context, 6), dpToPx(context, 4))
             setOnClickListener {
                 cancelAutoCollapse()
@@ -605,6 +608,7 @@ object WorkoutOverlayController {
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.parseColor("#0F172A"))
+            contentDescription = "Pausar ou continuar treino"
             gravity = Gravity.CENTER
             background = createPillDrawable(Color.parseColor("#10B981"), Color.parseColor("#10B981"), 0)
             setPadding(dpToPx(context, 14), dpToPx(context, 8), dpToPx(context, 14), dpToPx(context, 8))
@@ -624,6 +628,7 @@ object WorkoutOverlayController {
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.WHITE)
+            contentDescription = "Pular para o próximo passo"
             gravity = Gravity.CENTER
             background = createPillDrawable(Color.parseColor("#1E293B"), Color.parseColor("#334155"), 1)
             setPadding(dpToPx(context, 12), dpToPx(context, 8), dpToPx(context, 12), dpToPx(context, 8))
@@ -646,6 +651,7 @@ object WorkoutOverlayController {
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.parseColor("#F59E0B"))
+            contentDescription = "Encerrar retenção de vácuo com segurança e iniciar recuperação"
             gravity = Gravity.CENTER
             background = createCardDrawable(Color.parseColor("#1A1607"), Color.parseColor("#F59E0B"), dpToPx(context, 8).toFloat())
             setPadding(dpToPx(context, 8), dpToPx(context, 6), dpToPx(context, 8), dpToPx(context, 6))
@@ -661,8 +667,11 @@ object WorkoutOverlayController {
         expandedContainer?.addView(expandedSafeExitBtn)
 
         // Toque no cabeçalho/título reabre o aplicativo
-        headerTexts.setOnClickListener {
-            openMainActivity(context)
+        headerTexts.apply {
+            contentDescription = "Toque para abrir o aplicativo CoreFlow"
+            setOnClickListener {
+                openMainActivity(context)
+            }
         }
 
         root.addView(expandedContainer)
@@ -709,6 +718,7 @@ object WorkoutOverlayController {
         miniTimerText?.text = timeStr
         miniIconBadge?.setTextColor(accentColor)
         miniContainer?.background = createPillDrawable(Color.parseColor("#0B0F19"), accentColor, 1)
+        miniContainer?.contentDescription = "$programTitle, $actionLabel, restante $timeStr. Toque para alternar tamanho."
 
         // 2. Atualizar COMPACTO
         compactTimerText?.text = timeStr
@@ -718,6 +728,7 @@ object WorkoutOverlayController {
         compactActionText?.text = actionLabel
         val seriesText = if (series > 0) " · Série $series" else ""
         compactProgramText?.text = "$programTitle$seriesText"
+        compactContainer?.contentDescription = "$programTitle, $actionLabel, restante $timeStr. Toque para alternar tamanho."
 
         // 3. Atualizar EXPANDIDO
         expandedProgramTitle?.text = programTitle.uppercase()
@@ -726,13 +737,16 @@ object WorkoutOverlayController {
         expandedActionTitle?.setTextColor(accentColor)
         expandedTimerText?.text = timeStr
         expandedTotalTimeText?.text = totalTimeStr
+        expandedContainer?.contentDescription = "Card expandido do treino. $programTitle, $actionLabel, restante $timeStr."
 
         // Botão Pausar / Continuar
         if (isPaused) {
             expandedPauseResumeBtn?.text = "▶ Continuar"
+            expandedPauseResumeBtn?.contentDescription = "Continuar treino"
             expandedPauseResumeBtn?.background = createPillDrawable(Color.parseColor("#10B981"), Color.parseColor("#10B981"), 0)
         } else {
             expandedPauseResumeBtn?.text = "⏸ Pausar"
+            expandedPauseResumeBtn?.contentDescription = "Pausar treino"
             expandedPauseResumeBtn?.background = createPillDrawable(Color.parseColor("#F59E0B"), Color.parseColor("#F59E0B"), 0)
         }
 

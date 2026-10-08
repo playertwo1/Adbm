@@ -91,7 +91,16 @@ assert(serviceCode.includes('releaseAudioDucking'), 'WorkoutForegroundService de
 assert(serviceCode.includes('UtteranceProgressListener'), 'WorkoutForegroundService deve monitorar término da fala via UtteranceProgressListener');
 console.log('✓ FUTURA 2: Áudio Ducking nativo implementado no WorkoutForegroundService');
 
-// 9. Verificar paridade estrita entre index.html e app/src/main/assets/index.html
+// 9. Verificar Acessibilidade TalkBack no WorkoutOverlayController.kt (FUTURA 3 / E13)
+assert(overlayCode.includes('contentDescription = "Treino ativo flutuante, modo mini'), 'Mini view deve ter contentDescription');
+assert(overlayCode.includes('contentDescription = "Treino ativo flutuante, modo compacto'), 'Compact view deve ter contentDescription');
+assert(overlayCode.includes('contentDescription = "Recolher modo expandido"'), 'Botão recolher deve ter contentDescription');
+assert(overlayCode.includes('contentDescription = "Pausar ou continuar treino"'), 'Botão pausar/continuar deve ter contentDescription');
+assert(overlayCode.includes('contentDescription = "Pular para o próximo passo"'), 'Botão pular deve ter contentDescription');
+assert(overlayCode.includes('contentDescription = "Encerrar retenção de vácuo com segurança e iniciar recuperação"'), 'Botão saída segura deve ter contentDescription');
+console.log('✓ FUTURA 3 / E13: Acessibilidade TalkBack (contentDescription) implementada em todos os controles do overlay');
+
+// 10. Verificar paridade estrita entre index.html e app/src/main/assets/index.html
 assert(fs.existsSync(assetsHtmlPath), 'app/src/main/assets/index.html não encontrado');
 const assetsHtmlContent = fs.readFileSync(assetsHtmlPath, 'utf8');
 assert.strictEqual(

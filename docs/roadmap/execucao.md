@@ -1,5 +1,23 @@
 # Registro de execução
 
+## 2026-10-08 — E13 & FUTURA 3: Acessibilidade TalkBack no Overlay e Validação Prévia — CONCLUÍDO NO CÓDIGO
+
+- **Objetivos Realizados:**
+  1. **Acessibilidade TalkBack Completa no Modo Treino Flutuante (`WorkoutOverlayController.kt`):**
+     - Atribuição de `contentDescription` acessível a todos os controles e cards: `miniContainer`, `compactContainer`, `expandedContainer`, `collapseBtn`, `expandedPauseResumeBtn`, `expandedSkipBtn`, `expandedSafeExitBtn` e `headerTexts`.
+     - Atualização dinâmica em tempo de execução via `bindStateToViews`: o leitor de tela anuncia nome do programa, ação atual, tempo restante e o estado do botão (ex.: "Continuar treino" vs "Pausar treino").
+  2. **Conformidade de Serviços e Políticas Google Play:**
+     - Validação da declaração e subtipo de `FOREGROUND_SERVICE` (`specialUse` com subtipo `guided_exercise_timer_with_voice_and_haptics`), `FOREGROUND_SERVICE_MEDIA_PLAYBACK` e `SYSTEM_ALERT_WINDOW`.
+  3. **Validação de Código e Diagnósticos:**
+     - Teste de regressão `diagnostics/floating-workout-overlay.test.cjs` validando 100% dos `contentDescription` dos controles.
+     - Suíte completa de diagnósticos `diagnostics/*.test.cjs` com 100% PASS.
+     - E13 e FUTURA 3 atualizados para status **EM VALIDAÇÃO FÍSICA** (restante restrito aos testes em aparelho físico Galaxy S25 Ultra e Galaxy Watch conduzidos por Rafael).
+- **Arquivos Alterados:**
+  - `app/src/main/java/com/example/WorkoutOverlayController.kt`
+  - `diagnostics/floating-workout-overlay.test.cjs`
+  - `ROADMAP.md`
+  - `docs/roadmap/execucao.md`
+
 ## 2026-10-08 — Implementação FUTURA 2: Treino Flutuante Fase 2 (Áudio Ducking e Persistência de Coordenadas) — CONCLUÍDO
 
 - **Objetivos Realizados:**
