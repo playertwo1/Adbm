@@ -900,3 +900,17 @@ Próximo passo:
 - **Itens diferidos:** sequência de fases (preparação, inspiração, expiração, retenção, retorno, recuperação); "Encerrar retenção" registra executado e vai ao retorno/recuperação; pausa na retenção orienta a saída sem exigir apneia congelada na retomada; bloqueio de alteração silenciosa de carga/postura em série ativa; encerrar salva parcial sem concluir programa; feedback associado ao ID com resposta opcional; retomada do estado do serviço após bloqueio sem timer concorrente; cancelamento de sinais pendentes ao encerrar sem vibração duplicada.
 - **Não alterado:** nenhum código funcional, ID, armazenamento ou protocolo de treino. Somente `ROADMAP.md` (estado de E04, checklist de E13, tabela de sequência e linha de status) e este registro.
 - **Próximo passo:** E09 (Tela 10: Perfil), com a correção do Finding 1 da E08.6-R incluída no escopo, já que o item de aceite de lembretes de E09 incide sobre o mesmo código.
+
+## 2026-10-09 — Release v1.1.42 (code 42) / Novo Modelo de Bracing (8 Semanas)
+
+- **Novo Modelo de Bracing Progressivo (8 Semanas):**
+  - Matriz progressiva de 8 semanas com meta de 5 dias semanais (`weeklyTargetDays: 5`) e meta diária de 2 sessões (`dailyTarget: 2`).
+  - Biblioteca completa de 8 exercícios (BR-01 a BR-08), com semana 8 estruturada em circuito de 2 voltas completas.
+  - 100% de exercícios no banco ou em pé (zero posturas no solo/chão).
+  - 4 novas ilustrações anatômicas AMOLED vetoriais geradas e integradas para BR-04, BR-05, BR-06 e BR-08, exibidas tanto no app aberto quanto no Modo Treino Flutuante expandido.
+  - Variedade inteligente entre Sessão A e B com rotação de abertura.
+- **Validação de Testes:**
+  - Paridade estrita HTML 100% verificada (`cmp -s index.html app/src/main/assets/index.html`).
+  - Todos os 20+ testes da suíte de diagnóstico em `diagnostics/*.test.cjs` executados com sucesso (100% PASS).
+- **Contrato de Versão:** `CORE_FLOW_VERSION_CODE=42`, `CORE_FLOW_VERSION_NAME=1.1.42` sincronizados entre `gradle.properties`, `app/build.gradle.kts`, `wear/build.gradle.kts`, `README.md` e `CHANGELOG.md`.
+

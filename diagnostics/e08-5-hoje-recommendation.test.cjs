@@ -118,7 +118,7 @@ console.log('E08.5 caso 1: programa já selecionado continua sendo a recomendaç
     const html = env.getElementById('todayRecommendationContainer').innerHTML;
     assert.match(html, /id="todayProgramSelection"/, 'sem seleção prévia e sem progresso real, Hoje deve oferecer escolha explícita');
     assert.doesNotMatch(html, /todayRecommendationCard/, 'não pode fabricar uma recomendação sem base real');
-    assert.match(html, /Bracing: Controle e Automação/);
+    assert.match(html, /Bracing: Treino de 8 Semanas/);
     assert.match(html, /Programa Kegel/);
     assert.match(html, /Stomach Vacuum: 8 Semanas no Escritório/);
     assert.doesNotMatch(html, /Mindfulness 8 Semanas/, 'Mindfulness não é candidato de seleção neste fluxo (fora do escopo desta fatia)');

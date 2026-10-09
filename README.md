@@ -19,8 +19,8 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, estabiliza�
 
 ## Versão Atual
 
-- **Versão base local:** `1.1.41` (`versionCode 41`)
-- **Última Release publicada:** `1.1.41` (`versionCode 41`) — traz as ilustrações anatômicas das posturas de Bracing McGill (no app aberto e no modo flutuante expandido), restauração das animações dinâmicas de respiração (Box Breathing em 60 FPS com traço contínuo e expansão/contração esférica) e sincronização nativa completa.
+- **Versão base local:** `1.1.42` (`versionCode 42`)
+- **Última Release publicada:** `1.1.42` (`versionCode 42`) — reformulação clínica do Bracing para modelo progressivo de 8 semanas (5 dias/semana, sentado ou em pé) com novas ilustrações anatômicas AMOLED dedicadas (BR-01 a BR-08), variedade de sessão diária e sincronização nativa completa.
 - **Downloads:** O APK assinado para celular e relógio está disponível na aba de [Releases](https://github.com/playertwo1/Adbm/releases).
 - **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.
 

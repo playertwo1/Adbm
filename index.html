@@ -831,7 +831,7 @@
                 <!-- 4. Botão para abrir o Programa de 6 Semanas -->
                 <button onclick="openBracingProgramModal()" class="w-full py-3.5 mt-2 rounded-2xl bg-slate-800/80 hover:bg-slate-750 border border-slate-700/80 text-emerald-400 font-bold text-sm flex items-center justify-center gap-2.5 shadow transition active:scale-95">
                     <i class="fa-solid fa-graduation-cap"></i>
-                    Ver Programa Completo de Bracing (6 Semanas)
+                    Ver Programa Completo de Bracing (8 Semanas)
                 </button>
             </div>
         </section>
@@ -3340,8 +3340,8 @@
             programs: [
                 {
                     id: '1',
-                    title: 'Bracing: Controle e Automação (8 Semanas)',
-                    description: 'Sessões A/B guiadas para controle, estabilidade, movimento e aplicação discreta no trabalho.',
+                    title: 'Bracing: Treino de 8 Semanas',
+                    description: 'Programa progressivo de 8 semanas para ativar e estabilizar o tronco, sentado ou em pé, sem equipamento.',
                     expanded: false,
                     currentPhaseIndex: 0,
                     currentDayInWeek: 1,
@@ -3351,14 +3351,14 @@
                     reminderTimes: ['09:00', '15:00'],
                     remindersEnabled: false,
                     phases: [
-                        { title: 'Semana 1: Consciência 360° e Ativação no Banco', details: 'Sessão A: Respiração 360° sentado • Sessão B: Palpação oblíquos e sustentação em pé', weeklyTargetDays: 7, completed: false },
-                        { title: 'Semana 2: Dissociação de Membros e Pelve Neutra', details: 'Sessão A: Marcha sentada Sahrmann • Sessão B: Bracing em pé e Sit-to-Stand', weeklyTargetDays: 7, completed: false },
-                        { title: 'Semana 3: Anti-Rotação e Resistência Isométrica', details: 'Sessão A: Pallof press sentado • Sessão B: Bird Dog em pé com apoio na mesa', weeklyTargetDays: 7, completed: false },
-                        { title: 'Semana 4: Anti-Extensão e Cadeia Lateral', details: 'Sessão A: Elevação bimanual sentado • Sessão B: Prancha inclinada no banco', weeklyTargetDays: 7, completed: false },
-                        { title: 'Semana 5: Cargas Assimétricas e Antimovimento Bípede', details: 'Sessão A: Chop & Lift sentado • Sessão B: Pallof em pé e Suitcase carry no lugar', weeklyTargetDays: 7, completed: false },
-                        { title: 'Semana 6: Coordenação e Controle Reativo', details: 'Sessão A: Transição ativa relaxa/ativa • Sessão B: Equilíbrio unipodal e prancha no banco', weeklyTargetDays: 7, completed: false },
-                        { title: 'Semana 7: Automação Cotidiana e Tarefas de Trabalho', details: 'Sessão A: Bracing em digitação e torção • Sessão B: Agachamento com alcance e empurrar parede', weeklyTargetDays: 7, completed: false },
-                        { title: 'Semana 8: Consolidação e Protocolo Vitalício', details: 'Sessão A: Tríade McGill adaptada • Sessão B: Teste de resistência e manutenção diária', weeklyTargetDays: 7, completed: false }
+                        { title: 'Semana 1: Consciência abdominal', details: 'Sentado e em pé • 2 exercícios • 3 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 2: Sustentação e respiração', details: 'Sentado e em pé • 2 exercícios • 4 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 3: Controle com movimento sentado', details: 'Sentado e em pé • 3 exercícios • 4 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 4: Resistência com movimentos simples', details: 'Sentado e em pé • 3 exercícios • 5 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 5: Controle postural', details: 'Sentado e em pé • 3 exercícios • 5 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 6: Resistência entre membros', details: 'Sentado e em pé • 3 exercícios • 6 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 7: Controle contra rotação', details: 'Sentado e em pé • 3 exercícios • 6 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 8: Circuito de domínio', details: 'Em pé e sentado • 5 exercícios • 2 voltas • 5 dias por semana', weeklyTargetDays: 5, completed: false }
                     ]
                 },
                 {
@@ -9653,7 +9653,7 @@
         /* -------------------------------------------------------------
            ABA 3: PROGRAMAS & EVOLUÇÃO (AVANÇO DIÁRIO 2X AO DIA)
         ------------------------------------------------------------- */
-        function getProgramSteps(progId, phaseIdx) {
+        function getProgramSteps(progId, phaseIdx, sessionNum = null) {
             if (progId === '2') { // Cronograma Avançado de 8 Semanas de Kegel
                 switch (phaseIdx) {
                     case 0: { // Semana 1: Volume Acumulado
@@ -10243,138 +10243,45 @@
                     }
                 }
                 return steps;
-            } else if (progId === '1') { // Program 1: Bracing guiado em 8 semanas (E14: McGill & Sahrmann no Banco e em Pé)
-                const program = AppState.programs.find(program => program.id === '1');
-                const sessionNumber = Math.min((program?.sessionsToday || 0) + 1, program?.dailyTarget || 2);
-                const bracingCircuits = [
-                    // Semana 1: Consciência 360° e Ativação no Banco
-                    [
-                        // Sessão A (Sentado no banco)
-                        [
-                            ['Respiração 360° no Banco', 'Sentado ereto, mãos nas costelas baixas. Inspire expandindo frente, lados e costas sem elevar ombros.', 40, 'img/bracing/bracing_seated_360.jpg'],
-                            ['Pressão Mão-Coxa Isométrica', 'Sentado no banco, pressione as palmas contra as coxas ativando o abdômen sem travar a respiração.', 35, 'img/bracing/bracing_seated_press.jpg'],
-                            ['Coluna Neutra com Bracing', 'Mantenha o alinhamento reto do tronco com bracing suave e respiração ritmada.', 35, 'img/bracing/bracing_seated_360.jpg']
-                        ],
-                        // Sessão B (Sentado e Em Pé)
-                        [
-                            ['Palpação Lateral de McGill', 'Sentado, dedos nos oblíquos. Crie firmeza lateral 360° como se fosse receber um toque.', 40, 'img/bracing/bracing_seated_360.jpg'],
-                            ['Extensão Unilateral no Banco', 'Sentado no banco com tronco travado, estenda um joelho à frente sem inclinar as costas.', 35, 'img/bracing/bracing_seated_leg.jpg'],
-                            ['Bracing em Pé com Apoio', 'Em pé com mãos na mesa/banco, alinhe quadril e tronco mantendo firmeza e respiração livre.', 40, 'img/bracing/bracing_standing_support.jpg']
-                        ]
-                    ],
-                    // Semana 2: Dissociação de Membros e Pelve Neutra
-                    [
-                        // Sessão A (Sentado)
-                        [
-                            ['Marcha Sentada de Sahrmann', 'Sentado ereto, eleve um pé 5cm do chão alternadamente sem oscilar a pelve.', 40, 'img/bracing/bracing_seated_leg.jpg'],
-                            ['Alcance Alternado de Braços', 'Sentado no banco com core firme, eleve um braço à frente na altura do ombro sem curvar a lombar.', 40, 'img/bracing/bracing_seated_arms.jpg'],
-                            ['Inclinação de Tronco Reto (Torso Hinge)', 'Incline o tronco 20° à frente a partir do quadril, mantendo coluna perfeitamente neutra.', 45, 'img/bracing/bracing_seated_hinge.jpg']
-                        ],
-                        // Sessão B (Em Pé)
-                        [
-                            ['Bracing em Pé Alinhado', 'Em pé, pés na largura dos ombros. Ative a cinta abdominal mantendo respiração nasal calma.', 40, 'img/bracing/bracing_standing_aligned.jpg'],
-                            ['Marcha Estacionária Lenta', 'Em pé com apoio leve das mãos, eleve um joelho devagar preservando o tronco imóvel.', 45, 'img/bracing/bracing_standing_single_leg.jpg'],
-                            ['Sentar e Levantar Controlado', 'Inicie em pé e sente no banco devagar sem perder a rigidez da coluna, depois suba.', 45, 'img/bracing/bracing_sit_to_stand.jpg']
-                        ]
-                    ],
-                    // Semana 3: Anti-Rotação e Resistência Isométrica
-                    [
-                        // Sessão A (Sentado)
-                        [
-                            ['Pallof Press Isométrico Sentado', 'Sentado no banco, mãos unidas no peito; estenda os braços à frente resistindo à rotação.', 45, 'img/bracing/bracing_seated_arms.jpg'],
-                            ['Pressão Cruzada Mão-Joelho', 'Sentado, empurre a mão direita contra o joelho esquerdo ativando os oblíquos cruzados.', 45, 'img/bracing/bracing_seated_press.jpg'],
-                            ['Dobradiça de Tronco Sustentada', 'Incline o tronco reto a 30° no banco e sustente a posição com ativação lombar e abdominal.', 45, 'img/bracing/bracing_seated_hinge.jpg']
-                        ],
-                        // Sessão B (Em Pé)
-                        [
-                            ['Bird Dog em Pé com Apoio', 'Mãos no banco/mesa, estenda uma perna para trás mantendo a pelve e tronco nivelados.', 45, 'img/bracing/bracing_standing_support.jpg'],
-                            ['Postura Unipodal Nivelada', 'Em pé, tire um pé do chão sustentando o equilíbrio com o core travado e pelve firme.', 40, 'img/bracing/bracing_standing_single_leg.jpg'],
-                            ['Auto-Perturbação Tátil nas Costelas', 'Em pé, dê toques suaves nas laterais do abdômen mantendo o tronco completamente firme.', 45, 'img/bracing/bracing_standing_aligned.jpg']
-                        ]
-                    ],
-                    // Semana 4: Anti-Extensão e Cadeia Lateral
-                    [
-                        // Sessão A (Sentado)
-                        [
-                            ['Elevação Bimanual Acima da Cabeça', 'Sentado no banco, eleve ambos os braços acima da cabeça sem arquear a coluna lombar.', 45, 'img/bracing/bracing_seated_arms.jpg'],
-                            ['Inclinação Lateral Isométrica no Banco', 'Sentado, incline o tronco 15° para o lado sem girar os ombros, segurando a firmeza lateral.', 45, 'img/bracing/bracing_seated_hinge.jpg'],
-                            ['Pressão Cruzada Diagonal Submáxima', 'Sentado, exerça força cruzada mão e coxa oposta mantendo respiração contínua e calma.', 50, 'img/bracing/bracing_seated_press.jpg']
-                        ],
-                        // Sessão B (Em Pé)
-                        [
-                            ['Prancha Inclinada no Banco', 'Apoie as mãos no assento do banco em ângulo de 45°. Mantenha linha reta do calcanhar à cabeça.', 45, 'img/bracing/bracing_incline_plank.jpg'],
-                            ['Bird Dog em Pé com Membros Opostos', 'Em pé com apoio, estenda o braço direito à frente e a perna esquerda atrás sem girar a pelve.', 50, 'img/bracing/bracing_standing_support.jpg'],
-                            ['Sentar e Levantar com Pausa Isométrica', 'Agache até quase tocar o banco, segure 3 segundos no ponto crítico e suba firme.', 50, 'img/bracing/bracing_sit_to_stand.jpg']
-                        ]
-                    ],
-                    // Semana 5: Cargas Assimétricas e Antimovimento Bípede
-                    [
-                        // Sessão A (Sentado)
-                        [
-                            ['Chop & Lift Diagonal Sentado', 'Sentado no banco, mova os braços unidos do quadril ao ombro oposto resistindo à torção.', 50, 'img/bracing/bracing_seated_arms.jpg'],
-                            ['Extensão de Perna com Alcance Oposto', 'Sentado, estenda a perna direita e o braço esquerdo simultaneamente mantendo a postura.', 50, 'img/bracing/bracing_seated_leg.jpg'],
-                            ['Carga Assimétrica no Banco (Suitcase Hold)', 'Sentado, segure a contração lateral de um lado simulando segurar uma maleta.', 50, 'img/bracing/bracing_seated_360.jpg']
-                        ],
-                        // Sessão B (Em Pé)
-                        [
-                            ['Pallof Press em Pé sem Apoio', 'Em pé, estenda as mãos unidas à frente resistindo à rotação com pés firmes no chão.', 50, 'img/bracing/bracing_standing_aligned.jpg'],
-                            ['Marcha do Fazendeiro Simulada', 'Em pé, caminhe no lugar com passos controlados mantendo um lado do tronco resistindo ao peso.', 55, 'img/bracing/bracing_standing_single_leg.jpg'],
-                            ['Dobradiça de Quadril em Pé (Hip Hinge)', 'Flexione o quadril para trás com joelhos levemente destravados e coluna reta.', 50, 'img/bracing/bracing_seated_hinge.jpg']
-                        ]
-                    ],
-                    // Semana 6: Coordenação e Controle Reativo
-                    [
-                        // Sessão A (Sentado)
-                        [
-                            ['Transição Ativa de Postura', 'No banco, relaxe por 2s e ative imediatamente o bracing 360°, automatizando a resposta rápida.', 50, 'img/bracing/bracing_seated_360.jpg'],
-                            ['Pressão Unilateral com Fala Livre', 'Pressione a mão na coxa enquanto conta em voz alta de 1 a 10 sem perder o bracing.', 55, 'img/bracing/bracing_seated_press.jpg'],
-                            ['Equilíbrio Isquiático sem Encosto', 'Sentado na ponta do banco, encontre apoio nos ísquios mantendo tronco em auto-alongamento.', 55, 'img/bracing/bracing_seated_360.jpg']
-                        ],
-                        // Sessão B (Em Pé)
-                        [
-                            ['Equilíbrio Unipodal com Alcance Funcional', 'Em pé sobre um pé, alcance a mão à frente tocando um ponto imaginário sem perder a linha.', 50, 'img/bracing/bracing_standing_single_leg.jpg'],
-                            ['Prancha Inclinada com Toque no Ombro', 'No banco em prancha inclinada, tire uma mão do apoio e toque o ombro oposto sem girar o quadril.', 55, 'img/bracing/bracing_incline_plank.jpg'],
-                            ['Passo à Frente com Parada Brusca', 'Dê um passo firme à frente e trave o movimento imediatamente com o core estável.', 55, 'img/bracing/bracing_standing_aligned.jpg']
-                        ]
-                    ],
-                    // Semana 7: Automação Cotidiana e Tarefas de Trabalho
-                    [
-                        // Sessão A (Sentado)
-                        [
-                            ['Bracing Submáximo em Tarefas', 'Mantenha 30% de firmeza abdominal sustentada enquanto digita ou simula atividade no banco.', 55, 'img/bracing/bracing_seated_360.jpg'],
-                            ['Torção Resistida Isométrica no Banco', 'Segure a lateral do banco e tente girar o tronco sem produzir movimento visível.', 55, 'img/bracing/bracing_seated_arms.jpg'],
-                            ['Transição Sentar-Levantar com Pausa Intermediária', 'Levante do banco, pare a meio caminho por 4 segundos sustentando a carga e termine de subir.', 60, 'img/bracing/bracing_sit_to_stand.jpg']
-                        ],
-                        // Sessão B (Em Pé)
-                        [
-                            ['Agachamento Funcional com Alcance Baixo', 'Em pé, dobre quadris e joelhos simulando pegar um objeto do chão com coluna neutra protegida.', 55, 'img/bracing/bracing_sit_to_stand.jpg'],
-                            ['Empurrar Isométrico contra a Parede', 'Em pé, empurre as palmas contra a parede com força progressiva mantendo a coluna estável.', 60, 'img/bracing/bracing_wall_push.jpg'],
-                            ['Marcha com Mudança Rápida de Direção', 'Em passos curtos no lugar, gire 90° o apoio dos pés travando o tronco no eixo vertical.', 60, 'img/bracing/bracing_standing_single_leg.jpg']
-                        ]
-                    ],
-                    // Semana 8: Consolidação e Protocolo Vitalício
-                    [
-                        // Sessão A (Sentado e Em Pé)
-                        [
-                            ['Tríade McGill Adaptada (Banco & Em Pé)', 'Circuito sequencial: sustentação no banco, Bird Dog em pé e Pallof sem apoio.', 60, 'img/bracing/bracing_standing_support.jpg'],
-                            ['Bracing sob Esforço Respiratório e Fala', 'Mantenha a parede abdominal rígida enquanto respira profundamente e fala sem interrupção.', 60, 'img/bracing/bracing_seated_360.jpg'],
-                            ['Checagem Postural Expressa de 15 Segundos', 'Ativação reflexa imediata de auto-alongamento e rigidez protetora para uso no dia a dia.', 60, 'img/bracing/bracing_standing_aligned.jpg']
-                        ],
-                        // Sessão B (Em Pé)
-                        [
-                            ['Teste de Resistência do Core em Pé', 'Sustentação isométrica contínua em postura ereta com desafios táteis e respiração livre.', 60, 'img/bracing/bracing_standing_aligned.jpg'],
-                            ['Circuito Integrado de Trabalho', 'Sequência funcional: levantar do banco, caminhar 5 passos com core firme e sentar controlado.', 60, 'img/bracing/bracing_sit_to_stand.jpg'],
-                            ['Protocolo de Manutenção Diária Vitalícia', 'Rotina expressa de 3 minutos para manutenção definitiva da estabilidade lombar no trabalho.', 60, 'img/bracing/bracing_seated_360.jpg']
-                        ]
-                    ]
+            } else if (progId === '1') { // Programa 1: Bracing de 8 semanas, 5 dias/semana, sentado ou em pé, sem equipamento
+                // Tabela do documento TREINO_BRACING_8_SEMANAS. Por série: [id, séries, repetições, segundos sustentados].
+                // "Por lado/perna" já está somado nas repetições. Cada repetição tem ~15 s de descanso entre elas.
+                const BR = {
+                    'BR-01': ['Bracing sentado', 'Sentado com pés apoiados e tronco ereto. Inspire suave, firme o abdômen na frente, nas laterais e atrás, sem prender o ar.', 'img/bracing/bracing_seated_360.jpg'],
+                    'BR-02': ['Bracing em pé', 'Em pé, pés na largura do quadril e joelhos destravados. Firme o abdômen sem mudar a postura e siga respirando.', 'img/bracing/bracing_standing_aligned.jpg'],
+                    'BR-03': ['Marcha sentada com bracing', 'Sentado, eleve um pé poucos centímetros sem inclinar o tronco. Alterne as pernas a cada repetição.', 'img/bracing/bracing_seated_leg.jpg'],
+                    'BR-04': ['Elevação de calcanhares em pé', 'Em pé, suba os calcanhares devagar, cerca de 2 s subindo e 2 s descendo, sem projetar o tronco.', 'img/bracing/bracing_standing_calf_raise.jpg'],
+                    'BR-05': ['Inclinação do quadril em pé', 'Em pé, leve o quadril para trás e incline o tronco de 15 a 30 graus a partir do quadril, com a lombar neutra.', 'img/bracing/bracing_standing_hip_hinge.jpg'],
+                    'BR-06': ['Base desencontrada com bracing', 'Um pé meio passo à frente. Transfira pouco peso entre os pés sem girar o tronco. Troque a posição dos pés entre as repetições.', 'img/bracing/bracing_staggered_stance.jpg'],
+                    'BR-07': ['Joelho contra mão oposta, sentado', 'Sentado, apoie a palma na parte de cima da coxa, perto do joelho, e tente elevar a coxa com resistência suave. Pouco ou nenhum movimento. Troque de lado.', 'img/bracing/bracing_seated_press.jpg'],
+                    'BR-08': ['Marcha em pé com braço oposto', 'Em pé, eleve discretamente um joelho e mova o braço oposto à frente, sem girar o corpo. Alterne os lados.', 'img/bracing/bracing_standing_march_arm.jpg']
+                };
+                const bracingWeeks = [
+                    { exercises: [['BR-01', 2, 6, 5], ['BR-02', 1, 6, 5]] },
+                    { exercises: [['BR-01', 2, 6, 8], ['BR-02', 2, 6, 8]] },
+                    { exercises: [['BR-01', 1, 5, 8], ['BR-03', 2, 12, 3], ['BR-02', 1, 6, 10]] },
+                    { exercises: [['BR-03', 2, 16, 3], ['BR-04', 2, 10, 4], ['BR-02', 1, 8, 10]] },
+                    { exercises: [['BR-05', 2, 8, 4], ['BR-06', 2, 10, 8], ['BR-01', 1, 6, 10]] },
+                    { exercises: [['BR-07', 2, 12, 5], ['BR-05', 2, 8, 4], ['BR-04', 2, 12, 4]] },
+                    { exercises: [['BR-08', 2, 12, 4], ['BR-07', 2, 14, 6], ['BR-06', 2, 12, 10]] },
+                    { laps: 2, exercises: [['BR-02', 1, 5, 10], ['BR-05', 1, 8, 4], ['BR-07', 1, 12, 6], ['BR-08', 1, 12, 5], ['BR-06', 1, 8, 8]] }
                 ];
-                const safePhase = Math.min(Math.max(phaseIdx, 0), bracingCircuits.length - 1);
-                const safeSession = sessionNumber === 2 ? 1 : 0;
-                const exercises = bracingCircuits[safePhase][safeSession];
+                const REP_REST = 15;   // segundos entre repetições de uma série
+                const SET_REST = 30;   // segundos entre séries do mesmo exercício
+                const LAP_REST = 50;   // segundos entre voltas do circuito (semana 8)
+                const safePhase = Math.min(Math.max(phaseIdx, 0), bracingWeeks.length - 1);
+                const week = bracingWeeks[safePhase];
+                const laps = week.laps || 1;
+                const prog = (typeof AppState !== 'undefined' && AppState.programs && AppState.programs.find(p => p.id === '1')) || (typeof AppState !== 'undefined' && AppState.programs && AppState.programs[0]);
+                const isSessionB = sessionNum === 2 || (sessionNum === null && prog && (prog.sessionsToday || 0) >= 1);
+                const exercisesList = (isSessionB && week.exercises.length > 1)
+                    ? [...week.exercises.slice(1), week.exercises[0]]
+                    : week.exercises;
+                const total = exercisesList.length;
 
                 const steps = [
                     {
-                        title: `Sessão ${sessionNumber === 1 ? 'A' : 'B'}: Preparação`,
+                        title: 'Preparação',
                         instruction: 'Ajuste a posição no banco ou em pé. Respire duas vezes sem esforço. Mantenha coluna neutra e sem dor.',
                         duration: 15,
                         isRest: true,
@@ -10382,52 +10289,66 @@
                         badge: 'PREPARAÇÃO'
                     }
                 ];
-
-                exercises.forEach(([name, instruction, workSeconds, image], exIdx) => {
-                    const exNum = exIdx + 1;
-                    const exImg = image || '';
-                    for (let set = 1; set <= 3; set++) {
+                let series = 0;
+                for (let lap = 1; lap <= laps; lap++) {
+                    if (lap > 1) {
                         steps.push({
-                            title: `Ex ${exNum}/3: ${name} • Série ${set}/3`,
-                            instruction: instruction,
-                            duration: workSeconds,
-                            isRest: false,
-                            voice: set === 1 ? name : `Série ${set} de ${name}`,
-                            badge: `EX ${exNum}/3 • ${set}/3`,
-                            phase: 'controle',
-                            series: (exIdx * 3) + set,
-                            image: exImg
+                            title: 'Descanso entre voltas',
+                            instruction: 'Solte a tensão abdominal, respire normalmente e relaxe ombros e mandíbula.',
+                            duration: LAP_REST,
+                            isRest: true,
+                            voice: 'Descanso entre voltas.',
+                            badge: 'DESCANSO'
                         });
-                        if (set < 3) {
+                    }
+                    exercisesList.forEach(([id, sets, reps, hold], exIdx) => {
+                        const [name, instruction, image] = BR[id];
+                        const exNum = exIdx + 1;
+                        const workSeconds = reps * hold + (reps - 1) * REP_REST;
+                        for (let set = 1; set <= sets; set++) {
+                            series += 1;
                             steps.push({
-                                title: `Recuperação • Ex ${exNum}/3 Série ${set}/3`,
-                                instruction: 'Solte a tensão abdominal, respire normalmente e relaxe ombros e mandíbula.',
+                                title: `${laps > 1 ? `Volta ${lap}/${laps} • ` : ''}Ex ${exNum}/${total}: ${name} • Série ${set}/${sets}`,
+                                instruction: `${reps} repetições de ${hold} s com cerca de ${REP_REST} s de descanso. Continue respirando livremente. ${instruction}`,
+                                duration: workSeconds,
+                                isRest: false,
+                                voice: set === 1 ? name : `Série ${set} de ${name}`,
+                                badge: `EX ${exNum}/${total}`,
+                                phase: 'controle',
+                                series: series,
+                                image: image
+                            });
+                            if (set < sets) {
+                                steps.push({
+                                    title: `Recuperação • Ex ${exNum}/${total} Série ${set}/${sets}`,
+                                    instruction: 'Solte a tensão abdominal, respire normalmente e relaxe ombros e mandíbula.',
+                                    duration: SET_REST,
+                                    isRest: true,
+                                    voice: 'Relaxe completamente.',
+                                    badge: 'RECUPERAÇÃO',
+                                    phase: 'descanso',
+                                    series: series
+                                });
+                            }
+                        }
+                        if (exIdx < total - 1) {
+                            const nextName = BR[exercisesList[exIdx + 1][0]][0];
+                            steps.push({
+                                title: `Transição para Exercício ${exNum + 1}/${total}`,
+                                instruction: `Prepare-se para o próximo exercício: ${nextName}. Ajuste a postura no banco ou em pé.`,
                                 duration: 20,
                                 isRest: true,
-                                voice: 'Relaxe completamente.',
-                                badge: 'RECUPERAÇÃO',
-                                phase: 'descanso',
-                                series: (exIdx * 3) + set
+                                voice: `Transição. Próximo exercício: ${nextName}`,
+                                badge: 'TRANSIÇÃO',
+                                phase: 'descanso'
                             });
                         }
-                    }
-                    if (exIdx < exercises.length - 1) {
-                        const nextExName = exercises[exIdx + 1][0];
-                        steps.push({
-                            title: `Transição para Exercício ${exNum + 1}/3`,
-                            instruction: `Prepare-se para o próximo exercício: ${nextExName}. Ajuste a postura no banco ou em pé.`,
-                            duration: 20,
-                            isRest: true,
-                            voice: `Transição. Próximo exercício: ${nextExName}`,
-                            badge: 'TRANSIÇÃO',
-                            phase: 'descanso'
-                        });
-                    }
-                });
+                    });
+                }
 
                 steps.push({
                     title: 'Encerramento e checagem',
-                    instruction: 'Solte o abdômen. Confirme: respirou livremente durante os 3 exercícios, manteve a postura e terminou sem dor.',
+                    instruction: 'Solte o abdômen. Confirme: respirou livremente em todas as séries, manteve a postura e terminou sem dor.',
                     duration: 20,
                     isRest: true,
                     voice: 'Relaxe e confira a qualidade da prática.',

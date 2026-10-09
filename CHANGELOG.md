@@ -7,6 +7,19 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
+## [1.1.42] - 2026-10-09
+
+### Adicionado
+- **Novo Modelo de Bracing Progressivo (8 Semanas):**
+  - Implementação completa do protocolo estruturado de 8 semanas com meta de 5 dias/semana (`weeklyTargetDays: 5`).
+  - Biblioteca técnica de 8 exercícios especializados (`BR-01` a `BR-08`): Bracing sentado, Bracing em pé, Marcha sentada, Elevação de calcanhares em pé, Inclinação de quadril em pé, Base desencontrada (split stance), Joelho contra mão oposta (isometria) e Marcha em pé contralateral com braço oposto.
+  - Semana 8 em circuito funcional de 2 voltas completas com 5 exercícios e intervalo de 50s entre voltas.
+  - Zero posturas no solo/chão (execução 100% sentado em cadeira/banco ou em pé).
+  - 4 novas ilustrações anatômicas AMOLED vetoriais dedicadas geradas e integradas para `BR-04`, `BR-05`, `BR-06` e `BR-08`, tanto no app aberto quanto no Modo Treino Flutuante expandido.
+  - Variedade inteligente de sessões diárias (Sessão A e Sessão B com rotação de abertura) preservando o volume total e mantendo compatibilidade com lembretes e persistência de dados.
+
+---
+
 ## [1.1.41] - 2026-10-08
 
 ### Adicionado

@@ -24,14 +24,15 @@ vm.runInContext('var AppState;\n' + appStateSlice.replace('const AppState =', 'A
 const programs = vmContext.AppState.programs;
 assert(Array.isArray(programs), 'AppState.programs deve ser um array');
 
-// 2.1 Programa 1: Bracing McGill Adaptado (7 dias e 8 fases)
+// 2.1 Programa 1: Bracing de 8 semanas (5 dias por semana, conforme TREINO_BRACING_8_SEMANAS)
 const bracing = programs.find(p => p.id === '1');
 assert(bracing, 'Programa 1 (Bracing) deve existir');
 assert.strictEqual(bracing.phases.length, 8, 'Bracing deve possuir 8 fases (8 semanas)');
+assert.strictEqual(bracing.title, 'Bracing: Treino de 8 Semanas', 'Programa 1 deve ter o título do novo treino');
 bracing.phases.forEach((phase, idx) => {
-    assert.strictEqual(phase.weeklyTargetDays, 7, `Bracing semana ${idx + 1} deve ter weeklyTargetDays: 7`);
+    assert.strictEqual(phase.weeklyTargetDays, 5, `Bracing semana ${idx + 1} deve ter weeklyTargetDays: 5`);
 });
-console.log('✓ Programa 1 (Bracing): 8 semanas com weeklyTargetDays: 7');
+console.log('✓ Programa 1 (Bracing): 8 semanas com weeklyTargetDays: 5');
 
 // 2.2 Programa 2: Programa Kegel (ID '2', 7 dias)
 const kegel = programs.find(p => p.id === '2');
@@ -74,6 +75,7 @@ const stepsContext = vm.createContext({
 });
 vm.runInContext(extractFunction('getProgramSteps'), stepsContext);
 
+const BRACING_EXPECTED_SERIES = [3, 4, 4, 5, 5, 6, 6, 10]; // séries de trabalho por semana, somadas da tabela de TREINO_BRACING_8_SEMANAS (semana 8: 2 voltas × 5 exercícios)
 for (let week = 0; week < 8; week++) {
     for (let session = 1; session <= 2; session++) {
         const steps = stepsContext.getProgramSteps('1', week, session);
@@ -84,10 +86,9 @@ for (let week = 0; week < 8; week++) {
         // Deve ter qualidade no final
         assert.strictEqual(steps[steps.length - 1].badge, 'QUALIDADE', `Último passo deve ser QUALIDADE`);
 
-        // Contar exercícios de trabalho
+        // Contar séries de trabalho
         const exerciseWorkSteps = steps.filter(s => s.badge && s.badge.startsWith('EX ') && !s.isRest);
-        // Cada exercício tem 3 séries, totalizando 9 steps de trabalho
-        assert.strictEqual(exerciseWorkSteps.length, 9, `Semana ${week + 1} Sessão ${session} deve ter 9 séries de trabalho (3 exercícios x 3 séries)`);
+        assert.strictEqual(exerciseWorkSteps.length, BRACING_EXPECTED_SERIES[week], `Semana ${week + 1} deve ter ${BRACING_EXPECTED_SERIES[week]} séries de trabalho`);
 
         // Verificar imagens anatômicas das posturas
         exerciseWorkSteps.forEach(s => {

@@ -73,10 +73,15 @@ function extractAssignedFunctionFrom(source, name) {
 function makeElement() {
     return {
         _classes: new Set(),
+        _attrs: new Map(),
         innerText: '',
         innerHTML: '',
         className: '',
         style: {},
+        // Atributos usados pela UI real (ex.: postureImg.removeAttribute('src') no modo treino).
+        setAttribute(name, value) { this._attrs.set(name, String(value)); },
+        getAttribute(name) { return this._attrs.has(name) ? this._attrs.get(name) : null; },
+        removeAttribute(name) { this._attrs.delete(name); },
         classList: {
             add(...names) { names.forEach(n => this._owner._classes.add(n)); },
             remove(...names) { names.forEach(n => this._owner._classes.delete(n)); },
@@ -130,7 +135,7 @@ function setup() {
     return { context, elements, getElementById, toastLog, values };
 }
 
-// 1. Card abre o programa correto por ID (etapa 3/sessão 2 abre etapa 3/sessão 2).
+// 1. Card abre o programa correto por ID (etapa 3 abre etapa 3). Programa 1 tem 1 sessão por dia.
 {
     const env = setup();
     vm.runInContext(`AppState.programs.find(p => p.id === '1').sessionsToday = 1`, env.context);
