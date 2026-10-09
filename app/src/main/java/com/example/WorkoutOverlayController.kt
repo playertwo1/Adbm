@@ -3,10 +3,16 @@ package com.example
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.PixelFormat
+import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import androidx.core.graphics.ColorUtils
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
@@ -119,6 +125,8 @@ object WorkoutOverlayController {
     private var expandedActionTitle: TextView? = null
     private var expandedTimerText: TextView? = null
     private var expandedTotalTimeText: TextView? = null
+    private var expandedExerciseImage: ImageView? = null
+    private var breathVisualView: BreathVisualView? = null
     private var expandedNextStepCard: LinearLayout? = null
     private var expandedNextStepLabel: TextView? = null
     private var expandedPauseResumeBtn: TextView? = null
@@ -249,6 +257,8 @@ object WorkoutOverlayController {
             miniContainer = null
             compactContainer = null
             expandedContainer = null
+            expandedExerciseImage = null
+            breathVisualView = null
         }
     }
 
@@ -550,6 +560,20 @@ object WorkoutOverlayController {
         }
         expandedContainer?.addView(divider)
 
+        // Visualização Dedicada de Respiração (Em Caixa com traço ou Respirações com pulso)
+        breathVisualView = BreathVisualView(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                dpToPx(context, 140),
+                dpToPx(context, 140)
+            ).apply {
+                gravity = Gravity.CENTER_HORIZONTAL
+                topMargin = dpToPx(context, 4)
+                bottomMargin = dpToPx(context, 8)
+            }
+            visibility = View.GONE
+        }
+        expandedContainer?.addView(breathVisualView)
+
         // Corpo central: Ação Atual + Cronômetro Grande
         expandedActionTitle = TextView(context).apply {
             text = "RETENÇÃO"
@@ -575,9 +599,26 @@ object WorkoutOverlayController {
             textSize = 10f
             setTextColor(Color.parseColor("#64748B"))
             gravity = Gravity.CENTER
-            setPadding(0, 0, 0, dpToPx(context, 8))
+            setPadding(0, 0, 0, dpToPx(context, 6))
         }
         expandedContainer?.addView(expandedTotalTimeText)
+
+        // Imagem da Postura Biomecânica (Bracing McGill e exercícios com guia)
+        expandedExerciseImage = ImageView(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dpToPx(context, 120)
+            ).apply {
+                topMargin = dpToPx(context, 2)
+                bottomMargin = dpToPx(context, 8)
+            }
+            scaleType = ImageView.ScaleType.FIT_CENTER
+            background = createCardDrawable(Color.parseColor("#090D16"), Color.parseColor("#1E293B"), dpToPx(context, 12).toFloat())
+            setPadding(dpToPx(context, 6), dpToPx(context, 6), dpToPx(context, 6), dpToPx(context, 6))
+            clipToOutline = true
+            visibility = View.GONE
+        }
+        expandedContainer?.addView(expandedExerciseImage)
 
         // Card do Próximo Passo
         expandedNextStepCard = LinearLayout(context).apply {
@@ -733,10 +774,48 @@ object WorkoutOverlayController {
         // 3. Atualizar EXPANDIDO
         expandedProgramTitle?.text = programTitle.uppercase()
         expandedPhaseSubtitle?.text = if (phaseTitle.isNotBlank()) phaseTitle else "$programTitle$seriesText"
-        expandedActionTitle?.text = actionLabel
-        expandedActionTitle?.setTextColor(accentColor)
-        expandedTimerText?.text = timeStr
-        expandedTotalTimeText?.text = totalTimeStr
+
+        val isBreath = sessionMeta.optString("type") == "breath" || programTitle.contains("Respiração", ignoreCase = true)
+        if (isBreath) {
+            val patternKey = sessionMeta.optString("patternKey", "")
+            val isBox = patternKey == "caixa" || phaseTitle.contains("Caixa", ignoreCase = true)
+            breathVisualView?.visibility = View.VISIBLE
+            breathVisualView?.updateState(isBox, actionLabel, stepTimeLeft, duration, accentColor, currentStepIndex)
+            breathVisualView?.contentDescription = "Visual da respiração $actionLabel. Tempo restante: $timeStr"
+            expandedActionTitle?.visibility = View.GONE
+            expandedTimerText?.visibility = View.GONE
+            expandedTotalTimeText?.visibility = View.GONE
+            expandedExerciseImage?.visibility = View.GONE
+        } else {
+            breathVisualView?.visibility = View.GONE
+            expandedActionTitle?.visibility = View.VISIBLE
+            expandedActionTitle?.text = actionLabel
+            expandedActionTitle?.setTextColor(accentColor)
+            expandedTimerText?.visibility = View.VISIBLE
+            expandedTimerText?.text = timeStr
+            expandedTotalTimeText?.visibility = View.VISIBLE
+            expandedTotalTimeText?.text = totalTimeStr
+
+            val imagePath = currentStep?.optString("image", "").orEmpty()
+            if (imagePath.isNotBlank()) {
+                try {
+                    context.assets.open(imagePath).use { stream ->
+                        val bmp = BitmapFactory.decodeStream(stream)
+                        if (bmp != null) {
+                            expandedExerciseImage?.setImageBitmap(bmp)
+                            expandedExerciseImage?.contentDescription = "Postura correta para o exercício $title"
+                            expandedExerciseImage?.visibility = View.VISIBLE
+                        } else {
+                            expandedExerciseImage?.visibility = View.GONE
+                        }
+                    }
+                } catch (_: Exception) {
+                    expandedExerciseImage?.visibility = View.GONE
+                }
+            } else {
+                expandedExerciseImage?.visibility = View.GONE
+            }
+        }
         expandedContainer?.contentDescription = "Card expandido do treino. $programTitle, $actionLabel, restante $timeStr."
 
         // Botão Pausar / Continuar
@@ -797,6 +876,7 @@ object WorkoutOverlayController {
             isRest || phase == "recuperacao" -> Color.parseColor("#0EA5E9") // Sky / Azul
             programTitle.contains("Kegel", ignoreCase = true) -> Color.parseColor("#A855F7") // Roxo
             programTitle.contains("Bracing", ignoreCase = true) -> Color.parseColor("#F59E0B") // Âmbar
+            programTitle.contains("Respiração", ignoreCase = true) -> Color.parseColor("#06B6D4") // Ciano
             else -> Color.parseColor("#10B981")
         }
     }
@@ -827,5 +907,158 @@ object WorkoutOverlayController {
             setColor(bgColor)
             setStroke(2, strokeColor)
         }
+    }
+}
+
+/**
+ * Visualizador animado de Respiração para o Modo Treino Flutuante.
+ * Suporta o modo "Em Caixa" (Box Breathing com traço contínuo no perímetro)
+ * e o modo com pulso/esfera expansiva para as demais respirações.
+ */
+class BreathVisualView(context: Context) : View(context) {
+
+    private val trackPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 6f
+        color = Color.parseColor("#1E293B")
+        strokeCap = Paint.Cap.ROUND
+    }
+    private val activePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 8f
+        strokeCap = Paint.Cap.ROUND
+    }
+    private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+    private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.CENTER
+        typeface = Typeface.DEFAULT_BOLD
+    }
+    private val dotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = Color.parseColor("#334155")
+    }
+
+    var isBoxPattern: Boolean = true
+    var stepTimeLeft: Int = 0
+    var phaseDuration: Int = 4
+    var phaseLabel: String = "INSPIRE"
+    var phaseIndex: Int = 0
+    var accentColor: Int = Color.parseColor("#10B981")
+
+    fun updateState(isBox: Boolean, label: String, timeLeft: Int, duration: Int, color: Int, stepIndex: Int) {
+        isBoxPattern = isBox
+        phaseLabel = label
+        stepTimeLeft = timeLeft
+        phaseDuration = duration.coerceAtLeast(1)
+        accentColor = color
+        phaseIndex = (stepIndex % 4).coerceIn(0, 3)
+        activePaint.color = color
+        postInvalidate()
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        val w = width.toFloat()
+        val h = height.toFloat()
+        if (w <= 0f || h <= 0f) return
+
+        val pad = dpToPx(12).toFloat()
+        val elapsed = (phaseDuration - stepTimeLeft).coerceAtLeast(0)
+        val fraction = (elapsed.toFloat() / phaseDuration.toFloat()).coerceIn(0f, 1f)
+        val cx = w / 2f
+        val cy = h / 2f
+
+        if (isBoxPattern) {
+            val left = pad + 4f
+            val top = pad + 4f
+            val right = w - pad - 4f
+            val bottom = h - pad - 4f
+            val sideW = right - left
+            val sideH = bottom - top
+
+            // 1. Base track (rounded box)
+            val rect = RectF(left, top, right, bottom)
+            canvas.drawRoundRect(rect, 16f, 16f, trackPaint)
+
+            // 2. Active sides drawing
+            val path = Path()
+            when (phaseIndex) {
+                0 -> {
+                    path.moveTo(left, top)
+                    path.lineTo(left + sideW * fraction, top)
+                }
+                1 -> {
+                    path.moveTo(left, top)
+                    path.lineTo(right, top)
+                    path.lineTo(right, top + sideH * fraction)
+                }
+                2 -> {
+                    path.moveTo(left, top)
+                    path.lineTo(right, top)
+                    path.lineTo(right, bottom)
+                    path.lineTo(right - sideW * fraction, bottom)
+                }
+                3 -> {
+                    path.moveTo(left, top)
+                    path.lineTo(right, top)
+                    path.lineTo(right, bottom)
+                    path.lineTo(left, bottom)
+                    path.lineTo(left, bottom - sideH * fraction)
+                }
+            }
+            canvas.drawPath(path, activePaint)
+
+            // Indicadores discretos dos cantos do quadrado
+            canvas.drawCircle(left, top, 4f, dotPaint)
+            canvas.drawCircle(right, top, 4f, dotPaint)
+            canvas.drawCircle(right, bottom, 4f, dotPaint)
+            canvas.drawCircle(left, bottom, 4f, dotPaint)
+        } else {
+            // Pulsação circular suave para outras respirações
+            val baseR = (w / 2f) - pad - 8f
+            val scale = when {
+                phaseLabel.contains("INSPIRE", ignoreCase = true) -> 0.70f + (0.35f * fraction)
+                phaseLabel.contains("EXPIRE", ignoreCase = true) -> 1.05f - (0.35f * fraction)
+                else -> 1.05f
+            }
+            val currentR = baseR * scale
+            trackPaint.style = Paint.Style.STROKE
+            canvas.drawCircle(cx, cy, baseR, trackPaint)
+
+            fillPaint.color = ColorUtils.setAlphaComponent(accentColor, 40)
+            canvas.drawCircle(cx, cy, currentR, fillPaint)
+            activePaint.style = Paint.Style.STROKE
+            canvas.drawCircle(cx, cy, currentR, activePaint)
+        }
+
+        // Texto Central: Fase e Segundos restantes
+        textPaint.color = accentColor
+        textPaint.textSize = spToPx(12).toFloat()
+        textPaint.typeface = Typeface.DEFAULT_BOLD
+        canvas.drawText(phaseLabel.uppercase(), cx, cy - dpToPx(4).toFloat(), textPaint)
+
+        textPaint.color = Color.WHITE
+        textPaint.textSize = spToPx(26).toFloat()
+        textPaint.typeface = Typeface.MONOSPACE
+        val secStr = "%02d".format(stepTimeLeft)
+        canvas.drawText(secStr, cx, cy + dpToPx(20).toFloat(), textPaint)
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            context.resources.displayMetrics
+        ).toInt()
+    }
+
+    private fun spToPx(sp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            sp.toFloat(),
+            context.resources.displayMetrics
+        ).toInt()
     }
 }

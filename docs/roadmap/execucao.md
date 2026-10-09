@@ -1,5 +1,32 @@
 # Registro de execução
 
+## 2026-10-08 — Release v1.1.41 (Code 41): Ilustrações Anatômicas de Bracing & Animações Dinâmicas de Respiração — CONCLUÍDO
+
+- **Objetivos Realizados:**
+  1. **Ilustrações Anatômicas das Posturas de Bracing McGill:**
+     - 11 ilustrações anatômicas AMOLED (`#0B0F19`) geradas por IA cobrindo todas as posturas clínicas em banco e em pé (zero solo).
+     - Exibição integrada no app aberto (`#workoutPostureCard` e `#workoutPostureImg` no `dailyExecutionModal`) e no overlay flutuante expandido (`expandedExerciseImage` no `WorkoutOverlayController.kt`).
+     - Armazenamento 100% local em `app/src/main/assets/img/bracing/` e `img/bracing/`.
+  2. **Restauração e Sincronização Dinâmica das Animações de Respiração:**
+     - `BreathVisualView` implementada no modo flutuante com animação em 60 FPS: quadrado dinâmico com linha contínua no perímetro para Box Breathing e pulsação suave esférica para outras respirações.
+     - Unificação do fluxo de renderização (`renderBreathTickUI`) em `index.html` e `app/src/main/assets/index.html` para sincronização fluida com `WorkoutForegroundService`.
+  3. **Validação e Paridade:**
+     - Paridade estrita byte a byte mantida entre `index.html` e `app/src/main/assets/index.html`.
+     - 100% dos testes diagnósticos aprovados (`diagnostics/*.test.cjs`).
+     - Compilação Android aprovada (`:app:testDebugUnitTest :app:assembleDebug`).
+- **Arquivos Alterados:**
+  - `app/src/main/java/com/example/WorkoutOverlayController.kt`
+  - `app/src/main/java/com/example/WorkoutForegroundService.kt`
+  - `index.html`
+  - `app/src/main/assets/index.html`
+  - `app/src/main/assets/img/bracing/*`
+  - `img/bracing/*`
+  - `diagnostics/e14-bracing-pausas-floating.test.cjs`
+  - `gradle.properties`
+  - `README.md`
+  - `CHANGELOG.md`
+  - `docs/roadmap/execucao.md`
+
 ## 2026-10-08 — E13 & FUTURA 3: Acessibilidade TalkBack no Overlay e Validação Prévia — CONCLUÍDO NO CÓDIGO
 
 - **Objetivos Realizados:**

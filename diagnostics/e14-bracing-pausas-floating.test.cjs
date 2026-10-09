@@ -89,6 +89,15 @@ for (let week = 0; week < 8; week++) {
         // Cada exercício tem 3 séries, totalizando 9 steps de trabalho
         assert.strictEqual(exerciseWorkSteps.length, 9, `Semana ${week + 1} Sessão ${session} deve ter 9 séries de trabalho (3 exercícios x 3 séries)`);
 
+        // Verificar imagens anatômicas das posturas
+        exerciseWorkSteps.forEach(s => {
+            assert(typeof s.image === 'string' && s.image.length > 0, `Step de trabalho do Bracing deve ter image definida: ${s.title}`);
+            const imgPathRoot = path.join(rootDir, s.image);
+            const imgPathAssets = path.join(rootDir, 'app', 'src', 'main', 'assets', s.image);
+            assert(fs.existsSync(imgPathRoot), `Imagem da postura deve existir na raiz: ${s.image}`);
+            assert(fs.existsSync(imgPathAssets), `Imagem da postura deve existir nos assets: ${s.image}`);
+        });
+
         // Verificar que não há nenhuma posição de chão
         steps.forEach(s => {
             const text = `${s.title} ${s.instruction}`.toLowerCase();
@@ -98,7 +107,12 @@ for (let week = 0; week < 8; week++) {
         });
     }
 }
-console.log('✓ Matriz Clínica do Bracing: 8 semanas x 2 sessões x 3 exercícios reais, 100% no banco ou em pé (zero chão)');
+console.log('✓ Matriz Clínica do Bracing: 8 semanas x 2 sessões x 3 exercícios reais, 100% no banco ou em pé (zero chão) com ilustrações anatômicas validadas');
+
+// 3.1 Modal de Execução Diária: Presença dos elementos de imagem de postura
+assert(htmlContent.includes('id="workoutPostureCard"'), 'dailyExecutionModal deve conter #workoutPostureCard');
+assert(htmlContent.includes('id="workoutPostureImg"'), 'dailyExecutionModal deve conter #workoutPostureImg');
+console.log('✓ Card e imagem de postura presentes no modal de treino aberto (#workoutPostureCard, #workoutPostureImg)');
 
 // 4. Integração da Aba Pausas ao Modo Treino Flutuante Nativo
 // 4.1 Alongamentos / Circuito Ergonômico
@@ -108,6 +122,8 @@ assert(htmlContent.includes("AppState.pausas.nativeManaged = true;"), 'startStre
 // 4.2 Respiração Guiada da Mente
 assert(htmlContent.includes("type: 'breath'"), 'startSpecificBreath deve definir type breath');
 assert(htmlContent.includes("AppState.mente.nativeManaged = true;"), 'startSpecificBreath deve marcar nativeManaged = true ao iniciar');
+assert(htmlContent.includes("function renderBreathTickUI()"), 'renderBreathTickUI deve estar definida');
+assert(htmlContent.includes("renderBreathTickUI();"), 'renderBreathTickUI deve ser chamada nos ticks de respiração');
 
 // 4.3 Pausa de Resposta de 3 Minutos
 assert(htmlContent.includes("type: 'responsive_pause'"), 'startResponsivePause deve definir type responsive_pause');
@@ -120,6 +136,6 @@ assert(htmlContent.includes("handleNativeResponsivePauseState(state);"), 'window
 assert(htmlContent.includes("function handleNativeStretchState(state)"), 'handleNativeStretchState deve estar definida');
 assert(htmlContent.includes("function handleNativeBreathState(state)"), 'handleNativeBreathState deve estar definida');
 assert(htmlContent.includes("function handleNativeResponsivePauseState(state)"), 'handleNativeResponsivePauseState deve estar definida');
-console.log('✓ Aba Pausas conectada ao Modo Treino Flutuante (Alongamentos, Respiração e Pausa de Resposta com handlers nativos)');
+console.log('✓ Aba Pausas conectada ao Modo Treino Flutuante (Alongamentos, Respiração e Pausa de Resposta com handlers nativos e animação síncrona)');
 
 console.log('--- TODOS OS TESTES PASSARAM COM SUCESSO! ---');

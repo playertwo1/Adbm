@@ -45,7 +45,8 @@ class WorkoutForegroundService : Service() {
         val badge: String,
         val phase: String,
         val haptic: String,
-        val series: Int
+        val series: Int,
+        val image: String = ""
     )
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -418,6 +419,7 @@ class WorkoutForegroundService : Service() {
             "sessionNumber",
             "targetSessions",
             "type",
+            "patternKey",
             "completionMessage",
             "seriesTotal"
         ).forEach { key ->
@@ -515,6 +517,7 @@ class WorkoutForegroundService : Service() {
                     put("phase", step.phase)
                     put("haptic", step.haptic)
                     put("series", step.series)
+                    if (step.image.isNotBlank()) put("image", step.image)
                 })
             }
         })
@@ -599,7 +602,8 @@ class WorkoutForegroundService : Service() {
                     badge = item.optString("badge", ""),
                     phase = item.optString("phase", ""),
                     haptic = item.optString("haptic", ""),
-                    series = item.optInt("series", 0)
+                    series = item.optInt("series", 0),
+                    image = item.optString("image", "")
                 )
             )
         }

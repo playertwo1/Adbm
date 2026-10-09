@@ -7,6 +7,25 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
+## [1.1.41] - 2026-10-08
+
+### Adicionado
+- **Ilustrações Anatômicas das Posturas de Bracing McGill:**
+  - 11 ilustrações anatômicas de alta fidelidade em tema escuro AMOLED (`#0B0F19`) e estilo vetorial/line-art com traços ciano e esmeralda cobrindo todas as posturas no banco e em pé.
+  - Exibição integrada no aplicativo aberto dentro do modal de execução diária (`#workoutPostureCard` e `#workoutPostureImg`).
+  - Exibição integrada no Modo Treino Flutuante expandido (`expandedExerciseImage` no `WorkoutOverlayController.kt`) através de decodificação direta de assets locais.
+- **Restauração e Sincronização Dinâmica das Animações de Respiração:**
+  - Visualizador nativo `BreathVisualView` no modo treino flutuante com animação em 60 FPS:
+    - Traço contínuo neon percorrendo o perímetro do quadrado em 4 fases para a respiração "Em Caixa".
+    - Pulsação suave expansiva e retrátil com preenchimento translúcido para "Expiração Longa" e outras respirações.
+    - Contagem regressiva em fonte mono e indicação textual da fase.
+  - Unificação do fluxo de renderização web (`renderBreathTickUI`) garantindo animação contínua da borda e transição da esfera mesmo sob controle do serviço nativo em segundo plano.
+
+### Corrigido
+- Sincronização de ticks e transições de fase da respiração entre o serviço nativo (`WorkoutForegroundService`) e a interface web (`index.html`), evitando congelamento visual da linha do quadrado e da esfera ao executar treinos flutuantes de respiração.
+
+---
+
 ## [1.1.40] - 2026-10-08
 
 ### Adicionado

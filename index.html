@@ -2345,6 +2345,9 @@
 
             <!-- Current Step Details -->
             <div class="text-center px-4 w-full">
+                <div id="workoutPostureCard" class="hidden mb-3 w-full max-w-[260px] mx-auto rounded-2xl overflow-hidden border border-slate-800 bg-slate-900/90 shadow-2xl transition-all duration-300">
+                    <img id="workoutPostureImg" src="" alt="Postura do exercício" class="w-full h-44 object-contain bg-slate-950/70 p-2" />
+                </div>
                 <h3 id="workoutStepTitle" class="text-lg font-bold text-white leading-snug">Lento: 8 contrações de 6s</h3>
                 <p id="workoutStepInstruction" class="text-xs text-slate-300 mt-1.5 leading-relaxed bg-slate-900/60 border border-slate-800 p-3 rounded-xl">Contraia por 6 segundos e relaxe por 6 segundos com respiração fluida.</p>
             </div>
@@ -8050,19 +8053,12 @@
             AppState.mente.intervalId = setInterval(runBreathTick, 1000);
         }
 
-        function runBreathTick() {
+        function renderBreathTickUI() {
             const isInfinite = AppState.mente.selectedDuration === 'infinite';
-            AppState.mente.elapsedSessionSec++;
-
-            if (!isInfinite) {
-                AppState.mente.remainingSessionSec--;
-            }
-            AppState.mente.phaseSecLeft--;
-
             const patternKey = AppState.mente.activePattern || 'caixa';
             const phases = getActivePatternPhases();
             const curIdx = AppState.mente.currentPhaseIdx;
-            const currentPhase = phases[curIdx];
+            const currentPhase = phases[curIdx] || phases[0];
 
             // Atualiza tempo total na UI
             const timeEl = document.getElementById('breath-time-left');
@@ -8125,7 +8121,7 @@
             if (patternKey === 'caixa') {
                 const totalPerimeter = 335;
                 const sideLength = totalPerimeter / 4;
-                const phaseDuration = currentPhase.sec || 4;
+                const phaseDuration = (currentPhase && currentPhase.sec) || 4;
                 const elapsedInPhase = Math.max(0, phaseDuration - AppState.mente.phaseSecLeft);
                 const fraction = Math.min(1, Math.max(0, elapsedInPhase / phaseDuration));
                 const totalDrawn = (curIdx * sideLength) + (sideLength * fraction);
@@ -8141,6 +8137,24 @@
                 const oledBoxRect = document.getElementById('oled-box-track-rect');
                 if (oledBoxRect) oledBoxRect.style.strokeDashoffset = offsetOled;
             }
+        }
+
+        function runBreathTick() {
+            const isInfinite = AppState.mente.selectedDuration === 'infinite';
+            AppState.mente.elapsedSessionSec++;
+
+            if (!isInfinite) {
+                AppState.mente.remainingSessionSec--;
+            }
+            AppState.mente.phaseSecLeft--;
+
+            const patternKey = AppState.mente.activePattern || 'caixa';
+            const phases = getActivePatternPhases();
+            const curIdx = AppState.mente.currentPhaseIdx;
+            const currentPhase = phases[curIdx];
+
+            // UI atualizada via renderBreathTickUI()
+            renderBreathTickUI();
 
             // Transição de fase
             if (AppState.mente.phaseSecLeft <= 0) {
@@ -10237,120 +10251,120 @@
                     [
                         // Sessão A (Sentado no banco)
                         [
-                            ['Respiração 360° no Banco', 'Sentado ereto, mãos nas costelas baixas. Inspire expandindo frente, lados e costas sem elevar ombros.', 40],
-                            ['Pressão Mão-Coxa Isométrica', 'Sentado no banco, pressione as palmas contra as coxas ativando o abdômen sem travar a respiração.', 35],
-                            ['Coluna Neutra com Bracing', 'Mantenha o alinhamento reto do tronco com bracing suave e respiração ritmada.', 35]
+                            ['Respiração 360° no Banco', 'Sentado ereto, mãos nas costelas baixas. Inspire expandindo frente, lados e costas sem elevar ombros.', 40, 'img/bracing/bracing_seated_360.jpg'],
+                            ['Pressão Mão-Coxa Isométrica', 'Sentado no banco, pressione as palmas contra as coxas ativando o abdômen sem travar a respiração.', 35, 'img/bracing/bracing_seated_press.jpg'],
+                            ['Coluna Neutra com Bracing', 'Mantenha o alinhamento reto do tronco com bracing suave e respiração ritmada.', 35, 'img/bracing/bracing_seated_360.jpg']
                         ],
                         // Sessão B (Sentado e Em Pé)
                         [
-                            ['Palpação Lateral de McGill', 'Sentado, dedos nos oblíquos. Crie firmeza lateral 360° como se fosse receber um toque.', 40],
-                            ['Extensão Unilateral no Banco', 'Sentado no banco com tronco travado, estenda um joelho à frente sem inclinar as costas.', 35],
-                            ['Bracing em Pé com Apoio', 'Em pé com mãos na mesa/banco, alinhe quadril e tronco mantendo firmeza e respiração livre.', 40]
+                            ['Palpação Lateral de McGill', 'Sentado, dedos nos oblíquos. Crie firmeza lateral 360° como se fosse receber um toque.', 40, 'img/bracing/bracing_seated_360.jpg'],
+                            ['Extensão Unilateral no Banco', 'Sentado no banco com tronco travado, estenda um joelho à frente sem inclinar as costas.', 35, 'img/bracing/bracing_seated_leg.jpg'],
+                            ['Bracing em Pé com Apoio', 'Em pé com mãos na mesa/banco, alinhe quadril e tronco mantendo firmeza e respiração livre.', 40, 'img/bracing/bracing_standing_support.jpg']
                         ]
                     ],
                     // Semana 2: Dissociação de Membros e Pelve Neutra
                     [
                         // Sessão A (Sentado)
                         [
-                            ['Marcha Sentada de Sahrmann', 'Sentado ereto, eleve um pé 5cm do chão alternadamente sem oscilar a pelve.', 40],
-                            ['Alcance Alternado de Braços', 'Sentado no banco com core firme, eleve um braço à frente na altura do ombro sem curvar a lombar.', 40],
-                            ['Inclinação de Tronco Reto (Torso Hinge)', 'Incline o tronco 20° à frente a partir do quadril, mantendo coluna perfeitamente neutra.', 45]
+                            ['Marcha Sentada de Sahrmann', 'Sentado ereto, eleve um pé 5cm do chão alternadamente sem oscilar a pelve.', 40, 'img/bracing/bracing_seated_leg.jpg'],
+                            ['Alcance Alternado de Braços', 'Sentado no banco com core firme, eleve um braço à frente na altura do ombro sem curvar a lombar.', 40, 'img/bracing/bracing_seated_arms.jpg'],
+                            ['Inclinação de Tronco Reto (Torso Hinge)', 'Incline o tronco 20° à frente a partir do quadril, mantendo coluna perfeitamente neutra.', 45, 'img/bracing/bracing_seated_hinge.jpg']
                         ],
                         // Sessão B (Em Pé)
                         [
-                            ['Bracing em Pé Alinhado', 'Em pé, pés na largura dos ombros. Ative a cinta abdominal mantendo respiração nasal calma.', 40],
-                            ['Marcha Estacionária Lenta', 'Em pé com apoio leve das mãos, eleve um joelho devagar preservando o tronco imóvel.', 45],
-                            ['Sentar e Levantar Controlado', 'Inicie em pé e sente no banco devagar sem perder a rigidez da coluna, depois suba.', 45]
+                            ['Bracing em Pé Alinhado', 'Em pé, pés na largura dos ombros. Ative a cinta abdominal mantendo respiração nasal calma.', 40, 'img/bracing/bracing_standing_aligned.jpg'],
+                            ['Marcha Estacionária Lenta', 'Em pé com apoio leve das mãos, eleve um joelho devagar preservando o tronco imóvel.', 45, 'img/bracing/bracing_standing_single_leg.jpg'],
+                            ['Sentar e Levantar Controlado', 'Inicie em pé e sente no banco devagar sem perder a rigidez da coluna, depois suba.', 45, 'img/bracing/bracing_sit_to_stand.jpg']
                         ]
                     ],
                     // Semana 3: Anti-Rotação e Resistência Isométrica
                     [
                         // Sessão A (Sentado)
                         [
-                            ['Pallof Press Isométrico Sentado', 'Sentado no banco, mãos unidas no peito; estenda os braços à frente resistindo à rotação.', 45],
-                            ['Pressão Cruzada Mão-Joelho', 'Sentado, empurre a mão direita contra o joelho esquerdo ativando os oblíquos cruzados.', 45],
-                            ['Dobradiça de Tronco Sustentada', 'Incline o tronco reto a 30° no banco e sustente a posição com ativação lombar e abdominal.', 45]
+                            ['Pallof Press Isométrico Sentado', 'Sentado no banco, mãos unidas no peito; estenda os braços à frente resistindo à rotação.', 45, 'img/bracing/bracing_seated_arms.jpg'],
+                            ['Pressão Cruzada Mão-Joelho', 'Sentado, empurre a mão direita contra o joelho esquerdo ativando os oblíquos cruzados.', 45, 'img/bracing/bracing_seated_press.jpg'],
+                            ['Dobradiça de Tronco Sustentada', 'Incline o tronco reto a 30° no banco e sustente a posição com ativação lombar e abdominal.', 45, 'img/bracing/bracing_seated_hinge.jpg']
                         ],
                         // Sessão B (Em Pé)
                         [
-                            ['Bird Dog em Pé com Apoio', 'Mãos no banco/mesa, estenda uma perna para trás mantendo a pelve e tronco nivelados.', 45],
-                            ['Postura Unipodal Nivelada', 'Em pé, tire um pé do chão sustentando o equilíbrio com o core travado e pelve firme.', 40],
-                            ['Auto-Perturbação Tátil nas Costelas', 'Em pé, dê toques suaves nas laterais do abdômen mantendo o tronco completamente firme.', 45]
+                            ['Bird Dog em Pé com Apoio', 'Mãos no banco/mesa, estenda uma perna para trás mantendo a pelve e tronco nivelados.', 45, 'img/bracing/bracing_standing_support.jpg'],
+                            ['Postura Unipodal Nivelada', 'Em pé, tire um pé do chão sustentando o equilíbrio com o core travado e pelve firme.', 40, 'img/bracing/bracing_standing_single_leg.jpg'],
+                            ['Auto-Perturbação Tátil nas Costelas', 'Em pé, dê toques suaves nas laterais do abdômen mantendo o tronco completamente firme.', 45, 'img/bracing/bracing_standing_aligned.jpg']
                         ]
                     ],
                     // Semana 4: Anti-Extensão e Cadeia Lateral
                     [
                         // Sessão A (Sentado)
                         [
-                            ['Elevação Bimanual Acima da Cabeça', 'Sentado no banco, eleve ambos os braços acima da cabeça sem arquear a coluna lombar.', 45],
-                            ['Inclinação Lateral Isométrica no Banco', 'Sentado, incline o tronco 15° para o lado sem girar os ombros, segurando a firmeza lateral.', 45],
-                            ['Pressão Cruzada Diagonal Submáxima', 'Sentado, exerça força cruzada mão e coxa oposta mantendo respiração contínua e calma.', 50]
+                            ['Elevação Bimanual Acima da Cabeça', 'Sentado no banco, eleve ambos os braços acima da cabeça sem arquear a coluna lombar.', 45, 'img/bracing/bracing_seated_arms.jpg'],
+                            ['Inclinação Lateral Isométrica no Banco', 'Sentado, incline o tronco 15° para o lado sem girar os ombros, segurando a firmeza lateral.', 45, 'img/bracing/bracing_seated_hinge.jpg'],
+                            ['Pressão Cruzada Diagonal Submáxima', 'Sentado, exerça força cruzada mão e coxa oposta mantendo respiração contínua e calma.', 50, 'img/bracing/bracing_seated_press.jpg']
                         ],
                         // Sessão B (Em Pé)
                         [
-                            ['Prancha Inclinada no Banco', 'Apoie as mãos no assento do banco em ângulo de 45°. Mantenha linha reta do calcanhar à cabeça.', 45],
-                            ['Bird Dog em Pé com Membros Opostos', 'Em pé com apoio, estenda o braço direito à frente e a perna esquerda atrás sem girar a pelve.', 50],
-                            ['Sentar e Levantar com Pausa Isométrica', 'Agache até quase tocar o banco, segure 3 segundos no ponto crítico e suba firme.', 50]
+                            ['Prancha Inclinada no Banco', 'Apoie as mãos no assento do banco em ângulo de 45°. Mantenha linha reta do calcanhar à cabeça.', 45, 'img/bracing/bracing_incline_plank.jpg'],
+                            ['Bird Dog em Pé com Membros Opostos', 'Em pé com apoio, estenda o braço direito à frente e a perna esquerda atrás sem girar a pelve.', 50, 'img/bracing/bracing_standing_support.jpg'],
+                            ['Sentar e Levantar com Pausa Isométrica', 'Agache até quase tocar o banco, segure 3 segundos no ponto crítico e suba firme.', 50, 'img/bracing/bracing_sit_to_stand.jpg']
                         ]
                     ],
                     // Semana 5: Cargas Assimétricas e Antimovimento Bípede
                     [
                         // Sessão A (Sentado)
                         [
-                            ['Chop & Lift Diagonal Sentado', 'Sentado no banco, mova os braços unidos do quadril ao ombro oposto resistindo à torção.', 50],
-                            ['Extensão de Perna com Alcance Oposto', 'Sentado, estenda a perna direita e o braço esquerdo simultaneamente mantendo a postura.', 50],
-                            ['Carga Assimétrica no Banco (Suitcase Hold)', 'Sentado, segure a contração lateral de um lado simulando segurar uma maleta.', 50]
+                            ['Chop & Lift Diagonal Sentado', 'Sentado no banco, mova os braços unidos do quadril ao ombro oposto resistindo à torção.', 50, 'img/bracing/bracing_seated_arms.jpg'],
+                            ['Extensão de Perna com Alcance Oposto', 'Sentado, estenda a perna direita e o braço esquerdo simultaneamente mantendo a postura.', 50, 'img/bracing/bracing_seated_leg.jpg'],
+                            ['Carga Assimétrica no Banco (Suitcase Hold)', 'Sentado, segure a contração lateral de um lado simulando segurar uma maleta.', 50, 'img/bracing/bracing_seated_360.jpg']
                         ],
                         // Sessão B (Em Pé)
                         [
-                            ['Pallof Press em Pé sem Apoio', 'Em pé, estenda as mãos unidas à frente resistindo à rotação com pés firmes no chão.', 50],
-                            ['Marcha do Fazendeiro Simulada', 'Em pé, caminhe no lugar com passos controlados mantendo um lado do tronco resistindo ao peso.', 55],
-                            ['Dobradiça de Quadril em Pé (Hip Hinge)', 'Flexione o quadril para trás com joelhos levemente destravados e coluna reta.', 50]
+                            ['Pallof Press em Pé sem Apoio', 'Em pé, estenda as mãos unidas à frente resistindo à rotação com pés firmes no chão.', 50, 'img/bracing/bracing_standing_aligned.jpg'],
+                            ['Marcha do Fazendeiro Simulada', 'Em pé, caminhe no lugar com passos controlados mantendo um lado do tronco resistindo ao peso.', 55, 'img/bracing/bracing_standing_single_leg.jpg'],
+                            ['Dobradiça de Quadril em Pé (Hip Hinge)', 'Flexione o quadril para trás com joelhos levemente destravados e coluna reta.', 50, 'img/bracing/bracing_seated_hinge.jpg']
                         ]
                     ],
                     // Semana 6: Coordenação e Controle Reativo
                     [
                         // Sessão A (Sentado)
                         [
-                            ['Transição Ativa de Postura', 'No banco, relaxe por 2s e ative imediatamente o bracing 360°, automatizando a resposta rápida.', 50],
-                            ['Pressão Unilateral com Fala Livre', 'Pressione a mão na coxa enquanto conta em voz alta de 1 a 10 sem perder o bracing.', 55],
-                            ['Equilíbrio Isquiático sem Encosto', 'Sentado na ponta do banco, encontre apoio nos ísquios mantendo tronco em auto-alongamento.', 55]
+                            ['Transição Ativa de Postura', 'No banco, relaxe por 2s e ative imediatamente o bracing 360°, automatizando a resposta rápida.', 50, 'img/bracing/bracing_seated_360.jpg'],
+                            ['Pressão Unilateral com Fala Livre', 'Pressione a mão na coxa enquanto conta em voz alta de 1 a 10 sem perder o bracing.', 55, 'img/bracing/bracing_seated_press.jpg'],
+                            ['Equilíbrio Isquiático sem Encosto', 'Sentado na ponta do banco, encontre apoio nos ísquios mantendo tronco em auto-alongamento.', 55, 'img/bracing/bracing_seated_360.jpg']
                         ],
                         // Sessão B (Em Pé)
                         [
-                            ['Equilíbrio Unipodal com Alcance Funcional', 'Em pé sobre um pé, alcance a mão à frente tocando um ponto imaginário sem perder a linha.', 50],
-                            ['Prancha Inclinada com Toque no Ombro', 'No banco em prancha inclinada, tire uma mão do apoio e toque o ombro oposto sem girar o quadril.', 55],
-                            ['Passo à Frente com Parada Brusca', 'Dê um passo firme à frente e trave o movimento imediatamente com o core estável.', 55]
+                            ['Equilíbrio Unipodal com Alcance Funcional', 'Em pé sobre um pé, alcance a mão à frente tocando um ponto imaginário sem perder a linha.', 50, 'img/bracing/bracing_standing_single_leg.jpg'],
+                            ['Prancha Inclinada com Toque no Ombro', 'No banco em prancha inclinada, tire uma mão do apoio e toque o ombro oposto sem girar o quadril.', 55, 'img/bracing/bracing_incline_plank.jpg'],
+                            ['Passo à Frente com Parada Brusca', 'Dê um passo firme à frente e trave o movimento imediatamente com o core estável.', 55, 'img/bracing/bracing_standing_aligned.jpg']
                         ]
                     ],
                     // Semana 7: Automação Cotidiana e Tarefas de Trabalho
                     [
                         // Sessão A (Sentado)
                         [
-                            ['Bracing Submáximo em Tarefas', 'Mantenha 30% de firmeza abdominal sustentada enquanto digita ou simula atividade no banco.', 55],
-                            ['Torção Resistida Isométrica no Banco', 'Segure a lateral do banco e tente girar o tronco sem produzir movimento visível.', 55],
-                            ['Transição Sentar-Levantar com Pausa Intermediária', 'Levante do banco, pare a meio caminho por 4 segundos sustentando a carga e termine de subir.', 60]
+                            ['Bracing Submáximo em Tarefas', 'Mantenha 30% de firmeza abdominal sustentada enquanto digita ou simula atividade no banco.', 55, 'img/bracing/bracing_seated_360.jpg'],
+                            ['Torção Resistida Isométrica no Banco', 'Segure a lateral do banco e tente girar o tronco sem produzir movimento visível.', 55, 'img/bracing/bracing_seated_arms.jpg'],
+                            ['Transição Sentar-Levantar com Pausa Intermediária', 'Levante do banco, pare a meio caminho por 4 segundos sustentando a carga e termine de subir.', 60, 'img/bracing/bracing_sit_to_stand.jpg']
                         ],
                         // Sessão B (Em Pé)
                         [
-                            ['Agachamento Funcional com Alcance Baixo', 'Em pé, dobre quadris e joelhos simulando pegar um objeto do chão com coluna neutra protegida.', 55],
-                            ['Empurrar Isométrico contra a Parede', 'Em pé, empurre as palmas contra a parede com força progressiva mantendo a coluna estável.', 60],
-                            ['Marcha com Mudança Rápida de Direção', 'Em passos curtos no lugar, gire 90° o apoio dos pés travando o tronco no eixo vertical.', 60]
+                            ['Agachamento Funcional com Alcance Baixo', 'Em pé, dobre quadris e joelhos simulando pegar um objeto do chão com coluna neutra protegida.', 55, 'img/bracing/bracing_sit_to_stand.jpg'],
+                            ['Empurrar Isométrico contra a Parede', 'Em pé, empurre as palmas contra a parede com força progressiva mantendo a coluna estável.', 60, 'img/bracing/bracing_wall_push.jpg'],
+                            ['Marcha com Mudança Rápida de Direção', 'Em passos curtos no lugar, gire 90° o apoio dos pés travando o tronco no eixo vertical.', 60, 'img/bracing/bracing_standing_single_leg.jpg']
                         ]
                     ],
                     // Semana 8: Consolidação e Protocolo Vitalício
                     [
                         // Sessão A (Sentado e Em Pé)
                         [
-                            ['Tríade McGill Adaptada (Banco & Em Pé)', 'Circuito sequencial: sustentação no banco, Bird Dog em pé e Pallof sem apoio.', 60],
-                            ['Bracing sob Esforço Respiratório e Fala', 'Mantenha a parede abdominal rígida enquanto respira profundamente e fala sem interrupção.', 60],
-                            ['Checagem Postural Expressa de 15 Segundos', 'Ativação reflexa imediata de auto-alongamento e rigidez protetora para uso no dia a dia.', 60]
+                            ['Tríade McGill Adaptada (Banco & Em Pé)', 'Circuito sequencial: sustentação no banco, Bird Dog em pé e Pallof sem apoio.', 60, 'img/bracing/bracing_standing_support.jpg'],
+                            ['Bracing sob Esforço Respiratório e Fala', 'Mantenha a parede abdominal rígida enquanto respira profundamente e fala sem interrupção.', 60, 'img/bracing/bracing_seated_360.jpg'],
+                            ['Checagem Postural Expressa de 15 Segundos', 'Ativação reflexa imediata de auto-alongamento e rigidez protetora para uso no dia a dia.', 60, 'img/bracing/bracing_standing_aligned.jpg']
                         ],
                         // Sessão B (Em Pé)
                         [
-                            ['Teste de Resistência do Core em Pé', 'Sustentação isométrica contínua em postura ereta com desafios táteis e respiração livre.', 60],
-                            ['Circuito Integrado de Trabalho', 'Sequência funcional: levantar do banco, caminhar 5 passos com core firme e sentar controlado.', 60],
-                            ['Protocolo de Manutenção Diária Vitalícia', 'Rotina expressa de 3 minutos para manutenção definitiva da estabilidade lombar no trabalho.', 60]
+                            ['Teste de Resistência do Core em Pé', 'Sustentação isométrica contínua em postura ereta com desafios táteis e respiração livre.', 60, 'img/bracing/bracing_standing_aligned.jpg'],
+                            ['Circuito Integrado de Trabalho', 'Sequência funcional: levantar do banco, caminhar 5 passos com core firme e sentar controlado.', 60, 'img/bracing/bracing_sit_to_stand.jpg'],
+                            ['Protocolo de Manutenção Diária Vitalícia', 'Rotina expressa de 3 minutos para manutenção definitiva da estabilidade lombar no trabalho.', 60, 'img/bracing/bracing_seated_360.jpg']
                         ]
                     ]
                 ];
@@ -10369,8 +10383,9 @@
                     }
                 ];
 
-                exercises.forEach(([name, instruction, workSeconds], exIdx) => {
+                exercises.forEach(([name, instruction, workSeconds, image], exIdx) => {
                     const exNum = exIdx + 1;
+                    const exImg = image || '';
                     for (let set = 1; set <= 3; set++) {
                         steps.push({
                             title: `Ex ${exNum}/3: ${name} • Série ${set}/3`,
@@ -10380,7 +10395,8 @@
                             voice: set === 1 ? name : `Série ${set} de ${name}`,
                             badge: `EX ${exNum}/3 • ${set}/3`,
                             phase: 'controle',
-                            series: (exIdx * 3) + set
+                            series: (exIdx * 3) + set,
+                            image: exImg
                         });
                         if (set < 3) {
                             steps.push({
@@ -11422,6 +11438,19 @@
             document.getElementById('workoutStepInstruction').innerText = currentStep.instruction;
             document.getElementById('dailyExecutionTimer').innerText = formatDailyTime(stepTimeLeft);
 
+            // Posture Image Card (ex: Bracing McGill)
+            const postureCard = document.getElementById('workoutPostureCard');
+            const postureImg = document.getElementById('workoutPostureImg');
+            if (postureCard && postureImg) {
+                if (currentStep.image) {
+                    postureImg.src = currentStep.image;
+                    postureCard.classList.remove('hidden');
+                } else {
+                    postureCard.classList.add('hidden');
+                    postureImg.removeAttribute('src');
+                }
+            }
+
             // 2. State Badge & Rings (Rest vs Action vs Peak/Fast)
             const badgeEl = document.getElementById('workoutStepBadge');
             const circleBg = document.getElementById('workoutCircleBg');
@@ -11947,9 +11976,33 @@
             AppState.mente.phaseSecLeft = Math.max(0, state.stepTimeLeft || 0);
             const phases = getActivePatternPhases();
             const curPhaseIdx = (state.currentStepIndex || 0) % phases.length;
+            const prevPhaseIdx = AppState.mente.currentPhaseIdx;
             AppState.mente.currentPhaseIdx = curPhaseIdx;
             const currentPhase = phases[curPhaseIdx] || phases[0];
-            applyBreathPhaseUI(currentPhase, false);
+            const phaseChanged = prevPhaseIdx !== curPhaseIdx;
+            if (phaseChanged || !AppState.mente.hasAppliedInitialPhase) {
+                applyBreathPhaseUI(currentPhase, phaseChanged);
+                AppState.mente.hasAppliedInitialPhase = true;
+                if (phaseChanged && curPhaseIdx === 0 && (AppState.mente.activePattern || 'caixa') === 'caixa') {
+                    const boxRect = document.getElementById('box-track-rect');
+                    if (boxRect) {
+                        boxRect.style.transition = 'none';
+                        boxRect.style.strokeDashoffset = 335;
+                        setTimeout(() => {
+                            if (boxRect) boxRect.style.transition = 'stroke-dashoffset 0.95s linear';
+                        }, 30);
+                    }
+                    const oledBoxRect = document.getElementById('oled-box-track-rect');
+                    if (oledBoxRect) {
+                        oledBoxRect.style.transition = 'none';
+                        oledBoxRect.style.strokeDashoffset = 448;
+                        setTimeout(() => {
+                            if (oledBoxRect) oledBoxRect.style.transition = 'stroke-dashoffset 0.95s linear';
+                        }, 30);
+                    }
+                }
+            }
+            renderBreathTickUI();
         }
 
         function handleNativeResponsivePauseState(state) {
