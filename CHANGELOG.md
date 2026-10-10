@@ -7,6 +7,17 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
+## [1.1.43] - 2026-10-10
+
+### Adicionado
+- **E15 — Bracing progressivo:** catálogo e progressão funcional de 8 semanas, com uma sessão diária em 5 dias da semana e exercícios realizados sentado ou em pé.
+- Retomada da sessão pelo estado salvo e registro de prática parcial ao interromper após iniciar os exercícios.
+- Regressões dedicadas para catálogo, progressão, integração da sessão e guia, além de cobertura para persistência e compatibilidade.
+
+### Validação
+- Suíte técnica e builds Android passaram.
+- Aprovação visual das pranchas e validação em WebView/aparelho, tela bloqueada, TalkBack e Galaxy Watch físicos permanecem pendentes (NOT_TESTED).
+
 ## [1.1.42] - 2026-10-09
 
 ### Adicionado

@@ -7,12 +7,20 @@ const html = fs.readFileSync(path.join(__dirname, '..', 'app', 'src', 'main', 'a
 function extractFunction(name) {
     const start = html.indexOf(`        function ${name}(`);
     assert(start >= 0, `Função ausente: ${name}`);
+    const bodyStart = html.indexOf(') {', start) + 2;
     let depth = 0, opened = false;
-    for (let index = html.indexOf('{', start); index < html.length; index++) {
+    for (let index = bodyStart; index < html.length; index++) {
         if (html[index] === '{') { depth++; opened = true; }
         if (html[index] === '}' && opened && --depth === 0) return html.slice(start, index + 1);
     }
     throw new Error(`Função incompleta: ${name}`);
+}
+function extractConst(name) {
+    const start = html.indexOf(`const ${name} =`);
+    assert(start >= 0, `Constante ausente: ${name}`);
+    const end = html.indexOf(';\r\n', start);
+    assert(end > start, `Constante incompleta: ${name}`);
+    return html.slice(start, end + 1);
 }
 const appState = html.slice(html.indexOf('        const AppState = {'), html.indexOf('        const CORE_DATA_VERSION'));
 const persistenceStart = html.indexOf('        const CORE_PROGRESS_SNAPSHOT_KEY');
@@ -21,6 +29,8 @@ assert(persistenceStart > 0 && persistenceEnd > persistenceStart);
 const source = [
     appState,
     'const CORE_DATA_VERSION = 3;',
+    extractConst('BRACING_EXERCISES'), extractConst('BRACING_WEEKS'),
+    extractFunction('getBracingSteps'),
     extractFunction('localDateKey'), extractFunction('weekDateKeys'), extractFunction('syncDerivedStats'),
     extractFunction('getConfiguredWeeklyTargetDays'),
     extractFunction('isStrictNonNegativeInteger'),
@@ -32,6 +42,7 @@ const source = [
     extractFunction('syncSmartMiddayReminderNative'),
     extractFunction('synchronizeProgramProgress'),
     extractFunction('applyProgramProgressAdjustment'),
+    extractFunction('migrateBracingProgram'),
     html.slice(persistenceStart, persistenceEnd)
 ].join('\n');
 const noopNames = [
@@ -320,10 +331,10 @@ console.log('Cancelamento e importação com data anterior: passaram.');
     const first = vm.runInContext('AppState.programs[0].sessionsToday = 0; getProgramSteps("1", 2)', env.context);
     const second = vm.runInContext('AppState.programs[0].sessionsToday = 1; getProgramSteps("1", 2)', env.context);
     assert.ok(first.length >= 7 && second.length >= 7);
-    assert.notEqual(first[1].title, second[1].title, 'sessões A e B de Bracing precisam ter práticas diferentes');
+    assert.equal(first[1].title, second[1].title, 'sessionNum legado não deve rotacionar nem duplicar o volume diário');
     assert.match(first.at(-1).title, /Encerramento/);
 }
-console.log('Semana/sessão e migração/variedade do Bracing: passaram.');
+console.log('Migração Bracing e contrato de sessão diária sem rotação: passaram.');
 {
     const env = setup();
     const adjusted = vm.runInContext('applyProgramProgressAdjustment(AppState.programs[1], 2, 1, 1)', env.context);
@@ -348,6 +359,9 @@ console.log('Semana/sessão e migração/variedade do Bracing: passaram.');
     };
     assert.equal(vm.runInContext('normalizeSessionRecord(rawRecord).id', Object.assign(env.context, { rawRecord: record })), record.id);
     assert.equal(vm.runInContext('normalizeSessionRecord(rawRecord).totalElapsedSeconds', Object.assign(env.context, { rawRecord: record })), null, 'registro legado sem tempo total deve permanecer explicitamente desconhecido');
+    const bracingRecord = { ...record, id: 'bracing-reduced-1', programId: '1', completedSeries: 2, volumeStatus: 'reduced' };
+    assert.equal(vm.runInContext('normalizeSessionRecord(rawRecord).volumeStatus', Object.assign(env.context, { rawRecord: bracingRecord })), 'reduced', 'histórico diferencia volume parcial sem alterar o status de fechamento da sessão');
+    assert.throws(() => vm.runInContext('normalizeSessionRecord({ ...rawRecord, volumeStatus: "unknown" })', Object.assign(env.context, { rawRecord: bracingRecord })), /estado de volume inválido/);
     const timedRecord = { ...record, totalElapsedSeconds: 123 };
     assert.equal(vm.runInContext('normalizeSessionRecord(rawRecord).totalElapsedSeconds', Object.assign(env.context, { rawRecord: timedRecord })), 123, 'normalização deve preservar o tempo total real');
     assert.equal(vm.runInContext('upsertSessionRecord(rawRecord)', env.context), true);

@@ -19,8 +19,9 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, estabiliza�
 
 ## Versão Atual
 
-- **Versão base local:** `1.1.42` (`versionCode 42`)
-- **Última Release publicada:** `1.1.42` (`versionCode 42`) — reformulação clínica do Bracing para modelo progressivo de 8 semanas (5 dias/semana, sentado ou em pé) com novas ilustrações anatômicas AMOLED dedicadas (BR-01 a BR-08), variedade de sessão diária e sincronização nativa completa.
+- **Versão base local:** `1.1.43` (`versionCode 43`)
+- **Release:** `1.1.43` — implementação funcional E15 do Bracing: catálogo e progressão de 8 semanas, sessão única de 5 dias por semana, retomada segura e registro de prática parcial.
+- **Validação desta versão:** regressões e build técnico passaram. Aprovação visual das pranchas e validação em celular e Galaxy Watch físicos continuam pendentes; consulte o [registro de execução](docs/roadmap/execucao.md).
 - **Downloads:** O APK assinado para celular e relógio está disponível na aba de [Releases](https://github.com/playertwo1/Adbm/releases).
 - **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.
 
@@ -58,8 +59,8 @@ $env:KEYSTORE_PATH = "caminho/para/coreflow-upload.jks"
 $env:KEYSTORE_PASSWORD = "sua_senha_keystore"
 $env:KEY_ALIAS = "seu_alias"
 $env:KEY_PASSWORD = "sua_senha_chave"
-$env:BUILD_VERSION_CODE = "39"
-$env:BUILD_VERSION_NAME = "1.1.39"
+$env:BUILD_VERSION_CODE = "43"
+$env:BUILD_VERSION_NAME = "1.1.43"
 
 .\gradlew.bat :app:assembleRelease :wear:assembleRelease
 ```

@@ -60,7 +60,7 @@ const forbiddenFloorTerms = ['no chão', 'deite no chão', 'quatro apoios', 'de 
 function extractFunction(name) {
     const start = htmlContent.search(new RegExp(`function\\s+${name}\\s*\\(`));
     assert(start >= 0, `função ausente: ${name}`);
-    const bodyStart = htmlContent.indexOf('{', start);
+    const bodyStart = htmlContent.indexOf(') {', start) + 2;
     let depth = 0;
     for (let i = bodyStart; i < htmlContent.length; i++) {
         if (htmlContent[i] === '{') depth++;
@@ -73,13 +73,22 @@ const stepsContext = vm.createContext({
     AppState: { programs },
     console
 });
-vm.runInContext(extractFunction('getProgramSteps'), stepsContext);
+const extractConst = name => {
+    const start = htmlContent.indexOf(`const ${name} =`);
+    const end = htmlContent.indexOf(';\r\n', start);
+    assert(start >= 0 && end > start, `constante ausente: ${name}`);
+    return htmlContent.slice(start, end + 1);
+};
+vm.runInContext([
+    extractConst('BRACING_EXERCISES'), extractConst('BRACING_WEEKS'),
+    extractFunction('getBracingSteps'), extractFunction('getProgramSteps')
+].join('\n'), stepsContext);
 
-const BRACING_EXPECTED_SERIES = [3, 4, 4, 5, 5, 6, 6, 10]; // séries de trabalho por semana, somadas da tabela de TREINO_BRACING_8_SEMANAS (semana 8: 2 voltas × 5 exercícios)
+const BRACING_EXPECTED_SERIES = [3, 4, 4, 5, 5, 6, 6, 10]; // séries de trabalho por semana, semana 8: 2 voltas × 5 exercícios
 for (let week = 0; week < 8; week++) {
     for (let session = 1; session <= 2; session++) {
         const steps = stepsContext.getProgramSteps('1', week, session);
-        assert(Array.isArray(steps) && steps.length > 0, `Semana ${week + 1} Sessão ${session} deve retornar steps`);
+        assert(Array.isArray(steps) && steps.length > 0, `Semana ${week + 1} deve retornar passos`);
 
         // Deve ter preparação
         assert.strictEqual(steps[0].badge, 'PREPARAÇÃO', `Passo 1 deve ser PREPARAÇÃO`);
@@ -88,7 +97,8 @@ for (let week = 0; week < 8; week++) {
 
         // Contar séries de trabalho
         const exerciseWorkSteps = steps.filter(s => s.badge && s.badge.startsWith('EX ') && !s.isRest);
-        assert.strictEqual(exerciseWorkSteps.length, BRACING_EXPECTED_SERIES[week], `Semana ${week + 1} deve ter ${BRACING_EXPECTED_SERIES[week]} séries de trabalho`);
+        const seriesIndexes = new Set(exerciseWorkSteps.map(step => step.series));
+        assert.strictEqual(seriesIndexes.size, BRACING_EXPECTED_SERIES[week], `Semana ${week + 1} deve ter ${BRACING_EXPECTED_SERIES[week]} séries de trabalho`);
 
         // Verificar imagens anatômicas das posturas
         exerciseWorkSteps.forEach(s => {
@@ -108,7 +118,7 @@ for (let week = 0; week < 8; week++) {
         });
     }
 }
-console.log('✓ Matriz Clínica do Bracing: 8 semanas x 2 sessões x 3 exercícios reais, 100% no banco ou em pé (zero chão) com ilustrações anatômicas validadas');
+console.log('✓ Matriz E15 do Bracing: 8 semanas, 1 sessão diária, exercícios por repetição e zero posições no chão');
 
 // 3.1 Modal de Execução Diária: Presença dos elementos de imagem de postura
 assert(htmlContent.includes('id="workoutPostureCard"'), 'dailyExecutionModal deve conter #workoutPostureCard');

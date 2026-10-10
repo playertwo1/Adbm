@@ -3347,18 +3347,18 @@
                     currentDayInWeek: 1,
                     daysCompletedInPhase: 0,
                     sessionsToday: 0,
-                    dailyTarget: 2,
-                    reminderTimes: ['09:00', '15:00'],
+                    dailyTarget: 1,
+                    reminderTimes: ['09:00'],
                     remindersEnabled: false,
                     phases: [
-                        { title: 'Semana 1: Consciência abdominal', details: 'Sentado e em pé • 2 exercícios • 3 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 2: Sustentação e respiração', details: 'Sentado e em pé • 2 exercícios • 4 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 3: Controle com movimento sentado', details: 'Sentado e em pé • 3 exercícios • 4 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 4: Resistência com movimentos simples', details: 'Sentado e em pé • 3 exercícios • 5 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 5: Controle postural', details: 'Sentado e em pé • 3 exercícios • 5 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 6: Resistência entre membros', details: 'Sentado e em pé • 3 exercícios • 6 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 7: Controle contra rotação', details: 'Sentado e em pé • 3 exercícios • 6 séries • 5 dias por semana', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 8: Circuito de domínio', details: 'Em pé e sentado • 5 exercícios • 2 voltas • 5 dias por semana', weeklyTargetDays: 5, completed: false }
+                        { title: 'Semana 1: Consciência abdominal', details: 'BR-01: 2×6×5 s; BR-02: 1×6×5 s • esforço 2–3/10 • cerca de 5 min', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 2: Sustentação e respiração', details: 'BR-01: 2×6×8 s; BR-02: 2×6×8 s • esforço 2–3/10 • cerca de 6–8 min', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 3: Controle com movimento sentado', details: 'BR-01: 1×5×8 s; BR-03: 2×6/lado×3 s; BR-02: 1×6×10 s • esforço 3–4/10', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 4: Resistência com movimentos simples', details: 'BR-03: 2×8/lado×3 s; BR-04: 2×10; BR-02: 1×8×10 s • esforço 3–4/10', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 5: Controle postural', details: 'BR-05: 2×8; BR-06: 2×5/lado×8 s; BR-01: 1×6×10 s • esforço 3–5/10', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 6: Resistência entre membros', details: 'BR-07: 2×6/lado×5 s; BR-05: 2×8; BR-04: 2×12 • esforço 3–5/10', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 7: Controle contra rotação', details: 'BR-08: 2×6/lado×4 s; BR-07: 2×7/lado×6 s; BR-06: 2×6/lado×10 s • esforço 4–6/10', weeklyTargetDays: 5, completed: false },
+                        { title: 'Semana 8: Circuito de domínio', details: '2 voltas: BR-02, BR-05, BR-07, BR-08 e BR-06 • esforço 4–6/10 • cerca de 15–20 min', weeklyTargetDays: 5, completed: false }
                     ]
                 },
                 {
@@ -6002,124 +6002,34 @@
         /* -------------------------------------------------------------
            MODAL: PROGRAMA DE BRACING DE 8 SEMANAS
         ------------------------------------------------------------- */
-        const BRACING_PHASES = [
-            { title: 'Semana 1: Consciência e Respiração', focus: 'Reconhecer firmeza moderada sem prender o ar.', home: { pos: 'Deitado', inst: 'Respiração 360° e ativação suave durante a expiração.', vol: 'Sessão A • 3 séries guiadas' }, work: { pos: 'Sentado', inst: 'Pés apoiados; firme e solte completamente entre tentativas.', vol: 'Sessão B • 3 séries guiadas' }, time: 35 },
-            { title: 'Semana 2: Controle em Posições', focus: 'Levar o controle de deitado para sentado e em pé.', home: { pos: 'Deitado e sentado', inst: 'Mude a posição sem elevar os ombros ou alterar a respiração.', vol: 'Sessão A • 3 séries' }, work: { pos: 'Em pé com apoio', inst: 'Use a mesa e mantenha joelhos destravados.', vol: 'Sessão B • 3 séries' }, time: 40 },
-            { title: 'Semana 3: Estabilidade em 4 Apoios', focus: 'Manter coluna neutra contra pequenas mudanças de carga.', home: { pos: 'Quatro apoios', inst: 'Firme o tronco sem arredondar ou afundar a lombar.', vol: 'Sessão A • estabilidade' }, work: { pos: 'Quatro apoios', inst: 'Transfira o peso lentamente para frente e para trás.', vol: 'Sessão B • transferência' }, time: 45 },
-            { title: 'Semana 4: Alcance sem Rotação', focus: 'Preservar o alinhamento enquanto braços se movem.', home: { pos: 'Quatro apoios', inst: 'Deslize uma mão à frente e alterne os lados.', vol: 'Sessão A • alcance alternado' }, work: { pos: 'Em pé', inst: 'Alcance objetos leves sem girar o tronco.', vol: 'Sessão B • alcance funcional' }, time: 45 },
-            { title: 'Semana 5: Dobradiça e Cadeira', focus: 'Aplicar estabilidade ao sentar, levantar e inclinar.', home: { pos: 'Cadeira', inst: 'Sente e levante devagar mantendo a respiração livre.', vol: 'Sessão A • 3 séries' }, work: { pos: 'Em pé', inst: 'Leve o quadril para trás com coluna neutra.', vol: 'Sessão B • dobradiça' }, time: 50 },
-            { title: 'Semana 6: Movimento Controlado', focus: 'Controlar o tronco durante marcha e tarefas leves.', home: { pos: 'Em pé', inst: 'Marche devagar sem inclinar o corpo.', vol: 'Sessão A • marcha' }, work: { pos: 'Mesa e cadeira', inst: 'Alterne sentar, levantar e alcançar.', vol: 'Sessão B • circuito discreto' }, time: 55 },
-            { title: 'Semana 7: Transições Cotidianas', focus: 'Usar firmeza só durante o esforço e relaxar depois.', home: { pos: 'Funcional', inst: 'Pratique transições com movimento fluido.', vol: 'Sessão A • transições' }, work: { pos: 'Sentado ou em pé', inst: 'Faça uma tarefa leve e solte totalmente ao terminar.', vol: 'Sessão B • tarefa real' }, time: 60 },
-            { title: 'Semana 8: Consolidação', focus: 'Integrar técnica e escolher uma rotina sustentável.', home: { pos: 'Circuito', inst: 'Combine marcha, cadeira e alcance com qualidade.', vol: 'Sessão A • circuito' }, work: { pos: 'Livre', inst: 'Teste duas tarefas e planeje a manutenção.', vol: 'Sessão B • teste técnico' }, time: 60 }
-        ];
-
-        let bracingPhaseInterval = null;
+        let bracingExpandedWeek = 0;
 
         function renderBracingProgram() {
             const container = document.getElementById('bracingProgramList');
-            container.innerHTML = '';
-
-            BRACING_PHASES.forEach((phase, idx) => {
-                if (typeof phase.expanded === 'undefined') phase.expanded = false;
-                if (typeof phase.timeLeft === 'undefined') phase.timeLeft = phase.time;
-                if (typeof phase.isRunning === 'undefined') phase.isRunning = false;
-
-                const isExpanded = phase.expanded;
-                const isRunning = phase.isRunning;
-
-                container.innerHTML += `
-                    <div class="bg-slate-800 rounded-2xl overflow-hidden border ${isRunning ? 'border-emerald-500/50 shadow-emerald-500/10' : 'border-slate-700/80'} shadow-lg transition-all duration-300">
-                        <div class="p-4 flex items-center justify-between cursor-pointer active:bg-slate-700/50 transition" onclick="toggleBracingPhase(${idx})">
-                            <div class="pr-2">
-                                <h3 class="text-sm font-bold ${isExpanded ? 'text-emerald-400' : 'text-slate-200'}">${phase.title}</h3>
-                                <p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${phase.focus}</p>
-                            </div>
-                            <div class="w-6 h-6 rounded-full flex items-center justify-center ${isExpanded ? 'bg-emerald-500/20' : 'bg-slate-700'}">
-                                <i class="fa-solid ${isExpanded ? 'fa-chevron-up text-emerald-400' : 'fa-chevron-down text-slate-400'} text-xs"></i>
-                            </div>
-                        </div>
-
-                        <div id="bracing-phase-content-${idx}" class="${isExpanded ? 'block' : 'hidden'} px-4 pb-4 border-t border-slate-700/50 pt-4">
-
-                            <!-- Em Casa -->
-                            <div class="flex gap-3 mb-4">
-                                <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-house text-sm"></i></div>
-                                <div>
-                                    <h4 class="text-xs font-bold text-white">Em Casa (${phase.home.pos})</h4>
-                                    <p class="text-[11px] text-slate-300 mt-1">${phase.home.inst}</p>
-                                    <p class="text-[11px] font-bold text-emerald-400 mt-1">${phase.home.vol}</p>
-                                </div>
-                            </div>
-
-                            <!-- No Trabalho -->
-                            <div class="flex gap-3 mb-5">
-                                <div class="w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-briefcase text-sm"></i></div>
-                                <div>
-                                    <h4 class="text-xs font-bold text-white">No Trabalho (${phase.work.pos})</h4>
-                                    <p class="text-[11px] text-slate-300 mt-1">${phase.work.inst}</p>
-                                    <p class="text-[11px] font-bold text-sky-400 mt-1">${phase.work.vol}</p>
-                                </div>
-                            </div>
-
-                            <!-- Timer Integrado -->
-                            <div class="bg-slate-900/80 rounded-xl p-3 flex items-center justify-between border border-slate-800 shadow-inner">
-                                <div>
-                                    <h5 class="text-xs font-bold text-white">Timer de Prática</h5>
-                                    <p class="text-[10px] text-slate-400">Meta: ${phase.time}s</p>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <span class="text-xl font-bold font-mono ${isRunning ? 'text-emerald-400' : 'text-white'}">${phase.timeLeft}s</span>
-                                    <button onclick="toggleBracingPhaseTimer(${idx})" class="w-20 py-2 rounded-lg text-xs font-bold transition shadow-md active:scale-95 ${isRunning ? 'bg-slate-700 text-white border border-slate-600' : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950'}">
-                                        ${isRunning ? 'Pausar' : 'Iniciar'}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
+            if (!container) return;
+            const program = AppState.programs.find(item => item.id === '1');
+            const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+            container.innerHTML = BRACING_WEEKS.map((week, idx) => {
+                const expanded = bracingExpandedWeek === idx;
+                const prescriptionRows = week.prescriptions.map(item => {
+                    const exercise = BRACING_EXERCISES[item.exerciseId];
+                    const repetitions = `${item.repsPerSide}${item.sideMode === 'alternating' ? ' por lado' : ''}`;
+                    const duration = item.holdSeconds === null ? `${repetitions} repetições lentas` : `${repetitions} × ${item.holdSeconds} s`;
+                    return `<article class="rounded-xl border border-slate-700 bg-slate-950/60 p-3"><div class="flex items-start gap-3"><img src="${escapeHtml(exercise.imageSequence[0])}" alt="${escapeHtml(exercise.name)}" class="h-16 w-16 shrink-0 rounded-lg object-cover" loading="lazy"><div class="min-w-0"><h4 class="text-sm font-bold text-white">${escapeHtml(exercise.id)} · ${escapeHtml(exercise.name)}</h4><p class="mt-1 text-xs text-emerald-300">${item.sets} série(s) · ${escapeHtml(duration)}</p><ol class="mt-2 list-inside list-decimal space-y-1 text-[11px] leading-relaxed text-slate-300">${exercise.stageLabels.map(label => `<li>${escapeHtml(label)}</li>`).join('')}</ol><p class="mt-2 text-[11px] text-amber-200">Cuidados: ${escapeHtml(exercise.cautions.join(' '))}</p></div></div></article>`;
+                }).join('');
+                const phase = program?.phases?.[idx];
+                const current = program?.currentPhaseIndex === idx;
+                return `<section class="overflow-hidden rounded-2xl border ${current ? 'border-emerald-500/50' : 'border-slate-700/80'} bg-slate-800 shadow-lg"><button type="button" aria-expanded="${expanded}" class="flex w-full items-center justify-between gap-3 p-4 text-left" onclick="toggleBracingPhase(${idx})"><span><span class="block text-sm font-bold ${current ? 'text-emerald-300' : 'text-slate-200'}">Semana ${week.week}: ${escapeHtml(week.title)}</span><span class="mt-1 block text-[11px] text-slate-400">Esforço ${escapeHtml(week.effort)} · estimativa da fonte ${escapeHtml(week.estimatedDuration)} · 5 dias de prática</span></span><span aria-hidden="true">${expanded ? '−' : '+'}</span></button><div class="${expanded ? 'block' : 'hidden'} space-y-3 border-t border-slate-700/50 p-4"><p class="text-xs text-slate-300">Uma sessão por dia. Você pode dividi-la em pausas sem duplicar o volume. Continue respirando; ajuste ou pare se houver desconforto anormal.</p>${prescriptionRows}<div class="flex flex-wrap gap-2"><button type="button" onclick="openProgramExerciseDetail('1', ${idx})" class="rounded-xl border border-slate-600 px-4 py-3 text-xs font-bold text-slate-100">Ver detalhes e duração calculada</button>${current ? '<button type="button" onclick="openDailyExecutionModal(\'1\', ' + idx + ')" class="rounded-xl bg-emerald-500 px-4 py-3 text-xs font-bold text-slate-950">Iniciar semana ativa</button>' : ''}</div>${phase?.reviewPending ? '<p class="rounded-xl border border-amber-400/30 bg-amber-500/10 p-3 text-xs text-amber-100">Cinco dias registrados. A progressão aguarda sua avaliação técnica.</p>' : ''}</div></section>`;
+            }).join('');
         }
-
         function toggleBracingPhase(idx) {
-            BRACING_PHASES[idx].expanded = !BRACING_PHASES[idx].expanded;
+            bracingExpandedWeek = bracingExpandedWeek === idx ? -1 : idx;
             renderBracingProgram();
         }
 
         function toggleBracingPhaseTimer(idx) {
-            const phase = BRACING_PHASES[idx];
-
-            if (phase.isRunning) {
-                // Pausar
-                phase.isRunning = false;
-                clearInterval(bracingPhaseInterval);
-                renderBracingProgram();
-            } else {
-                // Parar qualquer outro timer ativo
-                BRACING_PHASES.forEach(p => { p.isRunning = false; });
-                clearInterval(bracingPhaseInterval);
-
-                // Iniciar este timer
-                if (phase.timeLeft === 0) phase.timeLeft = phase.time; // Reseta se acabou
-                phase.isRunning = true;
-
-                playHeavyPulse(); // Haptic forte de início
-
-                bracingPhaseInterval = setInterval(() => {
-                    phase.timeLeft--;
-                    if (phase.timeLeft <= 0) {
-                        clearInterval(bracingPhaseInterval);
-                        phase.isRunning = false;
-                        phase.timeLeft = phase.time; // reseta
-                        playRelaxationSignal(); // Haptic duplo de relaxamento
-                        playTibetanChime();
-                    }
-                    renderBracingProgram();
-                }, 1000);
-
-                renderBracingProgram();
-            }
+            openDailyExecutionModal('1', idx);
         }
-
         function openBracingProgramModal() {
             const modal = document.getElementById('bracingProgramModal');
             const content = document.getElementById('bracingProgramModalContent');
@@ -6148,9 +6058,6 @@
 
             setTimeout(() => {
                 modal.classList.add('hidden');
-                // Pausar timer ativo ao fechar o modal
-                BRACING_PHASES.forEach(p => { p.isRunning = false; });
-                clearInterval(bracingPhaseInterval);
             }, 300);
         }
 
@@ -9653,7 +9560,227 @@
         /* -------------------------------------------------------------
            ABA 3: PROGRAMAS & EVOLUÇÃO (AVANÇO DIÁRIO 2X AO DIA)
         ------------------------------------------------------------- */
+        const BRACING_EXERCISES = {
+            'BR-01': { id: 'BR-01', name: 'Bracing sentado', position: 'seated', instructions: ['Sente-se com os pés apoiados e o tronco ereto.', 'Inspire suavemente.', 'Firme o abdômen na frente, nas laterais e atrás, continuando a respirar.', 'Relaxe completamente entre as repetições.'], cautions: ['Não prenda a respiração.', 'Não sugue a barriga nem levante os ombros.'], imageSequence: ['img/bracing/bracing_seated_360.jpg'], stageLabels: ['Sentado com pés apoiados', 'Inspire suavemente', 'Firmeza com respiração', 'Relaxe'] },
+            'BR-02': { id: 'BR-02', name: 'Bracing em pé', position: 'standing', instructions: ['Fique em pé com os pés na largura do quadril e joelhos destravados.', 'Alinhe costelas e pelve sem rigidez.', 'Ative o abdômen sem mudar a postura e siga respirando.', 'Relaxe após o tempo indicado.'], cautions: ['Não trave os joelhos.', 'Não levante o peito nem contraia os glúteos ao máximo.'], imageSequence: ['img/bracing/bracing_standing_aligned.jpg'], stageLabels: ['Postura alinhada', 'Inspire', 'Firmeza respirando', 'Relaxe'] },
+            'BR-03': { id: 'BR-03', name: 'Marcha sentada com bracing', position: 'seated', instructions: ['Sente-se com os pés apoiados e coluna neutra.', 'Ative o abdômen moderadamente.', 'Eleve um pé poucos centímetros sem inclinar o tronco.', 'Abaixe e alterne as pernas.'], cautions: ['Não gire o quadril nem incline o tronco.', 'Mantenha a respiração livre.'], imageSequence: ['img/bracing/bracing_seated_leg.jpg'], stageLabels: ['Sentado', 'Eleve o pé direito', 'Retorne', 'Eleve o pé esquerdo'] },
+            'BR-04': { id: 'BR-04', name: 'Elevação de calcanhares em pé', position: 'standing', instructions: ['Fique em pé de forma estável, com os pés paralelos.', 'Ative suavemente o abdômen.', 'Eleve os calcanhares devagar.', 'Retorne controlando o movimento.'], cautions: ['Não use impulso nem perca o equilíbrio.', 'Respire normalmente.'], imageSequence: ['img/bracing/bracing_standing_calf_raise.jpg'], stageLabels: ['Pés apoiados', 'Eleve os calcanhares', 'Controle no alto', 'Baixe devagar'] },
+            'BR-05': { id: 'BR-05', name: 'Inclinação do quadril em pé', position: 'standing', instructions: ['Fique em pé com os pés na largura do quadril e joelhos levemente flexionados.', 'Firme o abdômen.', 'Leve o quadril para trás e incline o tronco 15–30° a partir do quadril.', 'Retorne de forma controlada.'], cautions: ['Não arredonde a lombar nem force a amplitude.', 'Mantenha a respiração livre.'], imageSequence: ['img/bracing/bracing_standing_hip_hinge.jpg'], stageLabels: ['Postura neutra', 'Quadril para trás', 'Incline 15–30°', 'Retorne'] },
+            'BR-06': { id: 'BR-06', name: 'Base desencontrada com bracing', position: 'standing', instructions: ['Coloque um pé meio passo à frente, com base estável.', 'Ative o abdômen e olhe à frente.', 'Transfira pouco peso entre os pés sem girar o tronco.', 'Alterne qual pé fica à frente.'], cautions: ['Não cruze os pés nem use base estreita.', 'Evite grandes deslocamentos e mantenha o equilíbrio.'], imageSequence: ['img/bracing/bracing_staggered_stance.jpg'], stageLabels: ['Base paralela', 'Pé direito à frente', 'Pequeno deslocamento', 'Troque a base'] },
+            'BR-07': { id: 'BR-07', name: 'Joelho contra mão oposta, sentado', position: 'seated', instructions: ['Sente-se ereto com os pés apoiados.', 'Apoie a palma esquerda na parte superior da coxa direita, perto do joelho.', 'Tente elevar levemente a coxa contra resistência suave, com pouco ou nenhum movimento.', 'Relaxe e inverta os lados.'], cautions: ['Não pressione a patela nem faça força máxima.', 'Não gire o tronco nem prenda a respiração.'], imageSequence: ['img/bracing/bracing_seated_press.jpg'], stageLabels: ['Sentado', 'Mão esquerda na coxa direita', 'Resista sem girar', 'Inverta os lados'] },
+            'BR-08': { id: 'BR-08', name: 'Marcha em pé com braço oposto', position: 'standing', instructions: ['Fique em pé e estabilize o tronco com bracing moderado.', 'Eleve discretamente o joelho direito e leve o braço esquerdo à frente.', 'Retorne à posição estável.', 'Alterne os lados.'], cautions: ['Não eleve demais o joelho nem arqueie a coluna.', 'Mantenha o equilíbrio e respire livremente.'], imageSequence: ['img/bracing/bracing_standing_march_arm.jpg'], stageLabels: ['Postura estável', 'Joelho direito e braço esquerdo', 'Retorne', 'Inverta os lados'] }
+        };
+
+        const BRACING_WEEKS = [
+            { week: 1, title: 'Consciência abdominal', effort: '2–3/10', estimatedDuration: '5 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-01', sets: 2, repsPerSide: 6, sideMode: 'none', holdSeconds: 5, movementSeconds: null }, { exerciseId: 'BR-02', sets: 1, repsPerSide: 6, sideMode: 'none', holdSeconds: 5, movementSeconds: null }] },
+            { week: 2, title: 'Sustentação e respiração', effort: '2–3/10', estimatedDuration: '6–8 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-01', sets: 2, repsPerSide: 6, sideMode: 'none', holdSeconds: 8, movementSeconds: null }, { exerciseId: 'BR-02', sets: 2, repsPerSide: 6, sideMode: 'none', holdSeconds: 8, movementSeconds: null }] },
+            { week: 3, title: 'Controle com movimento sentado', effort: '3–4/10', estimatedDuration: '7–9 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-01', sets: 1, repsPerSide: 5, sideMode: 'none', holdSeconds: 8, movementSeconds: null }, { exerciseId: 'BR-03', sets: 2, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 3, movementSeconds: null }, { exerciseId: 'BR-02', sets: 1, repsPerSide: 6, sideMode: 'none', holdSeconds: 10, movementSeconds: null }] },
+            { week: 4, title: 'Resistência com movimentos simples', effort: '3–4/10', estimatedDuration: '8–10 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-03', sets: 2, repsPerSide: 8, sideMode: 'alternating', holdSeconds: 3, movementSeconds: null }, { exerciseId: 'BR-04', sets: 2, repsPerSide: 10, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }, { exerciseId: 'BR-02', sets: 1, repsPerSide: 8, sideMode: 'none', holdSeconds: 10, movementSeconds: null }] },
+            { week: 5, title: 'Controle postural', effort: '3–5/10', estimatedDuration: '9–12 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-05', sets: 2, repsPerSide: 8, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }, { exerciseId: 'BR-06', sets: 2, repsPerSide: 5, sideMode: 'alternating', holdSeconds: 8, movementSeconds: null }, { exerciseId: 'BR-01', sets: 1, repsPerSide: 6, sideMode: 'none', holdSeconds: 10, movementSeconds: null }] },
+            { week: 6, title: 'Resistência entre membros', effort: '3–5/10', estimatedDuration: '10–13 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-07', sets: 2, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 5, movementSeconds: null }, { exerciseId: 'BR-05', sets: 2, repsPerSide: 8, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }, { exerciseId: 'BR-04', sets: 2, repsPerSide: 12, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }] },
+            { week: 7, title: 'Controle contra rotação', effort: '4–6/10', estimatedDuration: '12–18 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-08', sets: 2, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 4, movementSeconds: null }, { exerciseId: 'BR-07', sets: 2, repsPerSide: 7, sideMode: 'alternating', holdSeconds: 6, movementSeconds: null }, { exerciseId: 'BR-06', sets: 2, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 10, movementSeconds: null }] },
+            { week: 8, title: 'Circuito de domínio', effort: '4–6/10', estimatedDuration: '15–20 min', weeklyTargetDays: 5, laps: 2, prescriptions: [{ exerciseId: 'BR-02', sets: 1, repsPerSide: 5, sideMode: 'none', holdSeconds: 10, movementSeconds: null }, { exerciseId: 'BR-05', sets: 1, repsPerSide: 8, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }, { exerciseId: 'BR-07', sets: 1, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 6, movementSeconds: null }, { exerciseId: 'BR-08', sets: 1, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 5, movementSeconds: null }, { exerciseId: 'BR-06', sets: 1, repsPerSide: 4, sideMode: 'alternating', holdSeconds: 8, movementSeconds: null }] }
+        ];
+
+        function getBracingSteps(phaseIndex, options = {}) {
+            if (!Number.isInteger(phaseIndex) || phaseIndex < 0 || phaseIndex >= BRACING_WEEKS.length) throw new RangeError('Semana de Bracing inválida.');
+            if (!options || typeof options !== 'object' || Array.isArray(options)) throw new TypeError('Opções de Bracing inválidas.');
+            const week = BRACING_WEEKS[phaseIndex];
+            const steps = [{ title: 'Preparação', instruction: 'Ajuste a posição sentado ou em pé. Respire sem esforço e mantenha uma postura confortável.', duration: 15, isRest: true, voice: 'Ajuste a postura e respire sem esforço.', badge: 'PREPARAÇÃO' }];
+            let series = 0;
+            for (let lapIndex = 0; lapIndex < week.laps; lapIndex++) {
+                if (lapIndex > 0) steps.push({ title: `Descanso entre voltas ${lapIndex}/${week.laps}`, instruction: 'Solte a tensão abdominal, respire normalmente e relaxe.', duration: 50, isRest: true, voice: 'Descanso entre voltas.', badge: 'DESCANSO ENTRE VOLTAS', phase: 'descanso' });
+                week.prescriptions.forEach((prescription, exerciseIndex) => {
+                    const exercise = BRACING_EXERCISES[prescription.exerciseId];
+                    for (let setIndex = 0; setIndex < prescription.sets; setIndex++) {
+                        series++;
+                        const repetitionsPerSide = prescription.sideMode === 'alternating' ? prescription.repsPerSide * 2 : prescription.repsPerSide;
+                        for (let repIndex = 0; repIndex < repetitionsPerSide; repIndex++) {
+                            const side = prescription.sideMode === 'alternating' ? (repIndex % 2 === 0 ? 'right' : 'left') : null;
+                            const sideLabel = side === 'right' ? ' • Lado direito' : side === 'left' ? ' • Lado esquerdo' : '';
+                            const duration = prescription.holdSeconds ?? prescription.movementSeconds;
+                            steps.push({
+                                title: `Semana ${week.week} • ${exercise.name} • Série ${setIndex + 1}/${prescription.sets} • Repetição ${prescription.sideMode === 'alternating' ? Math.floor(repIndex / 2) + 1 : repIndex + 1}/${prescription.repsPerSide}${sideLabel}`,
+                                instruction: `${exercise.instructions.join(' ')} Continue respirando. ${exercise.cautions.join(' ')}`,
+                                duration,
+                                isRest: false,
+                                voice: `${exercise.name}${sideLabel}`,
+                                badge: `EX ${exerciseIndex + 1}/${week.prescriptions.length}`,
+                                phase: 'controle', series, image: exercise.imageSequence[0],
+                                exerciseId: exercise.id,
+                                exerciseStage: exercise.stageLabels[side === 'left' ? 3 : side === 'right' ? 1 : 2],
+                                repIndex: repIndex + 1,
+                                repsTotal: repetitionsPerSide,
+                                side,
+                                setIndex: setIndex + 1,
+                                lapIndex: lapIndex + 1
+                            });
+                            const lastRep = repIndex === repetitionsPerSide - 1;
+                            if (!lastRep && prescription.holdSeconds !== null) steps.push({ title: 'Relaxe entre repetições', instruction: 'Solte completamente a firmeza, respire normalmente e relaxe os ombros.', duration: 15, isRest: true, voice: 'Relaxe e continue respirando.', badge: 'DESCANSO', phase: 'descanso', series });
+                        }
+                        if (setIndex < prescription.sets - 1) steps.push({ title: 'Descanso entre séries', instruction: 'Solte a tensão abdominal e recupere a respiração antes da próxima série.', duration: 30, isRest: true, voice: 'Descanso entre séries.', badge: 'RECUPERAÇÃO', phase: 'descanso', series });
+                    }
+                    const lastExercise = exerciseIndex === week.prescriptions.length - 1;
+                    if (!lastExercise) steps.push({ title: `Transição para ${BRACING_EXERCISES[week.prescriptions[exerciseIndex + 1].exerciseId].name}`, instruction: 'Prepare a próxima posição e mantenha a respiração livre.', duration: 30, isRest: true, voice: 'Transição para o próximo exercício.', badge: 'TRANSIÇÃO', phase: 'descanso' });
+                });
+            }
+            steps.push({ title: 'Encerramento e checagem', instruction: 'Relaxe. Confira se respirou livremente, manteve a postura e terminou sem desconforto anormal.', duration: 20, isRest: true, voice: 'Relaxe e confira a qualidade da prática.', badge: 'QUALIDADE' });
+            const startStepIndex = options.startStepIndex ?? 0;
+            if (!Number.isInteger(startStepIndex) || startStepIndex < 0 || startStepIndex > steps.length) throw new RangeError('Índice inicial de Bracing inválido.');
+            return steps.slice(startStepIndex);
+        }
+
+        function migrateBracingProgram(program) {
+            if (!program || String(program.id) !== '1') return program;
+            const savedPhaseIndex = Number.isInteger(program.currentPhaseIndex) && program.currentPhaseIndex >= 0 ? program.currentPhaseIndex : 0;
+            const activePhase = Array.isArray(program.phases) && program.phases.length === 3
+                ? Math.min(7, savedPhaseIndex * 2)
+                : Math.min(7, savedPhaseIndex);
+            const legacyDays = Math.max(0, Math.min(5, Math.floor(Number(program.daysCompletedInPhase) || 0)));
+            if (!Array.isArray(program.bracingPracticeDateKeys) || program.bracingPracticeDateKeys.length !== 8) {
+                program.bracingPracticeDateKeys = Array.from({ length: 8 }, (_, index) =>
+                    Array.isArray(program.bracingPracticeDateKeys?.[index]) ? [...new Set(program.bracingPracticeDateKeys[index].filter(key => /^\d{4}-\d{2}-\d{2}$/.test(key)))] : []);
+            }
+            if (!Array.isArray(program.bracingLegacyPracticeCountByPhase) || program.bracingLegacyPracticeCountByPhase.length !== 8) {
+                program.bracingLegacyPracticeCountByPhase = Array(8).fill(0);
+                program.bracingLegacyPracticeCountByPhase[activePhase] = legacyDays;
+                program.bracingLegacyPracticeOrigin = legacyDays > 0 ? 'legacy-counter-no-dates' : 'none';
+            }
+            if (Number(program.sessionsToday) > 1) program.legacyBracingSessionsToday = Math.max(Number(program.legacyBracingSessionsToday) || 0, Number(program.sessionsToday));
+            program.sessionsToday = Math.max(0, Math.min(1, Math.floor(Number(program.sessionsToday) || 0)));
+            program.daysCompletedInPhase = Math.min(5, Math.max(0, Number(program.bracingLegacyPracticeCountByPhase[activePhase]) || 0) + program.bracingPracticeDateKeys[activePhase].length);
+            program.dailyTarget = 1;
+            program.bracingContentVersion = 2;
+            (program.phases || []).forEach(phase => { if (phase) phase.weeklyTargetDays = 5; });
+            return program;
+        }
+
+        function getBracingPracticeDays(program, phaseIndex = program?.currentPhaseIndex) {
+            if (!program || String(program.id) !== '1' || !Number.isInteger(phaseIndex) || phaseIndex < 0 || phaseIndex >= 8) return 0;
+            const legacyCount = Math.max(0, Math.min(5, Number(program.bracingLegacyPracticeCountByPhase?.[phaseIndex]) || 0));
+            const dates = Array.isArray(program.bracingPracticeDateKeys?.[phaseIndex]) ? [...new Set(program.bracingPracticeDateKeys[phaseIndex])] : [];
+            return Math.min(5, legacyCount + dates.length);
+        }
+
+        function recordBracingPractice(program, phaseIndex, dateKey = localDateKey(), volumeComplete = false, completedRepetitions = 0) {
+            if (!program || String(program.id) !== '1' || !Number.isInteger(phaseIndex) || phaseIndex !== program.currentPhaseIndex || !/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) return false;
+            migrateBracingProgram(program);
+            if (!Array.isArray(program.bracingPracticeDateKeys[phaseIndex])) program.bracingPracticeDateKeys[phaseIndex] = [];
+            const dates = program.bracingPracticeDateKeys[phaseIndex];
+            const isNewPracticeDate = !dates.includes(dateKey);
+            if (isNewPracticeDate) dates.push(dateKey);
+            program.bracingDailyPractice ||= {};
+            const prior = program.bracingDailyPractice[dateKey];
+            program.bracingDailyPractice[dateKey] = {
+                phaseIndex,
+                volumeComplete: volumeComplete === true || prior?.volumeComplete === true,
+                completedRepetitions: Math.max(Number(prior?.completedRepetitions) || 0, Math.max(0, Math.floor(Number(completedRepetitions) || 0))),
+                reduced: volumeComplete !== true && prior?.volumeComplete !== true
+            };
+            program.daysCompletedInPhase = getBracingPracticeDays(program, phaseIndex);
+            program.currentDayInWeek = Math.min(5, program.daysCompletedInPhase + 1);
+            if (program.daysCompletedInPhase >= 5) {
+                program.progressionReview = { phaseIndex, requestedAt: dateKey, status: 'pending', reason: 'five-practice-days' };
+                program.phases[phaseIndex].reviewPending = true;
+                program.phases[phaseIndex].reviewPendingAt = dateKey;
+            }
+            return isNewPracticeDate;
+        }
+
+        function recordBracingWeekReviewFailure(program, answers) {
+            const phaseIndex = program?.currentPhaseIndex;
+            if (String(program?.id) !== '1' || !Number.isInteger(phaseIndex) || !Array.isArray(answers) || answers.length !== 5 || !answers.every(answer => typeof answer === 'boolean') || answers.every(Boolean)) return false;
+            const dateKey = localDateKey();
+            program.lastBracingReview = { phaseIndex, dateKey, answers: [...answers], confirmed: true, passed: false };
+            program.progressionReview = { phaseIndex, requestedAt: dateKey, status: 'pending', reason: 'technical-review-failed' };
+            return true;
+        }
+
+        function canAdvanceBracingWeek(program, answers) {
+            const phaseIndex = program?.currentPhaseIndex;
+            if (String(program?.id) !== '1' || !Number.isInteger(phaseIndex) || phaseIndex < 0 || phaseIndex >= 8 ||
+                getBracingPracticeDays(program, phaseIndex) < 5 || !Array.isArray(answers) || answers.length !== 5 || !answers.every(answer => answer === true)) return false;
+            const dates = Array.isArray(program.bracingPracticeDateKeys?.[phaseIndex]) ? program.bracingPracticeDateKeys[phaseIndex] : [];
+            const failedReview = program.lastBracingReview?.phaseIndex === phaseIndex && program.lastBracingReview?.passed === false;
+            if (failedReview && !dates.some(dateKey => dateKey > program.lastBracingReview.dateKey)) return false;
+            const evaluationDates = [...new Set(dates)].sort().slice(-5);
+            return evaluationDates.length === 5 && evaluationDates.every(dateKey => program.bracingDailyPractice?.[dateKey]?.volumeComplete === true);
+        }
+
+        function applyBracingWeekReview(program, answers, confirmed) {
+            if (confirmed !== true || !canAdvanceBracingWeek(program, answers)) return false;
+            const phaseIndex = program.currentPhaseIndex;
+            const dateKey = localDateKey();
+            if (program.lastBracingReview?.phaseIndex === phaseIndex && program.lastBracingReview?.dateKey === dateKey && program.lastBracingReview?.passed !== false) return false;
+            program.phases[phaseIndex].completed = true;
+            program.phases[phaseIndex].reviewPending = false;
+            program.phases[phaseIndex].reviewPendingAt = null;
+            program.lastBracingReview = { phaseIndex, dateKey, answers: [...answers], confirmed: true, passed: true };
+            program.progressionReview = { phaseIndex, requestedAt: dateKey, status: 'completed', reason: 'technical-review' };
+            if (phaseIndex === 7) {
+                program.programCompleted = true;
+                program.currentPhaseIndex = 7;
+                return true;
+            }
+            program.currentPhaseIndex = phaseIndex + 1;
+            program.daysCompletedInPhase = getBracingPracticeDays(program, program.currentPhaseIndex);
+            program.currentDayInWeek = Math.min(5, program.daysCompletedInPhase + 1);
+            program.sessionsToday = 0;
+            return true;
+        }
+
+        function openBracingWeekReview() {
+            const program = AppState.programs.find(item => item.id === '1');
+            const phaseIndex = program?.currentPhaseIndex ?? 0;
+            if (!program || !canAdvanceBracingWeek(program, [true, true, true, true, true])) {
+                showInlineToast('Complete cinco dias de prática antes da avaliação técnica.');
+                return;
+            }
+            document.getElementById('bracingWeekReviewModal')?.remove();
+            const criteria = [
+                'Consegui manter a respiração fluindo durante as contrações.',
+                'Não tive dor ou desconforto anormal.',
+                'Mantive pescoço e ombros relaxados.',
+                'Mantive tronco e pelve estáveis nos movimentos.',
+                'Concluí o volume da semana sem perder a técnica.'
+            ];
+            const modal = document.createElement('div');
+            modal.id = 'bracingWeekReviewModal';
+            modal.className = 'fixed inset-0 z-[130] flex items-end justify-center bg-black/80 p-4';
+            modal.innerHTML = `<section role="dialog" aria-modal="true" aria-labelledby="bracingWeekReviewTitle" class="w-full max-w-md rounded-3xl border border-emerald-500/30 bg-slate-900 p-5"><h2 id="bracingWeekReviewTitle" class="text-lg font-black text-white">Avaliação técnica · Semana ${phaseIndex + 1}</h2><p class="mt-2 text-xs text-slate-300">Responda pelo que aconteceu nos cinco dias. Se algum item não for verdadeiro, repita a semana ou reduza o volume. Não há compensação obrigatória.</p><div class="mt-4 space-y-3">${criteria.map((criterion, index) => `<label class="flex min-h-12 items-start gap-3 rounded-xl border border-slate-700 bg-slate-950/60 p-3 text-sm text-slate-200"><input id="bracingReviewAnswer${index}" type="checkbox" class="mt-0.5 h-5 w-5 accent-emerald-400"><span>${criterion}</span></label>`).join('')}</div><div class="mt-5 flex gap-3"><button type="button" onclick="document.getElementById('bracingWeekReviewModal')?.remove()" class="flex-1 rounded-xl border border-slate-600 px-4 py-3 text-sm font-bold text-slate-200">Cancelar</button><button type="button" onclick="submitBracingWeekReview()" class="flex-1 rounded-xl bg-emerald-500 px-4 py-3 text-sm font-extrabold text-slate-950">Confirmar avaliação</button></div></section>`;
+            document.body.appendChild(modal);
+        }
+
+        function submitBracingWeekReview() {
+            const program = AppState.programs.find(item => item.id === '1');
+            const answers = Array.from({ length: 5 }, (_, index) => document.getElementById(`bracingReviewAnswer${index}`)?.checked === true);
+            if (!answers.every(Boolean)) {
+                recordBracingWeekReviewFailure(program, answers);
+                saveState();
+                document.getElementById('bracingWeekReviewModal')?.remove();
+                showInlineToast('A semana não avançou. Repita ou reduza o volume e avalie novamente.');
+                return false;
+            }
+            const originalProgram = JSON.parse(JSON.stringify(program));
+            if (!applyBracingWeekReview(program, answers, true)) {
+                showInlineToast('A avaliação não pôde avançar a semana. Confira os cinco dias registrados.');
+                return false;
+            }
+            if (!saveState()) {
+                const programIndex = AppState.programs.findIndex(item => item.id === '1');
+                if (programIndex >= 0) AppState.programs[programIndex] = originalProgram;
+                renderProgramsList();
+                showInlineToast('A avaliação avançou, mas o progresso ainda não foi salvo. Tente salvar novamente.');
+                return false;
+            }
+            document.getElementById('bracingWeekReviewModal')?.remove();
+            renderProgramsList();
+            showInlineToast(program.programCompleted ? 'Programa de Bracing concluído.' : 'Avaliação registrada. A próxima semana está liberada.');
+            return true;
+        }
+
         function getProgramSteps(progId, phaseIdx, sessionNum = null) {
+            if (String(progId) === '1') return getBracingSteps(phaseIdx);
             if (progId === '2') { // Cronograma Avançado de 8 Semanas de Kegel
                 switch (phaseIdx) {
                     case 0: { // Semana 1: Volume Acumulado
@@ -10243,118 +10370,6 @@
                     }
                 }
                 return steps;
-            } else if (progId === '1') { // Programa 1: Bracing de 8 semanas, 5 dias/semana, sentado ou em pé, sem equipamento
-                // Tabela do documento TREINO_BRACING_8_SEMANAS. Por série: [id, séries, repetições, segundos sustentados].
-                // "Por lado/perna" já está somado nas repetições. Cada repetição tem ~15 s de descanso entre elas.
-                const BR = {
-                    'BR-01': ['Bracing sentado', 'Sentado com pés apoiados e tronco ereto. Inspire suave, firme o abdômen na frente, nas laterais e atrás, sem prender o ar.', 'img/bracing/bracing_seated_360.jpg'],
-                    'BR-02': ['Bracing em pé', 'Em pé, pés na largura do quadril e joelhos destravados. Firme o abdômen sem mudar a postura e siga respirando.', 'img/bracing/bracing_standing_aligned.jpg'],
-                    'BR-03': ['Marcha sentada com bracing', 'Sentado, eleve um pé poucos centímetros sem inclinar o tronco. Alterne as pernas a cada repetição.', 'img/bracing/bracing_seated_leg.jpg'],
-                    'BR-04': ['Elevação de calcanhares em pé', 'Em pé, suba os calcanhares devagar, cerca de 2 s subindo e 2 s descendo, sem projetar o tronco.', 'img/bracing/bracing_standing_calf_raise.jpg'],
-                    'BR-05': ['Inclinação do quadril em pé', 'Em pé, leve o quadril para trás e incline o tronco de 15 a 30 graus a partir do quadril, com a lombar neutra.', 'img/bracing/bracing_standing_hip_hinge.jpg'],
-                    'BR-06': ['Base desencontrada com bracing', 'Um pé meio passo à frente. Transfira pouco peso entre os pés sem girar o tronco. Troque a posição dos pés entre as repetições.', 'img/bracing/bracing_staggered_stance.jpg'],
-                    'BR-07': ['Joelho contra mão oposta, sentado', 'Sentado, apoie a palma na parte de cima da coxa, perto do joelho, e tente elevar a coxa com resistência suave. Pouco ou nenhum movimento. Troque de lado.', 'img/bracing/bracing_seated_press.jpg'],
-                    'BR-08': ['Marcha em pé com braço oposto', 'Em pé, eleve discretamente um joelho e mova o braço oposto à frente, sem girar o corpo. Alterne os lados.', 'img/bracing/bracing_standing_march_arm.jpg']
-                };
-                const bracingWeeks = [
-                    { exercises: [['BR-01', 2, 6, 5], ['BR-02', 1, 6, 5]] },
-                    { exercises: [['BR-01', 2, 6, 8], ['BR-02', 2, 6, 8]] },
-                    { exercises: [['BR-01', 1, 5, 8], ['BR-03', 2, 12, 3], ['BR-02', 1, 6, 10]] },
-                    { exercises: [['BR-03', 2, 16, 3], ['BR-04', 2, 10, 4], ['BR-02', 1, 8, 10]] },
-                    { exercises: [['BR-05', 2, 8, 4], ['BR-06', 2, 10, 8], ['BR-01', 1, 6, 10]] },
-                    { exercises: [['BR-07', 2, 12, 5], ['BR-05', 2, 8, 4], ['BR-04', 2, 12, 4]] },
-                    { exercises: [['BR-08', 2, 12, 4], ['BR-07', 2, 14, 6], ['BR-06', 2, 12, 10]] },
-                    { laps: 2, exercises: [['BR-02', 1, 5, 10], ['BR-05', 1, 8, 4], ['BR-07', 1, 12, 6], ['BR-08', 1, 12, 5], ['BR-06', 1, 8, 8]] }
-                ];
-                const REP_REST = 15;   // segundos entre repetições de uma série
-                const SET_REST = 30;   // segundos entre séries do mesmo exercício
-                const LAP_REST = 50;   // segundos entre voltas do circuito (semana 8)
-                const safePhase = Math.min(Math.max(phaseIdx, 0), bracingWeeks.length - 1);
-                const week = bracingWeeks[safePhase];
-                const laps = week.laps || 1;
-                const prog = (typeof AppState !== 'undefined' && AppState.programs && AppState.programs.find(p => p.id === '1')) || (typeof AppState !== 'undefined' && AppState.programs && AppState.programs[0]);
-                const isSessionB = sessionNum === 2 || (sessionNum === null && prog && (prog.sessionsToday || 0) >= 1);
-                const exercisesList = (isSessionB && week.exercises.length > 1)
-                    ? [...week.exercises.slice(1), week.exercises[0]]
-                    : week.exercises;
-                const total = exercisesList.length;
-
-                const steps = [
-                    {
-                        title: 'Preparação',
-                        instruction: 'Ajuste a posição no banco ou em pé. Respire duas vezes sem esforço. Mantenha coluna neutra e sem dor.',
-                        duration: 15,
-                        isRest: true,
-                        voice: 'Ajuste a postura e respire sem esforço.',
-                        badge: 'PREPARAÇÃO'
-                    }
-                ];
-                let series = 0;
-                for (let lap = 1; lap <= laps; lap++) {
-                    if (lap > 1) {
-                        steps.push({
-                            title: 'Descanso entre voltas',
-                            instruction: 'Solte a tensão abdominal, respire normalmente e relaxe ombros e mandíbula.',
-                            duration: LAP_REST,
-                            isRest: true,
-                            voice: 'Descanso entre voltas.',
-                            badge: 'DESCANSO'
-                        });
-                    }
-                    exercisesList.forEach(([id, sets, reps, hold], exIdx) => {
-                        const [name, instruction, image] = BR[id];
-                        const exNum = exIdx + 1;
-                        const workSeconds = reps * hold + (reps - 1) * REP_REST;
-                        for (let set = 1; set <= sets; set++) {
-                            series += 1;
-                            steps.push({
-                                title: `${laps > 1 ? `Volta ${lap}/${laps} • ` : ''}Ex ${exNum}/${total}: ${name} • Série ${set}/${sets}`,
-                                instruction: `${reps} repetições de ${hold} s com cerca de ${REP_REST} s de descanso. Continue respirando livremente. ${instruction}`,
-                                duration: workSeconds,
-                                isRest: false,
-                                voice: set === 1 ? name : `Série ${set} de ${name}`,
-                                badge: `EX ${exNum}/${total}`,
-                                phase: 'controle',
-                                series: series,
-                                image: image
-                            });
-                            if (set < sets) {
-                                steps.push({
-                                    title: `Recuperação • Ex ${exNum}/${total} Série ${set}/${sets}`,
-                                    instruction: 'Solte a tensão abdominal, respire normalmente e relaxe ombros e mandíbula.',
-                                    duration: SET_REST,
-                                    isRest: true,
-                                    voice: 'Relaxe completamente.',
-                                    badge: 'RECUPERAÇÃO',
-                                    phase: 'descanso',
-                                    series: series
-                                });
-                            }
-                        }
-                        if (exIdx < total - 1) {
-                            const nextName = BR[exercisesList[exIdx + 1][0]][0];
-                            steps.push({
-                                title: `Transição para Exercício ${exNum + 1}/${total}`,
-                                instruction: `Prepare-se para o próximo exercício: ${nextName}. Ajuste a postura no banco ou em pé.`,
-                                duration: 20,
-                                isRest: true,
-                                voice: `Transição. Próximo exercício: ${nextName}`,
-                                badge: 'TRANSIÇÃO',
-                                phase: 'descanso'
-                            });
-                        }
-                    });
-                }
-
-                steps.push({
-                    title: 'Encerramento e checagem',
-                    instruction: 'Solte o abdômen. Confirme: respirou livremente em todas as séries, manteve a postura e terminou sem dor.',
-                    duration: 20,
-                    isRest: true,
-                    voice: 'Relaxe e confira a qualidade da prática.',
-                    badge: 'QUALIDADE'
-                });
-                return steps;
             }
             return [];
         }
@@ -10803,10 +10818,13 @@
                 const daysCompleted = Math.max(0, Number(prog.daysCompletedInPhase) || 0);
                 const targetDaysLabel = targetDays ? `${targetDays} dias` : 'frequência não configurada';
                 const currentDayLabel = currentDay ? `Dia ${currentDay}` : 'Dia não configurado';
+                const bracingReviewPending = prog.id === '1' && prog.progressionReview?.status === 'pending' && prog.progressionReview.phaseIndex === activePhaseIdx;
                 const progressionReviewPending = prog.id === '3' && prog.progressionReview?.status === 'pending';
-                const progressionReviewHtml = progressionReviewPending
-                    ? '<div class="mt-3 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-3 text-xs text-amber-100"><strong class="block text-amber-300">Revisão da etapa necessária</strong><span class="mt-1 block text-amber-100/80">A meta foi atingida. A etapa atual será repetida até uma revisão explícita; o calendário não aumenta a carga sozinho.</span></div>'
-                    : '';
+                const progressionReviewHtml = bracingReviewPending
+                    ? '<div class="mt-3 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-3 text-xs text-amber-100"><strong class="block text-amber-300">Avaliação técnica disponível</strong><span class="mt-1 block">Cinco dias de prática foram registrados; o calendário não libera a próxima semana sozinho.</span><button onclick="event.stopPropagation(); openBracingWeekReview()" class="mt-3 min-h-12 rounded-xl bg-amber-300 px-4 py-2 font-bold text-slate-950">Fazer avaliação técnica</button></div>'
+                    : progressionReviewPending
+                        ? '<div class="mt-3 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-3 text-xs text-amber-100"><strong class="block text-amber-300">Revisão da etapa necessária</strong><span class="mt-1 block text-amber-100/80">A meta foi atingida. A etapa atual será repetida até uma revisão explícita; o calendário não aumenta a carga sozinho.</span></div>'
+                        : '';
 
                 let guideBtnHtml = '';
                 if (prog.id === '2') {
@@ -10876,7 +10894,7 @@
 
                 let phasesHtml = prog.phases.map((phase, i) => {
                     const isCurrent = i === activePhaseIdx;
-                    const repeatBtnHtml = phase.completed
+                    const repeatBtnHtml = phase.completed && prog.id !== '1'
                         ? `<button onclick="event.stopPropagation(); repeatProgramPhase('${prog.id}', ${i})" title="Repetir esta etapa sem apagar diário/histórico" class="p-2 text-slate-400 hover:text-amber-400 transition text-xs">
                                 <i class="fa-solid fa-rotate-left"></i>
                             </button>`
@@ -11126,6 +11144,7 @@
                 showInlineToast('Encerre a sessão em andamento antes de repetir uma etapa.');
                 return;
             }
+            if (program.id === '1') return showInlineToast('O Bracing avança somente após os cinco itens da avaliação técnica.');
             triggerHaptic([20]);
             // Mantém etapas anteriores concluídas e desmarca esta e as seguintes,
             // para que a posição manual não seja sobrescrita por synchronizeProgramProgress.
@@ -11146,6 +11165,7 @@
         function toggleProgramPhase(pIdx, phaseIdx) {
             triggerHaptic([10]);
             const program = AppState.programs[pIdx];
+            if (program?.id === '1') return showInlineToast('O Bracing avança somente após os cinco itens da avaliação técnica.');
             const markCompleted = program.phases[phaseIdx].completed !== true;
             if (markCompleted) {
                 program.phases.forEach((phase, index) => { if (index <= phaseIdx) phase.completed = true; });
@@ -11160,6 +11180,7 @@
         function openProgramProgressAdjustment(programId) {
             const program = AppState.programs.find(item => item.id === programId);
             if (!program) return;
+            if (program.id === '1') return showInlineToast('O progresso do Bracing depende dos dias de prática e da avaliação técnica, sem ajuste manual.');
             const safeTitle = program.title.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
             document.getElementById('programProgressAdjustment')?.remove();
             const target = getProgramSchedule(program).targetDays;
@@ -11286,6 +11307,20 @@
                 showInlineToast('Não foi possível iniciar essa etapa: fase inválida.');
                 return;
             }
+            let bracingResume = prog.id === '1' && prog.bracingResume?.phaseIndex === pIdx ? prog.bracingResume : null;
+            if (prog.id === '1' && bracingResume && bracingResume.contentVersion !== 2) {
+                prog.bracingResume = null;
+                bracingResume = null;
+                showInlineToast('A continuação salva usava uma versão antiga; a sessão será reiniciada com segurança.');
+            }
+            if (prog.id === '1' && pIdx !== prog.currentPhaseIndex) {
+                showInlineToast('Inicie somente a semana ativa do Bracing. As outras semanas ficam disponíveis para consulta no guia.');
+                return;
+            }
+            if (prog.id === '1' && !bracingResume && ((prog.sessionsToday || 0) >= 1 || prog.bracingDailyPractice?.[localDateKey()])) {
+                showInlineToast('O Bracing tem uma sessão por dia. A próxima prática estará disponível em outro dia.');
+                return;
+            }
             const phase = prog.phases[pIdx];
             const steps = getProgramSteps(prog.id, pIdx);
             if (!Array.isArray(steps) || steps.length === 0) {
@@ -11296,21 +11331,27 @@
             const currentDay = targetDays ? Math.min((prog.currentDayInWeek || Math.max(1, (prog.daysCompletedInPhase || 0) + 1)), targetDays) : null;
             const targetDaysLabel = targetDays ? `${targetDays} dias` : 'frequência não configurada';
             const currentDayLabel = currentDay ? `Dia ${currentDay}` : 'Dia não configurado';
-
             AppState.dailyExecution.programId = prog.id;
             AppState.dailyExecution.phaseIndex = pIdx;
             AppState.dailyExecution.programTitle = prog.title;
             AppState.dailyExecution.phaseTitle = phase.title;
-            AppState.dailyExecution.sessionId = `program-${prog.id}-${pIdx}-${Date.now()}`;
+            AppState.dailyExecution.sessionId = bracingResume?.contentVersion === 2 ? bracingResume.sessionId : `program-${prog.id}-${pIdx}-${Date.now()}`;
             AppState.dailyExecution.steps = steps;
-            AppState.dailyExecution.currentStepIndex = 0;
+            AppState.dailyExecution.sessionStartStepIndex = bracingResume?.contentVersion === 2 ? bracingResume.nextStepIndex : 0;
+            AppState.dailyExecution.currentStepIndex = AppState.dailyExecution.sessionStartStepIndex;
+            AppState.dailyExecution.completedStepIndexes = bracingResume?.contentVersion === 2 ? [...(bracingResume.completedStepIndexes || [])] : [];
+            AppState.dailyExecution.skippedStepIndexes = bracingResume?.contentVersion === 2 ? [...(bracingResume.skippedStepIndexes || [])] : [];
+            AppState.dailyExecution.sessionDateKey = bracingResume?.contentVersion === 2 ? bracingResume.dateKey : localDateKey();
+            AppState.dailyExecution.bracingSplitRequested = false;
             AppState.dailyExecution.sessionNumber = Number.isInteger(sessionNumber)
-                ? Math.max(1, Math.min(sessionNumber, prog.dailyTarget || 2))
-                : Math.min((prog.sessionsToday || 0) + 1, prog.dailyTarget || 2);
-            AppState.dailyExecution.targetSessions = prog.dailyTarget || 2;
+                ? Math.max(1, Math.min(sessionNumber, prog.id === '1' ? 1 : (prog.dailyTarget || 2)))
+                : Math.min((prog.sessionsToday || 0) + 1, prog.id === '1' ? 1 : (prog.dailyTarget || 2));
+            AppState.dailyExecution.targetSessions = prog.id === '1' ? 1 : (prog.dailyTarget || 2);
             AppState.dailyExecution.currentDay = currentDay;
             AppState.dailyExecution.targetDays = targetDays;
-            AppState.dailyExecution.stepTimeLeft = steps[0].duration;
+            AppState.dailyExecution.stepTimeLeft = bracingResume?.contentVersion === 2
+                ? Math.max(0, Number(bracingResume.stepTimeLeft) || steps[AppState.dailyExecution.currentStepIndex]?.duration || 0)
+                : steps[0].duration;
             AppState.dailyExecution.isRunning = false;
             AppState.dailyExecution.isPaused = false;
             AppState.dailyExecution.totalSessionElapsed = 0;
@@ -11422,6 +11463,7 @@
                     <button onclick="resumeDailySession()" class="flex-1 py-4 bg-emerald-500 hover:bg-emerald-400 rounded-2xl text-slate-950 font-bold text-base transition shadow-lg flex items-center justify-center gap-2">
                         <i class="fa-solid fa-play"></i> Continuar
                     </button>
+                    ${AppState.dailyExecution.programId === '1' ? '<button onclick="saveBracingSplitAndExit()" class="rounded-2xl border border-cyan-400/40 bg-cyan-500/10 px-3 py-3 text-xs font-bold text-cyan-100">Dividir pausa</button>' : ''}
                     <button onclick="skipWorkoutStep()" class="px-4 py-4 bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-2xl text-slate-300 font-semibold text-sm transition flex items-center justify-center gap-1.5" title="Pular Passo">
                         <i class="fa-solid fa-forward-step"></i>
                     </button>
@@ -11521,6 +11563,33 @@
                 AppState.dailyExecution.isPaused = false;
                 AppState.dailyExecution.intervalId = null;
 
+                if (AppState.dailyExecution.bracingSplitRequested === true) {
+                    AppState.dailyExecution.bracingSplitRequested = false;
+                    window.AndroidBridge?.acknowledgeWorkoutState?.();
+                    return;
+                }
+
+                const interruptedSession = state.session || {};
+                const interruptedProgramId = interruptedSession.programId ?? AppState.dailyExecution.programId;
+                if (interruptedProgramId === '1') {
+                    const phaseIndex = interruptedSession.phaseIndex ?? AppState.dailyExecution.phaseIndex ?? 0;
+                    const program = AppState.programs.find(item => item.id === '1');
+                    const savedResume = program?.bracingResume;
+                    AppState.dailyExecution.programId = '1';
+                    AppState.dailyExecution.phaseIndex = phaseIndex;
+                    AppState.dailyExecution.sessionId = interruptedSession.sessionId ?? AppState.dailyExecution.sessionId;
+                    AppState.dailyExecution.steps = Array.isArray(state.steps) && state.steps.length === getBracingSteps(phaseIndex).length
+                        ? getBracingSteps(phaseIndex)
+                        : (AppState.dailyExecution.steps || getBracingSteps(phaseIndex));
+                    AppState.dailyExecution.currentStepIndex = state.currentStepIndex || 0;
+                    AppState.dailyExecution.sessionStartStepIndex = savedResume?.sessionId === AppState.dailyExecution.sessionId ? savedResume.nextStepIndex : 0;
+                    AppState.dailyExecution.completedStepIndexes = savedResume?.sessionId === AppState.dailyExecution.sessionId ? [...(savedResume.completedStepIndexes || [])] : [];
+                    AppState.dailyExecution.skippedStepIndexes = savedResume?.sessionId === AppState.dailyExecution.sessionId ? [...(savedResume.skippedStepIndexes || [])] : [];
+                    AppState.dailyExecution.sessionDateKey = savedResume?.dateKey || localDateKey();
+                    if (program) recordBracingPartialPractice(AppState.dailyExecution, program);
+                    if (program?.bracingResume?.sessionId === AppState.dailyExecution.sessionId) program.bracingResume = null;
+                }
+
                 if (!AppState.dailyExecution.sessionId) {
                     AppState.dailyExecution.sessionId = `legacy-abort-${Date.now()}`;
                 }
@@ -11534,13 +11603,16 @@
                         phaseIndex: AppState.dailyExecution.phaseIndex || 0,
                         date: localDateKey(),
                         status: 'interrupted',
-                        plannedSeries: state.steps ? countWorkoutSeries(state.steps) : 1,
-                        completedSeries: state.steps ? countCompletedSeries(state.steps, state.currentStepIndex) : 0,
+                        plannedSeries: AppState.dailyExecution.steps ? countWorkoutSeries(AppState.dailyExecution.steps) : (state.steps ? countWorkoutSeries(state.steps) : 1),
+                        completedSeries: AppState.dailyExecution.programId === '1'
+                            ? new Set(getBracingCompletedStepIndexes(AppState.dailyExecution, false).map(index => AppState.dailyExecution.steps[index]?.series).filter(series => Number.isInteger(series) && series > 0)).size
+                            : (state.steps ? countCompletedSeries(state.steps, state.currentStepIndex) : 0),
                         retentionSeconds: metrics.retentionSeconds,
                         recoverySeconds: metrics.recoverySeconds,
                         totalElapsedSeconds: metrics.totalElapsedSeconds,
                         pausedSeconds: metrics.pausedSeconds,
                         interrupted: true,
+                        volumeStatus: AppState.dailyExecution.programId === '1' ? 'reduced' : null,
                         feedback: null
                     });
                     saveState();
@@ -11557,8 +11629,13 @@
             }
 
             const session = state.session || {};
+            const nativeProgramId = session.programId ?? AppState.dailyExecution.programId;
+            const nativePhaseIndex = session.phaseIndex ?? AppState.dailyExecution.phaseIndex;
             if (Array.isArray(state.steps) && state.steps.length) {
-                AppState.dailyExecution.steps = state.steps;
+                if (nativeProgramId === '1' && Number.isInteger(nativePhaseIndex)) {
+                    const catalogSteps = getBracingSteps(nativePhaseIndex);
+                    AppState.dailyExecution.steps = catalogSteps.length === state.steps.length ? catalogSteps : state.steps;
+                } else AppState.dailyExecution.steps = state.steps;
             }
             AppState.dailyExecution.programId = session.programId ?? AppState.dailyExecution.programId;
             AppState.dailyExecution.sessionId = session.sessionId ?? AppState.dailyExecution.sessionId;
@@ -11572,6 +11649,15 @@
             AppState.dailyExecution.currentStepIndex = state.currentStepIndex || 0;
             AppState.dailyExecution.stepTimeLeft = Math.max(0, state.stepTimeLeft || 0);
             AppState.dailyExecution.totalSessionElapsed = Math.max(0, state.totalSessionElapsed || 0);
+            if (AppState.dailyExecution.programId === '1') {
+                const savedResume = AppState.programs.find(program => program.id === '1')?.bracingResume;
+                if (savedResume?.contentVersion === 2 && savedResume.sessionId === AppState.dailyExecution.sessionId) {
+                    AppState.dailyExecution.sessionStartStepIndex = savedResume.nextStepIndex || 0;
+                    AppState.dailyExecution.completedStepIndexes = [...(savedResume.completedStepIndexes || [])];
+                    AppState.dailyExecution.skippedStepIndexes = [...(savedResume.skippedStepIndexes || [])];
+                    AppState.dailyExecution.sessionDateKey = savedResume.dateKey || AppState.dailyExecution.sessionDateKey || localDateKey();
+                }
+            }
             AppState.dailyExecution.isPaused = state.status === 'paused';
             AppState.dailyExecution.isRunning = state.status === 'running' || state.status === 'paused';
             AppState.dailyExecution.intervalId = null;
@@ -12069,6 +12155,17 @@
 
         function skipWorkoutStep() {
             triggerHaptic([30, 20]);
+            if (AppState.dailyExecution.programId === '1') {
+                AppState.dailyExecution.skippedStepIndexes ||= [];
+                const stepIndex = AppState.dailyExecution.currentStepIndex;
+                const addedSkip = !AppState.dailyExecution.skippedStepIndexes.includes(stepIndex);
+                if (addedSkip) AppState.dailyExecution.skippedStepIndexes.push(stepIndex);
+                if (!saveBracingResumeCheckpoint(Math.min(AppState.dailyExecution.steps.length, stepIndex + 1))) {
+                    if (addedSkip) AppState.dailyExecution.skippedStepIndexes = AppState.dailyExecution.skippedStepIndexes.filter(index => index !== stepIndex);
+                    showInlineToast('Não foi possível salvar o passo pulado. A repetição continua na tela.');
+                    return;
+                }
+            }
             if (window.AndroidBridge?.skipWorkoutStep) {
                 window.AndroidBridge.skipWorkoutStep();
                 return;
@@ -12111,9 +12208,36 @@
             }
         }
 
+        function saveBracingResumeCheckpoint(nextStepIndex) {
+            const execution = AppState.dailyExecution;
+            if (execution.programId !== '1' || !Array.isArray(execution.steps)) return false;
+            const program = AppState.programs.find(item => item.id === '1');
+            if (!program) return false;
+            const priorResume = program.bracingResume;
+            program.bracingResume = {
+                sessionId: execution.sessionId,
+                phaseIndex: execution.phaseIndex,
+                nextStepIndex,
+                stepTimeLeft: execution.steps[nextStepIndex]?.duration || 0,
+                completedStepIndexes: getBracingCompletedStepIndexes(execution, false),
+                skippedStepIndexes: [...(execution.skippedStepIndexes || [])],
+                contentVersion: 2,
+                dateKey: execution.sessionDateKey || localDateKey()
+            };
+            if (saveState()) return true;
+            program.bracingResume = priorResume;
+            return false;
+        }
+
         function finishDailySession(fromNativeService = false) {
             const completionId = AppState.dailyExecution.sessionId || `legacy-${AppState.dailyExecution.programId}-${Date.now()}`;
             if (CorePersistence.completedSessionIds.includes(completionId)) return;
+            const isBracingSession = AppState.dailyExecution.programId === '1';
+            const bracingCompletedStepIndexes = isBracingSession ? getBracingCompletedStepIndexes(AppState.dailyExecution, true) : [];
+            const bracingCompletedRepetitions = bracingCompletedStepIndexes.length;
+            const bracingWorkSteps = isBracingSession ? AppState.dailyExecution.steps.filter(step => step.isRest !== true && step.exerciseId) : [];
+            const bracingVolumeComplete = isBracingSession && bracingCompletedRepetitions === bracingWorkSteps.length;
+            const bracingCompletedSeries = isBracingSession ? new Set(bracingCompletedStepIndexes.map(index => AppState.dailyExecution.steps[index]?.series).filter(series => Number.isInteger(series) && series > 0)).size : null;
             clearInterval(AppState.dailyExecution.intervalId);
             AppState.dailyExecution.intervalId = null;
             AppState.dailyExecution.isRunning = false;
@@ -12126,15 +12250,16 @@
                     schemaVersion: 1,
                     programId: AppState.dailyExecution.programId || 'unknown',
                     phaseIndex: AppState.dailyExecution.phaseIndex || 0,
-                    date: localDateKey(),
+                    date: isBracingSession ? (AppState.dailyExecution.sessionDateKey || localDateKey()) : localDateKey(),
                     status: 'completed',
                     plannedSeries: AppState.dailyExecution.steps ? countWorkoutSeries(AppState.dailyExecution.steps) : 1,
-                    completedSeries: AppState.dailyExecution.steps ? countCompletedSeries(AppState.dailyExecution.steps, AppState.dailyExecution.steps.length) : 1,
+                    completedSeries: isBracingSession ? Math.min(countWorkoutSeries(AppState.dailyExecution.steps), bracingCompletedSeries) : (AppState.dailyExecution.steps ? countCompletedSeries(AppState.dailyExecution.steps, AppState.dailyExecution.steps.length) : 1),
                     retentionSeconds: metrics.retentionSeconds,
                     recoverySeconds: metrics.recoverySeconds,
                     totalElapsedSeconds: metrics.totalElapsedSeconds,
                     pausedSeconds: metrics.pausedSeconds,
                     interrupted: false,
+                    volumeStatus: isBracingSession ? (bracingVolumeComplete ? 'complete' : 'reduced') : null,
                     feedback: null
                 });
                 saveState();
@@ -12164,14 +12289,23 @@
             // Atualiza o progresso do programa específico
             const prog = AppState.programs.find(p => p.id === AppState.dailyExecution.programId);
             if (prog) {
-                prog.sessionsToday = (prog.sessionsToday || 0) + 1;
+                if (completedProgramId === '1') {
+                    prog.bracingResume = null;
+                    if (bracingCompletedRepetitions > 0) {
+                        prog.sessionsToday = Math.min(1, (prog.sessionsToday || 0) + 1);
+                        recordBracingPractice(prog, AppState.dailyExecution.phaseIndex, AppState.dailyExecution.sessionDateKey || localDateKey(), bracingVolumeComplete, bracingCompletedRepetitions);
+                    }
+                } else prog.sessionsToday = (prog.sessionsToday || 0) + 1;
                 window.AndroidBridge?.updateProgramReminderProgress?.(prog.id, prog.sessionsToday, localDateKey());
-                const dailyTarget = prog.dailyTarget || 2;
+                const dailyTarget = completedProgramId === '1' ? 1 : (prog.dailyTarget || 2);
                 const phase = prog.phases[AppState.dailyExecution.phaseIndex];
                 const weeklyTargetDays = getConfiguredWeeklyTargetDays(phase);
 
                 // Avança o dia somente quando existe uma frequência real configurada.
-                if (prog.sessionsToday === dailyTarget && weeklyTargetDays) {
+                if (completedProgramId === '1') {
+                    prog.currentDayInWeek = Math.min(5, (prog.daysCompletedInPhase || 0) + 1);
+                    if (prog.sessionsToday === dailyTarget && bracingCompletedRepetitions > 0) celebrateDailyGoal();
+                } else if (prog.sessionsToday === dailyTarget && weeklyTargetDays) {
                     const reachedPhaseTarget = (prog.daysCompletedInPhase || 0) + 1 >= weeklyTargetDays;
                     if (completedProgramId === '3') {
                         prog.daysCompletedInPhase = Math.min(weeklyTargetDays, (prog.daysCompletedInPhase || 0) + 1);
@@ -12273,6 +12407,11 @@
             AppState.dailyExecution.intervalId = null;
             AppState.dailyExecution.isRunning = false;
             AppState.dailyExecution.isPaused = false;
+            if (AppState.dailyExecution.programId === '1') {
+                const bracingProgram = AppState.programs.find(program => program.id === '1');
+                if (bracingProgram?.bracingResume?.sessionId === AppState.dailyExecution.sessionId) bracingProgram.bracingResume = null;
+                if (bracingProgram) recordBracingPartialPractice(AppState.dailyExecution, bracingProgram);
+            }
 
             // Generate stable ID if missing to prevent collisions
             if (!AppState.dailyExecution.sessionId) {
@@ -12295,6 +12434,7 @@
                     totalElapsedSeconds: metrics.totalElapsedSeconds,
                     pausedSeconds: metrics.pausedSeconds,
                     interrupted: isInterrupted,
+                    volumeStatus: AppState.dailyExecution.programId === '1' ? 'reduced' : null,
                     feedback: null
                 });
                 saveState();
@@ -13490,6 +13630,9 @@
                         const statusLabels = { completed: 'Concluída', interrupted: 'Interrompida', cancelled: 'Cancelada' };
                         const feedbackLabels = { comfortable: 'Confortável', difficult: 'Difícil', interrupted: 'Interrompido' };
                         const statusLabel = statusLabels[record.status] || 'Estado indisponível';
+                        const volumeLabel = String(record.programId) === '1'
+                            ? ` • ${record.volumeStatus === 'complete' ? 'volume integral' : record.volumeStatus === 'reduced' ? 'volume reduzido/parcial' : 'volume não verificado'}`
+                            : '';
                         const sessionLabel = String(record.programId) === '3' ? 'Vácuo' : 'Treino';
                         const completedSeries = Math.max(0, Math.round(Number(record.completedSeries) || 0));
                         const plannedSeries = Math.max(0, Math.round(Number(record.plannedSeries) || 0));
@@ -13510,7 +13653,7 @@
                                     <span class="text-xs font-bold text-white">${sessionLabel}</span>
                                     <span class="text-[11px] text-slate-300">${statusLabel}</span>
                                 </div>
-                                <div class="mt-1 text-[11px] text-slate-400">${completedSeries}/${plannedSeries} séries • Retenção ${retentionSeconds}s • Recuperação ${recoverySeconds}s</div>
+                                <div class="mt-1 text-[11px] text-slate-400">${completedSeries}/${plannedSeries} séries${volumeLabel} • Retenção ${retentionSeconds}s • Recuperação ${recoverySeconds}s</div>
                                 <div class="text-[11px] text-slate-400">${totalTimeLabel}</div>
                                 <div class="text-[11px] text-slate-400">Feedback: ${feedbackLabel}</div>
                             </div>
@@ -14208,6 +14351,7 @@
         const CorePersistence = { status: 'loading', revision: 0, lastSavedAt: null, message: '', completedSessionIds: [], sessionHistory: [] };
         const SESSION_RECORD_SCHEMA_VERSION = 1;
         const SESSION_STATUSES = new Set(['completed', 'interrupted', 'cancelled']);
+        const SESSION_VOLUME_STATUSES = new Set([null, 'complete', 'reduced']);
         const SESSION_FEEDBACK = new Set([null, 'comfortable', 'difficult', 'interrupted']);
 
         function normalizeSessionRecord(record) {
@@ -14225,10 +14369,13 @@
             const plannedSeries = integer(record.plannedSeries, 'plannedSeries');
             const completedSeries = integer(record.completedSeries, 'completedSeries');
             if (completedSeries > plannedSeries) throw new Error('séries concluídas excedem o previsto');
+            const volumeStatus = record.volumeStatus ?? null;
+            if (!SESSION_VOLUME_STATUSES.has(volumeStatus)) throw new Error('estado de volume inválido');
             const normalized = {
                 id: record.id.trim(), schemaVersion: SESSION_RECORD_SCHEMA_VERSION,
                 programId: record.programId.trim(), phaseIndex: record.phaseIndex, date: record.date,
                 status: record.status, plannedSeries, completedSeries,
+                volumeStatus,
                 retentionSeconds: integer(record.retentionSeconds, 'retentionSeconds'),
                 recoverySeconds: integer(record.recoverySeconds, 'recoverySeconds'),
                 totalElapsedSeconds: record.totalElapsedSeconds == null ? null : integer(record.totalElapsedSeconds, 'totalElapsedSeconds'),
@@ -14329,8 +14476,10 @@
         function mergeLoadedPrograms(loaded, todayStr, isNewDay) {
             if (!Array.isArray(loaded)) return;
             AppState.programs.forEach(defaultProg => {
-                const saved = loaded.find(program => program && String(program.id) === String(defaultProg.id));
+                if (defaultProg.id === '1') migrateBracingProgram(defaultProg);
+                let saved = loaded.find(program => program && String(program.id) === String(defaultProg.id));
                 if (!saved) return;
+                if (defaultProg.id === '1') saved = migrateBracingProgram(saved);
                 const oldDefaultBracingTitle = defaultProg.id === '1' && saved.title === 'Bracing: Automação (6 Semanas)';
                 if (saved.title && saved.title !== 'Kegel: Assoalho Pélvico (8 Semanas)' && !oldDefaultBracingTitle) defaultProg.title = saved.title;
                 if (typeof saved.expanded === 'boolean') defaultProg.expanded = saved.expanded;
@@ -14347,6 +14496,12 @@
                 if (typeof saved.remindersEnabled === 'boolean') defaultProg.remindersEnabled = saved.remindersEnabled;
                 if (saved.lastManualAdjustment && typeof saved.lastManualAdjustment === 'object') defaultProg.lastManualAdjustment = saved.lastManualAdjustment;
                 if (saved.progressionReview && typeof saved.progressionReview === 'object') defaultProg.progressionReview = { ...saved.progressionReview };
+                if (defaultProg.id === '1') {
+                    ['bracingContentVersion', 'bracingPracticeDateKeys', 'bracingLegacyPracticeCountByPhase', 'bracingLegacyPracticeOrigin', 'bracingDailyPractice', 'bracingResume', 'legacyBracingSessionsToday', 'lastBracingReview'].forEach(key => {
+                        if (saved[key] !== undefined) defaultProg[key] = saved[key];
+                    });
+                    migrateBracingProgram(defaultProg);
+                }
                 if (defaultProg.id === '3' && Array.isArray(saved.phases)) {
                     saved.phases.forEach((savedPhase, index) => {
                         if (defaultProg.phases[index] && savedPhase && savedPhase.reviewPending === true) {
@@ -14448,6 +14603,94 @@
                     AppState.dailyExecution.isPaused = true;
                     renderDailyExecutionUI();
                 }
+
+        function getBracingCompletedStepIndexes(execution, includeCurrent = false) {
+            const completed = new Set((execution.completedStepIndexes || []).filter(Number.isInteger));
+            const skipped = new Set((execution.skippedStepIndexes || []).filter(Number.isInteger));
+            const endExclusive = Math.min(execution.steps?.length || 0, execution.currentStepIndex + (includeCurrent ? 1 : 0));
+            for (let index = Math.max(0, execution.sessionStartStepIndex || 0); index < endExclusive; index++) {
+                if (execution.steps[index]?.isRest !== true && !skipped.has(index)) completed.add(index);
+            }
+            return [...completed].sort((a, b) => a - b);
+        }
+
+        function recordBracingPartialPractice(execution, program) {
+            if (String(program?.id) !== '1') return 0;
+            const completedRepetitions = getBracingCompletedStepIndexes(execution, false).length;
+            if (completedRepetitions <= 0) return 0;
+            program.sessionsToday = Math.min(1, (program.sessionsToday || 0) + 1);
+            recordBracingPractice(program, execution.phaseIndex, execution.sessionDateKey || localDateKey(), false, completedRepetitions);
+            return completedRepetitions;
+        }
+
+        function saveBracingSplitAndExit() {
+            const execution = AppState.dailyExecution;
+            if (execution.programId !== '1' || !Array.isArray(execution.steps)) return false;
+            const program = AppState.programs.find(item => item.id === '1');
+            if (!program) return false;
+            const steps = execution.steps;
+            const currentStep = steps[execution.currentStepIndex];
+            let nextStepIndex = execution.currentStepIndex;
+            if (currentStep?.isRest) {
+                const nextWorkIndex = steps.findIndex((step, index) => index > execution.currentStepIndex && step.isRest !== true);
+                if (nextWorkIndex >= 0) nextStepIndex = nextWorkIndex;
+            }
+            const completedStepIndexes = getBracingCompletedStepIndexes(execution, false);
+            const completedRepetitions = completedStepIndexes.length;
+            const resume = {
+                sessionId: execution.sessionId,
+                phaseIndex: execution.phaseIndex,
+                nextStepIndex,
+                stepTimeLeft: nextStepIndex === execution.currentStepIndex ? execution.stepTimeLeft : steps[nextStepIndex]?.duration || 0,
+                completedStepIndexes,
+                skippedStepIndexes: [...(execution.skippedStepIndexes || [])],
+                contentVersion: 2,
+                dateKey: execution.sessionDateKey || localDateKey()
+            };
+            program.bracingResume = resume;
+            if (completedRepetitions > 0) recordBracingPractice(program, execution.phaseIndex, resume.dateKey, false, completedRepetitions);
+            const metrics = deriveDailySessionMetrics(execution);
+            const completedSeries = new Set(completedStepIndexes.map(index => steps[index]?.series).filter(series => Number.isInteger(series) && series > 0)).size;
+            try {
+                upsertSessionRecord({
+                    id: execution.sessionId,
+                    schemaVersion: 1,
+                    programId: '1',
+                    phaseIndex: execution.phaseIndex,
+                    date: resume.dateKey,
+                    status: 'interrupted',
+                    plannedSeries: countWorkoutSeries(steps),
+                    completedSeries: Math.min(countWorkoutSeries(steps), completedSeries),
+                    retentionSeconds: metrics.retentionSeconds,
+                    recoverySeconds: metrics.recoverySeconds,
+                    totalElapsedSeconds: metrics.totalElapsedSeconds,
+                    pausedSeconds: metrics.pausedSeconds,
+                    interrupted: true,
+                    volumeStatus: 'reduced',
+                    feedback: null
+                });
+            } catch (error) {
+                console.error('Erro ao registrar pausa dividida de Bracing', error);
+                return false;
+            }
+            if (execution.intervalId) clearInterval(execution.intervalId);
+            execution.intervalId = null;
+            execution.isRunning = false;
+            execution.isPaused = true;
+            execution.bracingSplitRequested = true;
+            if (!saveState()) {
+                execution.bracingSplitRequested = false;
+                showInlineToast('A pausa ainda não foi salva; a sessão continua aberta.');
+                return false;
+            }
+            if (window.AndroidBridge?.stopWorkoutSession) window.AndroidBridge.stopWorkoutSession();
+            window.AndroidBridge?.setKeepScreenOn?.(false);
+            document.getElementById('dailyExecutionModal')?.classList.add('hidden');
+            document.getElementById('dailyExecutionModal')?.classList.remove('flex');
+            renderProgramsList();
+            showInlineToast(completedRepetitions > 0 ? 'Pausa salva. A sessão continuará do mesmo ponto sem duplicar repetições.' : 'Pausa salva. Nenhum dia foi contabilizado ainda.');
+            return true;
+        }
             }
         }
 

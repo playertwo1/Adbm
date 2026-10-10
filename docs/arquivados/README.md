@@ -5,6 +5,7 @@ Este diretório contém artefatos históricos, especificações de etapas já co
 ## Conteúdo Arquivado
 
 ### 1. Roadmap e Especificações
+- [Reconciliação de 10/10/2026](2026-10-10/README.md): snapshot integral anterior ao plano E15, com etapas declaradas concluídas preservadas e pendências físicas mantidas no roadmap ativo. E14 está supersedida como especificação de Bracing.
 - [`roadmap-etapas-concluidas.md`](roadmap-etapas-concluidas.md): Registro integral dos checklists, critérios de aceite e evidências das etapas E00 a E12 já concluídas e consolidadas no repositório. O roadmap ativo permanece em [`ROADMAP.md`](../../ROADMAP.md).
 - [`E09.5_IMPLEMENTACAO.md`](E09.5_IMPLEMENTACAO.md): Documento de entrega e matriz de aceitação da feature E09.5 (Backup Seguro e Exportação Criptografada com AES-256 + SHA-256), anteriormente localizado na raiz do repositório.
 - [`e09-4-IMPLEMENTATION.md`](e09-4-IMPLEMENTATION.md): Documento de implementação da etapa E09.4 (Voz, Hápticos e Galaxy Watch com Disponibilidade Real), anteriormente localizado em `docs/`.

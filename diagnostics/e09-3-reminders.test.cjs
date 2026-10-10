@@ -180,6 +180,7 @@ function setupEnvironment() {
         extractFunction(source, 'closeReminderConfigModal'),
         extractFunction(source, 'saveReminderConfig'),
         extractFunction(source, 'renderProfilePreferences'),
+        extractFunction(source, 'migrateBracingProgram'),
         extractFunction(source, 'mergeLoadedPrograms'),
         extractFunction(source, 'applyProgressData'),
         extractFunction(source, 'collectProgressData'),
@@ -496,7 +497,7 @@ runScenario(
     () => {
         const env = setupEnvironment();
         vm.runInContext(`
-            const prog = AppState.programs[0];
+            const prog = AppState.programs.find(program => program.id === '2');
             prog.remindersEnabled = false;
             prog.reminderTimes = ['08:00', '15:00'];
             openReminderConfigModal(prog.id);
@@ -506,17 +507,17 @@ runScenario(
             saveReminderConfig();
         `, env.context);
 
-        const savedTimes = Array.from(vm.runInContext('AppState.programs[0].reminderTimes', env.context));
+        const savedTimes = Array.from(vm.runInContext("AppState.programs.find(program => program.id === '2').reminderTimes", env.context));
         assert.deepEqual(savedTimes, ['', '16:00'], 'salvar com toggle desligado deve preservar o slot vazio e o horário no slot 2');
 
         const serialized = JSON.stringify(vm.runInContext('collectProgressData()', env.context));
         const restoredData = JSON.parse(serialized);
         env.context.__restoredReminderData = restoredData;
-        vm.runInContext("AppState.programs[0].reminderTimes = ['09:00', '15:00'];", env.context);
+        vm.runInContext("AppState.programs.find(program => program.id === '2').reminderTimes = ['09:00', '15:00'];", env.context);
         vm.runInContext('applyProgressData(__restoredReminderData);', env.context);
-        const restoredTimes = Array.from(vm.runInContext('AppState.programs[0].reminderTimes', env.context));
+        const restoredTimes = Array.from(vm.runInContext("AppState.programs.find(program => program.id === '2').reminderTimes", env.context));
         assert.deepEqual(restoredTimes, ['', '16:00'], 'restore após serialização deve manter vazio e horário nas mesmas posições');
-        vm.runInContext('syncProgramNativeReminder(AppState.programs[0]);', env.context);
+        vm.runInContext("syncProgramNativeReminder(AppState.programs.find(program => program.id === '2'));", env.context);
         const restoredBridgeCall = env.bridgeCalls.at(-1);
         assert.equal(restoredBridgeCall.time1, '', 'slot 1 deve continuar vazio ao sincronizar após reabertura');
         assert.equal(restoredBridgeCall.time2, '16:00', 'slot 2 deve continuar associado à sessão 2 após reabertura');

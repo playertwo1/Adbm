@@ -1,0 +1,267 @@
+CI policy: push/PR verification and isolated release publication verified.
+E05 audit-fix regressions: Back, accessibility, and live components verified.
+E05 visual regressions: PASS
+E06 vacuum player regressions: state, controls, failure, tutorial, summary, feedback, and offline parity verified.
+E07 agenda/progress regressions: real agenda, missing-data honesty, completion guard, and snapshot round-trip verified.
+E07 null/zero weeklyTargetDays and reminder-fallback regressions verified.
+E07 regressões comportamentais: rota por ID, sessão/etapa exatas no payload, falha de início sem timer fantasma, reabertura, hero real, exercícios por sequência e estados vazio/erro/E03 verificados.
+E08.4 salvar meta válida: persiste, atualiza Hoje e fecha o editor.
+E08.4 salvar meta inválida: rejeitada com motivo real, editor permanece aberto, estado salvo preservado.
+E08.4 falha de persistência ao salvar: AppState.dailyGoal reverte, sem contaminação em memória.
+E08.4 cancelar: preserva a meta anterior sem efeito colateral no estado salvo.
+E08.5 caso 1: programa já selecionado continua sendo a recomendação, sem decidir por outro critério.
+E08.5 caso 2: sem programa selecionado, Hoje oferece seleção explícita em vez de escolher sozinha.
+E08.5 caso 3: seleção explícita do usuário é gravada e vira a recomendação exibida.
+E08.5 caso 4: ID inválido na seleção não fabrica escolha nem mascara o erro.
+E08.5 caso 5: desempate por mais sessões hoje entre candidatos elegíveis, conforme regra documentada.
+E08.5 caso 6: desempate por dias concluídos na etapa quando sessões hoje empatam.
+E08.5 caso 7: empate total resolvido pelo menor ID de programa, critério estável e não aleatório.
+E08.5 caso 8: candidato único com progresso real é a recomendação direta.
+E08.5 regressões: continuidade do programa selecionado, seleção explícita sem programa e desempate documentado verificados.
+E08.6 Hoje controls: OK
+E08.2 instalação limpa: loadSavedState() real + openOnboardingIfNeeded() exibem onboarding.
+E08.2 usuário existente: snapshot real (meta/agenda salvos) abre direto em Hoje, sem onboarding.
+E08.2 usuário existente legado: snapshot v4 sem onboardingCompleted também abre direto em Hoje.
+E08.2 dado corrompido: loadSavedState() não trava, sinaliza recoveryRequired e não força onboarding nem persiste meta substituta.
+E08.2 dado parcial (legado incompleto): recoveryRequired definido, sem travar e sem forçar onboarding.
+E08.3 instalação limpa: saudação neutra e números zerados, sem placeholder do mockup.
+E08.3 usuário existente com diário parcial: saudação com nome real e números derivados do diário.
+E08.3 usuário legado sem nome: saudação neutra por período, sem número decorativo herdado.
+E08.3 diário populado: streak/minutos exatos do diário real, saudação com nome real.
+E08 meta inválida: bloqueia avanço com motivo real em cada caso (vazio, abaixo/acima do limite, não numérico, frequência inválida).
+E08 preenchimento parcial + Voltar: foco, meta e frequência preservados em cada etapa.
+E08 conclusão: grava meta/agenda no AppState e nos dados persistidos (collectProgressData), abre Hoje.
+E08 meta inválida na conclusão: onboardingComplete não grava nem navega sem meta válida.
+E08 usuário existente: snapshot sem onboardingCompleted não reabre onboarding (evita regressão de instalação anterior).
+E08 instalação limpa: loadSavedState() marca onboardingCompleted=false na primeira execução real.
+E09.2 Perfil: nome/meta, Tema AMOLED e acessibilidade com salvar/cancelar, efeito observável e persistência verificados.
+[PASS] Fallback browser setInterval com dailyTarget=2, sessionsToday=0, reminderTimes=["", "16:00"] às 16:00: NÃO deve disparar Sessão 1
+[PASS] isReminderScheduleComplete real: dailyTarget=1 + ["09:00", ""] é completo
+[PASS] isReminderScheduleComplete real: dailyTarget=1 + ["", "16:00"] não é completo (sessão 2 não substitui sessão 1)
+[PASS] isReminderScheduleComplete real: dailyTarget=2 + ["09:00", ""] não é completo
+[PASS] syncProgramNativeReminder com bridge capturado: target=2 + ["", "16:00"] com opt-in/permissão verdadeiros deve encaminhar time1="", time2="16:00" e enabled=false
+[PASS] syncProgramNativeReminder com bridge capturado: target=1 + ["09:00", ""] deve encaminhar time1="09:00", time2="" e enabled=true
+[PASS] openReminderConfigModal com reminderTimes=["", "16:00"]: deve preservar slot 1 vazio e slot 2 com 16:00
+[PASS] mergeLoadedPrograms com reminderTimes=["", "16:00"]: deve preservar índice/cardinalidade e vazio no slot 1
+[PASS] applyProgressData com snapshot contendo reminderTimes=["", "16:00"]: deve preservar índice/cardinalidade e vazio no slot 1
+[PASS] Perfil lista horários por sessão e só mostra lembretes ativos com agenda completa e permissão efetiva
+[PASS] Perfil → salvar horário vazio/posicional → serializar/restaurar snapshot preserva os mesmos slots sem default
+[PASS] Validador estrito de horário rejeita ausência, formato parcial e limites fora de HH:mm
+[PASS] Importação de snapshot aceita slot vazio posicional e continua rejeitando horário não vazio inválido
+
+============================================================
+RESUMO DA SUÍTE DE REGRESSÃO E09.3 (LEMBRETES)
+============================================================
+Total de cenários executados: 13
+Cenários com falha: 0
+Cenários PASS: 13
+Todos os cenários passaram com sucesso.
+✓ E09.4 PASS: AC-1 (persistência), AC-2 (sincronização Bridge), AC-3 (sem fallback), AC-4 (sem mock), AC-5 (IDs/bridge/protocolo)
+E09 profile data controls: PASS
+E10 cancel resume countdown: PASS
+E10 circuit completed steps: PASS
+E10 circuit duration/history: PASS
+E10 skipped circuit is not complete: PASS
+E10 discrete silent mode: PASS
+E10 pause audio-off: PASS
+E10 pause voice-off: PASS
+E10 response-pause session guard: PASS
+E10 response pause: PASS
+E10 stretch catalog/recommendation: PASS
+E10 stretch filter: PASS
+E10 pause/resume individual stretch: PASS
+E11 missing audio error/retry: PASS
+E11 hápticos cancelados ao encerrar: PASS
+E11 sincronização com notificação/MediaSession: PASS
+E11 mute alerts (avisos) distinto de narração: PASS
+E11 playback controls (play/pause, ±15s, busca, extremos): PASS
+E11 Pausa de Resposta / bloqueio de sessão concorrente com Mindfulness: PASS
+E11 Pausa de Resposta / bloqueio inverso (Mindfulness tocando): PASS
+E11 next-track/end-of-list (arquivo anunciado, fim da lista): PASS
+E11 duração real das faixas de mindfulness (formalTrackDuration/secondaryTrackDuration batem com o arquivo): PASS
+E12 conquistas: critérios, progresso real e estado persistido — PASS
+E12.2: sessão diária expansível, agregados consistentes e ausência de detalhes tratada honestamente — PASS
+✓ Cenário 1: Período padrão "this_week" sem atividade — total 0m, comparação indisponível sem +100%, dias coerentes.
+✓ Cenário 2: Atividade real sem base anterior — total 60m, comparação indisponível (sem +100%), dados reais.
+✓ Cenário 3: Comparação com base anterior real (+50%) calculada com exatidão.
+✓ Cenário 4: Comparação negativa (-50%) com base anterior real calculada com exatidão.
+✓ Cenário 5: Troca para "last_week" atualiza coerentemente total, gráfico, resumo e comparação.
+✓ Cenário 6: Troca para "last_7_days" usa janela deslizante de 7 dias com janela anterior equivalente.
+✓ Cenário 7: Fallback seguro para "this_week" em período desconhecido.
+✓ Cenário 8: Compatibilidade reversa com chamadores de renderWeeklyTimeSummary e renderWeeklyChart mantida.
+
+============================================================
+E12.1 SUÍTE DE DIAGNÓSTICO: TODOS OS CENÁRIOS PASSARAM COM SUCESSO
+============================================================
+E12 relatório: período/dados selecionados e acesso ao backup no Perfil — PASS
+--- Teste de Regressão: E14 Bracing McGill Adaptado, Agenda 7 Dias & Aba Pausas Flutuante ---
+✓ Paridade estrita HTML confirmada
+✓ Programa 1 (Bracing): 8 semanas com weeklyTargetDays: 5
+✓ Programa 2: Renomeado para "Programa Kegel" mantendo ID 2 e weeklyTargetDays: 7
+✓ Programa 3 (Vácuo): 8 semanas com weeklyTargetDays: 7
+✓ Matriz Clínica do Bracing: 8 semanas x 2 sessões x 3 exercícios reais, 100% no banco ou em pé (zero chão) com ilustrações anatômicas validadas
+✓ Card e imagem de postura presentes no modal de treino aberto (#workoutPostureCard, #workoutPostureImg)
+✓ Aba Pausas conectada ao Modo Treino Flutuante (Alongamentos, Respiração e Pausa de Resposta com handlers nativos e animação síncrona)
+--- TODOS OS TESTES PASSARAM COM SUCESSO! ---
+Exact-alarm policy: authorization and fallback verified.
+--- Teste de Regressão: Modo Treino Flutuante (Floating Workout Overlay) ---
+✓ CP1: Permissão SYSTEM_ALERT_WINDOW declarada no AndroidManifest.xml
+✓ CP1/CP2/CP3/CP4: WorkoutOverlayController segue regras proibitivas e delega estritamente ao WorkoutForegroundService
+✓ CP2: WorkoutForegroundService é a fonte única de verdade do overlay
+✓ CP1/CP5: AndroidBridge expõe API de sobreposição para a WebView
+✓ FUTURA 2: Persistência de coordenadas (X, Y) implementada no WorkoutOverlayController
+✓ FUTURA 2: Áudio Ducking nativo implementado no WorkoutForegroundService
+✓ FUTURA 3 / E13: Acessibilidade TalkBack (contentDescription) implementada em todos os controles do overlay
+✓ Paridade estrita verificada entre index.html e app/src/main/assets/index.html
+--- TODOS OS TESTES DE REGRESSÃO DO MODO TREINO FLUTUANTE PASSARAM! ---
+Persistência segura: 9 cenários passaram.
+Backup/importação: arquivo válido, 10 rejeições, prévia sem gravação, cópia anterior, reabertura, repetição, sessão ativa e falha nativa verificados.
+Cancelamento e importação com data anterior: passaram.
+Semana/sessão e migração/variedade do Bracing: passaram.
+Contrato E02 de sessões: passou
+Release-signing policy: no debug fallback and all persistent-key variables required.
+Screenshot test policy: generated output is isolated from tracked sources.
+session-engine tests passed!
+E01 vacuum regressions: PASS
+E03 vacuum rules: PASS
+Version contract: 1.1.42 (code 42) shared by phone, Wear, and README.
+WebView security policy: local assets and restrictive native settings verified.
+Starting a Gradle Daemon, 2 busy Daemons could not be reused, use --status for details
+Calculating task graph as no cached configuration is available for tasks: :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug
+
+> Configure project :app
+WARNING: The option setting 'android.disallowKotlinSourceSets=false' is experimental.
+The current default is 'true'.
+Kotlin does not yet support 25 JDK target, falling back to Kotlin JVM_24 JVM target
+Kotlin does not yet support 25 JDK target, falling back to Kotlin JVM_24 JVM target
+Kotlin does not yet support 25 JDK target, falling back to Kotlin JVM_24 JVM target
+Kotlin does not yet support 25 JDK target, falling back to Kotlin JVM_24 JVM target
+
+> Task :wear:preBuild UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :wear:preDebugBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:processDebugGoogleServices UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugBuildConfig FROM-CACHE
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:processDebugMainManifest FROM-CACHE
+> Task :app:processDebugManifest FROM-CACHE
+> Task :app:processDebugManifestForPackage FROM-CACHE
+> Task :app:mergeDebugAssets
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:kspDebugKotlin UP-TO-DATE
+> Task :app:processDebugUnitTestManifest
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:processDebugResources
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:mergeDebugNativeLibs UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :wear:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:stripDebugDebugSymbols UP-TO-DATE
+> Task :wear:generateDebugResources UP-TO-DATE
+> Task :wear:packageDebugResources UP-TO-DATE
+> Task :wear:javaPreCompileDebug UP-TO-DATE
+> Task :wear:generateDebugAssets UP-TO-DATE
+> Task :wear:processDebugNavigationResources UP-TO-DATE
+> Task :wear:mergeDebugAssets UP-TO-DATE
+> Task :wear:compressDebugAssets UP-TO-DATE
+> Task :wear:parseDebugLocalResources UP-TO-DATE
+> Task :wear:generateDebugRFile UP-TO-DATE
+> Task :wear:checkDebugDuplicateClasses UP-TO-DATE
+> Task :wear:desugarDebugFileDependencies UP-TO-DATE
+> Task :wear:mergeExtDexDebug UP-TO-DATE
+> Task :wear:mergeLibDexDebug UP-TO-DATE
+> Task :wear:checkDebugAarMetadata UP-TO-DATE
+> Task :wear:mapDebugSourceSetPaths UP-TO-DATE
+> Task :wear:compileDebugNavigationResources UP-TO-DATE
+> Task :wear:compileDebugKotlin UP-TO-DATE
+> Task :wear:compileDebugJavaWithJavac NO-SOURCE
+> Task :wear:processDebugJavaRes UP-TO-DATE
+> Task :wear:mergeDebugJavaResource UP-TO-DATE
+> Task :wear:createDebugCompatibleScreenManifests
+> Task :wear:extractDeepLinksDebug UP-TO-DATE
+> Task :wear:mergeDebugResources UP-TO-DATE
+> Task :wear:mergeDebugJniLibFolders UP-TO-DATE
+> Task :wear:mergeDebugNativeLibs NO-SOURCE
+> Task :wear:stripDebugDebugSymbols NO-SOURCE
+> Task :wear:validateSigningDebug UP-TO-DATE
+> Task :wear:writeDebugAppMetadata UP-TO-DATE
+> Task :wear:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :wear:processDebugMainManifest FROM-CACHE
+> Task :wear:processDebugManifest FROM-CACHE
+> Task :wear:processDebugManifestForPackage FROM-CACHE
+> Task :app:compressDebugAssets
+> Task :wear:processDebugResources
+> Task :wear:dexBuilderDebug UP-TO-DATE
+> Task :wear:mergeProjectDexDebug UP-TO-DATE
+> Task :wear:packageDebug
+> Task :wear:assembleDebug
+> Task :wear:createDebugApkListingFileRedirect
+
+> Task :app:compileDebugKotlin
+w: file:///C:/Users/notefael/projetos/Adbm/app/src/main/java/com/example/MainActivity.kt:89:15 'fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Unit' is deprecated. This method has been deprecated in favor of using the Activity Result API
+      which brings increased type safety via an {@link ActivityResultContract} and the prebuilt
+      contracts for common intents available in
+      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for
+      testing, and allow receiving results in separate, testable classes independent from your
+      activity. Use
+      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)}
+      with the appropriate {@link ActivityResultContract} and handling the result in the
+      {@link ActivityResultCallback#onActivityResult(Object) callback}.
+w: file:///C:/Users/notefael/projetos/Adbm/app/src/main/java/com/example/MainActivity.kt:172:28 'constructor(p0: String!, p1: String!): Locale' is deprecated. Deprecated in Java.
+w: file:///C:/Users/notefael/projetos/Adbm/app/src/main/java/com/example/MainActivity.kt:175:30 'constructor(p0: String!): Locale' is deprecated. Deprecated in Java.
+w: file:///C:/Users/notefael/projetos/Adbm/app/src/main/java/com/example/MainActivity.kt:361:21 'var databaseEnabled: Boolean' is deprecated. Deprecated in Java.
+w: file:///C:/Users/notefael/projetos/Adbm/app/src/main/java/com/example/MainActivity.kt:695:83 'static field VIBRATOR_SERVICE: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/notefael/projetos/Adbm/app/src/main/java/com/example/MainActivity.kt:915:22 'fun setHintShowBackgroundOnly(p0: Boolean): @NonNull() NotificationCompat.WearableExtender' is deprecated. Deprecated in Java.
+w: file:///C:/Users/notefael/projetos/Adbm/app/src/main/java/com/example/MainActivity.kt:1001:83 'static field VIBRATOR_SERVICE: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/notefael/projetos/Adbm/app/src/main/java/com/example/ReminderScheduler.kt:421:14 'fun setHintShowBackgroundOnly(p0: Boolean): @NonNull() NotificationCompat.WearableExtender' is deprecated. Deprecated in Java.
+w: file:///C:/Users/notefael/projetos/Adbm/app/src/main/java/com/example/WorkoutForegroundService.kt:448:20 'constructor(p0: String!, p1: String!): Locale' is deprecated. Deprecated in Java.
+w: file:///C:/Users/notefael/projetos/Adbm/app/src/main/java/com/example/WorkoutForegroundService.kt:451:30 'constructor(p0: String!): Locale' is deprecated. Deprecated in Java.
+
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:mergeDebugJavaResource UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:dexBuilderDebug FROM-CACHE
+> Task :app:mergeProjectDexDebug FROM-CACHE
+> Task :app:packageDebug
+> Task :app:assembleDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:kspDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.robolectric.nativeruntime.DefaultNativeRuntimeLoader in an unnamed module
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+> Task :app:testDebugUnitTest
+> Task :app:finalizeTestRoborazziDebug SKIPPED
+
+BUILD SUCCESSFUL in 53s
+82 actionable tasks: 20 executed, 9 from cache, 53 up-to-date
+Configuration cache entry stored.
+CHECK PASS: diagnostics, equivalência HTML e builds debug passaram.

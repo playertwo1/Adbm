@@ -58,6 +58,7 @@ const weekDateKeys = extractFunction(source, 'weekDateKeys');
 const syncDerivedStats = extractFunction(source, 'syncDerivedStats');
 const getConfiguredWeeklyTargetDays = extractFunction(source, 'getConfiguredWeeklyTargetDays');
 const synchronizeProgramProgress = extractFunction(source, 'synchronizeProgramProgress');
+const migrateBracingProgram = extractFunction(source, 'migrateBracingProgram');
 const applyProgramProgressAdjustment = extractFunction(source, 'applyProgramProgressAdjustment');
 const loadSavedState = extractLastFunction(source, 'loadSavedState');
 const renderGreeting = extractFunction(source, 'renderGreeting');
@@ -138,7 +139,7 @@ function setup() {
         'const CORE_DATA_VERSION = 3;',
         'let onboardingState = { step: 1, focus: null, dailyGoalInput: "", weeklyDaysInput: "" };',
         localDateKey, weekDateKeys, syncDerivedStats, getConfiguredWeeklyTargetDays,
-        synchronizeProgramProgress, applyProgramProgressAdjustment,
+        synchronizeProgramProgress, migrateBracingProgram, applyProgramProgressAdjustment,
         source.slice(persistenceStart, persistenceEnd),
         renderGreeting, renderTodaySummary, updateHeaderStats,
         onboardingValidateGoal, showInlineToast,

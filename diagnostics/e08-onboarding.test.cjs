@@ -169,7 +169,7 @@ function setup() {
         validateGoal, validateWeekly, showStepError, renderStep, selectFocus, updateGoalInput,
         updateWeeklyInput, goBack, goNext, complete, openIfNeeded,
         localDateKey, getConfiguredWeeklyTargetDays, isStrictNonNegativeInteger,
-        isValidReminderTime, isReminderScheduleComplete, synchronizeProgramProgress, mergeLoadedPrograms,
+        isValidReminderTime, isReminderScheduleComplete, synchronizeProgramProgress, extractFunction(source, 'migrateBracingProgram'), mergeLoadedPrograms,
         isValidSessionRecord, normalizeSessionHistory,
         applyProgressData, collectProgressData
     ].join('\n');

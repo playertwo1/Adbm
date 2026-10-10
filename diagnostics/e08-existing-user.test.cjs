@@ -57,6 +57,7 @@ const isStrictNonNegativeInteger = extractFunction(source, 'isStrictNonNegativeI
 const isValidReminderTime = extractFunction(source, 'isValidReminderTime');
 const isReminderScheduleComplete = extractFunction(source, 'isReminderScheduleComplete');
 const synchronizeProgramProgress = extractFunction(source, 'synchronizeProgramProgress');
+const migrateBracingProgram = extractFunction(source, 'migrateBracingProgram');
 const applyProgramProgressAdjustment = extractFunction(source, 'applyProgramProgressAdjustment');
 const loadSavedState = extractLastFunction(source, 'loadSavedState');
 
@@ -122,7 +123,7 @@ function setup() {
         onboardingFocusLabels, onboardingShowStepError, onboardingRenderStep,
         localDateKey, weekDateKeys, syncDerivedStats, getConfiguredWeeklyTargetDays,
         isStrictNonNegativeInteger, isValidReminderTime, isReminderScheduleComplete,
-        synchronizeProgramProgress, applyProgramProgressAdjustment,
+        synchronizeProgramProgress, migrateBracingProgram, applyProgramProgressAdjustment,
         source.slice(persistenceStart, persistenceEnd),
         openOnboardingIfNeeded
     ].join('\n');

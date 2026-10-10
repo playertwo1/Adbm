@@ -9,8 +9,9 @@ const html = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'assets', 'in
 function extractFunctionFrom(source, name) {
     const start = source.indexOf(`        function ${name}(`);
     assert(start >= 0, `Função ausente: ${name}`);
+    const bodyStart = source.indexOf(') {', start) + 2;
     let depth = 0, opened = false;
-    for (let index = source.indexOf('{', start); index < source.length; index++) {
+    for (let index = bodyStart; index < source.length; index++) {
         if (source[index] === '{') { depth++; opened = true; }
         if (source[index] === '}' && opened && --depth === 0) return source.slice(start, index + 1);
     }
@@ -21,6 +22,14 @@ function extractFunction(name) {
     return extractFunctionFrom(html, name);
 }
 
+function extractConst(name) {
+    const start = html.indexOf(`const ${name} =`);
+    assert(start >= 0, `Constante ausente: ${name}`);
+    const end = html.indexOf(';\r\n', start);
+    assert(end > start, `Constante incompleta: ${name}`);
+    return html.slice(start, end + 1);
+}
+
 const appState = html.slice(html.indexOf('        const AppState = {'), html.indexOf('        const CORE_DATA_VERSION'));
 const persistenceStart = html.indexOf('        const CORE_PROGRESS_SNAPSHOT_KEY');
 const persistenceEnd = html.indexOf('        // Initialize on load', persistenceStart);
@@ -29,6 +38,9 @@ assert(persistenceStart > 0 && persistenceEnd > persistenceStart);
 const source = [
     appState,
     'const CORE_DATA_VERSION = 3;',
+    extractConst('BRACING_EXERCISES'),
+    extractConst('BRACING_WEEKS'),
+    extractFunction('getBracingSteps'),
     extractFunction('localDateKey'), extractFunction('weekDateKeys'), extractFunction('syncDerivedStats'),
     extractFunction('getConfiguredWeeklyTargetDays'),
     extractFunction('isStrictNonNegativeInteger'),
@@ -44,6 +56,7 @@ const source = [
     extractFunction('startHeroWorkout'),
     extractFunction('repeatProgramPhase'),
     extractFunction('toggleProgramPhase'),
+    extractFunction('migrateBracingProgram'),
     extractFunction('getProgramExerciseDetails'),
     extractFunction('renderProgramExerciseDetail'),
     extractFunction('openProgramExerciseDetail'),
@@ -135,14 +148,21 @@ function setup() {
     return { context, elements, getElementById, toastLog, values };
 }
 
-// 1. Card abre o programa correto por ID (etapa 3 abre etapa 3). Programa 1 tem 1 sessão por dia.
+// 1. Bracing só inicia a semana ativa e mantém 1 sessão diária mesmo com contagem legada acima da meta.
 {
     const env = setup();
     vm.runInContext(`AppState.programs.find(p => p.id === '1').sessionsToday = 1`, env.context);
     vm.runInContext(`openDailyExecutionModal('1', 2)`, env.context);
+    assert.equal(vm.runInContext('AppState.dailyExecution.programId', env.context), undefined, 'semana inativa do Bracing não pode iniciar');
+    assert.ok(env.toastLog.some(msg => /semana ativa/i.test(msg)));
+    vm.runInContext(`openDailyExecutionModal('1', 0)`, env.context);
+    assert.equal(vm.runInContext('AppState.dailyExecution.programId', env.context), undefined, 'segunda sessão no dia não pode iniciar');
+    assert.ok(env.toastLog.some(msg => /uma sessão por dia/i.test(msg)));
+    vm.runInContext(`AppState.programs.find(p => p.id === '1').sessionsToday = 0`, env.context);
+    vm.runInContext(`openDailyExecutionModal('1', 0)`, env.context);
     assert.equal(vm.runInContext('AppState.dailyExecution.programId', env.context), '1');
-    assert.equal(vm.runInContext('AppState.dailyExecution.phaseIndex', env.context), 2);
-    assert.equal(vm.runInContext('AppState.dailyExecution.sessionNumber', env.context), 2);
+    assert.equal(vm.runInContext('AppState.dailyExecution.phaseIndex', env.context), 0);
+    assert.equal(vm.runInContext('AppState.dailyExecution.sessionNumber', env.context), 1, 'Bracing mantém uma sessão diária mesmo com contagem antiga acima da meta');
     assert.equal(env.getElementById('dailyExecutionModal').classList.contains('hidden'), false);
 }
 

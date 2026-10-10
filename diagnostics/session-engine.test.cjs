@@ -10,12 +10,21 @@ const service = fs.readFileSync(path.join(__dirname, '..', 'app/src/main/java/co
 function extractFunction(name) {
     const start = html.indexOf(`        function ${name}(`);
     assert(start >= 0, `Função ausente: ${name}`);
+    const bodyStart = html.indexOf(') {', start) + 2;
     let depth = 0, opened = false;
-    for (let index = html.indexOf('{', start); index < html.length; index++) {
+    for (let index = bodyStart; index < html.length; index++) {
         if (html[index] === '{') { depth++; opened = true; }
         if (html[index] === '}' && opened && --depth === 0) return html.slice(start, index + 1);
     }
     throw new Error(`Função incompleta: ${name}`);
+}
+
+function extractConst(name) {
+    const start = html.indexOf(`const ${name} =`);
+    assert(start >= 0, `Constante ausente: ${name}`);
+    const end = html.indexOf(';\r\n', start);
+    assert(end > start, `Constante incompleta: ${name}`);
+    return html.slice(start, end + 1);
 }
 
 const appState = html.slice(html.indexOf('        const AppState = {'), html.indexOf('        const CORE_DATA_VERSION'));
@@ -25,8 +34,16 @@ const persistenceEnd = html.indexOf('        // Initialize on load', persistence
 const source = [
     appState,
     'const CORE_DATA_VERSION = 3;',
+    extractConst('BRACING_EXERCISES'), extractConst('BRACING_WEEKS'),
     extractFunction('localDateKey'),
     extractFunction('getConfiguredWeeklyTargetDays'),
+    extractFunction('getBracingSteps'),
+    extractFunction('migrateBracingProgram'),
+    extractFunction('getBracingPracticeDays'),
+    extractFunction('recordBracingPractice'),
+    extractFunction('recordBracingWeekReviewFailure'),
+    extractFunction('canAdvanceBracingWeek'),
+    extractFunction('applyBracingWeekReview'),
     extractFunction('isStrictNonNegativeInteger'),
     extractFunction('isValidReminderTime'),
     extractFunction('isReminderScheduleComplete'),
