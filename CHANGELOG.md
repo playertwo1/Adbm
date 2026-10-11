@@ -7,6 +7,15 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
+## [1.1.45] - 2026-10-11
+
+### Alterado
+- Bracing da semana 1: pausas entre repetições de 15 para 5 segundos.
+- Preparação inicial, descansos entre séries e demais semanas mantêm os tempos existentes.
+
+### Validação
+- Diagnósticos e builds release de celular e Wear verificados; assinatura compatível com 1.1.44.
+
 ## [1.1.44] - 2026-10-11
 
 ### Alterado

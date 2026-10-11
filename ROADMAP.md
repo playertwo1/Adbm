@@ -1,6 +1,7 @@
 # CoreFlow — Roadmap ativo
 
 **Atualizado:** 11/10/2026.
+**Release atual:** 1.1.45 — pausas entre repetições da semana 1 do Bracing reduzidas para 5s.
 **Foco:** E15 — Correção do Bracing de 8 semanas, conforme o documento fornecido por Rafael.
 **Estado:** implementação funcional verificada; aprovação visual das imagens novas e homologação física PENDENTES.
 

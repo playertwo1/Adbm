@@ -83,6 +83,11 @@ assert.equal(catalogSteps.filter(step => !step.isRest && step.exerciseId).length
 assert.equal(catalogSteps.filter(step => step.badge === 'PREPARAÇÃO').length, 1);
 assert.equal(catalogSteps.filter(step => step.badge === 'QUALIDADE').length, 1);
 assert.equal(vm.runInContext('getBracingSteps(0).filter(step => !step.isRest && step.exerciseId).length', context), 18, 'week 1 is 18 individual contractions');
+const week1RestSteps = vm.runInContext("getBracingSteps(0).filter(step => step.title === 'Relaxe entre repetições')", context);
+assert.equal(week1RestSteps.length, 15, 'week 1 has one separate rest between each pair of reps in each set');
+assert(week1RestSteps.every(step => step.duration === 5), 'week 1 repetition rests are five seconds');
+assert.equal(vm.runInContext("getBracingSteps(0).find(step => step.badge === 'PREPARAÇÃO').duration", context), 15, 'preparation stays fifteen seconds');
+assert(vm.runInContext("getBracingSteps(1).filter(step => step.title === 'Relaxe entre repetições').every(step => step.duration === 15)", context), 'other weeks keep their prescribed fifteen-second rests');
 const week3 = vm.runInContext('getBracingSteps(2)', context);
 const week3March = week3.filter(step => step.exerciseId === 'BR-03');
 assert.equal(week3March.length, 24, 'week 3 contains 12 BR-03 reps per side');

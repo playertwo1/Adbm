@@ -19,15 +19,19 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, estabiliza�
 
 ## Versão Atual
 
-- **Versão base local:** `1.1.44` (`versionCode 44`)
-- **Release:** `1.1.44` — Bracing com 2 treinos por dia, 7 dias por semana, ajuste manual de semana/dia restaurado e progresso preservado ao reabrir.
+- **Versão base local:** `1.1.45` (`versionCode 45`)
+- **Release:** `1.1.45` — Bracing com pausas entre repetições reduzidas para 5 segundos na primeira semana.
 - **Validação desta versão:** regressões e build técnico passaram. Aprovação visual das pranchas e validação em celular e Galaxy Watch físicos continuam pendentes; consulte o [registro de execução](docs/roadmap/execucao.md).
 - **Downloads:** O APK assinado para celular e relógio está disponível na aba de [Releases](https://github.com/playertwo1/Adbm/releases).
 - **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.
 
 ---
 
-## O que mudou na 1.1.44
+## O que mudou na 1.1.45
+
+- Na semana 1, cada pausa entre repetições do Bracing foi reduzida de 15 para 5 segundos. A preparação inicial e as semanas seguintes mantêm seus tempos.
+
+## Mudanças da 1.1.44
 
 - Bracing disponível duas vezes por dia nos sete dias da semana, conforme a configuração solicitada.
 - Ajuste manual de semana (1–8), dia (1–7) e sessões de hoje (0–2) restaurado. A posição escolhida permanece ao fechar e reabrir o app.
@@ -68,8 +72,8 @@ $env:KEYSTORE_PATH = "caminho/para/coreflow-upload.jks"
 $env:KEYSTORE_PASSWORD = "sua_senha_keystore"
 $env:KEY_ALIAS = "seu_alias"
 $env:KEY_PASSWORD = "sua_senha_chave"
-$env:BUILD_VERSION_CODE = "44"
-$env:BUILD_VERSION_NAME = "1.1.44"
+$env:BUILD_VERSION_CODE = "45"
+$env:BUILD_VERSION_NAME = "1.1.45"
 
 .\gradlew.bat :app:assembleRelease :wear:assembleRelease
 ```

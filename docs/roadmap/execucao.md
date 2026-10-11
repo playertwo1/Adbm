@@ -984,3 +984,17 @@ Próximo passo:
 - **Assinaturas:** certificados compatíveis com 1.1.43 e versão 44 nos dois APKs, conforme preparação acima.
 - **Limpeza temporária:** a revisão automática bloqueou a remoção dos arquivos locais de assinatura, inclusive tentativa limitada a caminhos literais, sem detalhar motivo. Material fora do repositório; limpeza manual pendente na pasta temporária desta release. Nenhuma credencial publicada.
 - **Gates físicos/visuais:** continuam pendentes/NOT_TESTED; publicação não encerra E15.
+
+
+## 2026-10-11 — Release 1.1.45 / descanso da semana 1
+
+- **Pedido:** reduzir todos os descansos de 15 para 5 segundos no Bracing da primeira semana, compilar APK e enviar ao GitHub.
+- **Mudança:** as 15 pausas entre repetições da semana 1 duram 5 segundos. Preparação (15s), descansos entre séries e repetições das semanas seguintes preservam suas durações.
+- **Versão:** `CORE_FLOW_VERSION_CODE=45`, `CORE_FLOW_VERSION_NAME=1.1.45`; README/CHANGELOG/notas da release atualizados.
+- **Regressão RED/GREEN:** `diagnostics/e15-bracing-catalog.test.cjs` primeiro falhou na duração; depois passou cobrindo 15 pausas, preparação e semana 2. Teste de persistência manual Bracing e contrato da versão também passaram.
+- **Frequência existente:** mantém 2 treinos diários/7 dias e ajuste manual da 1.1.44. IDs, demais prescrições, armazenamento, protocolo Android/Wear e estado visual/físico pendente preservados.
+- **Gate completo:** `bash scripts/check.sh` com JDK e Android SDK definidos → exit 0; `BUILD SUCCESSFUL in 1m 32s`, `CHECK PASS` para diagnósticos, equivalência HTML, testes Android e builds debug.
+- **Build release:** `gradlew.bat --no-daemon :app:assembleRelease :wear:assembleRelease --console=plain` → exit 0; `BUILD SUCCESSFUL in 1m 5s`.
+- **Assinatura/versão:** `apksigner verify --verbose --print-certs` passou nos dois APKs e seus certificados SHA-256 correspondem à versão 1.1.44. `aapt dump badging` confirmou versionCode 45, versionName 1.1.45 e applicationId preservado.
+- **SHA-256 APK:** celular `0e739f3611c08975d4c874d445ec33d3c8bf454dc76ba8de8017e9e9df6444ec`; Wear `8cb7913af81a7c81b9bf812e899e381d417d102e72ec35dcc47b77318fac5310`.
+- **Publicação e readback GitHub:** pendentes de execução nesta release; registrar após obter evidência.

@@ -9616,7 +9616,7 @@
                                 lapIndex: lapIndex + 1
                             });
                             const lastRep = repIndex === repetitionsPerSide - 1;
-                            if (!lastRep && prescription.holdSeconds !== null) steps.push({ title: 'Relaxe entre repetições', instruction: 'Solte completamente a firmeza, respire normalmente e relaxe os ombros.', duration: 15, isRest: true, voice: 'Relaxe e continue respirando.', badge: 'DESCANSO', phase: 'descanso', series });
+                            if (!lastRep && prescription.holdSeconds !== null) steps.push({ title: 'Relaxe entre repetições', instruction: 'Solte completamente a firmeza, respire normalmente e relaxe os ombros.', duration: week.week === 1 ? 5 : 15, isRest: true, voice: 'Relaxe e continue respirando.', badge: 'DESCANSO', phase: 'descanso', series });
                         }
                         if (setIndex < prescription.sets - 1) steps.push({ title: 'Descanso entre séries', instruction: 'Solte a tensão abdominal e recupere a respiração antes da próxima série.', duration: 30, isRest: true, voice: 'Descanso entre séries.', badge: 'RECUPERAÇÃO', phase: 'descanso', series });
                     }
