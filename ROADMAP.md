@@ -1,6 +1,6 @@
 # CoreFlow — Roadmap ativo
 
-**Atualizado:** 10/10/2026.
+**Atualizado:** 11/10/2026.
 **Foco:** E15 — Correção do Bracing de 8 semanas, conforme o documento fornecido por Rafael.
 **Estado:** implementação funcional verificada; aprovação visual das imagens novas e homologação física PENDENTES.
 
@@ -29,6 +29,10 @@ As seções concluídas saíram do backlog ativo. Nenhum código, imagem antiga 
 E14 fica SUPERSEDIDA como especificação do Bracing. A tentativa registrada em 09/10 está no código, mas não representa aceite de E15. Este plano prevalece em conflitos de conteúdo; não apaga histórico.
 
 ## 3. E15 — Bracing de 8 semanas
+
+**Decisão de Rafael, 11/10:** 2 treinos diários em 7 dias por semana, com ajuste manual de semana/dia restaurado. Esta configuração substitui a frequência anterior; repetições e descansos individuais permanecem. Evidência diária passa a distinguir cada sessão/fase sem apagar registros antigos.
+
+- [x] E15-AJUSTE — Frequência 2×7 e ajuste manual persistente: regressões, gate técnico e reauditoria PASS em 11/10; execução física pendente; release 1.1.44 preparada com APKs assinados e certificados compatíveis. Evidência: `docs/roadmap/execucao.md` e `docs/roadmap/bracing-ajuste-2026-10-11-check.log`.
 
 Contrato detalhado, matriz semanal, arquivos, APIs propostas, regressões e critérios: [bracing-8-semanas-v2.md](docs/roadmap/bracing-8-semanas-v2.md).
 

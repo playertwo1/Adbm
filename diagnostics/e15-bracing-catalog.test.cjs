@@ -42,9 +42,9 @@ const appStateEnd = html.indexOf('        const CORE_DATA_VERSION', appStateStar
 const appStateContext = vm.createContext({});
 vm.runInContext('var AppState;\n' + html.slice(appStateStart, appStateEnd).replace('const AppState =', 'AppState ='), appStateContext);
 const bracingProgram = JSON.parse(vm.runInContext('JSON.stringify(AppState.programs.find(program => program.id === "1"))', appStateContext));
-assert.equal(bracingProgram.dailyTarget, 1, 'Bracing prescribes one daily session');
+assert.equal(bracingProgram.dailyTarget, 2, 'Bracing uses two daily sessions as requested');
 assert.equal(bracingProgram.phases.length, 8);
-assert(bracingProgram.phases.every(phase => phase.weeklyTargetDays === 5));
+assert(bracingProgram.phases.every(phase => phase.weeklyTargetDays === 7));
 
 vm.runInContext([
     extractConst('BRACING_EXERCISES'),
@@ -71,7 +71,7 @@ const expected = [
 
 weeks.forEach((week, index) => {
     assert.equal(week.week, index + 1);
-    assert.equal(week.weeklyTargetDays, 5);
+    assert.equal(week.weeklyTargetDays, 7);
     assert.equal(week.laps, index === 7 ? 2 : 1);
     assert.deepEqual(week.prescriptions.map(p => [p.exerciseId, p.sets, p.repsPerSide, p.sideMode === 'alternating' ? 1 : 0, p.holdSeconds]), expected[index]);
 });

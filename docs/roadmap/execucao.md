@@ -948,3 +948,29 @@ Próximo passo:
 - **Conteúdo:** implementação funcional E15 descrita acima; regressões e build técnico registrados como PASS.
 - **Gates pendentes:** aprovação visual das pranchas e validação em WebView, aparelho, tela bloqueada, TalkBack e Galaxy Watch físicos continuam NOT_TESTED. Esta publicação não marca E15 como concluída.
 - **Distribuição:** APK release assinado para celular e Wear publicados na GitHub Release `v1.1.43`.
+
+
+## 2026-10-11 — E15-AJUSTE / frequência 2×7 e ajuste manual
+
+- **Pedido e decisão de Rafael:** confirmou que as fotos do contador agregado eram da versão desatualizada. Solicitou explicitamente “Voltar a 2 treinos em 7 dias”, além de restaurar a seleção manual de semana/dia. Essa frequência substitui o contrato de 1 sessão/5 dias anterior, sem alterar a fonte original nem as repetições/tempos de cada sessão.
+- **Implementação:** catálogo e fases com 7 dias; migração idempotente restaura meta diária 2; início permite sessão 2 e bloqueia sessão 3. Guia, revisão e lembretes usam a configuração atual. A revisão de semana preserva o contador diário para não liberar uma terceira sessão ao avançar.
+- **Ajuste manual:** modal disponível para Bracing, semana 1–8, dia 1–7 e sessões hoje 0–2. `lastManualAdjustment` guarda posição e quantidade de datas existentes; recarregar/migrar preserva a posição e novas datas avançam a partir dela. Diário/minutos/evidência anterior preservados. Ajuste descarta continuação ativa e revisão pendente; falha ao salvar restaura snapshot completo, inclusive continuação.
+- **Decisão de armazenamento aditiva:** `bracingDailyPractice[data].byPhase[fase].sessions[sessionId]` identifica volume e término por sessão. Uma pausa dividida permanece não finalizada; retorno atualiza a mesma sessão. Duas sessões finalizadas com trabalho real, inclusive reduzidas, contam uma data de consistência; duas integrais comprovam volume diário. Registros antigos permanecem sem inventar a segunda sessão. Mudança manual de semana conserva os registros da fase anterior. Reprocessamento da mesma sessão não duplica o dia nem o contador de sessões.
+- **Regressões RED/GREEN:** `diagnostics/bracing-schedule-adjustment.test.cjs` falhou primeiro no bloqueio do modal; depois no avanço indevido do dia e no reset do contador ao aprovar semana. Todas passaram após as correções. Cobre frequência, ajuste persistente, progresso posterior, rollback, separação por fase, split idempotente, duas sessões por dia e limite mantido ao avançar. `progress-persistence.test.cjs` verifica save/load real do ajuste e da evidência por sessão; E07 verifica sessão 2 permitida e sessão 3 bloqueada. Diagnósticos anteriores atualizados para a frequência solicitada e a nova dependência do contador de prática.
+- **Auditoria independente:** agente `audit_bracing_schedule`, somente leitura. Findings de volume diário, rollback, contaminação entre fases, avanço na primeira sessão e reset do contador ao avançar semana corrigidos; reauditoria informou ausência de findings materiais residuais.
+- **Gate final:** Git Bash `JAVA_HOME="C:/Program Files/Android/Android Studio/jbr" ANDROID_HOME="C:/Users/notefael/AppData/Local/Android/Sdk" bash scripts/check.sh` → exit 0; `BUILD SUCCESSFUL in 29s`, `CHECK PASS` (todos os diagnósticos, paridade HTML, testes Android e builds debug app/Wear). Log: [bracing-ajuste-2026-10-11-check.log](bracing-ajuste-2026-10-11-check.log). `git diff --check` PASS. Testes/build técnicos não comprovam execução no celular/relógio.
+- **Gates físicos/visuais:** S25 Ultra, Galaxy Watch, overlay/tela bloqueada, TTS, TalkBack e visual das pranchas continuam NOT_TESTED/pendentes. Nenhuma aprovação visual inferida.
+- **Escopo preservado:** IDs, exercícios, tempos/repetições/lados, protocolo Android/Wear, segurança WebView e histórico existentes. Versão permanece 1.1.43 (43); esta correção de código ainda precisa ser incorporada a uma nova atualização distribuída. Sem commit/push/publicação de release nesta tarefa.
+
+
+## 2026-10-11 — Preparação da release 1.1.44
+
+- **Autorização:** Rafael pediu novo APK seguindo o modelo anterior, publicação no GitHub Release e README das mudanças. Abrange celular e Wear, assinatura release existente, commit/push e release.
+- **Versão:** `CORE_FLOW_VERSION_CODE=44`, `CORE_FLOW_VERSION_NAME=1.1.44` em `gradle.properties`; README e CHANGELOG atualizados, notas em `docs/releases/v1.1.44.md`.
+- **Conteúdo:** E15-AJUSTE descrito acima, 2 treinos/dia em 7 dias, ajuste manual, evidência por sessão/fase, rollback e limite diário preservado na progressão. Repetições e tempos mantidos.
+- **Gate na versão 44:** Git Bash `scripts/check.sh` com JDK/SDK definidos → exit 0; `BUILD SUCCESSFUL in 45s`; `CHECK PASS`. Log: [release-1.1.44-check.log](release-1.1.44-check.log).
+- **Build release local:** `gradlew.bat --no-daemon :app:assembleRelease :wear:assembleRelease --console=plain` com o par `BUILD_VERSION_*` e as quatro variáveis de assinatura → exit 0; `BUILD SUCCESSFUL in 46s`. Material usado de modo temporário fora do repositório; nenhum valor registrado.
+- **APK/assinatura:** `apksigner verify --verbose --print-certs` passou em ambos; certificado SHA-256 de cada APK comparado com a release 1.1.43 e idêntico. `aapt dump badging` confirmou `versionCode=44`, `versionName=1.1.44` e mesmo applicationId nos dois módulos. `git diff --check` PASS.
+- **SHA-256:** celular `f7729d4af759b2b761600565e12bafcabfef07e243c21ea34e7ecefeaf5e05ad`; Wear `4d1ac45920e72f64bfcd9e9736493e2178a3765a254da189af51caed33be4c0d`.
+- **Pacote preparado:** `app-release.apk`, `wear-release.apk` e `README.md`, com notas completas. Registro da publicação será acrescentado após confirmação do GitHub.
+- **Gates físicos/visuais:** NOT_TESTED, sem aceite final de E15, S25 Ultra, Galaxy Watch, tela bloqueada, TalkBack ou pranchas.

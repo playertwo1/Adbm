@@ -3347,18 +3347,18 @@
                     currentDayInWeek: 1,
                     daysCompletedInPhase: 0,
                     sessionsToday: 0,
-                    dailyTarget: 1,
+                    dailyTarget: 2,
                     reminderTimes: ['09:00'],
                     remindersEnabled: false,
                     phases: [
-                        { title: 'Semana 1: Consciência abdominal', details: 'BR-01: 2×6×5 s; BR-02: 1×6×5 s • esforço 2–3/10 • cerca de 5 min', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 2: Sustentação e respiração', details: 'BR-01: 2×6×8 s; BR-02: 2×6×8 s • esforço 2–3/10 • cerca de 6–8 min', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 3: Controle com movimento sentado', details: 'BR-01: 1×5×8 s; BR-03: 2×6/lado×3 s; BR-02: 1×6×10 s • esforço 3–4/10', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 4: Resistência com movimentos simples', details: 'BR-03: 2×8/lado×3 s; BR-04: 2×10; BR-02: 1×8×10 s • esforço 3–4/10', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 5: Controle postural', details: 'BR-05: 2×8; BR-06: 2×5/lado×8 s; BR-01: 1×6×10 s • esforço 3–5/10', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 6: Resistência entre membros', details: 'BR-07: 2×6/lado×5 s; BR-05: 2×8; BR-04: 2×12 • esforço 3–5/10', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 7: Controle contra rotação', details: 'BR-08: 2×6/lado×4 s; BR-07: 2×7/lado×6 s; BR-06: 2×6/lado×10 s • esforço 4–6/10', weeklyTargetDays: 5, completed: false },
-                        { title: 'Semana 8: Circuito de domínio', details: '2 voltas: BR-02, BR-05, BR-07, BR-08 e BR-06 • esforço 4–6/10 • cerca de 15–20 min', weeklyTargetDays: 5, completed: false }
+                        { title: 'Semana 1: Consciência abdominal', details: 'BR-01: 2×6×5 s; BR-02: 1×6×5 s • esforço 2–3/10 • cerca de 5 min', weeklyTargetDays: 7, completed: false },
+                        { title: 'Semana 2: Sustentação e respiração', details: 'BR-01: 2×6×8 s; BR-02: 2×6×8 s • esforço 2–3/10 • cerca de 6–8 min', weeklyTargetDays: 7, completed: false },
+                        { title: 'Semana 3: Controle com movimento sentado', details: 'BR-01: 1×5×8 s; BR-03: 2×6/lado×3 s; BR-02: 1×6×10 s • esforço 3–4/10', weeklyTargetDays: 7, completed: false },
+                        { title: 'Semana 4: Resistência com movimentos simples', details: 'BR-03: 2×8/lado×3 s; BR-04: 2×10; BR-02: 1×8×10 s • esforço 3–4/10', weeklyTargetDays: 7, completed: false },
+                        { title: 'Semana 5: Controle postural', details: 'BR-05: 2×8; BR-06: 2×5/lado×8 s; BR-01: 1×6×10 s • esforço 3–5/10', weeklyTargetDays: 7, completed: false },
+                        { title: 'Semana 6: Resistência entre membros', details: 'BR-07: 2×6/lado×5 s; BR-05: 2×8; BR-04: 2×12 • esforço 3–5/10', weeklyTargetDays: 7, completed: false },
+                        { title: 'Semana 7: Controle contra rotação', details: 'BR-08: 2×6/lado×4 s; BR-07: 2×7/lado×6 s; BR-06: 2×6/lado×10 s • esforço 4–6/10', weeklyTargetDays: 7, completed: false },
+                        { title: 'Semana 8: Circuito de domínio', details: '2 voltas: BR-02, BR-05, BR-07, BR-08 e BR-06 • esforço 4–6/10 • cerca de 15–20 min', weeklyTargetDays: 7, completed: false }
                     ]
                 },
                 {
@@ -6019,7 +6019,7 @@
                 }).join('');
                 const phase = program?.phases?.[idx];
                 const current = program?.currentPhaseIndex === idx;
-                return `<section class="overflow-hidden rounded-2xl border ${current ? 'border-emerald-500/50' : 'border-slate-700/80'} bg-slate-800 shadow-lg"><button type="button" aria-expanded="${expanded}" class="flex w-full items-center justify-between gap-3 p-4 text-left" onclick="toggleBracingPhase(${idx})"><span><span class="block text-sm font-bold ${current ? 'text-emerald-300' : 'text-slate-200'}">Semana ${week.week}: ${escapeHtml(week.title)}</span><span class="mt-1 block text-[11px] text-slate-400">Esforço ${escapeHtml(week.effort)} · estimativa da fonte ${escapeHtml(week.estimatedDuration)} · 5 dias de prática</span></span><span aria-hidden="true">${expanded ? '−' : '+'}</span></button><div class="${expanded ? 'block' : 'hidden'} space-y-3 border-t border-slate-700/50 p-4"><p class="text-xs text-slate-300">Uma sessão por dia. Você pode dividi-la em pausas sem duplicar o volume. Continue respirando; ajuste ou pare se houver desconforto anormal.</p>${prescriptionRows}<div class="flex flex-wrap gap-2"><button type="button" onclick="openProgramExerciseDetail('1', ${idx})" class="rounded-xl border border-slate-600 px-4 py-3 text-xs font-bold text-slate-100">Ver detalhes e duração calculada</button>${current ? '<button type="button" onclick="openDailyExecutionModal(\'1\', ' + idx + ')" class="rounded-xl bg-emerald-500 px-4 py-3 text-xs font-bold text-slate-950">Iniciar semana ativa</button>' : ''}</div>${phase?.reviewPending ? '<p class="rounded-xl border border-amber-400/30 bg-amber-500/10 p-3 text-xs text-amber-100">Cinco dias registrados. A progressão aguarda sua avaliação técnica.</p>' : ''}</div></section>`;
+                return `<section class="overflow-hidden rounded-2xl border ${current ? 'border-emerald-500/50' : 'border-slate-700/80'} bg-slate-800 shadow-lg"><button type="button" aria-expanded="${expanded}" class="flex w-full items-center justify-between gap-3 p-4 text-left" onclick="toggleBracingPhase(${idx})"><span><span class="block text-sm font-bold ${current ? 'text-emerald-300' : 'text-slate-200'}">Semana ${week.week}: ${escapeHtml(week.title)}</span><span class="mt-1 block text-[11px] text-slate-400">Esforço ${escapeHtml(week.effort)} · estimativa da fonte ${escapeHtml(week.estimatedDuration)} · 7 dias de prática</span></span><span aria-hidden="true">${expanded ? '−' : '+'}</span></button><div class="${expanded ? 'block' : 'hidden'} space-y-3 border-t border-slate-700/50 p-4"><p class="text-xs text-slate-300">Duas sessões por dia, sete dias por semana. Você pode dividir cada sessão em pausas e retomar o restante. Continue respirando; ajuste ou pare se houver desconforto anormal.</p>${prescriptionRows}<div class="flex flex-wrap gap-2"><button type="button" onclick="openProgramExerciseDetail('1', ${idx})" class="rounded-xl border border-slate-600 px-4 py-3 text-xs font-bold text-slate-100">Ver detalhes e duração calculada</button>${current ? '<button type="button" onclick="openDailyExecutionModal(\'1\', ' + idx + ')" class="rounded-xl bg-emerald-500 px-4 py-3 text-xs font-bold text-slate-950">Iniciar semana ativa</button>' : ''}</div>${phase?.reviewPending ? '<p class="rounded-xl border border-amber-400/30 bg-amber-500/10 p-3 text-xs text-amber-100">Sete dias registrados. A progressão aguarda sua avaliação técnica.</p>' : ''}</div></section>`;
             }).join('');
         }
         function toggleBracingPhase(idx) {
@@ -9572,14 +9572,14 @@
         };
 
         const BRACING_WEEKS = [
-            { week: 1, title: 'Consciência abdominal', effort: '2–3/10', estimatedDuration: '5 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-01', sets: 2, repsPerSide: 6, sideMode: 'none', holdSeconds: 5, movementSeconds: null }, { exerciseId: 'BR-02', sets: 1, repsPerSide: 6, sideMode: 'none', holdSeconds: 5, movementSeconds: null }] },
-            { week: 2, title: 'Sustentação e respiração', effort: '2–3/10', estimatedDuration: '6–8 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-01', sets: 2, repsPerSide: 6, sideMode: 'none', holdSeconds: 8, movementSeconds: null }, { exerciseId: 'BR-02', sets: 2, repsPerSide: 6, sideMode: 'none', holdSeconds: 8, movementSeconds: null }] },
-            { week: 3, title: 'Controle com movimento sentado', effort: '3–4/10', estimatedDuration: '7–9 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-01', sets: 1, repsPerSide: 5, sideMode: 'none', holdSeconds: 8, movementSeconds: null }, { exerciseId: 'BR-03', sets: 2, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 3, movementSeconds: null }, { exerciseId: 'BR-02', sets: 1, repsPerSide: 6, sideMode: 'none', holdSeconds: 10, movementSeconds: null }] },
-            { week: 4, title: 'Resistência com movimentos simples', effort: '3–4/10', estimatedDuration: '8–10 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-03', sets: 2, repsPerSide: 8, sideMode: 'alternating', holdSeconds: 3, movementSeconds: null }, { exerciseId: 'BR-04', sets: 2, repsPerSide: 10, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }, { exerciseId: 'BR-02', sets: 1, repsPerSide: 8, sideMode: 'none', holdSeconds: 10, movementSeconds: null }] },
-            { week: 5, title: 'Controle postural', effort: '3–5/10', estimatedDuration: '9–12 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-05', sets: 2, repsPerSide: 8, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }, { exerciseId: 'BR-06', sets: 2, repsPerSide: 5, sideMode: 'alternating', holdSeconds: 8, movementSeconds: null }, { exerciseId: 'BR-01', sets: 1, repsPerSide: 6, sideMode: 'none', holdSeconds: 10, movementSeconds: null }] },
-            { week: 6, title: 'Resistência entre membros', effort: '3–5/10', estimatedDuration: '10–13 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-07', sets: 2, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 5, movementSeconds: null }, { exerciseId: 'BR-05', sets: 2, repsPerSide: 8, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }, { exerciseId: 'BR-04', sets: 2, repsPerSide: 12, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }] },
-            { week: 7, title: 'Controle contra rotação', effort: '4–6/10', estimatedDuration: '12–18 min', weeklyTargetDays: 5, laps: 1, prescriptions: [{ exerciseId: 'BR-08', sets: 2, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 4, movementSeconds: null }, { exerciseId: 'BR-07', sets: 2, repsPerSide: 7, sideMode: 'alternating', holdSeconds: 6, movementSeconds: null }, { exerciseId: 'BR-06', sets: 2, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 10, movementSeconds: null }] },
-            { week: 8, title: 'Circuito de domínio', effort: '4–6/10', estimatedDuration: '15–20 min', weeklyTargetDays: 5, laps: 2, prescriptions: [{ exerciseId: 'BR-02', sets: 1, repsPerSide: 5, sideMode: 'none', holdSeconds: 10, movementSeconds: null }, { exerciseId: 'BR-05', sets: 1, repsPerSide: 8, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }, { exerciseId: 'BR-07', sets: 1, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 6, movementSeconds: null }, { exerciseId: 'BR-08', sets: 1, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 5, movementSeconds: null }, { exerciseId: 'BR-06', sets: 1, repsPerSide: 4, sideMode: 'alternating', holdSeconds: 8, movementSeconds: null }] }
+            { week: 1, title: 'Consciência abdominal', effort: '2–3/10', estimatedDuration: '5 min', weeklyTargetDays: 7, laps: 1, prescriptions: [{ exerciseId: 'BR-01', sets: 2, repsPerSide: 6, sideMode: 'none', holdSeconds: 5, movementSeconds: null }, { exerciseId: 'BR-02', sets: 1, repsPerSide: 6, sideMode: 'none', holdSeconds: 5, movementSeconds: null }] },
+            { week: 2, title: 'Sustentação e respiração', effort: '2–3/10', estimatedDuration: '6–8 min', weeklyTargetDays: 7, laps: 1, prescriptions: [{ exerciseId: 'BR-01', sets: 2, repsPerSide: 6, sideMode: 'none', holdSeconds: 8, movementSeconds: null }, { exerciseId: 'BR-02', sets: 2, repsPerSide: 6, sideMode: 'none', holdSeconds: 8, movementSeconds: null }] },
+            { week: 3, title: 'Controle com movimento sentado', effort: '3–4/10', estimatedDuration: '7–9 min', weeklyTargetDays: 7, laps: 1, prescriptions: [{ exerciseId: 'BR-01', sets: 1, repsPerSide: 5, sideMode: 'none', holdSeconds: 8, movementSeconds: null }, { exerciseId: 'BR-03', sets: 2, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 3, movementSeconds: null }, { exerciseId: 'BR-02', sets: 1, repsPerSide: 6, sideMode: 'none', holdSeconds: 10, movementSeconds: null }] },
+            { week: 4, title: 'Resistência com movimentos simples', effort: '3–4/10', estimatedDuration: '8–10 min', weeklyTargetDays: 7, laps: 1, prescriptions: [{ exerciseId: 'BR-03', sets: 2, repsPerSide: 8, sideMode: 'alternating', holdSeconds: 3, movementSeconds: null }, { exerciseId: 'BR-04', sets: 2, repsPerSide: 10, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }, { exerciseId: 'BR-02', sets: 1, repsPerSide: 8, sideMode: 'none', holdSeconds: 10, movementSeconds: null }] },
+            { week: 5, title: 'Controle postural', effort: '3–5/10', estimatedDuration: '9–12 min', weeklyTargetDays: 7, laps: 1, prescriptions: [{ exerciseId: 'BR-05', sets: 2, repsPerSide: 8, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }, { exerciseId: 'BR-06', sets: 2, repsPerSide: 5, sideMode: 'alternating', holdSeconds: 8, movementSeconds: null }, { exerciseId: 'BR-01', sets: 1, repsPerSide: 6, sideMode: 'none', holdSeconds: 10, movementSeconds: null }] },
+            { week: 6, title: 'Resistência entre membros', effort: '3–5/10', estimatedDuration: '10–13 min', weeklyTargetDays: 7, laps: 1, prescriptions: [{ exerciseId: 'BR-07', sets: 2, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 5, movementSeconds: null }, { exerciseId: 'BR-05', sets: 2, repsPerSide: 8, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }, { exerciseId: 'BR-04', sets: 2, repsPerSide: 12, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }] },
+            { week: 7, title: 'Controle contra rotação', effort: '4–6/10', estimatedDuration: '12–18 min', weeklyTargetDays: 7, laps: 1, prescriptions: [{ exerciseId: 'BR-08', sets: 2, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 4, movementSeconds: null }, { exerciseId: 'BR-07', sets: 2, repsPerSide: 7, sideMode: 'alternating', holdSeconds: 6, movementSeconds: null }, { exerciseId: 'BR-06', sets: 2, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 10, movementSeconds: null }] },
+            { week: 8, title: 'Circuito de domínio', effort: '4–6/10', estimatedDuration: '15–20 min', weeklyTargetDays: 7, laps: 2, prescriptions: [{ exerciseId: 'BR-02', sets: 1, repsPerSide: 5, sideMode: 'none', holdSeconds: 10, movementSeconds: null }, { exerciseId: 'BR-05', sets: 1, repsPerSide: 8, sideMode: 'none', holdSeconds: null, movementSeconds: 4 }, { exerciseId: 'BR-07', sets: 1, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 6, movementSeconds: null }, { exerciseId: 'BR-08', sets: 1, repsPerSide: 6, sideMode: 'alternating', holdSeconds: 5, movementSeconds: null }, { exerciseId: 'BR-06', sets: 1, repsPerSide: 4, sideMode: 'alternating', holdSeconds: 8, movementSeconds: null }] }
         ];
 
         function getBracingSteps(phaseIndex, options = {}) {
@@ -9636,7 +9636,7 @@
             const activePhase = Array.isArray(program.phases) && program.phases.length === 3
                 ? Math.min(7, savedPhaseIndex * 2)
                 : Math.min(7, savedPhaseIndex);
-            const legacyDays = Math.max(0, Math.min(5, Math.floor(Number(program.daysCompletedInPhase) || 0)));
+            const legacyDays = Math.max(0, Math.min(7, Math.floor(Number(program.daysCompletedInPhase) || 0)));
             if (!Array.isArray(program.bracingPracticeDateKeys) || program.bracingPracticeDateKeys.length !== 8) {
                 program.bracingPracticeDateKeys = Array.from({ length: 8 }, (_, index) =>
                     Array.isArray(program.bracingPracticeDateKeys?.[index]) ? [...new Set(program.bracingPracticeDateKeys[index].filter(key => /^\d{4}-\d{2}-\d{2}$/.test(key)))] : []);
@@ -9647,40 +9647,58 @@
                 program.bracingLegacyPracticeOrigin = legacyDays > 0 ? 'legacy-counter-no-dates' : 'none';
             }
             if (Number(program.sessionsToday) > 1) program.legacyBracingSessionsToday = Math.max(Number(program.legacyBracingSessionsToday) || 0, Number(program.sessionsToday));
-            program.sessionsToday = Math.max(0, Math.min(1, Math.floor(Number(program.sessionsToday) || 0)));
-            program.daysCompletedInPhase = Math.min(5, Math.max(0, Number(program.bracingLegacyPracticeCountByPhase[activePhase]) || 0) + program.bracingPracticeDateKeys[activePhase].length);
-            program.dailyTarget = 1;
+            program.sessionsToday = Math.max(0, Math.min(2, Math.floor(Number(program.sessionsToday) || 0)));
+            program.daysCompletedInPhase = getBracingPracticeDays(program, activePhase);
+            program.dailyTarget = 2;
             program.bracingContentVersion = 2;
-            (program.phases || []).forEach(phase => { if (phase) phase.weeklyTargetDays = 5; });
+            (program.phases || []).forEach(phase => { if (phase) phase.weeklyTargetDays = 7; });
             return program;
         }
 
         function getBracingPracticeDays(program, phaseIndex = program?.currentPhaseIndex) {
             if (!program || String(program.id) !== '1' || !Number.isInteger(phaseIndex) || phaseIndex < 0 || phaseIndex >= 8) return 0;
-            const legacyCount = Math.max(0, Math.min(5, Number(program.bracingLegacyPracticeCountByPhase?.[phaseIndex]) || 0));
+            const legacyCount = Math.max(0, Math.min(7, Number(program.bracingLegacyPracticeCountByPhase?.[phaseIndex]) || 0));
             const dates = Array.isArray(program.bracingPracticeDateKeys?.[phaseIndex]) ? [...new Set(program.bracingPracticeDateKeys[phaseIndex])] : [];
-            return Math.min(5, legacyCount + dates.length);
+            const adjustment = program.lastManualAdjustment;
+            if (adjustment?.reason === 'bracing-progress' && adjustment.week === phaseIndex + 1) {
+                return Math.min(7, Math.max(0, adjustment.day - 1 + dates.length - adjustment.practiceDateCountAtAdjustment));
+            }
+            return Math.min(7, legacyCount + dates.length);
         }
 
-        function recordBracingPractice(program, phaseIndex, dateKey = localDateKey(), volumeComplete = false, completedRepetitions = 0) {
+        function recordBracingPractice(program, phaseIndex, dateKey = localDateKey(), volumeComplete = false, completedRepetitions = 0, sessionId = null, sessionFinished = true) {
             if (!program || String(program.id) !== '1' || !Number.isInteger(phaseIndex) || phaseIndex !== program.currentPhaseIndex || !/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) return false;
             migrateBracingProgram(program);
-            if (!Array.isArray(program.bracingPracticeDateKeys[phaseIndex])) program.bracingPracticeDateKeys[phaseIndex] = [];
-            const dates = program.bracingPracticeDateKeys[phaseIndex];
-            const isNewPracticeDate = !dates.includes(dateKey);
-            if (isNewPracticeDate) dates.push(dateKey);
             program.bracingDailyPractice ||= {};
             const prior = program.bracingDailyPractice[dateKey];
-            program.bracingDailyPractice[dateKey] = {
-                phaseIndex,
-                volumeComplete: volumeComplete === true || prior?.volumeComplete === true,
-                completedRepetitions: Math.max(Number(prior?.completedRepetitions) || 0, Math.max(0, Math.floor(Number(completedRepetitions) || 0))),
-                reduced: volumeComplete !== true && prior?.volumeComplete !== true
+            const byPhase = { ...(prior?.byPhase || {}) };
+            if (prior && !byPhase[prior.phaseIndex]) {
+                byPhase[prior.phaseIndex] = { ...prior, byPhase: undefined, legacyVolumeComplete: prior.volumeComplete === true };
+            }
+            const phasePractice = byPhase[phaseIndex] || {};
+            const sessions = { ...(phasePractice.sessions || {}) };
+            const key = sessionId || `${dateKey}-session-${program.sessionsToday || 1}`;
+            const previousSession = sessions[key];
+            sessions[key] = {
+                volumeComplete: volumeComplete === true || previousSession?.volumeComplete === true,
+                completedRepetitions: Math.max(Number(previousSession?.completedRepetitions) || 0, Math.max(0, Math.floor(Number(completedRepetitions) || 0))),
+                finished: sessionFinished === true || previousSession?.finished === true
             };
+            const finishedSessions = Object.values(sessions).filter(session => session.finished);
+            const complete = finishedSessions.filter(session => session.volumeComplete).length >= program.dailyTarget;
+            byPhase[phaseIndex] = {
+                ...phasePractice, sessions, volumeComplete: complete,
+                completedRepetitions: Object.values(sessions).reduce((sum, session) => sum + session.completedRepetitions, 0),
+                reduced: !complete
+            };
+            program.bracingDailyPractice[dateKey] = { phaseIndex, ...byPhase[phaseIndex], byPhase };
+            const dates = program.bracingPracticeDateKeys[phaseIndex];
+            const isNewPracticeDate = finishedSessions.length >= program.dailyTarget && !dates.includes(dateKey);
+            if (isNewPracticeDate) dates.push(dateKey);
             program.daysCompletedInPhase = getBracingPracticeDays(program, phaseIndex);
-            program.currentDayInWeek = Math.min(5, program.daysCompletedInPhase + 1);
-            if (program.daysCompletedInPhase >= 5) {
-                program.progressionReview = { phaseIndex, requestedAt: dateKey, status: 'pending', reason: 'five-practice-days' };
+            program.currentDayInWeek = Math.min(7, program.daysCompletedInPhase + 1);
+            if (program.daysCompletedInPhase >= 7) {
+                program.progressionReview = { phaseIndex, requestedAt: dateKey, status: 'pending', reason: 'seven-practice-days' };
                 program.phases[phaseIndex].reviewPending = true;
                 program.phases[phaseIndex].reviewPendingAt = dateKey;
             }
@@ -9699,12 +9717,16 @@
         function canAdvanceBracingWeek(program, answers) {
             const phaseIndex = program?.currentPhaseIndex;
             if (String(program?.id) !== '1' || !Number.isInteger(phaseIndex) || phaseIndex < 0 || phaseIndex >= 8 ||
-                getBracingPracticeDays(program, phaseIndex) < 5 || !Array.isArray(answers) || answers.length !== 5 || !answers.every(answer => answer === true)) return false;
+                getBracingPracticeDays(program, phaseIndex) < 7 || !Array.isArray(answers) || answers.length !== 5 || !answers.every(answer => answer === true)) return false;
             const dates = Array.isArray(program.bracingPracticeDateKeys?.[phaseIndex]) ? program.bracingPracticeDateKeys[phaseIndex] : [];
             const failedReview = program.lastBracingReview?.phaseIndex === phaseIndex && program.lastBracingReview?.passed === false;
             if (failedReview && !dates.some(dateKey => dateKey > program.lastBracingReview.dateKey)) return false;
-            const evaluationDates = [...new Set(dates)].sort().slice(-5);
-            return evaluationDates.length === 5 && evaluationDates.every(dateKey => program.bracingDailyPractice?.[dateKey]?.volumeComplete === true);
+            const evaluationDates = [...new Set(dates)].sort().slice(-7);
+            return evaluationDates.length === 7 && evaluationDates.every(dateKey => {
+                const daily = program.bracingDailyPractice?.[dateKey];
+                const practice = daily?.byPhase?.[phaseIndex] || (daily?.phaseIndex === phaseIndex ? daily : null);
+                return Object.values(practice?.sessions || {}).filter(session => session.finished && session.volumeComplete).length >= program.dailyTarget;
+            });
         }
 
         function applyBracingWeekReview(program, answers, confirmed) {
@@ -9724,8 +9746,7 @@
             }
             program.currentPhaseIndex = phaseIndex + 1;
             program.daysCompletedInPhase = getBracingPracticeDays(program, program.currentPhaseIndex);
-            program.currentDayInWeek = Math.min(5, program.daysCompletedInPhase + 1);
-            program.sessionsToday = 0;
+            program.currentDayInWeek = Math.min(7, program.daysCompletedInPhase + 1);
             return true;
         }
 
@@ -9733,7 +9754,7 @@
             const program = AppState.programs.find(item => item.id === '1');
             const phaseIndex = program?.currentPhaseIndex ?? 0;
             if (!program || !canAdvanceBracingWeek(program, [true, true, true, true, true])) {
-                showInlineToast('Complete cinco dias de prática antes da avaliação técnica.');
+                showInlineToast('Complete sete dias de prática antes da avaliação técnica.');
                 return;
             }
             document.getElementById('bracingWeekReviewModal')?.remove();
@@ -9747,7 +9768,7 @@
             const modal = document.createElement('div');
             modal.id = 'bracingWeekReviewModal';
             modal.className = 'fixed inset-0 z-[130] flex items-end justify-center bg-black/80 p-4';
-            modal.innerHTML = `<section role="dialog" aria-modal="true" aria-labelledby="bracingWeekReviewTitle" class="w-full max-w-md rounded-3xl border border-emerald-500/30 bg-slate-900 p-5"><h2 id="bracingWeekReviewTitle" class="text-lg font-black text-white">Avaliação técnica · Semana ${phaseIndex + 1}</h2><p class="mt-2 text-xs text-slate-300">Responda pelo que aconteceu nos cinco dias. Se algum item não for verdadeiro, repita a semana ou reduza o volume. Não há compensação obrigatória.</p><div class="mt-4 space-y-3">${criteria.map((criterion, index) => `<label class="flex min-h-12 items-start gap-3 rounded-xl border border-slate-700 bg-slate-950/60 p-3 text-sm text-slate-200"><input id="bracingReviewAnswer${index}" type="checkbox" class="mt-0.5 h-5 w-5 accent-emerald-400"><span>${criterion}</span></label>`).join('')}</div><div class="mt-5 flex gap-3"><button type="button" onclick="document.getElementById('bracingWeekReviewModal')?.remove()" class="flex-1 rounded-xl border border-slate-600 px-4 py-3 text-sm font-bold text-slate-200">Cancelar</button><button type="button" onclick="submitBracingWeekReview()" class="flex-1 rounded-xl bg-emerald-500 px-4 py-3 text-sm font-extrabold text-slate-950">Confirmar avaliação</button></div></section>`;
+            modal.innerHTML = `<section role="dialog" aria-modal="true" aria-labelledby="bracingWeekReviewTitle" class="w-full max-w-md rounded-3xl border border-emerald-500/30 bg-slate-900 p-5"><h2 id="bracingWeekReviewTitle" class="text-lg font-black text-white">Avaliação técnica · Semana ${phaseIndex + 1}</h2><p class="mt-2 text-xs text-slate-300">Responda pelo que aconteceu nos sete dias. Se algum item não for verdadeiro, repita a semana ou reduza o volume. Não há compensação obrigatória.</p><div class="mt-4 space-y-3">${criteria.map((criterion, index) => `<label class="flex min-h-12 items-start gap-3 rounded-xl border border-slate-700 bg-slate-950/60 p-3 text-sm text-slate-200"><input id="bracingReviewAnswer${index}" type="checkbox" class="mt-0.5 h-5 w-5 accent-emerald-400"><span>${criterion}</span></label>`).join('')}</div><div class="mt-5 flex gap-3"><button type="button" onclick="document.getElementById('bracingWeekReviewModal')?.remove()" class="flex-1 rounded-xl border border-slate-600 px-4 py-3 text-sm font-bold text-slate-200">Cancelar</button><button type="button" onclick="submitBracingWeekReview()" class="flex-1 rounded-xl bg-emerald-500 px-4 py-3 text-sm font-extrabold text-slate-950">Confirmar avaliação</button></div></section>`;
             document.body.appendChild(modal);
         }
 
@@ -9763,7 +9784,7 @@
             }
             const originalProgram = JSON.parse(JSON.stringify(program));
             if (!applyBracingWeekReview(program, answers, true)) {
-                showInlineToast('A avaliação não pôde avançar a semana. Confira os cinco dias registrados.');
+                showInlineToast('A avaliação não pôde avançar a semana. Confira os sete dias registrados.');
                 return false;
             }
             if (!saveState()) {
@@ -10821,7 +10842,7 @@
                 const bracingReviewPending = prog.id === '1' && prog.progressionReview?.status === 'pending' && prog.progressionReview.phaseIndex === activePhaseIdx;
                 const progressionReviewPending = prog.id === '3' && prog.progressionReview?.status === 'pending';
                 const progressionReviewHtml = bracingReviewPending
-                    ? '<div class="mt-3 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-3 text-xs text-amber-100"><strong class="block text-amber-300">Avaliação técnica disponível</strong><span class="mt-1 block">Cinco dias de prática foram registrados; o calendário não libera a próxima semana sozinho.</span><button onclick="event.stopPropagation(); openBracingWeekReview()" class="mt-3 min-h-12 rounded-xl bg-amber-300 px-4 py-2 font-bold text-slate-950">Fazer avaliação técnica</button></div>'
+                    ? '<div class="mt-3 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-3 text-xs text-amber-100"><strong class="block text-amber-300">Avaliação técnica disponível</strong><span class="mt-1 block">Sete dias de prática foram registrados; o calendário não libera a próxima semana sozinho.</span><button onclick="event.stopPropagation(); openBracingWeekReview()" class="mt-3 min-h-12 rounded-xl bg-amber-300 px-4 py-2 font-bold text-slate-950">Fazer avaliação técnica</button></div>'
                     : progressionReviewPending
                         ? '<div class="mt-3 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-3 text-xs text-amber-100"><strong class="block text-amber-300">Revisão da etapa necessária</strong><span class="mt-1 block text-amber-100/80">A meta foi atingida. A etapa atual será repetida até uma revisão explícita; o calendário não aumenta a carga sozinho.</span></div>'
                         : '';
@@ -11144,7 +11165,10 @@
                 showInlineToast('Encerre a sessão em andamento antes de repetir uma etapa.');
                 return;
             }
-            if (program.id === '1') return showInlineToast('O Bracing avança somente após os cinco itens da avaliação técnica.');
+            if (program.id === '1') {
+                openProgramProgressAdjustment(programId);
+                return;
+            }
             triggerHaptic([20]);
             // Mantém etapas anteriores concluídas e desmarca esta e as seguintes,
             // para que a posição manual não seja sobrescrita por synchronizeProgramProgress.
@@ -11180,7 +11204,6 @@
         function openProgramProgressAdjustment(programId) {
             const program = AppState.programs.find(item => item.id === programId);
             if (!program) return;
-            if (program.id === '1') return showInlineToast('O progresso do Bracing depende dos dias de prática e da avaliação técnica, sem ajuste manual.');
             const safeTitle = program.title.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
             document.getElementById('programProgressAdjustment')?.remove();
             const target = getProgramSchedule(program).targetDays;
@@ -11217,7 +11240,6 @@
 
         function applyProgramProgressAdjustment(program, week, day, sessions) {
             const safeWeek = Math.min(program.phases.length - 1, Math.max(0, Number(week) || 0));
-            const phaseTargetDays = program.phases[safeWeek].weeklyTargetDays;
             const maxDays = getConfiguredWeeklyTargetDays(program.phases[safeWeek]);
             const safeDay = maxDays ? Math.min(maxDays, Math.max(1, Number(day) || 1)) : Math.max(1, Number(day) || 1);
             const safeSessions = Math.min(program.dailyTarget || 2, Math.max(0, Number(sessions) || 0));
@@ -11228,6 +11250,13 @@
             program.sessionsToday = safeSessions;
             program.programCompleted = false;
             program.lastManualAdjustment = { at: new Date().toISOString(), week: safeWeek + 1, day: safeDay, sessionsToday: safeSessions };
+            if (program.id === '1') {
+                program.lastManualAdjustment.reason = 'bracing-progress';
+                program.lastManualAdjustment.practiceDateCountAtAdjustment = new Set(program.bracingPracticeDateKeys?.[safeWeek] || []).size;
+                program.bracingResume = null;
+                program.progressionReview = null;
+                program.phases.forEach(phase => { phase.reviewPending = false; phase.reviewPendingAt = null; });
+            }
             return program;
         }
 
@@ -11237,8 +11266,13 @@
             const week = Math.min(program.phases.length - 1, Math.max(0, Number(document.getElementById('adjustProgramWeek')?.value) || 0));
             const day = Number(document.getElementById('adjustProgramDay')?.value) || 1;
             const sessions = Math.min(program.dailyTarget || 2, Math.max(0, Number(document.getElementById('adjustProgramSessions')?.value) || 0));
+            const before = JSON.parse(JSON.stringify(program));
             applyProgramProgressAdjustment(program, week, day, sessions);
-            if (!saveState()) return showInlineToast('Não foi possível salvar o ajuste.');
+            if (!saveState()) {
+                Object.keys(program).forEach(key => { delete program[key]; });
+                Object.assign(program, before);
+                return showInlineToast('Não foi possível salvar o ajuste.');
+            }
             closeProgramProgressAdjustment();
             renderProgramsList();
             syncAllNativeReminders();
@@ -11317,8 +11351,8 @@
                 showInlineToast('Inicie somente a semana ativa do Bracing. As outras semanas ficam disponíveis para consulta no guia.');
                 return;
             }
-            if (prog.id === '1' && !bracingResume && ((prog.sessionsToday || 0) >= 1 || prog.bracingDailyPractice?.[localDateKey()])) {
-                showInlineToast('O Bracing tem uma sessão por dia. A próxima prática estará disponível em outro dia.');
+            if (prog.id === '1' && !bracingResume && (prog.sessionsToday || 0) >= (prog.dailyTarget || 2)) {
+                showInlineToast('As duas sessões de Bracing de hoje já foram registradas. A próxima prática estará disponível em outro dia.');
                 return;
             }
             const phase = prog.phases[pIdx];
@@ -11344,9 +11378,9 @@
             AppState.dailyExecution.sessionDateKey = bracingResume?.contentVersion === 2 ? bracingResume.dateKey : localDateKey();
             AppState.dailyExecution.bracingSplitRequested = false;
             AppState.dailyExecution.sessionNumber = Number.isInteger(sessionNumber)
-                ? Math.max(1, Math.min(sessionNumber, prog.id === '1' ? 1 : (prog.dailyTarget || 2)))
-                : Math.min((prog.sessionsToday || 0) + 1, prog.id === '1' ? 1 : (prog.dailyTarget || 2));
-            AppState.dailyExecution.targetSessions = prog.id === '1' ? 1 : (prog.dailyTarget || 2);
+                ? Math.max(1, Math.min(sessionNumber, (prog.dailyTarget || 2)))
+                : Math.min((prog.sessionsToday || 0) + 1, (prog.dailyTarget || 2));
+            AppState.dailyExecution.targetSessions = (prog.dailyTarget || 2);
             AppState.dailyExecution.currentDay = currentDay;
             AppState.dailyExecution.targetDays = targetDays;
             AppState.dailyExecution.stepTimeLeft = bracingResume?.contentVersion === 2
@@ -12292,18 +12326,19 @@
                 if (completedProgramId === '1') {
                     prog.bracingResume = null;
                     if (bracingCompletedRepetitions > 0) {
-                        prog.sessionsToday = Math.min(1, (prog.sessionsToday || 0) + 1);
-                        recordBracingPractice(prog, AppState.dailyExecution.phaseIndex, AppState.dailyExecution.sessionDateKey || localDateKey(), bracingVolumeComplete, bracingCompletedRepetitions);
+                        const alreadyRecorded = prog.bracingDailyPractice?.[AppState.dailyExecution.sessionDateKey || localDateKey()]?.byPhase?.[AppState.dailyExecution.phaseIndex]?.sessions?.[AppState.dailyExecution.sessionId]?.finished;
+                        if (!alreadyRecorded) prog.sessionsToday = Math.min(2, (prog.sessionsToday || 0) + 1);
+                        recordBracingPractice(prog, AppState.dailyExecution.phaseIndex, AppState.dailyExecution.sessionDateKey || localDateKey(), bracingVolumeComplete, bracingCompletedRepetitions, AppState.dailyExecution.sessionId);
                     }
                 } else prog.sessionsToday = (prog.sessionsToday || 0) + 1;
                 window.AndroidBridge?.updateProgramReminderProgress?.(prog.id, prog.sessionsToday, localDateKey());
-                const dailyTarget = completedProgramId === '1' ? 1 : (prog.dailyTarget || 2);
+                const dailyTarget = (prog.dailyTarget || 2);
                 const phase = prog.phases[AppState.dailyExecution.phaseIndex];
                 const weeklyTargetDays = getConfiguredWeeklyTargetDays(phase);
 
                 // Avança o dia somente quando existe uma frequência real configurada.
                 if (completedProgramId === '1') {
-                    prog.currentDayInWeek = Math.min(5, (prog.daysCompletedInPhase || 0) + 1);
+                    prog.currentDayInWeek = Math.min(7, (prog.daysCompletedInPhase || 0) + 1);
                     if (prog.sessionsToday === dailyTarget && bracingCompletedRepetitions > 0) celebrateDailyGoal();
                 } else if (prog.sessionsToday === dailyTarget && weeklyTargetDays) {
                     const reachedPhaseTarget = (prog.daysCompletedInPhase || 0) + 1 >= weeklyTargetDays;
@@ -14618,8 +14653,9 @@
             if (String(program?.id) !== '1') return 0;
             const completedRepetitions = getBracingCompletedStepIndexes(execution, false).length;
             if (completedRepetitions <= 0) return 0;
-            program.sessionsToday = Math.min(1, (program.sessionsToday || 0) + 1);
-            recordBracingPractice(program, execution.phaseIndex, execution.sessionDateKey || localDateKey(), false, completedRepetitions);
+            const alreadyRecorded = program.bracingDailyPractice?.[execution.sessionDateKey || localDateKey()]?.byPhase?.[execution.phaseIndex]?.sessions?.[execution.sessionId]?.finished;
+            if (!alreadyRecorded) program.sessionsToday = Math.min(2, (program.sessionsToday || 0) + 1);
+            recordBracingPractice(program, execution.phaseIndex, execution.sessionDateKey || localDateKey(), false, completedRepetitions, execution.sessionId);
             return completedRepetitions;
         }
 
@@ -14648,7 +14684,7 @@
                 dateKey: execution.sessionDateKey || localDateKey()
             };
             program.bracingResume = resume;
-            if (completedRepetitions > 0) recordBracingPractice(program, execution.phaseIndex, resume.dateKey, false, completedRepetitions);
+            if (completedRepetitions > 0) recordBracingPractice(program, execution.phaseIndex, resume.dateKey, false, completedRepetitions, execution.sessionId, false);
             const metrics = deriveDailySessionMetrics(execution);
             const completedSeries = new Set(completedStepIndexes.map(index => steps[index]?.series).filter(series => Number.isInteger(series) && series > 0)).size;
             try {

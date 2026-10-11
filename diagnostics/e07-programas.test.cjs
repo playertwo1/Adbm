@@ -56,7 +56,7 @@ const source = [
     extractFunction('startHeroWorkout'),
     extractFunction('repeatProgramPhase'),
     extractFunction('toggleProgramPhase'),
-    extractFunction('migrateBracingProgram'),
+    extractFunction('getBracingPracticeDays'), extractFunction('migrateBracingProgram'),
     extractFunction('getProgramExerciseDetails'),
     extractFunction('renderProgramExerciseDetail'),
     extractFunction('openProgramExerciseDetail'),
@@ -148,7 +148,7 @@ function setup() {
     return { context, elements, getElementById, toastLog, values };
 }
 
-// 1. Bracing só inicia a semana ativa e mantém 1 sessão diária mesmo com contagem legada acima da meta.
+// 1. Bracing inicia a segunda sessão e bloqueia a terceira; preserva semana ativa.
 {
     const env = setup();
     vm.runInContext(`AppState.programs.find(p => p.id === '1').sessionsToday = 1`, env.context);
@@ -156,13 +156,15 @@ function setup() {
     assert.equal(vm.runInContext('AppState.dailyExecution.programId', env.context), undefined, 'semana inativa do Bracing não pode iniciar');
     assert.ok(env.toastLog.some(msg => /semana ativa/i.test(msg)));
     vm.runInContext(`openDailyExecutionModal('1', 0)`, env.context);
-    assert.equal(vm.runInContext('AppState.dailyExecution.programId', env.context), undefined, 'segunda sessão no dia não pode iniciar');
-    assert.ok(env.toastLog.some(msg => /uma sessão por dia/i.test(msg)));
+    assert.equal(vm.runInContext('AppState.dailyExecution.sessionNumber', env.context), 2, 'segunda sessão deve iniciar');
+    vm.runInContext(`AppState.dailyExecution.programId = undefined; AppState.programs[0].sessionsToday = 2; openDailyExecutionModal('1', 0)`, env.context);
+    assert.equal(vm.runInContext('AppState.dailyExecution.programId', env.context), undefined, 'terceira sessão deve ser bloqueada');
+    assert.ok(env.toastLog.some(msg => /duas sessões/i.test(msg)));
     vm.runInContext(`AppState.programs.find(p => p.id === '1').sessionsToday = 0`, env.context);
     vm.runInContext(`openDailyExecutionModal('1', 0)`, env.context);
     assert.equal(vm.runInContext('AppState.dailyExecution.programId', env.context), '1');
     assert.equal(vm.runInContext('AppState.dailyExecution.phaseIndex', env.context), 0);
-    assert.equal(vm.runInContext('AppState.dailyExecution.sessionNumber', env.context), 1, 'Bracing mantém uma sessão diária mesmo com contagem antiga acima da meta');
+    assert.equal(vm.runInContext('AppState.dailyExecution.sessionNumber', env.context), 1, 'Bracing inicia a primeira sessão quando o contador está zerado');
     assert.equal(env.getElementById('dailyExecutionModal').classList.contains('hidden'), false);
 }
 

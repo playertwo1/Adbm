@@ -42,7 +42,8 @@ const source = [
     extractFunction('syncSmartMiddayReminderNative'),
     extractFunction('synchronizeProgramProgress'),
     extractFunction('applyProgramProgressAdjustment'),
-    extractFunction('migrateBracingProgram'),
+    extractFunction('getBracingPracticeDays'), extractFunction('migrateBracingProgram'),
+    extractFunction('recordBracingPractice'),
     html.slice(persistenceStart, persistenceEnd)
 ].join('\n');
 const noopNames = [
@@ -335,6 +336,26 @@ console.log('Cancelamento e importação com data anterior: passaram.');
     assert.match(first.at(-1).title, /Encerramento/);
 }
 console.log('Migração Bracing e contrato de sessão diária sem rotação: passaram.');
+{
+    const env = setup(); seedLegacy(env);
+    assert.equal(vm.runInContext('loadSavedState()', env.context), true);
+    vm.runInContext("recordBracingPractice(AppState.programs[0], AppState.programs[0].currentPhaseIndex, localDateKey(), true, 18, 'roundtrip-session-1'); recordBracingPractice(AppState.programs[0], AppState.programs[0].currentPhaseIndex, localDateKey(), false, 2, 'roundtrip-session-2')", env.context);
+    vm.runInContext("applyProgramProgressAdjustment(AppState.programs[0], 4, 7, 2)", env.context);
+    assert.equal(vm.runInContext('saveState()', env.context), true);
+    const restarted = setup();
+    restarted.values.set('coreflow_progress_snapshot_v4', env.values.get('coreflow_progress_snapshot_v4'));
+    assert.equal(vm.runInContext('loadSavedState()', restarted.context), true);
+    const bracing = JSON.parse(vm.runInContext('JSON.stringify(AppState.programs[0])', restarted.context));
+    assert.equal(bracing.currentPhaseIndex, 4, 'Bracing manual week survives a real snapshot reload');
+    assert.equal(bracing.currentDayInWeek, 7, 'Bracing manual day survives a real snapshot reload');
+    assert.equal(bracing.sessionsToday, 2);
+    assert.equal(bracing.dailyTarget, 2);
+    const recorded = bracing.bracingDailyPractice[env.today].byPhase[2];
+    assert.equal(recorded.sessions['roundtrip-session-1'].completedRepetitions, 18);
+    assert.equal(recorded.sessions['roundtrip-session-2'].completedRepetitions, 2);
+    assert.equal(recorded.volumeComplete, false, 'reduced daily volume remains explicit after reload and manual week change');
+    assert(bracing.phases.every(phase => phase.weeklyTargetDays === 7));
+}
 {
     const env = setup();
     const adjusted = vm.runInContext('applyProgramProgressAdjustment(AppState.programs[1], 2, 1, 1)', env.context);

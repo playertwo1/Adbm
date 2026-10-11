@@ -7,6 +7,22 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
+## [1.1.44] - 2026-10-11
+
+### Alterado
+- Bracing com 2 treinos diários em 7 dias por semana, conforme solicitação do usuário.
+- Ajuste manual de semana, dia e sessões de hoje restaurado e persistente.
+
+### Corrigido
+- Dia contabilizado após duas sessões; volume diário comprovado por duas sessões integrais.
+- Sessões divididas deduplicadas por ID e histórico separado por fase ao mudar de semana.
+- Falha de salvamento do ajuste reverte a posição e preserva a continuação.
+- Avançar de semana pela avaliação mantém o contador diário e o bloqueio da terceira sessão.
+
+### Validação
+- Diagnósticos, paridade HTML, testes Android e builds app/Wear passaram; auditoria independente sem findings materiais residuais.
+- Homologação física S25 Ultra/Galaxy Watch e aprovação das pranchas continuam pendentes.
+
 ## [1.1.43] - 2026-10-10
 
 ### Adicionado

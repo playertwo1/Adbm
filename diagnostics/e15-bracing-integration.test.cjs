@@ -67,7 +67,7 @@ assert(service.includes('ACTION_PAUSE') && service.includes('ACTION_STOP'), 'spl
 assert(!service.includes('bracingResume'), 'Bracing split resume must not add a parallel native protocol');
 assert(html.includes('saveBracingSplitAndExit()'), 'paused workout offers one-tap split-session save');
 assert(html.includes('program.bracingResume = resume'), 'split-session resume state is additive and versioned');
-assert(html.includes('bracingDailyPractice?.[localDateKey()]'), 'a second Bracing volume on the same day is blocked after completion or split cancellation');
+assert(html.includes('(prog.sessionsToday || 0) >= (prog.dailyTarget || 2)'), 'Bracing limits the day to the configured two sessions');
 assert(html.includes("SESSION_VOLUME_STATUSES = new Set([null, 'complete', 'reduced'])"), 'session history stores an explicit Bracing volume outcome');
 assert(html.includes("volumeStatus === 'reduced' ? 'volume reduzido/parcial'"), 'daily history labels reduced Bracing volume honestly');
 assert(html.includes('savedResume.skippedStepIndexes'), 'native state recovery restores skipped Bracing repetitions from the saved checkpoint');
@@ -89,7 +89,7 @@ vm.runInContext('saveBracingResumeCheckpoint(5)', context);
 assert.deepEqual(Array.from(context.AppState.programs[0].bracingResume.skippedStepIndexes), [2]);
 assert.deepEqual(Array.from(context.AppState.programs[0].bracingResume.completedStepIndexes), [0, 3]);
 assert.equal(vm.runInContext('recordBracingPartialPractice(AppState.dailyExecution, AppState.programs[0])', context), 2);
-assert.equal(context.AppState.programs[0].sessionsToday, 1, 'an aborted/partial practice blocks a second Bracing volume that day');
+assert.equal(context.AppState.programs[0].sessionsToday, 1, 'an aborted/partial practice occupies one of two daily sessions');
 assert.equal(context.recordedPractices.length, 1);
 context.saveState = () => false;
 vm.runInContext('skipWorkoutStep()', context);

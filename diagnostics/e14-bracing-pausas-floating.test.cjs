@@ -24,15 +24,15 @@ vm.runInContext('var AppState;\n' + appStateSlice.replace('const AppState =', 'A
 const programs = vmContext.AppState.programs;
 assert(Array.isArray(programs), 'AppState.programs deve ser um array');
 
-// 2.1 Programa 1: Bracing de 8 semanas (5 dias por semana, conforme TREINO_BRACING_8_SEMANAS)
+// 2.1 Programa 1: Bracing de 8 semanas (7 dias por semana, conforme ajuste solicitado em 11/10)
 const bracing = programs.find(p => p.id === '1');
 assert(bracing, 'Programa 1 (Bracing) deve existir');
 assert.strictEqual(bracing.phases.length, 8, 'Bracing deve possuir 8 fases (8 semanas)');
 assert.strictEqual(bracing.title, 'Bracing: Treino de 8 Semanas', 'Programa 1 deve ter o título do novo treino');
 bracing.phases.forEach((phase, idx) => {
-    assert.strictEqual(phase.weeklyTargetDays, 5, `Bracing semana ${idx + 1} deve ter weeklyTargetDays: 5`);
+    assert.strictEqual(phase.weeklyTargetDays, 7, `Bracing semana ${idx + 1} deve ter weeklyTargetDays: 7`);
 });
-console.log('✓ Programa 1 (Bracing): 8 semanas com weeklyTargetDays: 5');
+console.log('✓ Programa 1 (Bracing): 8 semanas com weeklyTargetDays: 7');
 
 // 2.2 Programa 2: Programa Kegel (ID '2', 7 dias)
 const kegel = programs.find(p => p.id === '2');
@@ -118,7 +118,7 @@ for (let week = 0; week < 8; week++) {
         });
     }
 }
-console.log('✓ Matriz E15 do Bracing: 8 semanas, 1 sessão diária, exercícios por repetição e zero posições no chão');
+console.log('✓ Matriz E15 do Bracing: 8 semanas, 2 sessões diárias, exercícios por repetição e zero posições no chão');
 
 // 3.1 Modal de Execução Diária: Presença dos elementos de imagem de postura
 assert(htmlContent.includes('id="workoutPostureCard"'), 'dailyExecutionModal deve conter #workoutPostureCard');

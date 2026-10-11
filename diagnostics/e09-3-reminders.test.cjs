@@ -180,7 +180,7 @@ function setupEnvironment() {
         extractFunction(source, 'closeReminderConfigModal'),
         extractFunction(source, 'saveReminderConfig'),
         extractFunction(source, 'renderProfilePreferences'),
-        extractFunction(source, 'migrateBracingProgram'),
+        extractFunction(source, 'getBracingPracticeDays'), extractFunction(source, 'migrateBracingProgram'),
         extractFunction(source, 'mergeLoadedPrograms'),
         extractFunction(source, 'applyProgressData'),
         extractFunction(source, 'collectProgressData'),

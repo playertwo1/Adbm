@@ -9,7 +9,15 @@
 **Estado:** CP0 concluído. CP1, CP2 e CP4 implementados e verificados; CP3 funcional no guia/detalhes, com integração das novas imagens pendente da aprovação visual; CP5 validado em diagnósticos/build, com teste físico ainda pendente; CP6 aguarda homologação visual e física. As imagens novas continuam candidatas.
 **Baseline:** HEAD `f08ff31bc8c30acdc3832636f075ea748a18118e`, Git limpo antes desta tarefa.
 
-## 1. Diagnóstico confirmado no checkout
+## Decisão de Rafael em 11/10/2026 — frequência e ajuste manual
+
+Rafael solicitou explicitamente **2 treinos diários, 7 dias por semana** e restauração do ajuste manual de semana/dia. Esta decisão substitui a frequência de 1 sessão/5 dias do anexo e as restrições manuais anteriores. A fonte original permanece intacta como referência; séries, repetições, lados e tempos de cada sessão continuam os mesmos. Não se trata de nova validação clínica da frequência.
+
+O ajuste reposiciona semana/dia/sessões hoje e invalida apenas a continuação ativa; não cria minutos, sessões retroativas ou evidência de qualidade. `lastManualAdjustment` guarda a posição e a quantidade de datas existentes para que novas práticas avancem a partir da posição selecionada. Falha de persistência reverte todas as mudanças.
+
+O registro diário agora conserva `bracingDailyPractice[data].byPhase[fase].sessions[sessionId]`, com repetição realizada, término e volume integral. A mesma sessão dividida conta uma vez. Duas sessões finalizadas, inclusive reduzidas, contam um dia de consistência; duas integrais são necessárias para comprovar o volume diário. Evidência antiga permanece preservada, sem inventar uma segunda sessão. Os sete dias comprovados e cinco respostas técnicas continuam sendo o caminho de avanço por avaliação; o ajuste manual é uma alternativa explícita de reposicionamento.
+
+## 1. Diagnóstico histórico confirmado no checkout em 10/10
 
 - `AppState.programs`, programa `'1'`: 8 fases e `weeklyTargetDays: 5`, porém `dailyTarget: 2`. A fonte fornece um volume diário, divisível em duas pausas; duas sessões completas duplicam esse volume.
 - `getProgramSteps`: biblioteca BR-01 a BR-08 já existe, mas cada série vira um bloco temporal que mistura execução e descanso. A interface não guia cada repetição/lado; não basta testar número de séries.
@@ -22,8 +30,8 @@
 ## 2. Regras globais
 
 1. Preservar ID `'1'`; Kegel `'2'`, Vacuum `'3'` e demais programas mantêm comportamento.
-2. Uma sessão diária prescrita, cinco dias de prática por semana. Quarta permite redução voluntária; sábado/domingo descanso. Não obrigar compensação, reinício ou dois volumes diários.
-3. O calendário não aumenta carga. Cinco dias de prática distintos, inclusive prática reduzida, habilitam avaliação; avanço depende das cinco respostas positivas e confirmação explícita.
+2. Duas sessões diárias, sete dias por semana, conforme solicitação de 11/10. Cada sessão pode ser dividida e retomada sem duplicar seu volume.
+3. O calendário não aumenta carga. Sete dias com duas sessões finalizadas habilitam revisão; avanço por avaliação exige sete dias com as duas sessões integrais, cinco respostas positivas e confirmação. Ajuste manual de semana/dia é permitido sem fabricar evidência.
 4. Somente sentado/em pé, cadeira estável quando necessária, sem pesos, elásticos, exercícios no chão ou alegação de protocolo McGill/Sahrmann.
 5. Reutilizar cartão expansível, oito fases, trilha semanal, detalhes, iniciar/pausar/retomar/encerrar, lembretes, histórico e relatório existentes.
 6. `index.html` e `app/src/main/assets/index.html` idênticos byte a byte; imagens locais espelhadas byte a byte quando integradas.
@@ -54,7 +62,7 @@ BR-04/BR-05 são movimentos, com `holdSeconds: null`. Convenção operacional: u
 
 **Duração:** calcular soma dos passos reais; o anexo informa estimativas que podem divergir da soma com descansos. Mostrar duração calculada do player e identificar estimativa da fonte no guia. Não encurtar sustentação, remover repetições nem acelerar movimentos para caber na estimativa.
 
-Distinguir dias de prática, sessões integrais e volume real. Prática reduzida conta como consistência, sem se passar por sessão integral. Após cinco dias de prática, a avaliação pode ser respondida; a resposta sobre volume permanece honesta e pode impedir avanço. Repetir a semana é opção, sem exigir sábado/domingo, compensação nem zerar dias antigos. Faltas deixam a fase aberta até novas práticas, sem prazo compulsório.
+Distinguir dias de prática, sessões integrais e volume real. Prática reduzida conta como consistência, sem se passar por sessão integral. Após sete dias com duas sessões finalizadas, a avaliação pode ser respondida; a resposta sobre volume permanece honesta e pode impedir avanço. Repetir a semana é opção, sem exigir sábado/domingo, compensação nem zerar dias antigos. Faltas deixam a fase aberta até novas práticas, sem prazo compulsório.
 
 Redução voluntária: permitir finalizar uma volta bem executada na semana 8 ou menos séries nos outros dias. Registrar volume efetivamente realizado e status parcial/reduzido; não creditar automaticamente volume integral nem satisfazer a avaliação de volume completo.
 
@@ -63,16 +71,16 @@ Redução voluntária: permitir finalizar uma volta bem executada na semana 8 ou
 Manter no script de `index.html`, sincronizando asset Android. Adaptar o gerador atual, sem reorganizar todo o monólito.
 
 - `BRACING_EXERCISES`: objeto por BR-01…BR-08, com `id, name, position, instructions[], cautions[], imageSequence, stageLabels[]`.
-- `BRACING_WEEKS`: oito objetos `{week, title, effort, weeklyTargetDays:5, laps, prescriptions[]}`.
+- `BRACING_WEEKS`: oito objetos `{week, title, effort, weeklyTargetDays:7, laps, prescriptions[]}`.
 - Prescrição: `{exerciseId, sets, repsPerSide, sideMode:'none'|'alternating', holdSeconds:number|null, movementSeconds:number|null}`. Em `none`, repsPerSide é o total da série. Semana 8: `laps:2`, cada prescrição tem `sets:1`.
 - `getBracingSteps(phaseIndex, options = {}) -> Array<Step>`: opções `{startStepIndex?:number}`; números de semana só de 0 a 7, argumentos inválidos rejeitados explicitamente.
 - Cada Step preserva o contrato nativo existente e acrescenta metadados JS `exerciseId, exerciseStage, repIndex, repsTotal, side, setIndex, lapIndex`. Campos extras só atravessam bridge se desserialização existente admitir e regressão demonstrar; imagens não exigem extensão de protocolo.
 - `getProgramSteps('1', phaseIdx, sessionNum)` delega ao gerador. `sessionNum` legado não rotaciona nem duplica treino.
-- `migrateBracingProgram(program) -> program`: normaliza configuração do programa 1 para meta diária 1/frequência 5 mantendo IDs de sessões, datas, progresso e metadados antigos. Marca `bracingContentVersion:2`. Não regravar prescrições salvas durante sessão ativa.
-- `canAdvanceBracingWeek(program, answers) -> boolean`: cinco dias de prática da fase e exatamente cinco booleanos verdadeiros.
+- `migrateBracingProgram(program) -> program`: normaliza configuração do programa 1 para meta diária 2/frequência 7 mantendo IDs de sessões, datas, progresso e metadados antigos. Marca `bracingContentVersion:2`. Não regravar prescrições salvas durante sessão ativa.
+- `canAdvanceBracingWeek(program, answers) -> boolean`: sete dias com duas sessões integrais na fase e exatamente cinco booleanos verdadeiros.
 - `applyBracingWeekReview(program, answers, confirmed) -> boolean`: avança no máximo uma fase, somente com confirmação e elegibilidade; semana 8 conclui programa. Idempotência por fase/data da revisão.
-- Consistência: reutilizar `daysCompletedInPhase` como contador de prática da fase para Bracing. Acrescentar `bracingPracticeDateKeys` por fase para deduplicar datas novas; na migração preservar contador legado válido limitado a 0–5, com origem legada identificada, sem inventar datas ou avaliações antigas. Revisão técnica continua obrigatória.
-- Sessão dividida é a MESMA sessão lógica: marcador aditivo `bracingResume:{sessionId,phaseIndex,nextStepIndex,completedStepIndexes,contentVersion}`. Ao sair, pausa/encerra motor conforme ciclo de vida existente, salva parcial; ao retomar usa ID original e restante do volume. Não deixar motor executar ocultamente durante intervalo entre pausas. Registrar dia de prática uma vez ao salvar execução com pelo menos uma repetição realizada, inclusive parcial/reduzida; creditar conclusão integral somente após todos os passos de trabalho, sem pular. Descansos não contam como execução de exercício.
+- Consistência: reutilizar `daysCompletedInPhase` como contador de prática da fase para Bracing. Acrescentar `bracingPracticeDateKeys` por fase para deduplicar datas novas; na migração preservar contador legado válido limitado a 0–7, com origem legada identificada, sem inventar datas ou avaliações antigas. Revisão técnica continua obrigatória.
+- Sessão dividida é a MESMA sessão lógica: marcador aditivo `bracingResume:{sessionId,phaseIndex,nextStepIndex,completedStepIndexes,contentVersion}`. Ao sair, pausa/encerra motor conforme ciclo de vida existente, salva parcial; ao retomar usa ID original e restante do volume. Não deixar motor executar ocultamente durante intervalo entre pausas. Registrar dia de prática uma vez ao finalizar duas sessões com pelo menos uma repetição realizada em cada uma, inclusive parcial/reduzida; creditar conclusão integral somente após todos os passos de trabalho de ambas as sessões, sem pular. Descansos não contam como execução de exercício.
 
 ## 5. Imagens de execução
 
@@ -128,7 +136,7 @@ Consome catálogo e passos; BRACING_PHASES legado passa a ser derivado ou removi
 - [ ] Revisar as oito pranchas e corrigir qualquer etapa/anatomia inconsistente; registrar decisão de Rafael.
 - [x] Diagnóstico confirma guia e detalhes derivados da matriz; exercícios Bracing sem posturas no chão/quatro apoios.
 - [ ] Integrar as novas pranchas após aprovação de Rafael; manter imagens em ambos os destinos, hashes iguais, zoom e legendas acessíveis.
-- [x] Conferir Bracing com uma sessão diária e cinco dias por semana; eliminar rotação e oferta de iniciar semana inativa.
+- [x] Conferir Bracing com duas sessões diárias e sete dias por semana; eliminar rotação e oferta de iniciar semana inativa.
 - [ ] Capturar semanas 1/3/5/8 em tela de celular e overlay expandido; fonte ampliada, tema AMOLED, modo silencioso e TalkBack.
 **Aceite:** conteúdo consistente em todas as entradas e imagens legíveis/aprovadas.
 
