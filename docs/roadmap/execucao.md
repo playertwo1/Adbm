@@ -997,4 +997,4 @@ Próximo passo:
 - **Build release:** `gradlew.bat --no-daemon :app:assembleRelease :wear:assembleRelease --console=plain` → exit 0; `BUILD SUCCESSFUL in 1m 5s`.
 - **Assinatura/versão:** `apksigner verify --verbose --print-certs` passou nos dois APKs e seus certificados SHA-256 correspondem à versão 1.1.44. `aapt dump badging` confirmou versionCode 45, versionName 1.1.45 e applicationId preservado.
 - **SHA-256 APK:** celular `0e739f3611c08975d4c874d445ec33d3c8bf454dc76ba8de8017e9e9df6444ec`; Wear `8cb7913af81a7c81b9bf812e899e381d417d102e72ec35dcc47b77318fac5310`.
-- **Publicação e readback GitHub:** pendentes de execução nesta release; registrar após obter evidência.
+- **Publicação confirmada:** GitHub Release `v1.1.45` publicada em https://github.com/playertwo1/Adbm/releases/tag/v1.1.45 após push do commit `b7a4705` e tag. Assets celular, Wear e README verificados: estado uploaded, tamanho/SHA-256 iguais aos arquivos locais, notas remotas correspondem ao arquivo versionado.
