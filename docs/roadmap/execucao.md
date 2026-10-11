@@ -974,3 +974,13 @@ Próximo passo:
 - **SHA-256:** celular `f7729d4af759b2b761600565e12bafcabfef07e243c21ea34e7ecefeaf5e05ad`; Wear `4d1ac45920e72f64bfcd9e9736493e2178a3765a254da189af51caed33be4c0d`.
 - **Pacote preparado:** `app-release.apk`, `wear-release.apk` e `README.md`, com notas completas. Registro da publicação será acrescentado após confirmação do GitHub.
 - **Gates físicos/visuais:** NOT_TESTED, sem aceite final de E15, S25 Ultra, Galaxy Watch, tela bloqueada, TalkBack ou pranchas.
+
+
+## 2026-10-11 — Publicação confirmada da release 1.1.44
+
+- **Código publicado:** commit `05b55b5`, tag `v1.1.44`, push atômico de `main` e tag concluído.
+- **Release:** https://github.com/playertwo1/Adbm/releases/tag/v1.1.44 — publicada, não draft, marcada latest.
+- **Assets:** `app-release.apk`, `wear-release.apk` e `README.md`. Readback do GitHub confirmou upload, tamanho e SHA-256 idênticos aos arquivos locais, e corpo da release idêntico às notas de `docs/releases/v1.1.44.md`.
+- **Assinaturas:** certificados compatíveis com 1.1.43 e versão 44 nos dois APKs, conforme preparação acima.
+- **Limpeza temporária:** a revisão automática bloqueou a remoção dos arquivos locais de assinatura, inclusive tentativa limitada a caminhos literais, sem detalhar motivo. Material fora do repositório; limpeza manual pendente na pasta temporária desta release. Nenhuma credencial publicada.
+- **Gates físicos/visuais:** continuam pendentes/NOT_TESTED; publicação não encerra E15.
