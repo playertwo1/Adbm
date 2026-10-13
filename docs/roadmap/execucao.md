@@ -1005,3 +1005,10 @@ Próximo passo:
 - **Correção:** chaves de fechamento movidas para antes das funções; HTML do app sincronizado.
 - **Regressão:** `diagnostics/bracing-global-scope.test.cjs` (falhava antes, passa depois).
 - **Gate:** `bash scripts/check.sh` → `CHECK PASS`. Emulador Pixel_9: Pular, Cancelar + reabertura e Dividir pausa verificados com toques reais.
+
+## 2026-10-13 — Publicação confirmada da release 1.1.46
+
+- **Build release:** `gradlew --no-daemon :app:assembleRelease :wear:assembleRelease` → `BUILD SUCCESSFUL in 1m 32s`.
+- **Assinatura/versão:** `apksigner verify --print-certs` — certificado SHA-256 `56052883…2d4dd` idêntico ao da 1.1.45 nos dois APKs; `aapt dump badging` confirmou versionCode 46, versionName 1.1.46 e applicationId preservado.
+- **SHA-256 APK:** celular `0feab6834a63fa1e3bbe5f070f6615219d09a8a38122d5e92485eba75d45dc19`; Wear `9cec183a580204bae797ab88776eff764710620dcbb00f14ba651cf554369929`.
+- **Publicação confirmada:** GitHub Release `v1.1.46` em https://github.com/playertwo1/Adbm/releases/tag/v1.1.46; assets celular, Wear e README com estado uploaded e tamanhos iguais aos locais.
