@@ -998,3 +998,10 @@ Próximo passo:
 - **Assinatura/versão:** `apksigner verify --verbose --print-certs` passou nos dois APKs e seus certificados SHA-256 correspondem à versão 1.1.44. `aapt dump badging` confirmou versionCode 45, versionName 1.1.45 e applicationId preservado.
 - **SHA-256 APK:** celular `0e739f3611c08975d4c874d445ec33d3c8bf454dc76ba8de8017e9e9df6444ec`; Wear `8cb7913af81a7c81b9bf812e899e381d417d102e72ec35dcc47b77318fac5310`.
 - **Publicação confirmada:** GitHub Release `v1.1.45` publicada em https://github.com/playertwo1/Adbm/releases/tag/v1.1.45 após push do commit `b7a4705` e tag. Assets celular, Wear e README verificados: estado uploaded, tamanho/SHA-256 iguais aos arquivos locais, notas remotas correspondem ao arquivo versionado.
+
+## 2026-10-13 — Release 1.1.46 / sessão de Bracing presa
+
+- **Causa:** `getBracingCompletedStepIndexes`, `recordBracingPartialPractice` e `saveBracingSplitAndExit` estavam aninhadas no bloco `if (data.dailyExecution)` do carregamento de estado; Cancelar/Pular/Dividir pausa lançavam `ReferenceError`.
+- **Correção:** chaves de fechamento movidas para antes das funções; HTML do app sincronizado.
+- **Regressão:** `diagnostics/bracing-global-scope.test.cjs` (falhava antes, passa depois).
+- **Gate:** `bash scripts/check.sh` → `CHECK PASS`. Emulador Pixel_9: Pular, Cancelar + reabertura e Dividir pausa verificados com toques reais.

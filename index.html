@@ -14638,6 +14638,8 @@
                     AppState.dailyExecution.isPaused = true;
                     renderDailyExecutionUI();
                 }
+            }
+        }
 
         function getBracingCompletedStepIndexes(execution, includeCurrent = false) {
             const completed = new Set((execution.completedStepIndexes || []).filter(Number.isInteger));
@@ -14726,8 +14728,6 @@
             renderProgramsList();
             showInlineToast(completedRepetitions > 0 ? 'Pausa salva. A sessão continuará do mesmo ponto sem duplicar repetições.' : 'Pausa salva. Nenhum dia foi contabilizado ainda.');
             return true;
-        }
-            }
         }
 
         function readLegacyProgress() {
