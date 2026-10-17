@@ -3,11 +3,19 @@
 Todas as mudanças notáveis deste projeto são documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e adota o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [Não lançado]
+Cabeçalhos no formato `## X.Y.Z — AAAA-MM-DD` (ideias_standard), mais recente primeiro; versões e datas são as já registradas e as das tags `v1.1.x`. As tags v1.1.14, v1.1.21, v1.1.23, v1.1.26–v1.1.29, v1.1.31, v1.1.32, v1.1.34 e v1.1.35 não têm entrada própria; o histórico delas está no `git log`.
 
----
+## 1.1.46 — 2026-10-13
 
-## [1.1.45] - 2026-10-11
+### Corrigido
+- Bracing: **Cancelar**, **Pular** e **Dividir pausa** voltaram a responder. Três funções do Bracing estavam aninhadas no carregamento de estado e lançavam `ReferenceError`, prendendo o app na tela do treino. Nenhum dado, programa ou cronograma alterado.
+
+### Validação
+- `diagnostics/bracing-global-scope.test.cjs` falhava na 1.1.45 e passa agora; `bash scripts/check.sh` → CHECK PASS.
+- Emulador Pixel_9: Pular, Cancelar (com reabertura) e Dividir pausa testados com toques reais. Certificados de assinatura iguais aos da 1.1.45.
+- Homologação física S25 Ultra/Galaxy Watch continua pendente (NOT_TESTED).
+
+## 1.1.45 — 2026-10-11
 
 ### Alterado
 - Bracing da semana 1: pausas entre repetições de 15 para 5 segundos.
@@ -16,7 +24,7 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 ### Validação
 - Diagnósticos e builds release de celular e Wear verificados; assinatura compatível com 1.1.44.
 
-## [1.1.44] - 2026-10-11
+## 1.1.44 — 2026-10-11
 
 ### Alterado
 - Bracing com 2 treinos diários em 7 dias por semana, conforme solicitação do usuário.
@@ -32,7 +40,7 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 - Diagnósticos, paridade HTML, testes Android e builds app/Wear passaram; auditoria independente sem findings materiais residuais.
 - Homologação física S25 Ultra/Galaxy Watch e aprovação das pranchas continuam pendentes.
 
-## [1.1.43] - 2026-10-10
+## 1.1.43 — 2026-10-10
 
 ### Adicionado
 - **E15 — Bracing progressivo:** catálogo e progressão funcional de 8 semanas, com uma sessão diária em 5 dias da semana e exercícios realizados sentado ou em pé.
@@ -43,7 +51,7 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 - Suíte técnica e builds Android passaram.
 - Aprovação visual das pranchas e validação em WebView/aparelho, tela bloqueada, TalkBack e Galaxy Watch físicos permanecem pendentes (NOT_TESTED).
 
-## [1.1.42] - 2026-10-09
+## 1.1.42 — 2026-10-09
 
 ### Adicionado
 - **Novo Modelo de Bracing Progressivo (8 Semanas):**
@@ -56,7 +64,7 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
-## [1.1.41] - 2026-10-08
+## 1.1.41 — 2026-10-08
 
 ### Adicionado
 - **Ilustrações Anatômicas das Posturas de Bracing McGill:**
@@ -75,7 +83,7 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
-## [1.1.40] - 2026-10-08
+## 1.1.40 — 2026-10-08
 
 ### Adicionado
 - **E14 — Reformulação Clínica do Bracing no Banco e em Pé (McGill Adaptado):**
@@ -101,7 +109,7 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
-## [1.1.39] - 2026-10-02
+## 1.1.39 — 2026-10-02
 
 ### Adicionado
 - **Modo Treino Flutuante Nativo (CP1 a CP7):**
@@ -117,7 +125,7 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
-## [1.1.38] - 2026-09-28
+## 1.1.38 — 2026-09-28
 
 ### Corrigido
 - **Frequência Semanal no Programa 2 (Kegel):** Configuração explícita de `weeklyTargetDays: 7` em todas as 8 fases do catálogo para evitar mensagens de "frequência/dia não configurado".
@@ -125,7 +133,7 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
-## [1.1.37] - 2026-09-27
+## 1.1.37 — 2026-09-27
 
 ### Adicionado
 - Release estável compilada localmente com Android Studio e Gradle 9.3.1.
@@ -133,7 +141,7 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
-## [1.1.36] - 2026-09-12
+## 1.1.36 — 2026-09-12
 
 ### Adicionado
 - **Pausa de Resposta de 3 Minutos:** Fluxo guiado em três etapas com alternância de respiração, postura e relaxamento.
@@ -141,21 +149,21 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
-## [1.1.33] - 2026-09-08
+## 1.1.33 — 2026-09-08
 
 ### Adicionado
 - **Integração Galaxy Watch (Wear OS):** Módulo complementar `wear/` e classe nativa `WearHapticsRelay.kt` para espelhamento síncrono dos pulsos de vibração háptica no pulso do usuário.
 
 ---
 
-## [1.1.30] - 2026-09-07
+## 1.1.30 — 2026-09-07
 
 ### Adicionado
 - **Programa de Mindfulness / MBCT (8 Semanas):** Oito faixas de áudio nativas de meditação guiada com suporte à reprodução em segundo plano com tela bloqueada via `MindfulnessAudioService.kt`.
 
 ---
 
-## [1.1.25] - 2026-08-27
+## 1.1.25 — 2026-08-27
 
 ### Adicionado
 - **Programa Progressivo de Stomach Vacuum (8 Semanas):** Treino guiado de sucção abdominal com fases clínicas de preparação, inspiração, expiração, apneia/retenção, retorno controlado e recuperação.
