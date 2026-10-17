@@ -7,6 +7,7 @@ CoreFlow é um app Android/WebView com módulo Wear OS. Preserve a arquitetura a
 ## Fontes de verdade
 
 - Interface: `index.html` e `app/src/main/assets/index.html` devem permanecer idênticos.
+- Estado e próxima ação: `STATE.md` (comece por aqui). Visão e escopo: `PROJECT.md`.
 - Roadmap: `ROADMAP.md`; registre cada tarefa concluída em `docs/roadmap/execucao.md`.
 - Versão: `CORE_FLOW_VERSION_CODE` e `CORE_FLOW_VERSION_NAME` em `gradle.properties`; CI pode sobrescrevê-las somente como par por `BUILD_VERSION_*`.
 - Releases exigem `KEYSTORE_PATH`, `KEYSTORE_PASSWORD`, `KEY_ALIAS` e `KEY_PASSWORD`; nunca use assinatura debug para release.
@@ -22,3 +23,9 @@ CoreFlow é um app Android/WebView com módulo Wear OS. Preserve a arquitetura a
 ## Segurança
 
 A WebView deve carregar somente recursos locais e não pode conceder permissões web, conteúdo misto, navegação externa ou acesso local sem uma justificativa testada.
+
+## Documentação e Git
+
+- `CLAUDE.md` só importa este arquivo (`@AGENTS.md`); regras novas entram aqui.
+- Ao publicar uma versão: atualize `gradle.properties`, `README.md` (o teste `diagnostics/version-contract.test.cjs` confere a versão), `CHANGELOG.md` (`## X.Y.Z — AAAA-MM-DD`) e `docs/releases/vX.Y.Z.md`.
+- Ao encerrar sessão relevante, atualize `STATE.md`. Nunca force push nem reescreva histórico.

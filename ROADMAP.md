@@ -1,9 +1,21 @@
 # CoreFlow — Roadmap ativo
 
 **Atualizado:** 11/10/2026.
-**Release atual:** 1.1.45 — pausas entre repetições da semana 1 do Bracing reduzidas para 5s.
+**Release atual:** 1.1.46 (13/10) — Cancelar, Pular e Dividir pausa do Bracing restaurados. Ponto de retomada: [STATE.md](STATE.md).
 **Foco:** E15 — Correção do Bracing de 8 semanas, conforme o documento fornecido por Rafael.
 **Estado:** implementação funcional verificada; aprovação visual das imagens novas e homologação física PENDENTES.
+
+## Marcos
+
+| Marco | Resultado verificável | Estado | Gate |
+|---|---|---|---|
+| E00–E12 | Etapas anteriores (ver histórico) | CONCLUÍDA | registros em `docs/arquivados/roadmap-etapas-concluidas.md` |
+| E14 | Bracing McGill (primeira versão) | SUPERSEDIDA por E15 | — |
+| E15 | Bracing de 8 semanas conforme a fonte fornecida | EM EXECUÇÃO | CP0–CP6 abaixo; CP6 = auditoria independente, revisão visual e homologação física |
+| E13 | Validação integrada Android em aparelho físico | EM VALIDAÇÃO FÍSICA | evidência física em `docs/roadmap/execucao.md` |
+| FUTURA 3 | Homologação de hardware (S25 Ultra, Doze) | EM VALIDAÇÃO FÍSICA | resultados físicos registrados; sem aparelho, NOT_TESTED |
+
+**Marco ativo:** E15 — itens CP3, CP5 e CP6 pendentes (seção 3). Evidência exigida: `bash scripts/check.sh` verde, regressão por tarefa e registro em `docs/roadmap/execucao.md`; CP6 exige aparelho físico e aprovação visual.
 
 ## 1. Procedimento obrigatório para qualquer IA
 

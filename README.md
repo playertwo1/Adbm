@@ -19,15 +19,19 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, estabiliza�
 
 ## Versão Atual
 
-- **Versão base local:** `1.1.45` (`versionCode 45`)
-- **Release:** `1.1.45` — Bracing com pausas entre repetições reduzidas para 5 segundos na primeira semana.
+- **Versão base local:** `1.1.46` (`versionCode 46`)
+- **Release:** `1.1.46` — correção urgente: Cancelar, Pular e Dividir pausa voltaram a funcionar no treino de Bracing.
 - **Validação desta versão:** regressões e build técnico passaram. Aprovação visual das pranchas e validação em celular e Galaxy Watch físicos continuam pendentes; consulte o [registro de execução](docs/roadmap/execucao.md).
 - **Downloads:** O APK assinado para celular e relógio está disponível na aba de [Releases](https://github.com/playertwo1/Adbm/releases).
 - **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.
 
 ---
 
-## O que mudou na 1.1.45
+## O que mudou na 1.1.46
+
+- Na 1.1.45 o app podia abrir direto na tela do treino de Bracing sem deixar sair: **Cancelar**, **Pular** e **Dividir pausa** não respondiam. As três funções voltaram a ficar acessíveis; nenhum dado, programa ou cronograma foi alterado. Uma sessão que ficou presa pode ser cancelada ou dividida normalmente.
+
+## Mudanças da 1.1.45
 
 - Na semana 1, cada pausa entre repetições do Bracing foi reduzida de 15 para 5 segundos. A preparação inicial e as semanas seguintes mantêm seus tempos.
 
@@ -72,8 +76,8 @@ $env:KEYSTORE_PATH = "caminho/para/coreflow-upload.jks"
 $env:KEYSTORE_PASSWORD = "sua_senha_keystore"
 $env:KEY_ALIAS = "seu_alias"
 $env:KEY_PASSWORD = "sua_senha_chave"
-$env:BUILD_VERSION_CODE = "45"
-$env:BUILD_VERSION_NAME = "1.1.45"
+$env:BUILD_VERSION_CODE = "46"
+$env:BUILD_VERSION_NAME = "1.1.46"
 
 .\gradlew.bat :app:assembleRelease :wear:assembleRelease
 ```
@@ -95,6 +99,20 @@ Os pacotes gerados ficam localizados em:
 - `wear/`: Módulo independente do aplicativo para Wear OS (Galaxy Watch).
 - `ROADMAP.md`: Planejamento ativo e backlog de desenvolvimento do projeto.
 - `docs/arquivados/roadmap-etapas-concluidas.md`: Histórico e critérios de aceite das etapas concluídas.
+
+---
+
+## Documentação
+
+| Pergunta | Arquivo |
+|---|---|
+| Por que existe, MVP, fora de escopo | [PROJECT.md](PROJECT.md) |
+| Onde paramos, próxima ação | [STATE.md](STATE.md) |
+| Marcos e tarefas ativas | [ROADMAP.md](ROADMAP.md) |
+| Regras para agentes | [AGENTS.md](AGENTS.md) (`CLAUDE.md` só importa este) |
+| Registro de execução e evidências | [docs/roadmap/execucao.md](docs/roadmap/execucao.md) |
+| Notas de release | [docs/releases/](docs/releases/) |
+| Histórico de mudanças | [CHANGELOG.md](CHANGELOG.md) |
 
 ---
 
