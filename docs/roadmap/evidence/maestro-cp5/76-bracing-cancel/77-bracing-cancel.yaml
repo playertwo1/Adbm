@@ -1,0 +1,23 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Hoje"
+    timeout: 20000
+- tapOn:
+    point: "55%, 40%"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 55%"
+- extendedWaitUntil:
+    visible: "Pausar Bracing"
+    timeout: 8000
+- takeScreenshot: cp5-bracing-active-before-cancel
+- tapOn:
+    point: "30%, 74%"
+- extendedWaitUntil:
+    visible: "Manter Postura 2min"
+    timeout: 8000
+- assertVisible: "02:00"
+- takeScreenshot: cp5-bracing-reset-after-cancel
