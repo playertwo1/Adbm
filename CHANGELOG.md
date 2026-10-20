@@ -7,6 +7,21 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
+## [1.1.47] - 2026-10-20
+
+### Corrigido
+- Cancelamento consistente de sessões no guia e no overlay Android, preservando a saída segura da retenção de Vácuo.
+- Leitura e exibição de imagens locais no overlay; Respiração e suas animações acompanham o tempo do motor nativo.
+- Instruções e ações de pausa alinhadas para Corpo e modos flutuantes.
+
+### Validação
+- `bash scripts/check.sh`: `CHECK PASS` (diagnósticos, paridade HTML, testes Android e builds debug).
+- `:app:assembleRelease :wear:assembleRelease`: `BUILD SUCCESSFUL`; APKs 1.1.47/47 assinados e verificados com `apksigner` e `aapt`.
+- Certificado SHA-256 igual ao da 1.1.46: `56052883ad4841ab226e4c41dc573d7c9862f89519c8ff74c74979443fb2d4dd`.
+- Fluxos Maestro anteriores estão registrados em `docs/roadmap/execucao.md`. Execução do APK 1.1.47 no emulador `NOT_RUN`; revisão visual humana `PENDING_HUMAN`, S25 físico e Data Layer/vibração Wear `NOT_RUN`.
+
+---
+
 ## [1.1.45] - 2026-10-11
 
 ### Alterado
