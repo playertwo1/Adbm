@@ -1,0 +1,31 @@
+device=emulator-5554 app=com.aistudio.coreflow.vdfpkw version=1.1.46/46
+=== BEFORE ===
+  mForceIdle=false
+  mScreenOn=true
+  mState=ACTIVE mLightState=ACTIVE
+=== SCREEN OFF ===
+
+=== FORCE IDLE ===
+Now forced in to deep idle mode
+=== DURING ===
+  mForceIdle=true
+  mScreenOn=false
+  mState=IDLE mLightState=OVERRIDE
+=== FOREGROUND SERVICE ===
+>   * ServiceRecord{73071b9 u0 com.aistudio.coreflow.vdfpkw/com.example.WorkoutForegroundService c:com.aistudio.coreflow.vdfpkw}
+>     intent={act=com.example.workout.START cmp=com.aistudio.coreflow.vdfpkw/com.example.WorkoutForegroundService}
+      packageName=com.aistudio.coreflow.vdfpkw
+      processName=com.aistudio.coreflow.vdfpkw
+      targetSdkVersion=36
+>     infoAllowStartForeground=[callingPackage: com.aistudio.coreflow.vdfpkw; callingUid: 10232; uidState: TOP ; uidBFSL: [BFSL]; BFGS denied: false; intent: Intent { act=com.example.workout.START xflg=0x4 cmp=com.aistudio.coreflow.vdfpkw/com.example.WorkoutForegroundService (has extras) }; code:PROC_STATE_TOP; tempAllowListReason:<null>; allowWiu:12; targetSdkVersion:36; callerTargetSdkVersion:36; startForegroundCount:0; bindFromPackage:null; isBindService:false]
+      isNativeIsolated=false
+      isForeground=true foregroundId=2001 types=0x40000000 foregroundNoti=Notification(channel=coreflow_active_workout shortcut=null contentView=null vibrate=null sound=null defaults=0 flags=ONGOING_EVENT|ONLY_ALERT_ONCE|NO_CLEAR|FOREGROUND_SERVICE color=0x00000000 category=workout actions=3 vis=PUBLIC template=null)
+      createTime=-1m13s619ms startingBgTimeout=--
+=== RESTORE ===
+Light state: OVERRIDE, deep state: IDLE
+mForceModeManagerQuickDozeRequest: false
+mForceModeManagerOffBodyState: false
+
+  mForceIdle=false
+  mScreenOn=true
+  mState=ACTIVE mLightState=ACTIVE

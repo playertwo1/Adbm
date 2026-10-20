@@ -1,0 +1,23 @@
+device=emulator-5554; model=Pixel_9; api=37; app=com.aistudio.coreflow.vdfpkw; version=1.1.46/46
+screen=1080x2424; density=420; overlay=735x755; margin=16dp=42px
+
+Maestro-only gesture result:
+- Flow 72 JUnit: tests=1, failures=0; overlay_position_x/y stayed 24/120.
+- Flow 75 JUnit: tests=1, failures=0; overlay_position_x/y stayed 24/120.
+- These PASS results do not prove a drag. Captures before/after are unchanged in position.
+
+Android touch injection while the expanded Caixa session was active:
+- Before: overlay_position_x=24, overlay_position_y=120.
+- adb shell input swipe 200 400 500 400 1200
+- After right swipe: overlay_position_x=303, overlay_position_y=120.
+- Expected right edge: screenWidth - windowWidth - margin = 1080 - 735 - 42 = 303.
+- Maestro flow 73 observation: JUnit tests=1, failures=0; screenshot cp5-drag-right-snap.png.
+- adb shell input swipe 750 400 540 400 1200
+- After left swipe: overlay_position_x=42, overlay_position_y=120.
+- Maestro flow 74 observation/cancel: JUnit tests=1, failures=0; screenshot cp5-drag-left-snap.png.
+
+Cleanup:
+- Confirmed cancel; WorkoutForegroundService absent.
+- Force-stopped the app and restored only overlay_position_x from test value 42 to original 24 in the emulator SharedPreferences; overlay_position_y remained 120.
+- Final checks: overlay enabled=true, default size=mini, x/y=24/120, deviceidle=ACTIVE, screen on, SYSTEM_ALERT_WINDOW=default.
+- Scope: emulator only. Maestro gestures are NOT_PROVEN for dragging the separate native overlay window; actual touch was injected through adb. Physical S25 remains NOT_RUN.
