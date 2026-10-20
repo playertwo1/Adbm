@@ -33,6 +33,7 @@ function getElement(id) {
             innerText: '',
             className: '',
             style: {},
+            dataset: {},
             classList: {
                 add(...names) { names.forEach(name => classes.add(name)); },
                 remove(...names) { names.forEach(name => classes.delete(name)); },

@@ -466,6 +466,11 @@ class AndroidBridge(
     }
 
     @JavascriptInterface
+    fun setAccessibilityReducedMotion(enabled: Boolean) {
+        WorkoutOverlayController.setAppReducedMotion(context, enabled)
+    }
+
+    @JavascriptInterface
     fun vibrate(durationMs: Long) {
         AdvancedHapticsManager.cancel(context)
         WearHapticsRelay.sendPattern(context, longArrayOf(0L, durationMs.coerceIn(1L, 5_000L)))

@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="emulator-5554" tests="1" failures="1" time="0.095" timestamp="2026-10-19T06:39:50">
+    <testcase id="21-restore-stretch-duration-direct" name="21-restore-stretch-duration-direct" classname="21-restore-stretch-duration-direct" file="docs\roadmap\evidence\maestro-cp3\21-restore-stretch-duration-direct.yaml" time="0.088" timestamp="2026-10-19T06:39:50" status="ERROR">
+      <failure>maestro.android.DeviceServerDiedException: Device server died during 'deviceInfo' on emulator-5554 (4669ms since last byte, connection age 8234ms): StatusRuntimeException: UNAVAILABLE&#xd;
+	at maestro.android.AndroidDeviceConnection.onGrpcDeath(AndroidDeviceConnection.kt:319)&#xd;
+	at maestro.android.AndroidDeviceConnection.mapTransport(AndroidDeviceConnection.kt:306)&#xd;
+	at maestro.android.AndroidDeviceConnection.execute(AndroidDeviceConnection.kt:122)&#xd;
+	at maestro.drivers.AndroidDriver.deviceInfo(AndroidDriver.kt:205)&#xd;
+	at maestro.Maestro.cachedDeviceInfo_delegate$lambda$0(Maestro.kt:57)&#xd;
+	at kotlin.SynchronizedLazyImpl.getValue(LazyJVM.kt:86)&#xd;
+	at maestro.Maestro.getCachedDeviceInfo(Maestro.kt:55)&#xd;
+	at maestro.orchestra.Orchestra._init_$lambda$12(Orchestra.kt:163)&#xd;
+	at maestro.orchestra.Orchestra.initJsEngine(Orchestra.kt:375)&#xd;
+	at maestro.orchestra.Orchestra.runFlow(Orchestra.kt:204)&#xd;
+	at maestro.cli.runner.TestSuiteInteractor.runFlow(TestSuiteInteractor.kt:208)&#xd;
+	at maestro.cli.runner.TestSuiteInteractor.runTestSuite(TestSuiteInteractor.kt:98)&#xd;
+	at maestro.cli.command.TestCommand.runMultipleFlows(TestCommand.kt:623)&#xd;
+	at maestro.cli.command.TestCommand.access$runMultipleFlows(TestCommand.kt:81)&#xd;
+	at maestro.cli.command.TestCommand$runShardSuite$1$1.invokeSuspend(TestCommand.kt:503)&#xd;
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)&#xd;
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)&#xd;
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)&#xd;
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)&#xd;
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)&#xd;
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source)&#xd;
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)&#xd;
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source)&#xd;
+	at maestro.cli.command.TestCommand.runShardSuite$lambda$10(TestCommand.kt:502)&#xd;
+	at maestro.cli.session.MaestroSessionManager.newSession(MaestroSessionManager.kt:133)&#xd;
+	at maestro.cli.session.MaestroSessionManager.newSession$default(MaestroSessionManager.kt:64)&#xd;
+	at maestro.cli.command.TestCommand.runShardSuite(TestCommand.kt:477)&#xd;
+	at maestro.cli.command.TestCommand.access$runShardSuite(TestCommand.kt:81)&#xd;
+	at maestro.cli.command.TestCommand$handleSessions$1$results$1$1.invokeSuspend(TestCommand.kt:438)&#xd;
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)&#xd;
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)&#xd;
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:124)&#xd;
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)&#xd;
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)&#xd;
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)&#xd;
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)&#xd;
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)&#xd;
+Caused by: io.grpc.StatusRuntimeException: UNAVAILABLE&#xd;
+	at io.grpc.stub.ClientCalls.toStatusRuntimeException(ClientCalls.java:275)&#xd;
+	at io.grpc.stub.ClientCalls.getUnchecked(ClientCalls.java:256)&#xd;
+	at io.grpc.stub.ClientCalls.blockingUnaryCall(ClientCalls.java:169)&#xd;
+	at maestro_android.MaestroDriverGrpc$MaestroDriverBlockingStub.deviceInfo(MaestroDriverGrpc.java:740)&#xd;
+	at maestro.drivers.AndroidDriver.deviceInfo$lambda$4(AndroidDriver.kt:205)&#xd;
+	at maestro.android.AndroidDeviceConnection.execute(AndroidDeviceConnection.kt:120)&#xd;
+	... 34 more&#xd;
+Caused by: java.io.IOException: Command failed (tcp:59313): closed&#xd;
+	at dadb.adbserver.AdbServer.send$dadb(AdbServer.kt:103)&#xd;
+	at dadb.adbserver.AdbServerDadb.open(AdbServer.kt:149)&#xd;
+	at maestro.android.AndroidDeviceConnection.buildChannel$lambda$2(AndroidDeviceConnection.kt:98)&#xd;
+	at maestro.android.RawAdbSocket.connect(AdbSocketFactory.kt:206)&#xd;
+	at java.base/java.net.Socket.connect(Unknown Source)&#xd;
+	at maestro.android.AdbSocketFactory.createSocket(AdbSocketFactory.kt:57)&#xd;
+	at maestro.android.AdbSocketFactory.createSocket(AdbSocketFactory.kt:63)&#xd;
+	at io.grpc.okhttp.OkHttpClientTransport$3.run(OkHttpClientTransport.java:535)&#xd;
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:133)&#xd;
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)&#xd;
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)&#xd;
+	at java.base/java.lang.Thread.run(Unknown Source)&#xd;
+</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

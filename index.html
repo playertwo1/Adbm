@@ -160,6 +160,24 @@
             opacity: 1;
             transform: translateY(0);
         }
+        #stretch-active-display, #breath-active-display { scroll-margin-top: 90px; }
+        .stretch-posture { position: relative; overflow: hidden; isolation: isolate; width: 100%; max-width: 220px; aspect-ratio: 1; margin: 0 auto; border-radius: 12px; background: #090d16; }
+        .stretch-posture-image { position: absolute; left: 0; top: 0; width: 200%; height: 200%; max-width: none; object-fit: fill; pointer-events: none; transition: left .28s ease, top .28s ease, opacity .28s ease; }
+        #stretch-posture-frame[data-frame="0"] .stretch-posture-image { left: 0; top: 0; }
+        #stretch-posture-frame[data-frame="1"] .stretch-posture-image { left: -100%; top: 0; }
+        #stretch-posture-frame[data-frame="2"] .stretch-posture-image { left: 0; top: -100%; }
+        #stretch-posture-frame[data-frame="3"] .stretch-posture-image { left: -100%; top: -100%; }
+        .stretch-direction { position: absolute; z-index: 2; right: 8px; top: 8px; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: #064e3b; color: #6ee7b7; }
+        #stretch-posture-frame[data-exercise="4"] .stretch-direction { transform: rotate(45deg); }
+        @keyframes stretch-phase-cue { from { transform: translateY(2px) scale(.94); opacity: .45; } to { transform: translateY(0) scale(1); opacity: 1; } }
+        #stretch-posture-frame[data-phase="enter"] .stretch-direction i { animation: stretch-phase-cue .42s ease-out both; }
+        #stretch-active-display[data-paused="true"] .stretch-direction i { animation-play-state: paused; }
+        #stretch-active-display[data-paused="true"] .stretch-posture-image, #stretch-active-display[data-paused="true"] .stretch-phase-segment { transition: none; }
+        .stretch-phase-track { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; max-width: 220px; margin: 6px auto 0; }
+        .stretch-phase-segment { height: 3px; border-radius: 999px; background: #334155; transition: background-color .2s ease; }
+        .stretch-phase-segment.is-current { background: #34d399; }
+        @media (prefers-reduced-motion: reduce) { .stretch-posture-image, .stretch-phase-segment, .stretch-direction i { transition: none !important; animation: none !important; } }
+        html.cf-reduced-motion .stretch-posture-image, html.cf-reduced-motion .stretch-phase-segment, html.cf-reduced-motion .stretch-direction i { transition: none !important; animation: none !important; }
         /* Breathing ring animations */
         .ring-circle {
             transition: stroke-dashoffset 0.1s linear, stroke 0.4s ease;
@@ -620,9 +638,7 @@
 
                     <!-- Controls -->
                     <div class="flex items-center justify-center gap-3 mt-4">
-                        <button onclick="resetKegelRes()" class="p-3 bg-slate-900 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-300 text-sm">
-                            <i class="fa-solid fa-rotate-left"></i>
-                        </button>
+                        <button onclick="resetKegelRes()" class="p-3 bg-slate-900 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-300 text-sm"><i class="fa-solid fa-stop mr-1" aria-hidden="true"></i><span>Cancelar</span></button>
                         <button id="btnKegelResPlay" onclick="toggleKegelRes()" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-extrabold rounded-xl flex items-center gap-2 shadow-lg shadow-emerald-500/20 text-sm">
                             <i id="kegelResIcon" class="fa-solid fa-play"></i>
                             <span id="kegelResText">Iniciar Treino</span>
@@ -656,9 +672,7 @@
 
                     <!-- Speed controller -->
                     <div class="flex items-center justify-center gap-2 mt-4">
-                        <button onclick="resetKegelFast()" class="p-3 bg-slate-900 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-300 text-sm">
-                            <i class="fa-solid fa-rotate-left"></i>
-                        </button>
+                        <button onclick="resetKegelFast()" class="p-3 bg-slate-900 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-300 text-sm"><i class="fa-solid fa-stop mr-1" aria-hidden="true"></i><span>Cancelar</span></button>
                         <button id="btnKegelFastPlay" onclick="toggleKegelFast()" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-extrabold rounded-xl flex items-center gap-2 shadow-lg shadow-cyan-500/20 text-sm">
                             <i id="kegelFastIcon" class="fa-solid fa-play"></i>
                             <span id="kegelFastText">Iniciar 15 Pulsos</span>
@@ -725,9 +739,7 @@
 
                     <!-- Timer Controls -->
                     <div class="flex items-center justify-center gap-3 mt-4">
-                        <button onclick="resetBracingTimer()" class="p-3 bg-slate-900 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-300 text-sm">
-                            <i class="fa-solid fa-rotate-left"></i>
-                        </button>
+                        <button onclick="resetBracingTimer()" class="p-3 bg-slate-900 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-300 text-sm"><i class="fa-solid fa-stop mr-1" aria-hidden="true"></i><span>Cancelar</span></button>
                         <button id="btnBracingPlay" onclick="toggleBracingTimer()" class="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-95 text-slate-950 font-extrabold rounded-xl flex items-center gap-2 shadow-lg shadow-emerald-500/20 text-sm transition">
                             <i id="bracingIcon" class="fa-solid fa-play"></i>
                             <span id="bracingText">Praticar Bracing (2 min)</span>
@@ -1076,7 +1088,7 @@
                                 <span id="circuit-corpo-label">Executar Circuito Completo (4 Minutos)</span>
                             </button>
                             <button id="btn-cancel-circuit" onclick="cancelStretchCircuit()" class="hidden px-3.5 py-3 bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 hover:text-rose-200 font-bold text-xs rounded-xl flex items-center justify-center transition" title="Cancelar Circuito">
-                                <i class="fa-solid fa-stop"></i>
+                                <span>Cancelar</span>
                             </button>
                         </div>
 
@@ -1102,6 +1114,18 @@
                                 <button onclick="cancelSoftResumeCorpo()" class="mt-3 px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-[10px] text-rose-300 hover:text-rose-200 font-bold border border-rose-500/30 transition">Cancelar</button>
                             </div>
 
+                            <div id="stretch-posture-frame" class="stretch-posture" data-exercise="1" data-frame="0" data-phase="prepare" role="img" aria-label="Postura do alongamento">
+                                <img id="stretch-posture-image" class="stretch-posture-image" src="img/pausas/stretch-sequence-1.png" alt="" draggable="false" />
+                                <span id="stretch-posture-fallback" class="hidden absolute inset-0 z-10 items-center justify-center p-4 text-center text-xs text-slate-300">Orientação visual indisponível. Siga a instrução do exercício.</span>
+                                <span class="stretch-direction" aria-hidden="true"><i id="stretch-direction-icon" class="fa-solid fa-arrow-down"></i></span>
+                            </div>
+                            <div class="stretch-phase-track" aria-hidden="true">
+                                <span id="stretch-stage-prepare" class="stretch-phase-segment is-current"></span>
+                                <span id="stretch-stage-enter" class="stretch-phase-segment"></span>
+                                <span id="stretch-stage-hold" class="stretch-phase-segment"></span>
+                                <span id="stretch-stage-return" class="stretch-phase-segment"></span>
+                            </div>
+                            <p class="text-center text-xs text-slate-400">A figura indica a postura; siga a fase e o lado sem forçar.</p>
                             <!-- METÁFORA VISUAL ANATÔMICA INTERATIVA -->
                             <div class="py-3 text-center relative flex flex-col items-center justify-center min-h-[170px]">
                                 <div class="relative w-36 h-36 flex items-center justify-center">
@@ -1135,8 +1159,9 @@
                                     <i class="fa-solid fa-backward-step text-[10px]"></i>
                                     <span>Anterior</span>
                                 </button>
-                                <div class="flex items-center gap-1.5">
-                                    <button onclick="toggleStretchCircuitPause()" id="btn-pause-stretch-ctrl" class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 font-bold rounded-lg text-xs transition flex items-center gap-1">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <button id="btn-cancel-stretch-active" onclick="cancelStretchCircuit()" class="min-h-12 px-3 rounded-lg border border-rose-500/30 text-rose-300 text-xs font-bold">Cancelar</button>
+                                    <button onclick="toggleStretchCircuitPause()" id="btn-pause-stretch-ctrl" class="min-h-12 px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 font-bold rounded-lg text-xs transition flex items-center gap-1">
                                         <i id="icon-pause-stretch-ctrl" class="fa-solid fa-pause text-xs"></i>
                                         <span id="label-pause-stretch-ctrl">Pausar</span>
                                     </button>
@@ -1618,12 +1643,13 @@
                                 <span id="circuit-mente-label">Iniciar Respiração Guiada (5 Minutos)</span>
                             </button>
                             <button id="btn-cancel-breath" onclick="cancelBreathSession()" class="hidden px-3.5 py-3 bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 hover:text-rose-200 font-bold text-xs rounded-xl flex items-center justify-center transition" title="Cancelar Respiração">
-                                <i class="fa-solid fa-stop"></i>
+                                <span>Cancelar</span>
                             </button>
                         </div>
 
                         <!-- Guia Visual e Cronômetro de Respiração (Ativo durante a prática) -->
                         <div id="breath-active-display" class="hidden relative bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-3">
+                            <button id="btn-cancel-breath-active" onclick="cancelBreathSession()" class="min-h-12 px-3 rounded-lg border border-rose-500/30 text-rose-300 text-xs font-bold">Cancelar respiração</button>
                             <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-2">
                                 <div class="flex items-center gap-1.5">
                                     <span id="breath-active-pattern-name" class="font-bold text-white">Em Caixa</span>
@@ -2316,8 +2342,8 @@
     <div id="dailyExecutionModal" class="fixed inset-0 bg-slate-950/98 backdrop-blur-md z-[60] hidden flex-col items-center justify-between p-6 no-print overflow-y-auto">
         <!-- Header -->
         <div class="w-full max-w-sm flex items-center justify-between pt-2">
-            <button onclick="requestCancelDailySession()" class="w-10 h-10 rounded-full bg-slate-850 border border-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
-                <i class="fa-solid fa-xmark"></i>
+            <button onclick="requestCancelDailySession()" aria-label="Cancelar sessão" class="min-w-20 h-12 rounded-full bg-slate-850 border border-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+                <span class="text-xs font-bold">Cancelar</span>
             </button>
             <div class="text-center">
                 <span id="dailyExecutionSessionTag" class="text-[11px] font-bold text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20 uppercase tracking-wider">Sessão 1/2</span>
@@ -2872,6 +2898,7 @@
                 <span id="oled-time-display" class="font-mono font-bold text-base text-zinc-300">0:00</span>
             </div>
             <div class="flex items-center gap-2">
+                <button id="oled-btn-cancel" onclick="cancelBreathSession()" class="min-h-12 px-3 rounded-xl border border-rose-900 text-rose-300 text-xs font-bold">Cancelar</button>
                 <button id="oled-btn-pause" onclick="toggleOledPause()" class="px-5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-bold text-xs flex items-center gap-2 transition active:scale-95">
                     <i id="oled-btn-pause-icon" class="fa-solid fa-pause"></i>
                     <span id="oled-btn-pause-label">Pausar</span>
@@ -3530,9 +3557,15 @@
             const settings = AppState.accessibility;
             const root = document.documentElement;
             const body = document.body;
+            const wasReducedMotion = root?.classList?.contains?.('cf-reduced-motion') === true;
             root?.classList.toggle('cf-text-large', settings.textScale === 'large');
             root?.classList.toggle('cf-reduced-motion', settings.reducedMotion === true);
             body?.classList.toggle('cf-high-contrast', settings.highContrast === true);
+            window.AndroidBridge?.setAccessibilityReducedMotion?.(settings.reducedMotion === true);
+            if (wasReducedMotion !== settings.reducedMotion) {
+                if (settings.reducedMotion) pauseBreathVisuals();
+                else resumeBreathVisuals();
+            }
 
             const normalButton = document.getElementById('accessibilityTextScaleNormal');
             const largeButton = document.getElementById('accessibilityTextScaleLarge');
@@ -3676,8 +3709,11 @@
         function saveProfileEditModal() { return saveProfileEditor(); }
 
         function openAccessibilitySettings() {
+            const modal = document.getElementById('accessibilitySettingsModal');
+            if (!modal) return;
+            if (modal.parentNode !== document.body) document.body.appendChild(modal);
             applyAccessibilityPreferences();
-            document.getElementById('accessibilitySettingsModal')?.classList.remove('hidden');
+            modal.classList.remove('hidden');
         }
 
         function closeAccessibilitySettings() {
@@ -3815,7 +3851,10 @@
 
         function openFloatingWorkoutSettings() {
             applyFloatingWorkoutPreferences();
-            document.getElementById('floatingWorkoutSettingsModal')?.classList.remove('hidden');
+            const modal = document.getElementById('floatingWorkoutSettingsModal');
+            if (!modal) return;
+            if (modal.parentNode !== document.body) document.body.appendChild(modal);
+            modal.classList.remove('hidden');
         }
 
         function closeFloatingWorkoutSettings() {
@@ -6215,6 +6254,7 @@
                 instruction: 'Cruze o tornozelo direito sobre o joelho oposto. Mantenha a coluna ereta e incline suavemente o tronco à frente a partir do quadril.',
                 voiceIntro: 'Exercício 1 de 4: Posição do 4 na Cadeira. Cruze o tornozelo sobre o joelho e incline suavemente.',
                 voiceSwitch: 'Metade do tempo! Troque a perna suavemente e repita a inclinação.',
+                image: 'img/pausas/stretch-sequence-1.png',
                 sides: 2
             },
             {
@@ -6226,6 +6266,7 @@
                 instruction: 'Sente-se com a coluna longa. Gire o tronco segurando o encosto ou braço da cadeira sem forçar a cervical.',
                 voiceIntro: 'Exercício 2 de 4: Torção de Coluna na Cadeira. Gire o tronco respirando fundo.',
                 voiceSwitch: 'Metade do tempo! Gire suavemente para o outro lado.',
+                image: 'img/pausas/stretch-sequence-2.png',
                 sides: 2
             },
             {
@@ -6237,6 +6278,7 @@
                 instruction: 'Entrelace as mãos atrás das costas ou segure o assento. Abra o peito, afaste os ombros das orelhas e respire pelas costelas.',
                 voiceIntro: 'Exercício 3 de 4: Abertura de Peitoral e Ombros. Abra o peito e respire fundo.',
                 voiceSwitch: '30 segundos. Mantenha o peito aberto e sinta o alívio postural.',
+                image: 'img/pausas/stretch-sequence-3.png',
                 sides: 1
             },
             {
@@ -6247,6 +6289,7 @@
                 targetZoneDesc: 'Alívio de tensão por digitação, tela de computador e cefaleia tensional',
                 instruction: 'Incline suavemente a cabeça lateralmente com ajuda suave da mão. Deixe o ombro oposto cair relaxado.',
                 voiceIntro: 'Exercício 4 de 4: Alívio Cervical e Trapézio. Incline a cabeça lateralmente com calma.',
+                image: 'img/pausas/stretch-sequence-4.png',
                 voiceSwitch: 'Metade do tempo! Incline suavemente para o outro lado.',
                 sides: 2
             }
@@ -6605,6 +6648,7 @@
                         title: ex ? ex.name : 'Alongamento',
                         instruction: ex ? ex.instruction : 'Alongamento na cadeira',
                         duration: totalSec,
+                        image: ex ? ex.image : ('img/pausas/stretch-sequence-' + cardId + '.png'),
                         voice: ex ? ex.voiceIntro : 'Alongamento na cadeira',
                         badge: 'POSTURA',
                         phase: 'stretch',
@@ -6642,16 +6686,7 @@
                 // Alerta de metade do tempo (troca de perna/braço para exercícios unilaterais)
                 const halfTime = Math.floor(totalSec / 2);
                 if (sec === halfTime) {
-                    triggerHaptic([100, 50, 100]);
-                    if (AppState.pausas.soundEnabled) playBeep(800, 0.15);
-                    const sideBadge = document.getElementById('stretch-active-side-badge');
-                    if (sideBadge) {
-                        sideBadge.innerText = ex.sides > 1 ? 'Lado 2' : 'Fase Final';
-                        sideBadge.className = 'text-[10px] font-bold text-teal-300 bg-teal-500/20 px-1.5 py-0.5 rounded border border-teal-500/30';
-                    }
-                    if (AppState.pausas.voiceGuideEnabled) {
-                        speakVoice(ex ? ex.voiceSwitch : 'Metade do tempo! Troque o lado suavemente');
-                    }
+                    notifyStretchSideSwitch(ex);
                 }
 
                 if (sec <= 0) {
@@ -6719,6 +6754,10 @@
             AppState.pausas.pausedTimerId = cardId;
             const icon = document.getElementById('stretch-icon-' + cardId);
             if (icon) icon.className = 'fa-solid fa-play';
+            const display = document.getElementById('stretch-active-display');
+            if (display) display.dataset.paused = 'true';
+            const pauseLabel = document.getElementById('label-pause-stretch-ctrl');
+            if (pauseLabel) pauseLabel.innerText = 'Continuar';
         }
 
         function showStretchActiveDisplay(stepId, totalSec) {
@@ -6733,6 +6772,9 @@
             const stepEl = document.getElementById('stretch-step-badge');
             const instEl = document.getElementById('stretch-phase-instruction');
             const hintEl = document.getElementById('stretch-switch-hint');
+            const postureFrame = document.getElementById('stretch-posture-frame');
+            const posture = document.getElementById('stretch-posture-image');
+            const postureFallback = document.getElementById('stretch-posture-fallback');
 
             if (nameEl && ex) nameEl.innerText = ex.name;
             if (muscleEl && ex) muscleEl.innerText = ex.muscle;
@@ -6740,14 +6782,73 @@
                 sideEl.innerText = ex.sides > 1 ? 'Lado 1' : 'Contínuo';
                 sideEl.className = 'text-[10px] font-bold text-slate-300 bg-slate-800/90 px-1.5 py-0.5 rounded';
             }
-            if (stepEl) stepEl.innerText = `${stepId}/4`;
+            if (stepEl) stepEl.innerText = AppState.pausas.circuitActive ? `${stepId}/4` : 'Individual';
+            if (postureFrame) {
+                postureFrame.dataset.exercise = String(stepId);
+                postureFrame.setAttribute?.('aria-label', ex ? ex.name + ': ' + ex.instruction : 'Postura do alongamento');
+            }
+            if (posture && ex) {
+                const imagePath = ex.image || `img/pausas/stretch-sequence-${stepId}.png`;
+                const isNewImage = posture.dataset.asset !== imagePath;
+                posture.onload = () => {
+                    if (posture.dataset.asset !== imagePath) return;
+                    if (postureFrame) postureFrame.dataset.imageMissing = 'false';
+                    postureFallback?.classList.add('hidden');
+                    postureFallback?.classList.remove('flex');
+                };
+                posture.onerror = () => {
+                    if (posture.dataset.asset !== imagePath) return;
+                    if (postureFrame) postureFrame.dataset.imageMissing = 'true';
+                    postureFallback?.classList.remove('hidden');
+                    postureFallback?.classList.add('flex');
+                };
+                if (isNewImage) {
+                    if (postureFrame) postureFrame.dataset.imageMissing = 'false';
+                    postureFallback?.classList.add('hidden');
+                    postureFallback?.classList.remove('flex');
+                    posture.dataset.asset = imagePath;
+                    posture.src = imagePath;
+                }
+            }
+            const direction = document.getElementById('stretch-direction-icon');
+            if (direction) direction.className = 'fa-solid ' + ({ 1: 'fa-arrow-down', 2: 'fa-rotate', 3: 'fa-arrows-left-right', 4: 'fa-arrow-down' }[stepId] || 'fa-arrow-down');
+            container.dataset.paused = 'false';
+            const pauseLabel = document.getElementById('label-pause-stretch-ctrl');
+            if (pauseLabel) pauseLabel.innerText = 'Pausar';
+            const pauseIcon = document.getElementById('icon-pause-stretch-ctrl');
+            if (pauseIcon) pauseIcon.className = 'fa-solid fa-pause text-xs';
+            ['btn-prev-stretch-step', 'btn-skip-stretch-step'].forEach(id => {
+                const button = document.getElementById(id);
+                if (button) button.classList.toggle('hidden', !AppState.pausas.circuitActive);
+            });
             if (instEl && ex) instEl.innerText = ex.instruction;
+            updateStretchActiveDisplayUI(stepId, AppState.pausas.remainingSec, totalSec);
+            container.scrollIntoView?.({ behavior: 'auto', block: 'start' });
             if (hintEl) hintEl.innerText = `Troca aos ${Math.floor(totalSec / 2)}s`;
         }
 
         function hideStretchActiveDisplay() {
             const container = document.getElementById('stretch-active-display');
             if (container) container.classList.add('hidden');
+        }
+
+        function resolveStretchCue(stepId, secLeft, totalSec) {
+            const ex = STRETCH_EXERCISES.find(item => item.id === Number(stepId));
+            const duration = Math.max(0, Number(totalSec) || 0);
+            const remaining = Math.min(duration, Math.max(0, Number(secLeft) || 0));
+            const elapsed = duration - remaining;
+            const hasSides = (ex?.sides || 0) > 1;
+            const halfDuration = duration / 2;
+            const sideIndex = hasSides && elapsed >= halfDuration ? 1 : 0;
+            const sideElapsed = hasSides ? Math.max(0, elapsed - sideIndex * halfDuration) : elapsed;
+            const sideDuration = hasSides ? halfDuration : duration;
+            const fraction = sideDuration > 0 ? Math.min(1, sideElapsed / sideDuration) : 1;
+            const prepareBoundary = hasSides ? 0.25 : 0.2;
+            const phase = fraction < prepareBoundary ? 'prepare' : fraction < 0.35 ? 'enter' : fraction < 0.85 ? 'hold' : 'return';
+            const phaseIndex = { prepare: 0, enter: 1, hold: 2, return: 3 }[phase];
+            const side = hasSides ? (sideIndex === 0 ? 'right' : 'left') : 'continuous';
+            const frame = phase === 'prepare' ? 0 : phase === 'return' ? 3 : Number(stepId) === 3 ? (phase === 'enter' ? 1 : 2) : (sideIndex === 0 ? 2 : 1);
+            return { frame, phase, phaseIndex, side, fraction };
         }
 
         function updateStretchActiveDisplayUI(stepId, secLeft, totalSec) {
@@ -6761,6 +6862,42 @@
 
             if (timeEl) timeEl.innerText = timeStr;
             if (secBig) secBig.innerText = secLeft;
+            const cue = resolveStretchCue(stepId, secLeft, totalSec);
+            const phaseLabels = { prepare: 'Preparar', enter: 'Movimento suave', hold: 'Manter', return: 'Retornar' };
+            const sideLabels = { right: 'Direita', left: 'Esquerda', continuous: 'Contínuo' };
+            const phaseLabel = document.getElementById('stretch-cue-label');
+            const instruction = document.getElementById('stretch-phase-instruction');
+            const postureFrame = document.getElementById('stretch-posture-frame');
+            const posture = document.getElementById('stretch-posture-image');
+            const fallback = document.getElementById('stretch-posture-fallback');
+            const activeDisplay = document.getElementById('stretch-active-display');
+            const phaseSegments = ['prepare', 'enter', 'hold', 'return'];
+
+            if (phaseLabel) phaseLabel.innerText = phaseLabels[cue.phase];
+            if (activeDisplay) activeDisplay.dataset.phase = cue.phase;
+            if (postureFrame) {
+                postureFrame.dataset.frame = String(cue.frame);
+                postureFrame.dataset.phase = cue.phase;
+                if (activeDisplay) postureFrame.dataset.paused = activeDisplay.dataset.paused === 'true' ? 'true' : 'false';
+            }
+            if (posture) posture.alt = `${STRETCH_EXERCISES.find(item => item.id === stepId)?.name || 'Alongamento'}, ${sideLabels[cue.side].toLowerCase()}, fase ${phaseLabels[cue.phase].toLowerCase()}`;
+            if (fallback && postureFrame?.dataset.imageMissing === 'true') {
+                fallback.classList.remove('hidden');
+                fallback.classList.add('flex');
+            }
+            phaseSegments.forEach((name, index) => {
+                document.getElementById(`stretch-stage-${name}`)?.classList.toggle('is-current', index === cue.phaseIndex);
+            });
+            const side = document.getElementById('stretch-active-side-badge');
+            if (side) side.innerText = sideLabels[cue.side];
+            const exercise = STRETCH_EXERCISES.find(item => Number(item.id) === Number(stepId));
+            if (instruction && Number(stepId) === 1 && exercise) {
+                instruction.innerText = exercise.instruction.replace(
+                    /tornozelo (?:direito|esquerdo)/i,
+                    `tornozelo ${cue.side === 'left' ? 'esquerdo' : 'direito'}`
+                );
+            }
+            if (postureFrame && exercise) postureFrame.setAttribute?.('aria-label', `${exercise.name}: ${instruction?.innerText || exercise.instruction}`);
 
             if (arc && totalSec > 0) {
                 const circumference = 301.6;
@@ -6768,6 +6905,14 @@
                 const fraction = Math.min(1, Math.max(0, elapsed / totalSec));
                 const offset = circumference * (1 - fraction);
                 arc.style.strokeDashoffset = offset;
+            }
+        }
+
+        function notifyStretchSideSwitch(ex) {
+            triggerHaptic([100, 50, 100]);
+            if (AppState.pausas.soundEnabled) playBeep(800, 0.15);
+            if (AppState.pausas.voiceGuideEnabled) {
+                speakVoice(ex?.voiceSwitch || 'Metade do tempo! Troque o lado suavemente');
             }
         }
 
@@ -6810,11 +6955,16 @@
         }
 
         function pauseStretchCircuit() {
+            const display = document.getElementById('stretch-active-display');
+            if (display?.dataset) display.dataset.paused = 'true';
             if (AppState.pausas.intervalId) {
                 clearInterval(AppState.pausas.intervalId);
                 AppState.pausas.intervalId = null;
             }
             AppState.pausas.circuitPaused = true;
+            if (AppState.pausas.nativeManaged && typeof window !== 'undefined') {
+                try { window.AndroidBridge?.pauseWorkoutSession?.(); } catch(e) {}
+            }
 
             const btnLabel = document.getElementById('circuit-corpo-label');
             const btnIcon = document.getElementById('circuit-corpo-icon');
@@ -6877,6 +7027,8 @@
         }
 
         function executeResumeStretchCircuit() {
+            const display = document.getElementById('stretch-active-display');
+            if (display?.dataset) display.dataset.paused = 'false';
             AppState.pausas.circuitPaused = false;
             const step = AppState.pausas.circuitStep || 1;
 
@@ -6893,6 +7045,10 @@
             const activeCard = AppState.pausas.activeTimerId || step;
             AppState.pausas.activeTimerId = activeCard;
 
+            if (AppState.pausas.nativeManaged && typeof window !== 'undefined') {
+                try { window.AndroidBridge?.resumeWorkoutSession?.(); } catch(e) {}
+                return;
+            }
             const totalSec = AppState.pausas.totalCardSec || 60;
             const ex = STRETCH_EXERCISES.find(e => e.id === activeCard);
 
@@ -6918,16 +7074,7 @@
 
                 const halfTime = Math.floor(totalSec / 2);
                 if (sec === halfTime) {
-                    triggerHaptic([100, 50, 100]);
-                    if (AppState.pausas.soundEnabled) playBeep(800, 0.15);
-                    const sideBadge = document.getElementById('stretch-active-side-badge');
-                    if (sideBadge) {
-                        sideBadge.innerText = ex.sides > 1 ? 'Lado 2' : 'Fase Final';
-                        sideBadge.className = 'text-[10px] font-bold text-teal-300 bg-teal-500/20 px-1.5 py-0.5 rounded border border-teal-500/30';
-                    }
-                    if (AppState.pausas.voiceGuideEnabled) {
-                        speakVoice(ex ? ex.voiceSwitch : 'Metade do tempo! Troque o lado suavemente');
-                    }
+                    notifyStretchSideSwitch(ex);
                 }
 
                 if (sec <= 0) {
@@ -6968,6 +7115,18 @@
         }
 
         function toggleStretchCircuitPause() {
+            if (!AppState.pausas.circuitActive) {
+                const active = AppState.pausas.activeTimerId;
+                const paused = AppState.pausas.pausedTimerId;
+                if (active) pauseStretchTimer(active);
+                else if (paused) startStretchTimer(paused, false, true);
+                const isPaused = !AppState.pausas.activeTimerId;
+                const label = document.getElementById('label-pause-stretch-ctrl');
+                if (label) label.innerText = isPaused ? 'Continuar' : 'Pausar';
+                const display = document.getElementById('stretch-active-display');
+                if (display) display.dataset.paused = String(isPaused);
+                return;
+            }
             if (AppState.pausas.circuitPaused) {
                 resumeStretchCircuit();
             } else {
@@ -7077,6 +7236,8 @@
         }
 
         function cancelStretchCircuit(announce = true) {
+            const wasCircuit = AppState.pausas.circuitActive === true;
+            const activeCardId = AppState.pausas.activeTimerId || AppState.pausas.pausedTimerId;
             cancelSoftResumeCorpo();
             if (AppState.pausas.intervalId) {
                 clearInterval(AppState.pausas.intervalId);
@@ -7093,6 +7254,9 @@
             AppState.pausas.pausedTimerId = null;
             AppState.pausas.circuitCompletedSteps = [];
             AppState.pausas.circuitStepDurations = {};
+            const selectedDuration = AppState.pausas.selectedDuration || 60;
+            AppState.pausas.remainingSec = selectedDuration === 'infinite' ? 300 : (Number(selectedDuration) || 60);
+            AppState.pausas.totalCardSec = AppState.pausas.remainingSec;
 
             const btnLabel = document.getElementById('circuit-corpo-label');
             const btnIcon = document.getElementById('circuit-corpo-icon');
@@ -7104,12 +7268,7 @@
 
             hideStretchActiveDisplay();
 
-            for (let i = 1; i <= 4; i++) {
-                const icon = document.getElementById('stretch-icon-' + i);
-                if (icon && !icon.classList.contains('fa-check')) {
-                    icon.className = 'fa-solid fa-play';
-                }
-            }
+            (wasCircuit ? [1, 2, 3, 4] : [activeCardId]).forEach(resetStretchCardToIdle);
 
             if (announce && AppState.pausas.voiceGuideEnabled) {
                 speakVoice('Circuito cancelado.');
@@ -7233,6 +7392,89 @@
 /* -------------------------------------------------------------
            ABA 3: PAUSAS ATIVAS & RESPIRAÇÃO (BLOCO MENTE)
         ------------------------------------------------------------- */
+        function isBreathMotionReduced() {
+            return document.documentElement?.classList?.contains('cf-reduced-motion') === true ||
+                window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
+        }
+
+        function setBreathVisualTarget(element, property, targetValue, remainingSeconds, shouldAnimate = true) {
+            if (!element) return null;
+            const computed = window.getComputedStyle?.(element);
+            const startValue = computed?.getPropertyValue?.(property) || computed?.[property] || element.style?.[property] || targetValue;
+            element.getAnimations?.().filter(animation =>
+                animation.effect?.getKeyframes().some(frame => Object.prototype.hasOwnProperty.call(frame, property))
+            ).forEach(animation => animation.cancel());
+            const duration = Math.max(0, Number(remainingSeconds) || 0);
+            if (!shouldAnimate || isBreathMotionReduced() || duration <= 0) {
+                element.style.transition = 'none';
+                element.style[property] = targetValue;
+                return null;
+            }
+            if (typeof element.animate === 'function') {
+                return element.animate(
+                    [{ [property]: startValue }, { [property]: targetValue }],
+                    { duration: duration * 1000, easing: 'linear', fill: 'forwards' }
+                );
+            }
+            element.style.transition = `${property} ${duration}s linear`;
+            element.style[property] = targetValue;
+            return null;
+        }
+
+        function getBreathVisualElements() {
+            return [
+                'box-track-rect', 'longa-sphere', 'longa-glow', 'igual-ring-outer', 'igual-ring-mid', 'igual-core', 'custom-circle', 'custom-glow',
+                'oled-box-track-rect', 'oled-longa-sphere', 'oled-igual-ring-outer', 'oled-igual-core', 'oled-custom-circle'
+            ].map(id => document.getElementById(id)).filter(Boolean);
+        }
+
+        function pauseBreathVisuals() {
+            getBreathVisualElements().forEach(element => {
+                element.getAnimations?.().forEach(animation => {
+                    if (animation.playState === 'running') animation.pause();
+                });
+            });
+        }
+
+        function resumeBreathVisuals() {
+            if (isBreathMotionReduced()) return;
+            const mente = AppState.mente;
+            if (!mente?.isRunning || mente.isPaused) return;
+            let hasActiveAnimation = false;
+            getBreathVisualElements().forEach(element => {
+                element.getAnimations?.().forEach(animation => {
+                    if (animation.playState === 'paused') {
+                        animation.play();
+                        hasActiveAnimation = true;
+                    } else if (animation.playState === 'running') {
+                        hasActiveAnimation = true;
+                    }
+                });
+            });
+            if (hasActiveAnimation) return;
+
+            const phases = getActivePatternPhases();
+            const phaseIndex = mente.currentPhaseIdx || 0;
+            const phase = phases[phaseIndex] || phases[0];
+            if (!phase) return;
+            const previousPhase = phases.length > 1 ? phases[(phaseIndex - 1 + phases.length) % phases.length] : null;
+            if (!previousPhase || previousPhase.scale === phase.scale) return;
+            applyBreathPhaseUI({ ...phase, scale: previousPhase.scale }, false, 0);
+            applyBreathPhaseUI(phase, false, mente.phaseSecLeft);
+        }
+
+        function cancelBreathVisuals(resetStyles = false) {
+            getBreathVisualElements().forEach(element => {
+                element.getAnimations?.().forEach(animation => animation.cancel());
+                if (resetStyles) {
+                    element.style.transition = '';
+                    if (element.style.transform !== undefined) element.style.transform = '';
+                    if (element.style.opacity !== undefined) element.style.opacity = '';
+                    if (element.style.strokeDashoffset !== undefined) element.style.strokeDashoffset = '';
+                }
+            });
+        }
+
         const BREATH_CONFIGS = {
             caixa: {
                 id: 'caixa',
@@ -7864,6 +8106,7 @@
             AppState.mente.currentPhaseIdx = 0;
             AppState.mente.cycleCount = 1;
             AppState.mente.completedCycles = 0;
+            cancelBreathVisuals(true);
 
             const config = BREATH_CONFIGS[patternKey];
             const phases = getActivePatternPhases(patternKey, AppState.mente.selectedLevel);
@@ -7890,7 +8133,10 @@
 
             switchVisualMetaphor(patternKey);
 
-            if (displayEl) displayEl.classList.remove('hidden');
+            if (displayEl) {
+                displayEl.classList.remove('hidden');
+                displayEl.scrollIntoView?.({ behavior: 'auto', block: 'start' });
+            }
             if (cancelBtn) cancelBtn.classList.remove('hidden');
 
             updateBreathButtonStates(true);
@@ -8030,19 +8276,26 @@
                 const sideLength = totalPerimeter / 4;
                 const phaseDuration = (currentPhase && currentPhase.sec) || 4;
                 const elapsedInPhase = Math.max(0, phaseDuration - AppState.mente.phaseSecLeft);
-                const fraction = Math.min(1, Math.max(0, elapsedInPhase / phaseDuration));
+                const reducedMotion = isBreathMotionReduced();
+                const fraction = reducedMotion ? 0 : Math.min(1, Math.max(0, elapsedInPhase / phaseDuration));
                 const totalDrawn = (curIdx * sideLength) + (sideLength * fraction);
-                const offset = Math.max(0, totalPerimeter - totalDrawn);
+                const offset = reducedMotion ? totalPerimeter : Math.max(0, totalPerimeter - totalDrawn);
                 const boxRect = document.getElementById('box-track-rect');
-                if (boxRect) boxRect.style.strokeDashoffset = offset;
+                if (boxRect) {
+                    boxRect.style.transition = reducedMotion ? 'none' : 'stroke-dashoffset 0.95s linear';
+                    boxRect.style.strokeDashoffset = offset;
+                }
 
                 // Sync OLED Box track
                 const totalOledPerimeter = 448;
                 const sideOledLength = 112;
                 const totalDrawnOled = (curIdx * sideOledLength) + (sideOledLength * fraction);
-                const offsetOled = Math.max(0, totalOledPerimeter - totalDrawnOled);
+                const offsetOled = reducedMotion ? totalOledPerimeter : Math.max(0, totalOledPerimeter - totalDrawnOled);
                 const oledBoxRect = document.getElementById('oled-box-track-rect');
-                if (oledBoxRect) oledBoxRect.style.strokeDashoffset = offsetOled;
+                if (oledBoxRect) {
+                    oledBoxRect.style.transition = reducedMotion ? 'none' : 'stroke-dashoffset 0.95s linear';
+                    oledBoxRect.style.strokeDashoffset = offsetOled;
+                }
             }
         }
 
@@ -8116,8 +8369,17 @@
             }
         }
 
-        function applyBreathPhaseUI(phase, triggerSensory = false) {
+        function applyBreathPhaseUI(phase, triggerSensory = false, remainingSeconds = null) {
             const patternKey = AppState.mente.activePattern || 'caixa';
+            const motionSeconds = Math.max(0, Number(remainingSeconds ?? AppState.mente.phaseSecLeft ?? phase.sec) || 0);
+            const animateMotion = AppState.mente.isRunning && !AppState.mente.isPaused;
+            let visualScale = phase.scale;
+            if (isBreathMotionReduced()) {
+                const phases = getActivePatternPhases(patternKey);
+                const phaseIndex = AppState.mente.currentPhaseIdx || 0;
+                const previousPhase = phases[(phaseIndex - 1 + phases.length) % phases.length];
+                if (previousPhase && previousPhase.scale !== phase.scale) visualScale = previousPhase.scale;
+            }
             const instEl = document.getElementById('breath-phase-instruction');
             if (instEl) instEl.innerText = phase.text;
 
@@ -8133,16 +8395,10 @@
                 const glow = document.getElementById('longa-glow');
                 if (label) label.innerText = phase.label;
                 if (sec) sec.innerText = phase.sec;
-                if (sphere) {
-                    sphere.style.transition = `transform ${phase.sec}s ease-in-out, opacity ${phase.sec}s ease-in-out`;
-                    sphere.style.transform = `scale(${phase.scale})`;
-                    sphere.style.opacity = phase.key === 'expire' ? '0.75' : '1';
-                }
-                if (glow) {
-                    glow.style.transition = `transform ${phase.sec}s ease-in-out, opacity ${phase.sec}s ease-in-out`;
-                    glow.style.transform = `scale(${phase.scale * 1.15})`;
-                    glow.style.opacity = phase.key === 'expire' ? '0.3' : '0.8';
-                }
+                setBreathVisualTarget(sphere, 'transform', `scale(${visualScale})`, motionSeconds, animateMotion);
+                setBreathVisualTarget(sphere, 'opacity', phase.key === 'expire' ? '0.75' : '1', motionSeconds, animateMotion);
+                setBreathVisualTarget(glow, 'transform', `scale(${visualScale * 1.15})`, motionSeconds, animateMotion);
+                setBreathVisualTarget(glow, 'opacity', phase.key === 'expire' ? '0.3' : '0.8', motionSeconds, animateMotion);
             } else if (patternKey === 'igual') {
                 const label = document.getElementById('igual-phase-label');
                 const sec = document.getElementById('igual-phase-seconds');
@@ -8151,18 +8407,9 @@
                 const core = document.getElementById('igual-core');
                 if (label) label.innerText = phase.label;
                 if (sec) sec.innerText = phase.sec;
-                if (outer) {
-                    outer.style.transition = `transform ${phase.sec}s ease-in-out`;
-                    outer.style.transform = `scale(${phase.scale * 1.1})`;
-                }
-                if (mid) {
-                    mid.style.transition = `transform ${phase.sec}s ease-in-out`;
-                    mid.style.transform = `scale(${phase.scale * 1.05})`;
-                }
-                if (core) {
-                    core.style.transition = `transform ${phase.sec}s ease-in-out`;
-                    core.style.transform = `scale(${phase.scale})`;
-                }
+                setBreathVisualTarget(outer, 'transform', `scale(${visualScale * 1.1})`, motionSeconds, animateMotion);
+                setBreathVisualTarget(mid, 'transform', `scale(${visualScale * 1.05})`, motionSeconds, animateMotion);
+                setBreathVisualTarget(core, 'transform', `scale(${visualScale})`, motionSeconds, animateMotion);
             } else if (patternKey === 'custom') {
                 const label = document.getElementById('custom-phase-label');
                 const sec = document.getElementById('custom-phase-seconds');
@@ -8170,18 +8417,12 @@
                 const glow = document.getElementById('custom-glow');
                 if (label) label.innerText = phase.label;
                 if (sec) sec.innerText = phase.sec;
-                if (circle) {
-                    circle.style.transition = `transform ${phase.sec}s ease-in-out`;
-                    circle.style.transform = `scale(${phase.scale})`;
-                }
-                if (glow) {
-                    glow.style.transition = `transform ${phase.sec}s ease-in-out`;
-                    glow.style.transform = `scale(${phase.scale * 1.1})`;
-                }
+                setBreathVisualTarget(circle, 'transform', `scale(${visualScale})`, motionSeconds, animateMotion);
+                setBreathVisualTarget(glow, 'transform', `scale(${visualScale * 1.1})`, motionSeconds, animateMotion);
             }
 
             if (AppState.mente.oledMode) {
-                applyOledPhaseUI(phase);
+                applyOledPhaseUI(phase, motionSeconds, animateMotion, visualScale);
             }
 
             // Dynamic Chroma: Transição suave do gradiente cromático da área de respiração
@@ -8245,7 +8486,7 @@
 
             const phases = getActivePatternPhases();
             const curPhase = phases[AppState.mente.currentPhaseIdx] || phases[0];
-            applyOledPhaseUI(curPhase);
+            applyBreathPhaseUI(curPhase, false, AppState.mente.phaseSecLeft);
             triggerHaptic([20]);
         }
 
@@ -8287,8 +8528,9 @@
             }
         }
 
-        function applyOledPhaseUI(phase) {
+        function applyOledPhaseUI(phase, remainingSeconds = null, shouldAnimate = AppState.mente.isRunning && !AppState.mente.isPaused, visualScale = phase.scale) {
             const patternKey = AppState.mente.activePattern || 'caixa';
+            const motionSeconds = Math.max(0, Number(remainingSeconds ?? AppState.mente.phaseSecLeft ?? phase.sec) || 0);
             const instEl = document.getElementById('oled-phase-instruction');
             if (instEl) instEl.innerText = phase.text;
 
@@ -8303,11 +8545,8 @@
                 const sphere = document.getElementById('oled-longa-sphere');
                 if (label) label.innerText = phase.label;
                 if (sec) sec.innerText = phase.sec;
-                if (sphere) {
-                    sphere.style.transition = `transform ${phase.sec}s ease-in-out, opacity ${phase.sec}s ease-in-out`;
-                    sphere.style.transform = `scale(${phase.scale})`;
-                    sphere.style.opacity = phase.key === 'expire' ? '0.7' : '1';
-                }
+                setBreathVisualTarget(sphere, 'transform', `scale(${visualScale})`, motionSeconds, shouldAnimate);
+                setBreathVisualTarget(sphere, 'opacity', phase.key === 'expire' ? '0.7' : '1', motionSeconds, shouldAnimate);
             } else if (patternKey === 'igual') {
                 const label = document.getElementById('oled-igual-phase');
                 const sec = document.getElementById('oled-igual-sec');
@@ -8315,24 +8554,15 @@
                 const core = document.getElementById('oled-igual-core');
                 if (label) label.innerText = phase.label;
                 if (sec) sec.innerText = phase.sec;
-                if (outer) {
-                    outer.style.transition = `transform ${phase.sec}s ease-in-out`;
-                    outer.style.transform = `scale(${phase.scale * 1.1})`;
-                }
-                if (core) {
-                    core.style.transition = `transform ${phase.sec}s ease-in-out`;
-                    core.style.transform = `scale(${phase.scale})`;
-                }
+                setBreathVisualTarget(outer, 'transform', `scale(${visualScale * 1.1})`, motionSeconds, shouldAnimate);
+                setBreathVisualTarget(core, 'transform', `scale(${visualScale})`, motionSeconds, shouldAnimate);
             } else if (patternKey === 'custom') {
                 const label = document.getElementById('oled-custom-phase');
                 const sec = document.getElementById('oled-custom-sec');
                 const circle = document.getElementById('oled-custom-circle');
                 if (label) label.innerText = phase.label;
                 if (sec) sec.innerText = phase.sec;
-                if (circle) {
-                    circle.style.transition = `transform ${phase.sec}s ease-in-out`;
-                    circle.style.transform = `scale(${phase.scale})`;
-                }
+                setBreathVisualTarget(circle, 'transform', `scale(${visualScale})`, motionSeconds, shouldAnimate);
             }
         }
 
@@ -8351,6 +8581,7 @@
                 clearInterval(AppState.mente.intervalId);
                 AppState.mente.intervalId = null;
             }
+            pauseBreathVisuals();
             if (AppState.mente.nativeManaged && window.AndroidBridge?.pauseWorkoutSession) {
                 try { window.AndroidBridge.pauseWorkoutSession(); } catch(e) {}
             }
@@ -8426,10 +8657,6 @@
                     updateOledButtonStates(true);
                     requestBreathWakeLock();
 
-                    const phases = getActivePatternPhases();
-                    const currentPhase = phases[AppState.mente.currentPhaseIdx];
-                    applyBreathPhaseUI(currentPhase, false);
-
                     startAmbientSound();
                     if (AppState.mente.smartDndEnabled && window.AndroidBridge?.setDoNotDisturbMode) {
                         try {
@@ -8439,6 +8666,9 @@
                     if (AppState.mente.nativeManaged && typeof window !== 'undefined' && window.AndroidBridge?.resumeWorkoutSession) {
                         try { window.AndroidBridge.resumeWorkoutSession(); } catch(e) {}
                     } else {
+                        const phases = getActivePatternPhases();
+                        const currentPhase = phases[AppState.mente.currentPhaseIdx];
+                        applyBreathPhaseUI(currentPhase, false, AppState.mente.phaseSecLeft);
                         AppState.mente.intervalId = setInterval(runBreathTick, 1000);
                     }
                 }
@@ -8470,6 +8700,7 @@
                 clearInterval(AppState.mente.intervalId);
                 AppState.mente.intervalId = null;
             }
+            cancelBreathVisuals(true);
             releaseBreathWakeLock();
             exitOledMode();
 
@@ -8657,6 +8888,7 @@
             }
             AppState.mente.isResuming = false;
             AppState.mente.isDecompressing = false;
+            cancelBreathVisuals(true);
 
             releaseBreathWakeLock();
             exitOledMode();
@@ -11866,6 +12098,8 @@
                 return;
             }
             if (state.status === 'interrupted' || state.status === 'canceled') {
+                const isCircuit = state.session?.type === 'stretch_circuit' || AppState.pausas.circuitActive === true;
+                const cardId = state.session?.cardId || AppState.pausas.activeTimerId || AppState.pausas.pausedTimerId;
                 AppState.pausas.isRunning = false;
                 AppState.pausas.isPaused = false;
                 AppState.pausas.nativeManaged = false;
@@ -11875,6 +12109,28 @@
                 }
                 AppState.pausas.activeTimerId = null;
                 AppState.pausas.pausedTimerId = null;
+                AppState.pausas.circuitActive = false;
+                AppState.pausas.circuitPaused = false;
+                AppState.pausas.circuitStep = 1;
+                AppState.pausas.circuitCompletedSteps = [];
+                AppState.pausas.circuitStepDurations = {};
+                const selectedDuration = AppState.pausas.selectedDuration || 60;
+                AppState.pausas.remainingSec = selectedDuration === 'infinite' ? 300 : (Number(selectedDuration) || 60);
+                AppState.pausas.totalCardSec = AppState.pausas.remainingSec;
+                const cardIds = isCircuit ? [1, 2, 3, 4] : [cardId];
+                cardIds.forEach(resetStretchCardToIdle);
+                const pauseLabel = document.getElementById('label-pause-stretch-ctrl');
+                if (pauseLabel) pauseLabel.innerText = 'Pausar';
+                const pauseIcon = document.getElementById('icon-pause-stretch-ctrl');
+                if (pauseIcon) pauseIcon.className = 'fa-solid fa-pause text-xs';
+                const circuitLabel = document.getElementById('circuit-corpo-label');
+                const circuitIcon = document.getElementById('circuit-corpo-icon');
+                const circuitCancel = document.getElementById('btn-cancel-circuit');
+                if (circuitLabel) circuitLabel.innerText = 'Executar Circuito Completo';
+                if (circuitIcon) circuitIcon.className = 'fa-solid fa-circle-play text-base';
+                if (circuitCancel) circuitCancel.classList.add('hidden');
+                const display = document.getElementById('stretch-active-display');
+                if (display?.dataset) display.dataset.paused = 'false';
                 hideStretchActiveDisplay();
                 window.AndroidBridge?.acknowledgeWorkoutState?.();
                 return;
@@ -11898,7 +12154,17 @@
             AppState.pausas.nativeManaged = true;
             AppState.pausas.isRunning = state.status === 'running';
             AppState.pausas.isPaused = state.status === 'paused';
-            const cardId = state.session?.cardId || AppState.pausas.activeTimerId || 1;
+            const display = document.getElementById('stretch-active-display');
+            if (display?.dataset) display.dataset.paused = String(AppState.pausas.isPaused);
+            const pauseLabel = document.getElementById('label-pause-stretch-ctrl');
+            if (pauseLabel) pauseLabel.innerText = AppState.pausas.isPaused ? 'Continuar' : 'Pausar';
+            const nativeCardId = state.session?.cardId || AppState.pausas.activeTimerId || AppState.pausas.pausedTimerId;
+            if (AppState.pausas.circuitActive) AppState.pausas.circuitPaused = AppState.pausas.isPaused;
+            if (nativeCardId && !AppState.pausas.circuitActive) {
+                AppState.pausas.activeTimerId = AppState.pausas.isPaused ? null : nativeCardId;
+                AppState.pausas.pausedTimerId = AppState.pausas.isPaused ? nativeCardId : null;
+            }
+            const cardId = state.session?.cardId || AppState.pausas.activeTimerId || AppState.pausas.pausedTimerId || 1;
             const remainingSec = Math.max(0, state.stepTimeLeft || 0);
             AppState.pausas.remainingSec = remainingSec;
             const step = state.steps?.[state.currentStepIndex];
@@ -11916,6 +12182,27 @@
             if (icon) icon.className = state.status === 'paused' ? 'fa-solid fa-play' : 'fa-solid fa-pause';
             if (label) label.innerText = state.status === 'paused' ? 'Continuar' : timeStr;
             if (disp) disp.innerText = `${remainingSec}s`;
+        }
+
+        function resetStretchCardToIdle(cardId) {
+            const id = Number(cardId);
+            if (![1, 2, 3, 4].includes(id)) return;
+            const selectedDuration = AppState.pausas.selectedDuration || 60;
+            const durationSec = selectedDuration === 'infinite' ? 300 : (Number(selectedDuration) || 60);
+            const labelText = selectedDuration === 'infinite'
+                ? '∞'
+                : `${Math.floor(durationSec / 60)}:${String(durationSec % 60).padStart(2, '0')}`;
+            const icon = document.getElementById('stretch-icon-' + id);
+            const label = document.getElementById('stretch-label-' + id);
+            const timerDisplay = document.getElementById('stretch-timer-display-' + id);
+            const progress = document.getElementById('stretch-bar-' + id);
+            if (icon) icon.className = 'fa-solid fa-play';
+            if (label) label.innerText = labelText;
+            if (timerDisplay) {
+                timerDisplay.innerText = `${durationSec}s`;
+                timerDisplay.classList.add('hidden');
+            }
+            if (progress) progress.style.width = '0%';
         }
 
         function completeStretchFromNative(cardId, isCircuit) {
@@ -12014,6 +12301,7 @@
             AppState.mente.elapsedSessionSec = totalElapsed;
             const targetSec = AppState.mente.totalSessionSec || 300;
             AppState.mente.remainingSessionSec = Math.max(0, targetSec - totalElapsed);
+            const previousPhaseSecLeft = AppState.mente.phaseSecLeft;
             AppState.mente.phaseSecLeft = Math.max(0, state.stepTimeLeft || 0);
             const phases = getActivePatternPhases();
             const curPhaseIdx = (state.currentStepIndex || 0) % phases.length;
@@ -12021,8 +12309,9 @@
             AppState.mente.currentPhaseIdx = curPhaseIdx;
             const currentPhase = phases[curPhaseIdx] || phases[0];
             const phaseChanged = prevPhaseIdx !== curPhaseIdx;
-            if (phaseChanged || !AppState.mente.hasAppliedInitialPhase) {
-                applyBreathPhaseUI(currentPhase, phaseChanged);
+            const phaseTickChanged = previousPhaseSecLeft !== AppState.mente.phaseSecLeft;
+            if (phaseChanged || !AppState.mente.hasAppliedInitialPhase || (!AppState.mente.isPaused && phaseTickChanged)) {
+                applyBreathPhaseUI(currentPhase, phaseChanged, AppState.mente.phaseSecLeft);
                 AppState.mente.hasAppliedInitialPhase = true;
                 if (phaseChanged && curPhaseIdx === 0 && (AppState.mente.activePattern || 'caixa') === 'caixa') {
                     const boxRect = document.getElementById('box-track-rect');
@@ -12042,6 +12331,10 @@
                         }, 30);
                     }
                 }
+            } else if (AppState.mente.isPaused) {
+                pauseBreathVisuals();
+            } else if (AppState.mente.isRunning) {
+                resumeBreathVisuals();
             }
             renderBreathTickUI();
         }
@@ -15240,9 +15533,9 @@
 
         function ensureAccessibleButtonNames() {
             const labels = {
-                resetKegelRes: 'Resetar Kegel de resistência',
-                resetKegelFast: 'Resetar Kegel de velocidade',
-                resetBracingTimer: 'Resetar temporizador de bracing',
+                resetKegelRes: 'Cancelar Kegel de resistência',
+                resetKegelFast: 'Cancelar Kegel de velocidade',
+                resetBracingTimer: 'Cancelar temporizador de bracing',
                 toggleScheduleItem: 'Marcar item do cronograma',
                 deleteScheduleItem: 'Excluir item do cronograma',
                 closeBracingProgramModal: 'Fechar programa de bracing',

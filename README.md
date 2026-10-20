@@ -19,7 +19,7 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, estabiliza�
 
 ## Versão Atual
 
-- **Versão base local:** `1.1.45` (`versionCode 45`)
+- **Versão base local:** `1.1.46` (`versionCode 46`)
 - **Release:** `1.1.45` — Bracing com pausas entre repetições reduzidas para 5 segundos na primeira semana.
 - **Validação desta versão:** regressões e build técnico passaram. Aprovação visual das pranchas e validação em celular e Galaxy Watch físicos continuam pendentes; consulte o [registro de execução](docs/roadmap/execucao.md).
 - **Downloads:** O APK assinado para celular e relógio está disponível na aba de [Releases](https://github.com/playertwo1/Adbm/releases).
@@ -72,8 +72,8 @@ $env:KEYSTORE_PATH = "caminho/para/coreflow-upload.jks"
 $env:KEYSTORE_PASSWORD = "sua_senha_keystore"
 $env:KEY_ALIAS = "seu_alias"
 $env:KEY_PASSWORD = "sua_senha_chave"
-$env:BUILD_VERSION_CODE = "45"
-$env:BUILD_VERSION_NAME = "1.1.45"
+$env:BUILD_VERSION_CODE = "46"
+$env:BUILD_VERSION_NAME = "1.1.46"
 
 .\gradlew.bat :app:assembleRelease :wear:assembleRelease
 ```

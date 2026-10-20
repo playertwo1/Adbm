@@ -29,13 +29,13 @@ function getElement(id) {
 }
 const cleared = [];
 const context = vm.createContext({
-    AppState: { pausas: { intervalId: 99, resumeTimerId: 42, isResuming: true, circuitActive: true, circuitPaused: true, circuitStep: 2, activeTimerId: 2, circuitCompletedSteps: [1], circuitStepDurations: { 1: 30 } } },
+    AppState: { pausas: { intervalId: 99, resumeTimerId: 42, isResuming: true, circuitActive: true, circuitPaused: true, circuitStep: 2, activeTimerId: 2, selectedDuration: 60, circuitCompletedSteps: [1], circuitStepDurations: { 1: 30 } } },
     document: { getElementById: getElement },
     clearInterval(id) { cleared.push(id); },
     hideStretchActiveDisplay() {},
     speakVoice() {}
 });
-vm.runInContext([extractFunction('cancelSoftResumeCorpo'), extractFunction('cancelStretchCircuit')].join('\n'), context);
+vm.runInContext([extractFunction('cancelSoftResumeCorpo'), extractFunction('resetStretchCardToIdle'), extractFunction('cancelStretchCircuit')].join('\n'), context);
 context.cancelStretchCircuit(false);
 assert.equal(context.AppState.pausas.resumeTimerId, null, 'cancelar circuito durante contagem deve cancelar timer de retomada');
 assert.equal(context.AppState.pausas.isResuming, false, 'cancelar circuito deve sair do estado de retomada');
@@ -44,5 +44,12 @@ assert(getElement('stretch-resume-overlay').classList.contains('hidden'), 'overl
 assert.equal(context.AppState.pausas.circuitActive, false, 'circuito cancelado deve ficar inativo');
 assert.deepEqual(Array.from(context.AppState.pausas.circuitCompletedSteps), [], 'cancelamento deve limpar etapas parciais para não contaminar novo circuito');
 assert.deepEqual({ ...context.AppState.pausas.circuitStepDurations }, {}, 'cancelamento deve limpar durações parciais');
+for (const cardId of [1, 2, 3, 4]) {
+    assert.equal(getElement(`stretch-icon-${cardId}`).className, 'fa-solid fa-play', `cartão ${cardId} deve voltar ao ícone inicial`);
+    assert.equal(getElement(`stretch-label-${cardId}`).innerText, '1:00', `cartão ${cardId} deve voltar à duração escolhida`);
+    assert.equal(getElement(`stretch-timer-display-${cardId}`).innerText, '60s');
+    assert(getElement(`stretch-timer-display-${cardId}`).classList.contains('hidden'), `timer do cartão ${cardId} deve ficar oculto`);
+    assert.equal(getElement(`stretch-bar-${cardId}`).style.width, '0%');
+}
 
 console.log('E10 cancel resume countdown: PASS');

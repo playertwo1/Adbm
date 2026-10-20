@@ -49,7 +49,8 @@ vm.runInContext([
     extractFunction('startSosStretch'),
     extractFunction('finishStretchCircuit'),
     extractFunction('cancelSoftResumeCorpo'),
-    extractFunction('cancelStretchCircuit')
+    extractFunction('cancelStretchCircuit'),
+    extractFunction('resetStretchCardToIdle')
 ].join('\n'), context);
 
 context.startSosStretch();

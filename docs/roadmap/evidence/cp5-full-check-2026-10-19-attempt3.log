@@ -1,0 +1,81 @@
+bracing-global-scope: ok
+Bracing: manual week/day, 2 daily sessions, 7 days, preserved evidence and subsequent progress PASS
+Breath visual synchronization and accessibility motion contract: PASS
+CI policy: push/PR verification and isolated release publication verified.
+E05 audit-fix regressions: Back, accessibility, and live components verified.
+E05 visual regressions: PASS
+E06 vacuum player regressions: state, controls, failure, tutorial, summary, feedback, and offline parity verified.
+E07 agenda/progress regressions: real agenda, missing-data honesty, completion guard, and snapshot round-trip verified.
+E07 null/zero weeklyTargetDays and reminder-fallback regressions verified.
+E07 regressões comportamentais: rota por ID, sessão/etapa exatas no payload, falha de início sem timer fantasma, reabertura, hero real, exercícios por sequência e estados vazio/erro/E03 verificados.
+E08.4 salvar meta válida: persiste, atualiza Hoje e fecha o editor.
+E08.4 salvar meta inválida: rejeitada com motivo real, editor permanece aberto, estado salvo preservado.
+E08.4 falha de persistência ao salvar: AppState.dailyGoal reverte, sem contaminação em memória.
+E08.4 cancelar: preserva a meta anterior sem efeito colateral no estado salvo.
+E08.5 caso 1: programa já selecionado continua sendo a recomendação, sem decidir por outro critério.
+E08.5 caso 2: sem programa selecionado, Hoje oferece seleção explícita em vez de escolher sozinha.
+E08.5 caso 3: seleção explícita do usuário é gravada e vira a recomendação exibida.
+E08.5 caso 4: ID inválido na seleção não fabrica escolha nem mascara o erro.
+E08.5 caso 5: desempate por mais sessões hoje entre candidatos elegíveis, conforme regra documentada.
+E08.5 caso 6: desempate por dias concluídos na etapa quando sessões hoje empatam.
+E08.5 caso 7: empate total resolvido pelo menor ID de programa, critério estável e não aleatório.
+E08.5 caso 8: candidato único com progresso real é a recomendação direta.
+E08.5 regressões: continuidade do programa selecionado, seleção explícita sem programa e desempate documentado verificados.
+E08.6 Hoje controls: OK
+E08.2 instalação limpa: loadSavedState() real + openOnboardingIfNeeded() exibem onboarding.
+E08.2 usuário existente: snapshot real (meta/agenda salvos) abre direto em Hoje, sem onboarding.
+E08.2 usuário existente legado: snapshot v4 sem onboardingCompleted também abre direto em Hoje.
+E08.2 dado corrompido: loadSavedState() não trava, sinaliza recoveryRequired e não força onboarding nem persiste meta substituta.
+E08.2 dado parcial (legado incompleto): recoveryRequired definido, sem travar e sem forçar onboarding.
+E08.3 instalação limpa: saudação neutra e números zerados, sem placeholder do mockup.
+E08.3 usuário existente com diário parcial: saudação com nome real e números derivados do diário.
+E08.3 usuário legado sem nome: saudação neutra por período, sem número decorativo herdado.
+E08.3 diário populado: streak/minutos exatos do diário real, saudação com nome real.
+E08 meta inválida: bloqueia avanço com motivo real em cada caso (vazio, abaixo/acima do limite, não numérico, frequência inválida).
+E08 preenchimento parcial + Voltar: foco, meta e frequência preservados em cada etapa.
+E08 conclusão: grava meta/agenda no AppState e nos dados persistidos (collectProgressData), abre Hoje.
+E08 meta inválida na conclusão: onboardingComplete não grava nem navega sem meta válida.
+E08 usuário existente: snapshot sem onboardingCompleted não reabre onboarding (evita regressão de instalação anterior).
+E08 instalação limpa: loadSavedState() marca onboardingCompleted=false na primeira execução real.
+E09.2 Perfil: nome/meta, Tema AMOLED e acessibilidade com salvar/cancelar, efeito observável e persistência verificados.
+[PASS] Fallback browser setInterval com dailyTarget=2, sessionsToday=0, reminderTimes=["", "16:00"] às 16:00: NÃO deve disparar Sessão 1
+[PASS] isReminderScheduleComplete real: dailyTarget=1 + ["09:00", ""] é completo
+[PASS] isReminderScheduleComplete real: dailyTarget=1 + ["", "16:00"] não é completo (sessão 2 não substitui sessão 1)
+[PASS] isReminderScheduleComplete real: dailyTarget=2 + ["09:00", ""] não é completo
+[PASS] syncProgramNativeReminder com bridge capturado: target=2 + ["", "16:00"] com opt-in/permissão verdadeiros deve encaminhar time1="", time2="16:00" e enabled=false
+[PASS] syncProgramNativeReminder com bridge capturado: target=1 + ["09:00", ""] deve encaminhar time1="09:00", time2="" e enabled=true
+[PASS] openReminderConfigModal com reminderTimes=["", "16:00"]: deve preservar slot 1 vazio e slot 2 com 16:00
+[PASS] mergeLoadedPrograms com reminderTimes=["", "16:00"]: deve preservar índice/cardinalidade e vazio no slot 1
+[PASS] applyProgressData com snapshot contendo reminderTimes=["", "16:00"]: deve preservar índice/cardinalidade e vazio no slot 1
+[PASS] Perfil lista horários por sessão e só mostra lembretes ativos com agenda completa e permissão efetiva
+[PASS] Perfil → salvar horário vazio/posicional → serializar/restaurar snapshot preserva os mesmos slots sem default
+[PASS] Validador estrito de horário rejeita ausência, formato parcial e limites fora de HH:mm
+[PASS] Importação de snapshot aceita slot vazio posicional e continua rejeitando horário não vazio inválido
+
+============================================================
+RESUMO DA SUÍTE DE REGRESSÃO E09.3 (LEMBRETES)
+============================================================
+Total de cenários executados: 13
+Cenários com falha: 0
+Cenários PASS: 13
+Todos os cenários passaram com sucesso.
+✓ E09.4 PASS: AC-1 (persistência), AC-2 (sincronização Bridge), AC-3 (sem fallback), AC-4 (sem mock), AC-5 (IDs/bridge/protocolo)
+E09 profile data controls: PASS
+E10 cancel resume countdown: PASS
+evalmachine.<anonymous>:86
+                    notifyStretchSideSwitch(ex);
+                    ^
+
+ReferenceError: notifyStretchSideSwitch is not defined
+    at evalmachine.<anonymous>:86:21
+    at Object.tick (C:\Users\notefael\projetos\Adbm\diagnostics\e10-circuit-completed-steps.test.cjs:49:47)
+    at Object.<anonymous> (C:\Users\notefael\projetos\Adbm\diagnostics\e10-circuit-completed-steps.test.cjs:54:8)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object..js (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47
+
+Node.js v24.20.0

@@ -1,0 +1,30 @@
+PASS: modal do modo flutuante ocupa a viewport fora da aba Perfil transformada
+node:assert:152
+  throw new AssertionError(obj);
+  ^
+
+AssertionError [ERR_ASSERTION]: modal de acessibilidade deve sair da aba Perfil transformada antes de abrir
++ actual - expected
+
+  {
++   id: 'tab-perfil'
+-   appendChild: [Function: appendChild]
+  }
+
+    at Object.<anonymous> (C:\Users\notefael\projetos\Adbm\diagnostics\floating-settings-modal.test.cjs:82:8)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object..js (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: { id: 'tab-perfil' },
+  expected: { appendChild: [Function: appendChild] },
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.20.0

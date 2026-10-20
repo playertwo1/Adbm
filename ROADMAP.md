@@ -1,5 +1,21 @@
 # CoreFlow — Roadmap ativo
 
+## Prioridade solicitada em 18/10/2026 — Corpo, Respiração e modo flutuante
+
+Base remota verificada: `main`/`origin/main` em `cbb9be0` (1.1.46/46). Cabeçalho abaixo preservado como contexto anterior.
+
+- [x] Preparar diagnóstico estático, roadmap e três pranchas de referência; planejamento apenas, sem correção do produto.
+- [x] CP0 — Referências aprovadas/corrigidas e matriz reproduzida no emulador Pixel 9 com APK 1.1.46/46; homologação física pendente.
+- [ ] CP1 — Regressões RED e rastreamento dos assets/payload nativos.
+- [ ] CP2 — Cancelar explícito e confirmação no overlay; limpeza consistente da sessão.
+- [ ] CP3 — Guias e sequências dos quatro alongamentos, web e Android.
+- [ ] CP4 — Respiração em caixa/igual/longa/personalizada com movimento sincronizado e acessível.
+- [ ] CP5 — Gate integrado, auditoria independente e homologação física.
+
+Plano, dependências, critérios e limites: [Pausas e flutuante — 18/10](docs/roadmap/pausas-flutuante-2026-10-18.md). Referências: [pranchas revisadas](docs/design/pausas-2026-10-18/). Direção visual aprovada; reprodução de exercícios/overlay no emulador concluída em 18/10. Homologação física `NOT_RUN` e revisão visual final `PENDING_HUMAN`.
+
+---
+
 **Atualizado:** 11/10/2026.
 **Release atual:** 1.1.45 — pausas entre repetições da semana 1 do Bracing reduzidas para 5s.
 **Foco:** E15 — Correção do Bracing de 8 semanas, conforme o documento fornecido por Rafael.
@@ -83,3 +99,10 @@ Estado: EM VALIDAÇÃO FÍSICA. Declarações anteriores de TalkBack e Google Pl
 - `documentation_parent_sha=51041a9c95cd329a9b67dfbfb13f74ed07e573f5`
 
 Snapshot desta reconciliação: HEAD `f08ff31bc8c30acdc3832636f075ea748a18118e`. Os SHAs acima são históricos preservados; não são evidência de testes atuais.
+
+## 8. Correção solicitada em 17/10 — players de Pausas
+
+- [x] Guia dos quatro alongamentos trazido à vista, referências ilustradas locais, estado inicial e troca de lado corretos; Pausar/Continuar individual e Cancelar no guia. Regressões em `diagnostics/pause-player-controls.test.cjs`.
+- [x] Cancelar explícito no player diário, na respiração e no modo OLED; pausa/retomada do circuito encaminhadas ao motor nativo sem segundo timer web.
+- [ ] Revisão visual/homologação física e aprovação das imagens: PENDING_HUMAN. Imagens estáticas com indicador animado; demonstração anatômica animada não implementada.
+- [ ] Gate completo: bloqueado por divergência preexistente README/versão (`version-contract.test.cjs`). Evidência em `docs/roadmap/pausas-player-check.log`.

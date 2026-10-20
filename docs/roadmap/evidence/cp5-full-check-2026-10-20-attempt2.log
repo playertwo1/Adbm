@@ -1,0 +1,57 @@
+bracing-global-scope: ok
+Bracing: manual week/day, 2 daily sessions, 7 days, preserved evidence and subsequent progress PASS
+Breath visual synchronization and accessibility motion contract: PASS
+CI policy: push/PR verification and isolated release publication verified.
+E05 audit-fix regressions: Back, accessibility, and live components verified.
+E05 visual regressions: PASS
+E06 vacuum player regressions: state, controls, failure, tutorial, summary, feedback, and offline parity verified.
+E07 agenda/progress regressions: real agenda, missing-data honesty, completion guard, and snapshot round-trip verified.
+E07 null/zero weeklyTargetDays and reminder-fallback regressions verified.
+E07 regressões comportamentais: rota por ID, sessão/etapa exatas no payload, falha de início sem timer fantasma, reabertura, hero real, exercícios por sequência e estados vazio/erro/E03 verificados.
+E08.4 salvar meta válida: persiste, atualiza Hoje e fecha o editor.
+E08.4 salvar meta inválida: rejeitada com motivo real, editor permanece aberto, estado salvo preservado.
+E08.4 falha de persistência ao salvar: AppState.dailyGoal reverte, sem contaminação em memória.
+E08.4 cancelar: preserva a meta anterior sem efeito colateral no estado salvo.
+E08.5 caso 1: programa já selecionado continua sendo a recomendação, sem decidir por outro critério.
+E08.5 caso 2: sem programa selecionado, Hoje oferece seleção explícita em vez de escolher sozinha.
+E08.5 caso 3: seleção explícita do usuário é gravada e vira a recomendação exibida.
+E08.5 caso 4: ID inválido na seleção não fabrica escolha nem mascara o erro.
+E08.5 caso 5: desempate por mais sessões hoje entre candidatos elegíveis, conforme regra documentada.
+E08.5 caso 6: desempate por dias concluídos na etapa quando sessões hoje empatam.
+E08.5 caso 7: empate total resolvido pelo menor ID de programa, critério estável e não aleatório.
+E08.5 caso 8: candidato único com progresso real é a recomendação direta.
+E08.5 regressões: continuidade do programa selecionado, seleção explícita sem programa e desempate documentado verificados.
+E08.6 Hoje controls: OK
+E08.2 instalação limpa: loadSavedState() real + openOnboardingIfNeeded() exibem onboarding.
+E08.2 usuário existente: snapshot real (meta/agenda salvos) abre direto em Hoje, sem onboarding.
+E08.2 usuário existente legado: snapshot v4 sem onboardingCompleted também abre direto em Hoje.
+E08.2 dado corrompido: loadSavedState() não trava, sinaliza recoveryRequired e não força onboarding nem persiste meta substituta.
+E08.2 dado parcial (legado incompleto): recoveryRequired definido, sem travar e sem forçar onboarding.
+E08.3 instalação limpa: saudação neutra e números zerados, sem placeholder do mockup.
+E08.3 usuário existente com diário parcial: saudação com nome real e números derivados do diário.
+E08.3 usuário legado sem nome: saudação neutra por período, sem número decorativo herdado.
+E08.3 diário populado: streak/minutos exatos do diário real, saudação com nome real.
+E08 meta inválida: bloqueia avanço com motivo real em cada caso (vazio, abaixo/acima do limite, não numérico, frequência inválida).
+E08 preenchimento parcial + Voltar: foco, meta e frequência preservados em cada etapa.
+E08 conclusão: grava meta/agenda no AppState e nos dados persistidos (collectProgressData), abre Hoje.
+E08 meta inválida na conclusão: onboardingComplete não grava nem navega sem meta válida.
+E08 usuário existente: snapshot sem onboardingCompleted não reabre onboarding (evita regressão de instalação anterior).
+E08 instalação limpa: loadSavedState() marca onboardingCompleted=false na primeira execução real.
+evalmachine.<anonymous>:468
+                if (settings.reducedMotion) pauseBreathVisuals();
+                                            ^
+
+ReferenceError: pauseBreathVisuals is not defined
+    at applyAccessibilityPreferences (evalmachine.<anonymous>:468:45)
+    at toggleAccessibilityReducedMotion (evalmachine.<anonymous>:620:13)
+    at evalmachine.<anonymous>:1:36
+    at Script.runInContext (node:vm:149:12)
+    at Object.runInContext (node:vm:301:6)
+    at Object.<anonymous> (C:\Users\notefael\projetos\Adbm\diagnostics\e09-2-profile.test.cjs:284:8)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object..js (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+
+Node.js v24.20.0
+scripts/check.sh exit_code=1

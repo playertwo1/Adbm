@@ -1,0 +1,150 @@
+node:assert:885
+    throw err;
+    ^
+
+AssertionError [ERR_ASSERTION]: README must describe the shared current version
+    at Object.<anonymous> (C:\Users\notefael\projetos\Adbm\diagnostics\version-contract.test.cjs:20:8)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object..js (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '# CoreFlow\r\n' +
+    '\r\n' +
+    'Aplicativo Android de práticas guiadas para fortalecimento do core, estabilização espinhal, postura, respiração, assoalho pélvico e atenção plena. A interface principal é executada em uma WebView local integrada aos recursos nativos do Android e com suporte complementar a relógios inteligentes Wear OS (Galaxy Watch).\r\n' +
+    '\r\n' +
+    '---\r\n' +
+    '\r\n' +
+    '## Recursos Principais\r\n' +
+    '\r\n' +
+    '- **Modo Treino Flutuante (Overlay Nativo):** Acompanhe e controle sua sessão ativa sobre qualquer outro aplicativo Android com janela flutuante Material 3 AMOLED (estados Mini, Compacto e Expandido, arrasto e recolhimento automático).\r\n' +
+    '- **Programa de Bracing e Automação Postural (8 Semanas):** Progressão funcional do core baseada no método McGill, executável sentado em banco ou em pé.\r\n' +
+    '- **Programa de Stomach Vacuum (8 Semanas):** Treino guiado de sucção abdominal com fases clínicas de preparação, inspiração, expiração, apneia/retenção, retorno controlado e recuperação.\r\n' +
+    '- **Programa de Kegel e Assoalho Pélvico (8 Semanas):** Foco em resistência, agilidade reflexa e suporte pélvico com agenda diária calibrada.\r\n' +
+    '- **Programa de Mindfulness / MBCT (8 Semanas):** Oito meditações guiadas em áudio nativo com reprodução contínua em segundo plano e tela bloqueada.\r\n' +
+    '- **Pausa de Resposta e Micro-Pausas Ativas:** Sessões rápidas para descompressão e alívio postural no trabalho (Alongamentos, Respiração e Pausa de Resposta), 100% integradas ao Modo Treino Flutuante nativo.\r\n' +
+    '- **Sincronização com Galaxy Watch (Wear OS):** Vibrações táteis espelhadas no relógio em tempo real via Bluetooth.\r\n' +
+    '- **Privacidade e Operação 100% Offline:** Sem login obrigatório, sem telemetria externa; dados e histórico salvos localmente no dispositivo.\r\n' +
+    '\r\n' +
+    '---\r\n' +
+    '\r\n' +
+    '## Versão Atual\r\n' +
+    '\r\n' +
+    '- **Versão base local:** `1.1.45` (`versionCode 45`)\r\n' +
+    '- **Release:** `1.1.45` — Bracing com pausas entre repetições reduzidas para 5 segundos na primeira semana.\r\n' +
+    '- **Validação desta versão:** regressões e build técnico passaram. Aprovação visual das pranchas e validação em celular e Galaxy Watch físicos continuam pendentes; consulte o [registro de execução](docs/roadmap/execucao.md).\r\n' +
+    '- **Downloads:** O APK assinado para celular e relógio está disponível na aba de [Releases](https://github.com/playertwo1/Adbm/releases).\r\n' +
+    '- **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.\r\n' +
+    '\r\n' +
+    '---\r\n' +
+    '\r\n' +
+    '## O que mudou na 1.1.45\r\n' +
+    '\r\n' +
+    '- Na semana 1, cada pausa entre repetições do Bracing foi reduzida de 15 para 5 segundos. A preparação inicial e as semanas seguintes mantêm seus tempos.\r\n' +
+    '\r\n' +
+    '## Mudanças da 1.1.44\r\n' +
+    '\r\n' +
+    '- Bracing disponível duas vezes por dia nos sete dias da semana, conforme a configuração solicitada.\r\n' +
+    '- Ajuste manual de semana (1–8), dia (1–7) e sessões de hoje (0–2) restaurado. A posição escolhida permanece ao fechar e reabrir o app.\r\n' +
+    '- Cada repetição continua com seu contador de exercício e descanso, sem agregar a série inteira em um único timer.\r\n' +
+    '- O dia avança após as duas sessões. A revisão técnica exige o volume das duas sessões completas e preserva o limite diário ao avançar de semana.\r\n' +
+    '- Pausar e retomar a mesma sessão não duplica o progresso. Mudar de semana manualmente preserva o histórico; falha ao salvar o ajuste mantém a posição e a continuação anteriores.\r\n' +
+    '- IDs, dados anteriores e integração Android/Wear preservados. Homologação física e aprovação das novas pranchas seguem pendentes.\r\n' +
+    '\r\n' +
+    '## Instalar no Samsung Galaxy Watch\r\n' +
+    '\r\n' +
+    'O relógio recebe um APK próprio: **`wear-release.apk`**. Instalar `app-release.apk` no celular não instala automaticamente o aplicativo no Watch. O módulo Wear OS atual recebe vibrações dos exercícios iniciados no celular; ele aparece como **CoreFlow Watch**.\r\n' +
+    '\r\n' +
+    '**[Manual completo de instalação no Galaxy Watch — Windows/PowerShell](docs/INSTALAR-GALAXY-WATCH.md)**, com preparação do relógio, comandos prontos, teste de vibração e solução de erros.\r\n' +
+    '\r\n' +
+    '### Instalar pelo celular, sem computador\r\n' +
+    '\r\n' +
+    '- **[Baixar Wear Installer 2 na Google Play](https://play.google.com/store/apps/details?id=org.freepoc.wearinstaller2)** — instale no celular Android.\r\n' +
+    '- **[Vídeo de pareamento e instalação com Wear Installer 2](https://www.youtube.com/watch?v=abgN4jQqHb0)** — indicado pelo desenvolvedor para o pareamento no Wear OS 4 ou posterior; o vídeo usa Pixel Watch e os nomes dos menus podem variar no Galaxy Watch6.\r\n' +
+    '- [Instruções escritas do desenvolvedor](https://freepoc.org/wear-installer-2-help-page/).\r\n' +
+    '\r\n' +
+    'Com celular e relógio no mesmo Wi-Fi, ative Depuração ADB/sem fio no Watch, faça o pareamento pelo menu **Pair with watch** do Wear Installer 2 e use **Custom APK** para selecionar `wear-release.apk`, baixado nos [Assets da release](https://github.com/playertwo1/Adbm/releases/latest). Toque **Install** e desligue a depuração após concluir. A porta de pareamento e a porta de conexão são diferentes.\r\n' +
+    '\r\n' +
+    '### Alternativa pelo computador\r\n' +
+    '\r\n' +
+    '1. Baixe `wear-release.apk` nos [Assets da release](https://github.com/playertwo1/Adbm/releases/latest); use os APKs de celular/relógio da mesma release, com assinaturas compatíveis.\r\n' +
+    '2. Conecte PC e Watch ao mesmo Wi-Fi. No relógio, ative Opções do desenvolvedor, Depuração ADB e Depuração sem fio.\r\n' +
+    '3. Faça `adb pair IP:PORTA_DE_PAREAMENTO` usando a tela com código; depois `adb connect IP:PORTA_DE_CONEXAO` usando a página principal de Depuração sem fio. **As portas geralmente são diferentes.**\r\n' +
+    '4. Instale com `adb -s IP:PORTA_DE_CONEXAO install -r "CAMINHO_DO_WEAR_APK"` e aguarde `Success`; substitua os valores pelos reais.\r\n' +
+    '5. Abra CoreFlow Watch; com Galaxy Wearable/Bluetooth conectado, ative **Galaxy Watch** no CoreFlow do celular e teste a vibração. Desative a depuração ao terminar.\r\n' +
+    '\r\n' +
+    'Compatível com o módulo Wear OS API 30+ (Galaxy Watch4 e posteriores com Wear OS); relógios antigos com Tizen não executam este APK. A indicação “pronta” no Watch não comprova conexão. Homologação física continua pendente.\r\n' +
+    '\r\n' +
+    '## Requisitos de Desenvolvimento\r\n' +
+    '\r\n' +
+    '- **Android Studio** com JDK 17 integrado (JBR).\r\n' +
+    '- **Android SDK:** Compile SDK 36, Target SDK 36, Min SDK 24 (Android 7.0+).\r\n' +
+    '- **Gradle:** 9.3.1.\r\n' +
+    '- **Wear OS:** Android 11+ (API 30+) para o módulo complementar `wear/` (Galaxy Watch4 ou mais recente).\r\n' +
+    '- **Node.js:** v18+ para execução das suítes de diagnóstico e testes de regressão.\r\n' +
+    '\r\n' +
+    '---\r\n' +
+    '\r\n' +
+    '## Compilação e Validação\r\n' +
+    '\r\n' +
+    'Antes de validar ou compilar, configure `JAVA_HOME` para o JDK do Android Studio e `ANDROID_HOME` para o Android SDK:\r\n' +
+    '\r\n' +
+    '```bash\r\n' +
+    '# Executa regressões Node, confirmação de integridade HTML e compilação debug\r\n' +
+    'bash scripts/check.sh\r\n' +
+    '```\r\n' +
+    '\r\n' +
+    '### Compilar APK de Desenvolvimento (Debug):\r\n' +
+    '```powershell\r\n' +
+    '.\\gradlew.bat :app:assembleDebug :wear:assembleDebug\r\n' +
+    '```\r\n' +
+    '\r\n' +
+    '### Compilar APK de Produção (Release Assinado):\r\n' +
+    'Configure as credenciais de assinatura persistente e execute:\r\n' +
+    '\r\n' +
+    '```powershell\r\n' +
+    '$env:KEYSTORE_PATH = "caminho/para/coreflow-upload.jks"\r\n' +
+    '$env:KEYSTORE_PASSWORD = "sua_senha_keystore"\r\n' +
+    '$env:KEY_ALIAS = "seu_alias"\r\n' +
+    '$env:KEY_PASSWORD = "sua_senha_chave"\r\n' +
+    '$env:BUILD_VERSION_CODE = "45"\r\n' +
+    '$env:BUILD_VERSION_NAME = "1.1.45"\r\n' +
+    '\r\n' +
+    '.\\gradlew.bat :app:assembleRelease :wear:assembleRelease\r\n' +
+    '```\r\n' +
+    '\r\n' +
+    'Os pacotes gerados ficam localizados em:\r\n' +
+    '- Celular: `app/build/outputs/apk/release/app-release.apk`\r\n' +
+    '- Relógio: `wear/build/outputs/apk/release/wear-release.apk`\r\n' +
+    '\r\n' +
+    '---\r\n' +
+    '\r\n' +
+    '## Arquitetura do Projeto\r\n' +
+    '\r\n' +
+    '- `index.html`: Interface web principal e lógica de estado (fonte de verdade).\r\n' +
+    '- `app/src/main/assets/index.html`: Cópia idêntica byte a byte embarcada no build Android.\r\n' +
+    '- `app/src/main/java/com/example/WorkoutOverlayController.kt`: Controlador da janela flutuante nativa (`SYSTEM_ALERT_WINDOW`).\r\n' +
+    '- `app/src/main/java/com/example/WorkoutForegroundService.kt`: Motor de sessão e timer nativo (fonte única da verdade).\r\n' +
+    '- `app/src/main/java/com/example/MindfulnessAudioService.kt`: Serviço de reprodução de áudio em primeiro plano com `MediaSession`.\r\n' +
+    '- `app/src/main/java/com/example/WearHapticsRelay.kt`: Comunicação Bluetooth e retransmissão de vibrações para o Wear OS.\r\n' +
+    '- `wear/`: Módulo independente do aplicativo para Wear OS (Galaxy Watch).\r\n' +
+    '- `ROADMAP.md`: Planejamento ativo e backlog de desenvolvimento do projeto.\r\n' +
+    '- `docs/arquivados/roadmap-etapas-concluidas.md`: Histórico e critérios de aceite das etapas concluídas.\r\n' +
+    '\r\n' +
+    '---\r\n' +
+    '\r\n' +
+    '## Licença e Privacidade\r\n' +
+    '\r\n' +
+    '- Consulte [PRIVACY.md](PRIVACY.md) para a política de retenção local de dados.\r\n' +
+    '- Consulte [SIGNING.md](SIGNING.md) para diretrizes de assinatura criptográfica contínua.\r\n' +
+    '- Todos os direitos reservados.\r\n',
+  expected: /`1\.1.46` \(`versionCode 46`\)/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.20.0
