@@ -11,7 +11,11 @@ assert.match(workflow, /bash scripts\/check\.sh/, 'CI must run the shared projec
 assert.match(workflow, /permissions:\s*\n\s+contents: read/, 'Verification must default to read-only repository permissions');
 assert.match(workflow, /release:\s*\n\s+needs: verify[\s\S]*?permissions:\s*\n\s+contents: read/, 'Signed builds must not receive repository write permission');
 assert.match(workflow, /publish:\s*\n\s+needs: release[\s\S]*?permissions:\s*\n\s+contents: write/, 'Only the artifact publication job may write releases');
-assert.match(workflow, /github\.ref == 'refs\/heads\/codex\/pausas-flutuante-cp5'/, 'Release signing must be restricted to the trusted release branch');
+assert.match(workflow, /release:\s*\n\s+needs: verify[\s\S]*?if: [^\n]*github\.ref == 'refs\/heads\/main'/, 'Release signing must run from main');
+assert.match(workflow, /publish:\s*\n\s+needs: release[\s\S]*?if: [^\n]*github\.ref == 'refs\/heads\/main'/, 'Release publication must run from main');
+assert.doesNotMatch(workflow, /refs\/heads\/codex\/pausas-flutuante-cp5/, 'The merged release branch must not remain the publication source');
+assert.match(workflow, /docs\/releases\/v1\.1\.48\.md/, 'The release artifact must include the canonical versioned notes file');
+assert.match(workflow, /--notes-file "release-artifact\/docs\/releases\/v\$\{version_name\}\.md"/, 'GitHub release notes must use the canonical v-prefixed filename');
 assert.match(workflow, /persist-credentials: false/, 'Checkout must not leave a GitHub token in the build worktree');
 assert.match(workflow, /CORE_FLOW_VERSION_NAME/, 'Release tag must come from the project version');
 assert.match(workflow, /apksigner.*verify|verify --verbose/, 'Release APK signatures must be verified before publication');

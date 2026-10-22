@@ -41,7 +41,7 @@ jobs:
 
   release:
     needs: verify
-    if: github.event_name == 'workflow_dispatch' && inputs.publish_release == true && github.ref == 'refs/heads/codex/pausas-flutuante-cp5'
+    if: github.event_name == 'workflow_dispatch' && inputs.publish_release == true && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -162,12 +162,12 @@ jobs:
           path: |
             app/build/outputs/apk/release/app-release.apk
             wear/build/outputs/apk/release/wear-release.apk
-            docs/releases/1.1.48.md
+            docs/releases/v1.1.48.md
           if-no-files-found: error
 
   publish:
     needs: release
-    if: needs.release.result == 'success' && github.event_name == 'workflow_dispatch' && inputs.publish_release == true && github.ref == 'refs/heads/codex/pausas-flutuante-cp5'
+    if: needs.release.result == 'success' && github.event_name == 'workflow_dispatch' && inputs.publish_release == true && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -211,4 +211,4 @@ jobs:
             "release-artifact/wear/build/outputs/apk/release/wear-release.apk#wear-release.apk" \
             --target "$GITHUB_SHA" \
             --title "CoreFlow ${RELEASE_TAG}" \
-            --notes-file "release-artifact/docs/releases/${version_name}.md"
+            --notes-file "release-artifact/docs/releases/v${version_name}.md"
