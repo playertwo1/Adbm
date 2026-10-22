@@ -14,7 +14,11 @@ for (const relative of ['index.html', 'app/src/main/assets/index.html']) {
 
   const elements = new Map();
   const element = id => {
-    if (!elements.has(id)) elements.set(id, { innerText: '', innerHTML: '', className: '', style: {} });
+    if (!elements.has(id)) elements.set(id, {
+      innerText: '', innerHTML: '', className: '', style: {},
+      classList: { add() {}, remove() {} },
+      removeAttribute(name) { delete this[name]; }
+    });
     return elements.get(id);
   };
   let safeExits = 0;
