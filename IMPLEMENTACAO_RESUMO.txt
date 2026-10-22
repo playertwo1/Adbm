@@ -1,0 +1,75 @@
+================================================================================ 
+CONSOLIDACAO HISTORICA — t_ce21c966 — RESUMO FINAL
+================================================================================
+
+STATUS: IMPLEMENTED COM SUCESSO (não DONE)
+
+BASE SHA:   d9af749ee64b0d155629574ee43c81b405e5d0a3
+TARGET SHA: 82139e3706d7f2a2716608b52652cc82ab77173a
+DATA:       2026-09-23 07:24:52 UTC-03
+
+================================================================================
+DESCOBERTA: RUN 183 COMMITOU ANTES DO RATE_LIMIT
+================================================================================
+
+Run 183 sofreu rate_limit às 08:32 UTC-03, mas o commit foi criado 
+8 minutos antes (07:24). Conclusão: NÃO repetir integração de zero.
+
+================================================================================
+MATRIZ AC-1 A AC-5: 100% PASS
+================================================================================
+
+AC-1 PASS: Inventário e decisão explícita (8 targets)
+  - 6 "já representados" por patch-id
+  - 2 "integrados" (E07.1 artefatos + E09.2 PASS)
+  - Nenhuma reaplicação cega
+
+AC-2 PASS: Comportamento material integrado
+  - diagnostics/e07-programas-red.cjs (5037 bytes)
+  - docs/roadmap/e07-contrato-inventario.md (5523 bytes)
+  - Zero alterações em código de produto
+
+AC-3 PASS: Registros aprovados em linha histórica
+  - E09.2 PASS integrado em auditorias.md
+  - Execução registrada em execucao.md
+
+AC-4 PASS: Nenhuma regressão
+  - 7 gates executados:
+    ✓ node diagnostics/e07-programas-red.cjs → PASS
+    ✓ node diagnostics/e07-programas.test.cjs → PASS
+    ✓ node diagnostics/e05-audit-fix.test.cjs → PASS
+    ✓ cmp index.html app/src/main/assets/index.html → byte-equivalent
+    ✓ git diff --check d9af749..HEAD → zero issues
+    ✓ bash scripts/check.sh → BUILD SUCCESSFUL
+    ✓ :app:testDebugUnitTest + assembleDebug (wear)
+
+AC-5 PASS: SHA imutável e mapa de proveniência
+  - base_sha, target_sha, mapa completo
+  - Sem auto-referência SHA interna
+
+================================================================================
+ARQUIVOS
+================================================================================
+
+Criados:
+  • diagnostics/e07-programas-red.cjs
+  • docs/roadmap/e07-contrato-inventario.md
+  • docs/roadmap/integracao-targets-aprovados.md
+  • CONSOLIDACAO_IMPLEMENTADA.md
+
+Modificados:
+  • docs/roadmap/auditorias.md
+  • docs/roadmap/execucao.md
+
+================================================================================
+HANDOFF PARA AUDITOR
+================================================================================
+
+Novo target aguarda auditoria independente integral. Mapa completo em:
+  docs/roadmap/integracao-targets-aprovados.md
+
+Limitações:
+  • Sem testes em aparelho Android/Watch/TalkBack
+  • Nenhum push/release/deploy/Actions realizado
+
+================================================================================
