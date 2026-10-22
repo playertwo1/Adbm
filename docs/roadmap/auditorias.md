@@ -125,3 +125,20 @@ existe por causa do segundo; a classificação ENUMERÁVEL/ABERTA, por causa do 
 - cobertura: inventário da Tela 10, matriz E09-01..E09-09/E09-R1, persistência/restore, callers Web/Android/Wear, estados ausente/inválido/erro, diagnóstico executado nos dois HTMLs e regressões/gate do projeto | NÃO coberto: Android/Watch físico, desconexão/reconexão real, TalkBack, fonte ampliada e seletor físico de arquivos; dependências explicitamente fora deste recorte/E13
 - tempo_espera: desconhecido
 - regressao_pos_pass: nenhuma até 2026-09-22
+
+
+### 2026-09-22 18:32 — `t_ac12e0e4` — E09.2 — rodada 1/3 — PASS
+
+- target_sha: `61dec44716e139e3a006840b1d6302ea80784b91`
+- classe: n/a (PASS sem achados)
+- achados_confirmados: 0 (nenhum)
+- achados_retirados: 2 (H1 — hipótese de injeção de markup no nome: refutada; resumo e saudação escrevem via `textContent`, e os demais usos só transportam/serializam o valor. H2 — hipótese de preferências não reaplicadas no restore: refutada pela chamada em `renderAfterProgressLoad` e pelos caminhos de load/restore; o diagnóstico exercita round-trip do snapshot.)
+- achados_tardios: 0 (nenhum identificado)
+- causa_raiz: sem causa de bloqueio confirmada.
+- gates_mecanicos: `node diagnostics/e09-2-profile.test.cjs` → exit 0; 22 `diagnostics/*.test.cjs` → exit 0; `cmp -s index.html app/src/main/assets/index.html` → exit 0; SHA-256 dos dois HTMLs `40aff67b8523b955f77da533378eb728acc7c5b34654f9c5b3aefc3b2eb587f5`; `git diff --check base..target` → exit 0; `bash scripts/check.sh` → exit 0, `CHECK PASS`, `BUILD SUCCESSFUL`.
+- familia_builder: gpt-6-luna / familia_auditor: gpt-6-luna (mesma família; limitação de descorrelação registrada)
+- cobertura: AC1 — salvar válido, rejeitar inválido sem fechar, cancelar sem alterar confirmado e rollback em falha de persistência; AC2 — classes/efeitos DOM de Tema AMOLED e três preferências de acessibilidade com snapshot round-trip; AC3 — dados ausentes/corrompidos normalizados a defaults neutros; dois HTMLs e consumidores de restore/importação cobertos por inspeção e diagnóstico. NÃO coberto: Android físico/WebView real, TalkBack, seletor de fonte do sistema e Galaxy Watch.
+- tempo_espera: desconhecido (há execuções rate_limited/invalidação de handoff no histórico do card; duração de espera não medida nesta rodada).
+- regressao_pos_pass: nenhuma conhecida até 2026-09-22.
+
+_Registro substitui o marcador de seção vazia._
