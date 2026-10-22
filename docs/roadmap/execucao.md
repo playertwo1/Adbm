@@ -1,5 +1,14 @@
 # Registro de execução
 
+## 2026-09-22 — E09.1 / contrato, inventário e regressões RED (t_59aeaece)
+
+- Base confirmada: `f7de3d44920d1e7f7b7bc8efdcb92dd2c5b1a8b0`; worktree isolado do Builder, sem alteração de produto, IDs, armazenamento, bridge ou protocolo de treino.
+- Inventário versionado: `docs/roadmap/e09-contrato-inventario.md`. A matriz separa fonte de verdade, entrada pública, consumidores, persistência e estados ausente/inválido/erro para nome, meta, lembretes, voz, hápticos, tema, acessibilidade, Watch, backup/importação/exportação e exclusão.
+- Diagnóstico RED novo: `diagnostics/e09-perfil-red.cjs` lê e verifica `index.html` e `app/src/main/assets/index.html`, preserva a equivalência byte a byte e reproduz as lacunas atuais. O teste inclui a regressão E08.6-R-F1: `['not-a-time', '16:00']` não pode compactar para `['16:00']` e promover o horário da Sessão 2 à Sessão 1.
+- Achados RED esperados no baseline: Perfil ainda não oferece editor de nome/meta, lembretes, Tema AMOLED, Acessibilidade ou exclusão; voz/vibração do aparelho não entram no snapshot v4; o modal do Watch declara `Sincronizados` sem estado de conexão exposto; restore de horários compacta posições inválidas. Backup/importação/exportação, permissão efetiva, bridge nativo, motores de voz/hápticos e ausência de dados fictícios permanecem cobertos como invariantes positivas.
+- Verificações desta fase: `node diagnostics/e09-perfil-red.cjs` retornou exit 1 intencional com os achados acima; a saída reproduziu cada verificação nos dois HTMLs. `for f in diagnostics/*.test.cjs; do node "$f" || exit $?; done` retornou `DIAGNOSTICS_OK=21`; SHA-256 dos dois HTMLs foi `4b521cd63858a6de50530e495bd725e6f97affac1edc8b33a4b29edb955c7bb8`; `cmp -s` e `git diff --check` retornaram 0; `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` terminou `BUILD SUCCESSFUL`/exit 0. O RED intencional não é suíte GREEN.
+- Limitações: não houve validação física em Android, Watch, desconexão/reconexão, TalkBack, fonte ampliada ou seletor de arquivos; essas evidências permanecem dependentes de E13. E09.2–E09.7 ficam bloqueadas até PASS independente deste recorte.
+
 ## 2026-09-22 — E08.6r / fechamento dos 3 achados de auditoria (t_dc4dfd04)
 
 - Base: cadeia E08.6 completa (`caa02db..8255644`) reaplicada por cherry-pick sobre o base E08.5 aprovado (`5c43fea19fd70094534d760281d36c7f0b087dcf`), conforme requisito de redesign da task `t_b3ac2abf`.

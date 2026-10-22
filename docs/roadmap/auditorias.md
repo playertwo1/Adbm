@@ -75,4 +75,16 @@ existe por causa do segundo; a classificação ENUMERÁVEL/ABERTA, por causa do 
 - regressao_pos_pass: <preencher depois, ou "nenhuma até <data>">
 -->
 
-_Nenhuma entrada ainda. A primeira auditoria após a integração da E08 abre esta seção._
+### 2026-09-22 16:00 — t_59aeaece — E09.1 — rodada 1/3 — PASS
+
+- target_sha: `f7de3d44920d1e7f7b7bc8efdcb92dd2c5b1a8b0` (HEAD; mudanças do card permanecem não commitadas por contrato local-only)
+- classe: n/a (PASS sem achados bloqueadores; lacunas RED são o diagnóstico intencional do recorte)
+- achados_confirmados: 0 (nenhum)
+- achados_retirados: 2 (hipótese de ausência de contratos nativos de backup/permissão; hipótese de ausência dos motores/relay hápticos — ambas refutadas pela inspeção e pelos checks E09-NATIVE-01/02)
+- achados_tardios: desconhecido (primeira rodada E09.1; nenhum finding anterior fornecido além de E08.6-R-F1, incorporado como E09-R1)
+- causa_raiz: sem causa comum; o artefato documenta lacunas de produto preexistentes sem alterar comportamento
+- gates_mecanicos: `node diagnostics/e09-perfil-red.cjs` → exit 1 intencional, 16 achados RED em 27 verificações; `for f in diagnostics/*.test.cjs; do node "$f" || exit $?; done` → exit 0; `cmp -s index.html app/src/main/assets/index.html` → exit 0; SHA-256 dos dois HTMLs `4b521cd63858a6de50530e495bd725e6f97affac1edc8b33a4b29edb955c7bb8`; `git diff --check` → exit 0; `bash scripts/check.sh` → exit 0 / BUILD SUCCESSFUL
+- familia_builder: gpt-5.6-luna/openai-codex / familia_auditor: gpt-5.6-luna/openai-codex (mesma família; limitação de descorrelação registrada)
+- cobertura: inventário da Tela 10, matriz E09-01..E09-09/E09-R1, persistência/restore, callers Web/Android/Wear, estados ausente/inválido/erro, diagnóstico executado nos dois HTMLs e regressões/gate do projeto | NÃO coberto: Android/Watch físico, desconexão/reconexão real, TalkBack, fonte ampliada e seletor físico de arquivos; dependências explicitamente fora deste recorte/E13
+- tempo_espera: desconhecido
+- regressao_pos_pass: nenhuma até 2026-09-22
