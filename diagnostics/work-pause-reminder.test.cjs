@@ -1,0 +1,45 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const root = path.resolve(__dirname, '..');
+const web = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const androidWeb = fs.readFileSync(path.join(root, 'app/src/main/assets/index.html'), 'utf8');
+const scheduler = fs.readFileSync(path.join(root, 'app/src/main/java/com/example/ReminderScheduler.kt'), 'utf8');
+const activity = fs.readFileSync(path.join(root, 'app/src/main/java/com/example/MainActivity.kt'), 'utf8');
+
+assert.equal(androidWeb, web, 'o WebView Android deve receber o mesmo HTML da raiz');
+assert.match(web, /DEFAULT_WORK_PAUSE_REMINDER = Object\.freeze\(\{ enabled: false, weekdays: \[0, 1, 2, 3, 4\], startTime: '08:00', endTime: '17:00', intervalMinutes: 60 \}\)/);
+assert.match(web, /id="work-pause-enabled"/);
+assert.match(web, /data-workday="6"/);
+assert.match(web, /function saveWorkPauseReminderSettings\(\)/);
+assert.match(web, /function hasWorkPauseOccurrenceWindow\(/);
+assert.match(web, /function syncWorkPauseReminderNative\(/);
+assert.match(web, /function onNativeWorkPauseReminderOpened\(\)/);
+assert.match(web, /onclick="openResponsivePauseGuide\(\)"/);
+assert.match(web, /onclick="startWorkPauseMobility\(\)"/);
+assert.match(web, /function startWorkPauseMobility\(\)[\s\S]*?circuitActive[\s\S]*?startSosStretch\(\)/);
+assert.match(scheduler, /fun updateWorkPauseReminder\(/);
+assert.match(scheduler, /fun workPauseReminderState\(context: Context\): String[\s\S]*?return "unset"[\s\S]*?return if \(prefs\.getBoolean\("work_pause_enabled", false\)\) "enabled" else "disabled"/);
+assert.match(scheduler, /fun nextWorkPauseTrigger\(/);
+assert.match(scheduler, /fun handleWorkPauseFire\([\s\S]*?isWorkPauseWindowActive\([\s\S]*?showWorkPauseNotification\(context\)/);
+assert.match(scheduler, /fun isWorkPauseWindowActive\(/);
+assert.match(scheduler, /CHANNEL_WORK_PAUSE[\s\S]*IMPORTANCE_LOW[\s\S]*enableVibration\(false\)/);
+assert.match(scheduler, /NotificationCompat\.Builder\(context, CHANNEL_WORK_PAUSE\)/);
+assert.match(scheduler, /fun hasWorkPauseNotificationPermission\(context: Context\)/);
+assert.match(scheduler, /fun hasGlobalNotificationPermission\(context: Context\)/);
+assert.match(scheduler, /ACTION_WORK_PAUSE_FIRE -> ReminderScheduler\.handleWorkPauseFire\(context\)/);
+assert.match(activity, /fun scheduleWorkPauseReminder\(/);
+assert.match(activity, /scheduleWorkPauseReminder\([\s\S]*?hasGlobalNotificationPermission\(context\)/);
+assert.match(activity, /fun workPauseNotificationsPermissionGranted\(\)/);
+assert.match(activity, /fun globalNotificationsPermissionGranted\(\)/);
+assert.match(activity, /fun workPauseReminderState\(\)/);
+assert.match(activity, /window\.onNativeWorkPauseReminderOpened/);
+assert.match(web, /function hasWorkPauseReminderPermission\(\)/);
+assert.match(web, /function hasGlobalNotificationPermission\(\)/);
+assert.match(web, /workPauseReminderState\?\.\(\) === 'disabled'[\s\S]*?workPauseConfig = \{ \.\.\.workPauseConfig, enabled: false \}/);
+assert.match(web, /function saveWorkPauseReminderSettings\(\)[\s\S]*?if \(!config\.enabled\)[\s\S]*?syncWorkPauseReminderNative\(disabled\)/);
+assert.match(web, /function saveWorkPauseReminderSettings\(\)[\s\S]*?catch \(_\) \{\s*if \(!config\.enabled\) syncWorkPauseReminderNative\(config\)/);
+assert.match(web, /if \(config\.enabled && !hasGlobalNotificationPermission\(\)\)/);
+
+console.log('work-pause-reminder: PASS');

@@ -19,13 +19,23 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, estabiliza�
 
 ## Versão Atual
 
-- **Versão base local:** `1.1.47` (`versionCode 47`)
-- **Release:** `1.1.47` — correções de cancelamento e pausa no modo flutuante, imagens locais de Corpo visíveis e Respiração sincronizada ao motor nativo.
-- **Validação desta versão:** `scripts/check.sh` passou e os dois APKs release foram assinados e verificados com certificado compatível com 1.1.46. Revisão visual humana `PENDING_HUMAN`, S25 físico `NOT_RUN` e enlace/vibração Wear `NOT_RUN`; consulte o [registro de execução](docs/roadmap/execucao.md).
+- **Versão base local:** `1.1.48` (`versionCode 48`)
+- **Candidata à release:** `1.1.48` — adiciona lembretes opcionais e configuráveis de pausas durante o trabalho, com orientações breves e integração ao agendador Android. Publicação no GitHub: pendente.
+- **Validação prevista:** o workflow exige `scripts/check.sh`, verificação de versão e assinatura dos dois APKs e compatibilidade do certificado com a release anterior. Runtime da notificação, permissão, reinício/fuso, S25 físico e Wear físico `NOT_RUN`; revisão visual humana das pílulas `PENDING_HUMAN`. Consulte o [registro de execução](docs/roadmap/execucao.md).
 - **Downloads:** O APK assinado para celular e relógio está disponível na aba de [Releases](https://github.com/playertwo1/Adbm/releases).
 - **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.
 
 ---
+
+## O que mudou na 1.1.48
+
+- Pausas no trabalho são opcionais e editáveis por dia, janela e intervalo, começando desativadas. A sugestão para esta conversa é seg–sex, 8h–17h, com intervalo inicial de 60 minutos.
+- A notificação abre orientações de descanso visual, mudança de posição, movimentos confortáveis, água sem meta fixa ou respiração natural. Começar uma mobilidade exige ação explícita e não cria registro de treino.
+- As pílulas do treino flutuante não mudaram nesta versão; a proposta visual aguarda aprovação.
+
+## O que mudou na 1.1.47
+
+- Cancelamento consistente no guia e no overlay Android, imagens locais de Corpo visíveis e Respiração sincronizada ao motor nativo.
 
 ## O que mudou na 1.1.45
 
@@ -96,8 +106,8 @@ $env:KEYSTORE_PATH = "caminho/para/coreflow-upload.jks"
 $env:KEYSTORE_PASSWORD = "sua_senha_keystore"
 $env:KEY_ALIAS = "seu_alias"
 $env:KEY_PASSWORD = "sua_senha_chave"
-$env:BUILD_VERSION_CODE = "47"
-$env:BUILD_VERSION_NAME = "1.1.47"
+$env:BUILD_VERSION_CODE = "48"
+$env:BUILD_VERSION_NAME = "1.1.48"
 
 .\gradlew.bat :app:assembleRelease :wear:assembleRelease
 ```

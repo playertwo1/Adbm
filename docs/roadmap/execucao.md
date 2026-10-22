@@ -1,5 +1,44 @@
 # Registro de execução
 
+## 2026-10-22 — Preparação da candidata 1.1.48 — PUBLICAÇÃO PENDENTE
+
+- Incrementado o par oficial para `CORE_FLOW_VERSION_CODE=48` e `CORE_FLOW_VERSION_NAME=1.1.48` para incluir os lembretes opcionais de pausas de trabalho já implementados.
+- Corrigido o workflow de release: tag/versão vêm das propriedades do projeto; assinatura e compatibilidade com os APKs atuais são verificadas antes da publicação; versões antigas e tags existentes são recusadas; apenas a branch de release autorizada pode expor os segredos; o job que publica tem permissão de escrita separada do build.
+- `bash scripts/check.sh` → `CHECK PASS` (diagnósticos, paridade dos HTMLs, testes unitários e builds debug de celular/Wear). `diagnostics/ci-policy.test.cjs`, `diagnostics/version-contract.test.cjs` e `git diff --check` → `PASS`.
+- Compilação release assinada e publicação no GitHub ainda não executadas nesta etapa. A release será publicada somente depois da validação do workflow; nenhuma chave local foi encontrada e nenhum valor de credencial foi lido.
+- Teste em runtime de notificações/permissões, reinício/fuso e aparelho físico `NOT_RUN`; aceite visual das pílulas `PENDING_HUMAN`. O layout das pílulas não foi alterado.
+
+## 2026-10-21 — Primeira implementação de pausas de trabalho — IMPLEMENTADA; RUNTIME PENDENTE
+
+- Implementada em `index.html` e `app/src/main/assets/index.html` uma configuração opcional na aba Pausas: dias, início/fim, intervalo e estado de permissão. A sugestão editável começa seg–sex, 8h–17h, a cada 60 min; desligada por padrão.
+- Integrados bridge e `ReminderScheduler` nativos com alarme próprio, recorrência semanal local, cancelamento ao desativar e reagendamento pelo fluxo já usado para boot/alterações de horário e fuso. Preferência persistida no WebView e `SharedPreferences`, com estados nativos `unset`/`enabled`/`disabled` para reconciliar restauração e opt-out. O canal de pausas é separado, de baixa prioridade e sem vibração; permissão global e importância do canal são verificadas separadamente.
+- Notificação abre a orientação em Pausas. O toque não inicia treino; a ação de mobilidade bloqueia a abertura de uma sessão guiada enquanto outra sessão estiver ativa. Instruções: repouso visual, mudança de postura, movimentos confortáveis, água sem meta fixa e respiração natural.
+- Regressões adicionadas: `ReminderSchedulerTest` cobre próxima ocorrência, intervalo inicial completo, fim do expediente, dias selecionados, configuração inválida e atraso em limites de dia/horário; diagnósticos cobrem integração, rota, cancelamento e paridade.
+- Gate final `bash scripts/check.sh` passou: diagnósticos, HTML idêntico, testes unitários, `:app:assembleDebug` e `:wear:assembleDebug`. `git diff --check` passou. Auditoria independente sem achados materiais.
+- Captura/fluxo real, permissão Android, alarmes com app fechado, boot/fuso e aparelho físico `NOT_RUN`. As pílulas não foram alteradas; A0 permanece `PENDING_HUMAN`.
+
+## 2026-10-21 — Roadmap das pílulas e pausas de trabalho — PREPARADO
+
+- Inspecionados o layout compacto nativo em `WorkoutOverlayController.kt`, o `ReminderScheduler`, a bridge Android, a configuração de lembretes dos programas e os fluxos existentes de Pausa Responsiva/respiração/Corpo.
+- Criado `docs/roadmap/pilulas-e-pausas-trabalho-2026-10-21.md` com duas frentes: alinhamento/acessibilidade das pílulas e rotina opcional de pausas no trabalho. O plano reaproveita o agendador e os guias existentes, define os gates, preservação de estado e critérios de aceite.
+- A agenda seg–sex, 8h–17h foi registrada como sugestão editável; rotina desligada até opt-in. Cadência de lembretes orienta pausas de movimento, visão, respiração e água sem meta clínica ou volume prescrito.
+- Nenhum código do app alterado. Testes/build `NOT_RUN`; execução, auditoria independente, revisão visual humana e homologação física permanecem pendentes.
+
+## 2026-10-21 — Referências visuais das pílulas do treino flutuante — PREPARADO
+
+- Criadas referências da captura compacta, uma exploração visual e um mapa vetorial cobrindo os modos mini, compacto, expandido e confirmação de cancelamento em `docs/design/pilulas-overlay-2026-10-21/`.
+- Leitura do código: no modo compacto, o temporizador tem 3 dp de padding vertical; `Pausar` e `Cancelar` têm `minHeight` de 48 dp. A diferença explica o desalinhamento mostrado.
+- As pranchas são propostas para discussão, não capturas nem aprovação visual do app. Revisão humana `PENDING_HUMAN`.
+- Nenhum código do app foi alterado; compilação e testes `NOT_RUN` (tarefa restrita a referências visuais).
+
+## 2026-10-21 — Refinamento das referências visuais das pílulas — PREPARADO
+
+- Pesquisadas recomendações oficiais atuais do Android e Material: alvo tátil mínimo de 48 dp, distinção entre ações e seleção, hierarquia de ação e uso consistente de cores semânticas.
+- Criada prancha vetorial refinada e versão PNG em docs/design/pilulas-overlay-2026-10-21/, cobrindo mini, compacto, expandido, variante pausada, confirmação e saída segura condicional.
+- A proposta usa 52 dp como referência visual comum, mantém a recomendação mínima de 48 dp para toque e separa a ação especial de segurança dos controles recorrentes.
+- A prancha é esquemática. Revisão humana PENDING_HUMAN; proporções e contraste em captura real NOT_RUN.
+- Nenhum código do app alterado; compilação e testes NOT_RUN.
+
 ## 2026-10-08 — Release v1.1.41 (Code 41): Ilustrações Anatômicas de Bracing & Animações Dinâmicas de Respiração — CONCLUÍDO
 
 - **Objetivos Realizados:**

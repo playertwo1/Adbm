@@ -53,7 +53,9 @@ assert.match(nativeBridge, /fun requestReminderPermission\(\): Boolean[\s\S]*?re
 assert.match(nativeBridge, /val effectiveEnabled = enabled && permissionGranted && ReminderScheduler\.isValidTime\(time1\)[\s\S]*?ReminderScheduler\.isValidTime\(time2\)/, 'bridge Android deve rejeitar horários inválidos sem fallback');
 const nativeScheduler = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'java', 'com', 'example', 'ReminderScheduler.kt'), 'utf8');
 assert.match(nativeScheduler, /val permissionGranted = hasEffectiveNotificationPermission\(context\)/, 'scheduler nativo deve verificar permissão efetiva ao restaurar');
-assert.match(nativeScheduler, /fun hasEffectiveNotificationPermission\(context: Context\): Boolean[\s\S]*?areNotificationsEnabled\(\)[\s\S]*?IMPORTANCE_NONE/, 'scheduler deve considerar permissão runtime, app e canal');
+assert.match(nativeScheduler, /fun hasEffectiveNotificationPermission\(context: Context\): Boolean =\s*hasNotificationPermissionForChannel\(context, CHANNEL_ID\)/, 'lembretes existentes devem continuar vinculados ao canal atual');
+assert.match(nativeScheduler, /private fun hasNotificationPermissionForChannel\([\s\S]*?hasGlobalNotificationPermission\(context\)[\s\S]*?IMPORTANCE_NONE/, 'scheduler deve considerar permissão runtime, app e canal específico');
+assert.match(nativeScheduler, /fun hasGlobalNotificationPermission\(context: Context\): Boolean[\s\S]*?areNotificationsEnabled\(\)/, 'permissão global deve ser distinguida da configuração de cada canal');
 assert.match(nativeScheduler, /fun isValidTime\(value: String\)[\s\S]*?Regex\("\^\\\\d\{2\}:\\\\d\{2\}\$"\)/, 'scheduler deve validar HH:mm sem fallback');
 assert.match(nativeScheduler, /scheduleMindSmartReminder[\s\S]*?hasEffectiveNotificationPermission\(context\)[\s\S]*?isValidTime\(timeStr\)/, 'smart reminder nativo deve bloquear permissão e horário inválidos');
 

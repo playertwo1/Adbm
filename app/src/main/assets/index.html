@@ -852,6 +852,71 @@
         <!-- ABA 3: PAUSAS ATIVAS & ALONGAMENTOS (1 MINUTO CADA) -->
         <!-- ============================================================ -->
         <section id="tab-pausas" class="tab-content space-y-4">
+            <div id="work-pause-reminder-prompt" class="hidden rounded-2xl border border-cyan-400/30 bg-cyan-950/30 p-4 shadow-lg" aria-labelledby="work-pause-reminder-title">
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-cyan-300">Pausa de trabalho</p>
+                        <h2 id="work-pause-reminder-title" tabindex="-1" class="mt-1 text-lg font-extrabold text-white">Um intervalo breve, do seu jeito</h2>
+                    </div>
+                    <button type="button" onclick="closeWorkPauseReminderPrompt()" class="min-h-12 min-w-12 rounded-xl text-slate-300" aria-label="Fechar sugestão de pausa">✕</button>
+                </div>
+                <ul class="mt-3 space-y-2 text-sm text-slate-200">
+                    <li>• A cada 20 minutos, descanse os olhos por 20 segundos olhando para longe.</li>
+                    <li>• Levante ou mude de posição; mova ombros, mãos e punhos sem forçar.</li>
+                    <li>• Tome alguns goles de água se quiser e respire no seu ritmo confortável.</li>
+                </ul>
+                <p class="mt-3 text-xs text-slate-400">Escolha só o que for confortável e pare se sentir dor ou mal-estar.</p>
+                <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    <button type="button" onclick="openResponsivePauseGuide()" class="min-h-12 rounded-xl border border-violet-400/40 bg-violet-500/10 px-3 text-xs font-bold text-violet-200">Abrir guia de pausa</button>
+                    <button type="button" onclick="startWorkPauseMobility()" class="min-h-12 rounded-xl bg-emerald-400 px-3 text-xs font-black text-slate-950">Começar mobilidade de 1 min</button>
+                </div>
+            </div>
+
+            <section class="rounded-2xl border border-cyan-400/20 bg-slate-900/80 p-4" aria-labelledby="work-pause-config-title">
+                <div class="flex items-start gap-3">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-400/30 bg-cyan-400/10 text-cyan-300" aria-hidden="true">⏱</div>
+                    <div class="min-w-0 flex-1">
+                        <h2 id="work-pause-config-title" class="text-sm font-extrabold text-white">Pausas no trabalho</h2>
+                        <p class="mt-1 text-xs text-slate-400">Lembretes opcionais para descansar a visão, mudar de posição e fazer uma pausa breve.</p>
+                    </div>
+                </div>
+                <label class="mt-4 flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border border-slate-700 bg-slate-950/60 px-3">
+                    <input id="work-pause-enabled" type="checkbox" class="h-5 w-5 accent-cyan-400">
+                    <span class="text-sm font-bold text-slate-100">Ativar lembretes de trabalho</span>
+                </label>
+                <fieldset class="mt-4">
+                    <legend class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Dias</legend>
+                    <div class="mt-2 grid grid-cols-7 gap-1.5">
+                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="0"><span>Seg</span></label>
+                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="1"><span>Ter</span></label>
+                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="2"><span>Qua</span></label>
+                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="3"><span>Qui</span></label>
+                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="4"><span>Sex</span></label>
+                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="5"><span>Sáb</span></label>
+                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="6"><span>Dom</span></label>
+                    </div>
+                </fieldset>
+                <div class="mt-4 grid grid-cols-2 gap-3">
+                    <label class="text-[11px] font-bold text-slate-400">Início
+                        <input id="work-pause-start" type="time" class="mt-1 min-h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 text-sm text-white">
+                    </label>
+                    <label class="text-[11px] font-bold text-slate-400">Fim
+                        <input id="work-pause-end" type="time" class="mt-1 min-h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 text-sm text-white">
+                    </label>
+                </div>
+                <label class="mt-3 block text-[11px] font-bold text-slate-400">Intervalo entre lembretes
+                    <select id="work-pause-interval" class="mt-1 min-h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 text-sm text-white">
+                        <option value="30">30 minutos</option>
+                        <option value="45">45 minutos</option>
+                        <option value="60">60 minutos</option>
+                        <option value="90">90 minutos</option>
+                        <option value="120">2 horas</option>
+                    </select>
+                </label>
+                <button type="button" onclick="saveWorkPauseReminderSettings()" class="mt-4 min-h-12 w-full rounded-xl bg-cyan-400 px-4 text-sm font-black text-slate-950">Salvar rotina de pausas</button>
+                <p id="work-pause-reminder-status" class="mt-2 min-h-5 text-xs text-slate-400" role="status" aria-live="polite"></p>
+            </section>
+
             <!-- BLOCO COLAPSÁVEL: CORPO -->
             <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl md:rounded-3xl shadow-xl overflow-hidden transition-all duration-300">
                 <!-- Cabeçalho Colapsável -->
@@ -12791,6 +12856,146 @@
         let activeReminderProgId = null;
         let activeReminderSessionNumber = 1;
         let lastFiredReminderKey = '';
+        const WORK_PAUSE_REMINDER_STORAGE_KEY = 'coreflow_work_pause_reminder_v1';
+        const DEFAULT_WORK_PAUSE_REMINDER = Object.freeze({ enabled: false, weekdays: [0, 1, 2, 3, 4], startTime: '08:00', endTime: '17:00', intervalMinutes: 60 });
+
+        function hasWorkPauseOccurrenceWindow(startTime, endTime, intervalMinutes) {
+            if (!isValidReminderTime(startTime) || !isValidReminderTime(endTime)) return false;
+            const startMinute = Number(startTime.slice(0, 2)) * 60 + Number(startTime.slice(3, 5));
+            const endMinute = Number(endTime.slice(0, 2)) * 60 + Number(endTime.slice(3, 5));
+            return endMinute - startMinute > intervalMinutes;
+        }
+
+        function readWorkPauseReminderSettings() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(WORK_PAUSE_REMINDER_STORAGE_KEY) || 'null');
+                if (!saved || typeof saved !== 'object' || typeof saved.enabled !== 'boolean'
+                    || !Array.isArray(saved.weekdays) || !saved.weekdays.length
+                    || !saved.weekdays.every(day => Number.isInteger(day) && day >= 0 && day <= 6)
+                    || new Set(saved.weekdays).size !== saved.weekdays.length
+                    || !isValidReminderTime(saved.startTime) || !isValidReminderTime(saved.endTime)
+                    || ![30, 45, 60, 90, 120].includes(saved.intervalMinutes)
+                    || !hasWorkPauseOccurrenceWindow(saved.startTime, saved.endTime, saved.intervalMinutes)) {
+                    return { ...DEFAULT_WORK_PAUSE_REMINDER, weekdays: [...DEFAULT_WORK_PAUSE_REMINDER.weekdays] };
+                }
+                return { ...saved, weekdays: [...saved.weekdays] };
+            } catch (_) {
+                return { ...DEFAULT_WORK_PAUSE_REMINDER, weekdays: [...DEFAULT_WORK_PAUSE_REMINDER.weekdays] };
+            }
+        }
+
+        function renderWorkPauseReminderSettings(config = readWorkPauseReminderSettings()) {
+            const enabled = document.getElementById('work-pause-enabled');
+            const start = document.getElementById('work-pause-start');
+            const end = document.getElementById('work-pause-end');
+            const interval = document.getElementById('work-pause-interval');
+            if (enabled) enabled.checked = config.enabled;
+            if (start) start.value = config.startTime;
+            if (end) end.value = config.endTime;
+            if (interval) interval.value = String(config.intervalMinutes);
+            document.querySelectorAll('input[data-workday]').forEach(input => {
+                input.checked = config.weekdays.includes(Number(input.dataset.workday));
+            });
+
+            const status = document.getElementById('work-pause-reminder-status');
+            if (!status) return;
+            if (!config.enabled) {
+                status.textContent = 'Desativado. A agenda sugerida é seg–sex, das 8h às 17h.';
+            } else if (!hasNativeReminderScheduler()) {
+                status.textContent = 'Configuração salva. Os avisos automáticos funcionam no app Android.';
+            } else if (!hasWorkPauseReminderPermission()) {
+                status.textContent = 'Sua configuração está salva. Ative as notificações e o canal Pausas de trabalho no Android.';
+            } else {
+                const days = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].filter((_, index) => config.weekdays.includes(index)).join(', ');
+                status.textContent = `Ativo: ${days}, ${config.startTime}–${config.endTime}, a cada ${config.intervalMinutes} min.`;
+            }
+        }
+
+        function saveWorkPauseReminderSettings() {
+            const weekdays = Array.from(document.querySelectorAll('input[data-workday]:checked'))
+                .map(input => Number(input.dataset.workday));
+            const config = {
+                enabled: document.getElementById('work-pause-enabled')?.checked === true,
+                weekdays,
+                startTime: document.getElementById('work-pause-start')?.value || '',
+                endTime: document.getElementById('work-pause-end')?.value || '',
+                intervalMinutes: Number(document.getElementById('work-pause-interval')?.value)
+            };
+            const valid = weekdays.length > 0 && weekdays.every(day => Number.isInteger(day) && day >= 0 && day <= 6)
+                && isValidReminderTime(config.startTime) && isValidReminderTime(config.endTime)
+                && [30, 45, 60, 90, 120].includes(config.intervalMinutes)
+                && hasWorkPauseOccurrenceWindow(config.startTime, config.endTime, config.intervalMinutes);
+            if (!valid) {
+                if (!config.enabled) {
+                    const disabled = { ...readWorkPauseReminderSettings(), enabled: false };
+                    let saved = true;
+                    try {
+                        localStorage.setItem(WORK_PAUSE_REMINDER_STORAGE_KEY, JSON.stringify(disabled));
+                    } catch (_) {
+                        saved = false;
+                    }
+                    syncWorkPauseReminderNative(disabled);
+                    renderWorkPauseReminderSettings();
+                    const status = document.getElementById('work-pause-reminder-status');
+                    if (status) status.textContent = saved
+                        ? 'Rotina desativada. Confira os dias e a janela antes de reativar.'
+                        : 'Rotina desativada no Android; não foi possível salvar a configuração neste aparelho.';
+                    return;
+                }
+                const status = document.getElementById('work-pause-reminder-status');
+                if (status) status.textContent = 'Confira os dias e escolha uma janela que comporte ao menos um lembrete completo.';
+                return;
+            }
+            try {
+                localStorage.setItem(WORK_PAUSE_REMINDER_STORAGE_KEY, JSON.stringify(config));
+            } catch (_) {
+                if (!config.enabled) syncWorkPauseReminderNative(config);
+                const status = document.getElementById('work-pause-reminder-status');
+                if (status) status.textContent = config.enabled
+                    ? 'Não foi possível salvar a configuração neste aparelho.'
+                    : 'Rotina desativada no Android; não foi possível salvar a configuração neste aparelho.';
+                return;
+            }
+            syncWorkPauseReminderNative(config);
+            renderWorkPauseReminderSettings();
+            if (config.enabled && !hasGlobalNotificationPermission()) {
+                requestSystemReminderPermission();
+                return;
+            }
+        }
+
+        function syncWorkPauseReminderNative(config = readWorkPauseReminderSettings()) {
+            if (!window.AndroidBridge?.scheduleWorkPauseReminder) return false;
+            const weekdaysMask = config.weekdays.reduce((mask, day) => mask | (1 << day), 0);
+            return window.AndroidBridge.scheduleWorkPauseReminder(
+                weekdaysMask, config.startTime, config.endTime, config.intervalMinutes, config.enabled
+            ) === true;
+        }
+
+        function onNativeWorkPauseReminderOpened() {
+            switchTab('pausas');
+            const prompt = document.getElementById('work-pause-reminder-prompt');
+            prompt?.classList.remove('hidden');
+            setTimeout(() => {
+                const reduceMotion = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+                prompt?.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
+                document.getElementById('work-pause-reminder-title')?.focus();
+            }, 50);
+        }
+
+        function closeWorkPauseReminderPrompt() {
+            document.getElementById('work-pause-reminder-prompt')?.classList.add('hidden');
+        }
+
+        function startWorkPauseMobility() {
+            if (AppState.mente?.isRunning || AppState.pausas?.isRunning || AppState.pausas?.circuitActive
+                || AppState.pausas?.activeTimerId || AppState.pausas?.pausedTimerId || AppState.dailyExecution?.isRunning
+                || (typeof responsivePause !== 'undefined' && ['running', 'paused'].includes(responsivePause.status))) {
+                showInlineToast('Encerre ou retome a sessão atual antes de iniciar outra pausa guiada.');
+                return;
+            }
+            startSosStretch();
+        }
 
         function hasNativeReminderScheduler() {
             try {
@@ -12840,9 +13045,23 @@
         }
 
         function syncAllNativeReminders() {
-            if (!hasNativeReminderScheduler()) return;
+            const hasNativeScheduler = typeof hasNativeReminderScheduler === 'function' && hasNativeReminderScheduler();
+            let workPauseConfig = typeof readWorkPauseReminderSettings === 'function'
+                ? readWorkPauseReminderSettings()
+                : null;
+            if (hasNativeScheduler && workPauseConfig
+                && window.AndroidBridge?.workPauseReminderState?.() === 'disabled'
+                && workPauseConfig.enabled) {
+                workPauseConfig = { ...workPauseConfig, enabled: false };
+                try {
+                    localStorage.setItem(WORK_PAUSE_REMINDER_STORAGE_KEY, JSON.stringify(workPauseConfig));
+                } catch (_) { }
+            }
+            if (workPauseConfig && typeof renderWorkPauseReminderSettings === 'function') renderWorkPauseReminderSettings(workPauseConfig);
+            if (!hasNativeScheduler) return;
             AppState.programs.forEach(syncProgramNativeReminder);
             syncSmartMiddayReminderNative();
+            if (workPauseConfig && typeof syncWorkPauseReminderNative === 'function') syncWorkPauseReminderNative(workPauseConfig);
         }
 
         // Fonte única de verdade para o smart reminder é o estado persistido da UI
@@ -12860,6 +13079,30 @@
         function hasSystemReminderPermission() {
             try {
                 if (hasNativeReminderScheduler()) return window.AndroidBridge?.notificationsPermissionGranted?.() === true;
+                return typeof Notification !== 'undefined' && Notification.permission === 'granted';
+            } catch (_) {
+                return false;
+            }
+        }
+
+        function hasWorkPauseReminderPermission() {
+            try {
+                if (hasNativeReminderScheduler()) {
+                    return window.AndroidBridge?.workPauseNotificationsPermissionGranted?.()
+                        ?? window.AndroidBridge?.notificationsPermissionGranted?.() === true;
+                }
+                return typeof Notification !== 'undefined' && Notification.permission === 'granted';
+            } catch (_) {
+                return false;
+            }
+        }
+
+        function hasGlobalNotificationPermission() {
+            try {
+                if (hasNativeReminderScheduler()) {
+                    return window.AndroidBridge?.globalNotificationsPermissionGranted?.()
+                        ?? window.AndroidBridge?.notificationsPermissionGranted?.() === true;
+                }
                 return typeof Notification !== 'undefined' && Notification.permission === 'granted';
             } catch (_) {
                 return false;

@@ -5,8 +5,70 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 class ReminderSchedulerTest {
+  private fun utcCalendar(year: Int, month: Int, day: Int, hour: Int, minute: Int): Calendar =
+    Calendar.getInstance(TimeZone.getTimeZone("UTC"), Locale.US).apply {
+      set(year, month, day, hour, minute, 0)
+      set(Calendar.MILLISECOND, 0)
+    }
+
+  @Test
+  fun `work pause schedule starts after one full interval and excludes work end`() {
+    val weekdays = (1 shl 0) or (1 shl 1) or (1 shl 2) or (1 shl 3) or (1 shl 4)
+    val now = utcCalendar(2026, Calendar.OCTOBER, 21, 8, 0)
+    val next = ReminderScheduler.nextWorkPauseTrigger(now, weekdays, 8 * 60, 17 * 60, 60)
+
+    assertEquals(utcCalendar(2026, Calendar.OCTOBER, 21, 9, 0).timeInMillis, next)
+    assertEquals(
+      utcCalendar(2026, Calendar.OCTOBER, 21, 10, 0).timeInMillis,
+      ReminderScheduler.nextWorkPauseTrigger(utcCalendar(2026, Calendar.OCTOBER, 21, 9, 0), weekdays, 8 * 60, 17 * 60, 60)
+    )
+    assertEquals(
+      utcCalendar(2026, Calendar.OCTOBER, 21, 16, 0).timeInMillis,
+      ReminderScheduler.nextWorkPauseTrigger(utcCalendar(2026, Calendar.OCTOBER, 21, 15, 30), weekdays, 8 * 60, 17 * 60, 60)
+    )
+  }
+
+  @Test
+  fun `work pause schedule skips disabled days and advances to next selected weekday`() {
+    val weekdays = (1 shl 0) or (1 shl 1) or (1 shl 2) or (1 shl 3) or (1 shl 4)
+    val next = ReminderScheduler.nextWorkPauseTrigger(
+      utcCalendar(2026, Calendar.OCTOBER, 24, 12, 0), weekdays, 8 * 60, 17 * 60, 60
+    )
+
+    assertEquals(utcCalendar(2026, Calendar.OCTOBER, 26, 9, 0).timeInMillis, next)
+  }
+
+  @Test
+  fun `work pause schedule rejects empty days invalid window and unsupported interval`() {
+    assertFalse(ReminderScheduler.isValidWorkPauseSchedule(0, "08:00", "17:00", 60))
+    assertFalse(ReminderScheduler.isValidWorkPauseSchedule(31, "17:00", "08:00", 60))
+    assertFalse(ReminderScheduler.isValidWorkPauseSchedule(31, "08:00", "09:00", 60))
+    assertFalse(ReminderScheduler.isValidWorkPauseSchedule(31, "08:00", "17:00", 20))
+    assertEquals(
+      null,
+      ReminderScheduler.nextWorkPauseTrigger(utcCalendar(2026, Calendar.OCTOBER, 24, 12, 0), 0, 8 * 60, 17 * 60, 60)
+    )
+  }
+
+  @Test
+  fun `late work pause alarm only publishes on selected day inside the active work window`() {
+    val weekdays = (1 shl 0) or (1 shl 1) or (1 shl 2) or (1 shl 3) or (1 shl 4)
+    fun active(hour: Int, minute: Int, day: Int = 21) = ReminderScheduler.isWorkPauseWindowActive(
+      utcCalendar(2026, Calendar.OCTOBER, day, hour, minute), weekdays, "08:00", "17:00", 60
+    )
+
+    assertFalse(active(8, 59))
+    assertTrue(active(9, 0))
+    assertTrue(active(16, 59))
+    assertFalse(active(17, 0))
+    assertFalse(active(10, 0, day = 24))
+  }
+
   @Test
   fun `snooze request identities include minutes and do not collide`() {
     assertNotEquals(

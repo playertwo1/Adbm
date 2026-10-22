@@ -7,6 +7,19 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
+## [1.1.48] - 2026-10-22
+
+### Adicionado
+- Lembretes opcionais de pausa no trabalho, configuráveis por dias, horário e intervalo; a sugestão inicial é seg–sex, 8h–17h, a cada 60 minutos, desligada até ativação.
+- A notificação abre orientações curtas de descanso visual, mudança de posição, mobilidade confortável, hidratação sem meta e respiração natural. Iniciar mobilidade exige ação separada e não interrompe outra sessão.
+
+### Validação
+- A publicação depende do workflow GitHub passar `bash scripts/check.sh`, validar versão e assinatura dos APKs de celular/Wear e confirmar compatibilidade do certificado com a release anterior.
+- Runtime da notificação, permissão, reinício/fuso e uso em aparelho físico: `NOT_RUN`.
+- Referências de redesign das pílulas são propostas (`PENDING_HUMAN`); o layout das pílulas não foi alterado nesta versão.
+
+---
+
 ## [1.1.47] - 2026-10-20
 
 ### Corrigido

@@ -22,6 +22,7 @@ object ReminderScheduler {
     const val ACTION_FIRE = "com.example.coreflow.REMINDER_FIRE"
     const val ACTION_SNOOZE = "com.example.coreflow.REMINDER_SNOOZE"
     const val ACTION_MIND_REMINDER_FIRE = "com.example.coreflow.MIND_REMINDER_FIRE"
+    const val ACTION_WORK_PAUSE_FIRE = "com.example.coreflow.WORK_PAUSE_FIRE"
     const val EXTRA_PROGRAM_ID = "program_id"
     const val EXTRA_PROGRAM_TITLE = "program_title"
     const val EXTRA_SESSION_NUMBER = "session_number"
@@ -32,6 +33,9 @@ object ReminderScheduler {
     private const val PREFS = "coreflow_native_reminders"
     private const val PROGRAM_IDS = "program_ids"
     private const val CHANNEL_ID = "coreflow_reminders"
+    private const val CHANNEL_WORK_PAUSE = "coreflow_work_pause"
+    private const val WORK_PAUSE_REQUEST_CODE = 999_002
+    const val WORK_PAUSE_NOTIFICATION_ID = 999_002
 
     fun updateProgram(
         context: Context,
@@ -86,6 +90,217 @@ object ReminderScheduler {
             scheduleDaily(context, programId, title, 1, time1)
             if (targetSessions > 1) scheduleDaily(context, programId, title, 2, time2)
         }
+        rescheduleWorkPauseReminder(context)
+    }
+
+    fun updateWorkPauseReminder(
+        context: Context,
+        weekdaysMask: Int,
+        startTime: String,
+        endTime: String,
+        intervalMinutes: Int,
+        enabled: Boolean
+    ): Boolean {
+        val valid = isValidWorkPauseSchedule(weekdaysMask, startTime, endTime, intervalMinutes)
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        prefs.edit()
+            .putInt("work_pause_days", weekdaysMask)
+            .putString("work_pause_start", startTime)
+            .putString("work_pause_end", endTime)
+            .putInt("work_pause_interval", intervalMinutes)
+            .putBoolean("work_pause_enabled", enabled && valid)
+            .apply()
+        rescheduleWorkPauseReminder(context)
+        return enabled && valid && hasWorkPauseNotificationPermission(context)
+    }
+
+    fun workPauseReminderState(context: Context): String {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        if (!prefs.contains("work_pause_enabled")) return "unset"
+        return if (prefs.getBoolean("work_pause_enabled", false)) "enabled" else "disabled"
+    }
+
+    fun handleWorkPauseFire(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        if (!prefs.getBoolean("work_pause_enabled", false) || !hasWorkPauseNotificationPermission(context)) {
+            cancelWorkPauseAlarm(context)
+            return
+        }
+        val weekdaysMask = prefs.getInt("work_pause_days", 0)
+        val startTime = prefs.getString("work_pause_start", "") ?: ""
+        val endTime = prefs.getString("work_pause_end", "") ?: ""
+        val intervalMinutes = prefs.getInt("work_pause_interval", 0)
+        if (!isValidWorkPauseSchedule(weekdaysMask, startTime, endTime, intervalMinutes)) {
+            cancelWorkPauseAlarm(context)
+            return
+        }
+        if (!isWorkPauseWindowActive(Calendar.getInstance(), weekdaysMask, startTime, endTime, intervalMinutes)) {
+            scheduleNextWorkPause(context)
+            return
+        }
+        showWorkPauseNotification(context)
+        scheduleNextWorkPause(context)
+    }
+
+    private fun rescheduleWorkPauseReminder(context: Context) {
+        cancelWorkPauseAlarm(context)
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val enabled = prefs.getBoolean("work_pause_enabled", false)
+        val weekdaysMask = prefs.getInt("work_pause_days", 0)
+        val startTime = prefs.getString("work_pause_start", "") ?: ""
+        val endTime = prefs.getString("work_pause_end", "") ?: ""
+        val intervalMinutes = prefs.getInt("work_pause_interval", 0)
+        if (!enabled || !isValidWorkPauseSchedule(weekdaysMask, startTime, endTime, intervalMinutes)) {
+            cancelWorkPauseNotification(context)
+            return
+        }
+        createWorkPauseChannel(context)
+        if (!hasWorkPauseNotificationPermission(context)) {
+            cancelWorkPauseNotification(context)
+            return
+        }
+        scheduleNextWorkPause(context)
+    }
+
+    private fun scheduleNextWorkPause(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        if (!prefs.getBoolean("work_pause_enabled", false) || !hasWorkPauseNotificationPermission(context)) return
+        val startTime = prefs.getString("work_pause_start", "") ?: ""
+        val endTime = prefs.getString("work_pause_end", "") ?: ""
+        val nextAt = nextWorkPauseTrigger(
+            Calendar.getInstance(),
+            prefs.getInt("work_pause_days", 0),
+            minuteOfDay(startTime) ?: return,
+            minuteOfDay(endTime) ?: return,
+            prefs.getInt("work_pause_interval", 0)
+        ) ?: return
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, ReminderReceiver::class.java).apply { action = ACTION_WORK_PAUSE_FIRE }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            WORK_PAUSE_REQUEST_CODE,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms()) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextAt, pendingIntent)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextAt, pendingIntent)
+        } else {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, nextAt, pendingIntent)
+        }
+    }
+
+    private fun cancelWorkPauseAlarm(context: Context) {
+        val intent = Intent(context, ReminderReceiver::class.java).apply { action = ACTION_WORK_PAUSE_FIRE }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            WORK_PAUSE_REQUEST_CODE,
+            intent,
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+        ) ?: return
+        (context.getSystemService(Context.ALARM_SERVICE) as AlarmManager).cancel(pendingIntent)
+        pendingIntent.cancel()
+    }
+
+    private fun cancelWorkPauseNotification(context: Context) {
+        (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            .cancel(WORK_PAUSE_NOTIFICATION_ID)
+    }
+
+    private fun showWorkPauseNotification(context: Context) {
+        createWorkPauseChannel(context)
+        val openIntent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            putExtra("action_work_pause", true)
+        }
+        val openPendingIntent = PendingIntent.getActivity(
+            context,
+            WORK_PAUSE_REQUEST_CODE + 10,
+            openIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val message = "Descanse o olhar, mude de posição, beba alguns goles de água ou respire com calma."
+        val notification = NotificationCompat.Builder(context, CHANNEL_WORK_PAUSE)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle("Pausa breve")
+            .setContentText(message)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+            .setContentIntent(openPendingIntent)
+            .addAction(0, "Abrir Pausas", openPendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .setAutoCancel(true)
+            .build()
+        (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            .notify(WORK_PAUSE_NOTIFICATION_ID, notification)
+    }
+
+    internal fun isValidWorkPauseSchedule(
+        weekdaysMask: Int,
+        startTime: String,
+        endTime: String,
+        intervalMinutes: Int
+    ): Boolean {
+        val start = minuteOfDay(startTime) ?: return false
+        val end = minuteOfDay(endTime) ?: return false
+        return weekdaysMask in 1..127 && end - start > intervalMinutes && intervalMinutes in 30..180
+    }
+
+    internal fun isWorkPauseWindowActive(
+        now: Calendar,
+        weekdaysMask: Int,
+        startTime: String,
+        endTime: String,
+        intervalMinutes: Int
+    ): Boolean {
+        if (!isValidWorkPauseSchedule(weekdaysMask, startTime, endTime, intervalMinutes)) return false
+        val mondayFirstIndex = (now.get(Calendar.DAY_OF_WEEK) + 5) % 7
+        val minuteOfDay = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE)
+        val startMinute = minuteOfDay(startTime) ?: return false
+        val endMinute = minuteOfDay(endTime) ?: return false
+        return weekdaysMask and (1 shl mondayFirstIndex) != 0 &&
+            minuteOfDay >= startMinute + intervalMinutes && minuteOfDay < endMinute
+    }
+
+    internal fun nextWorkPauseTrigger(
+        now: Calendar,
+        weekdaysMask: Int,
+        startMinute: Int,
+        endMinute: Int,
+        intervalMinutes: Int
+    ): Long? {
+        if (weekdaysMask !in 1..127 || startMinute !in 0..1439 || endMinute !in 1..1440 ||
+            endMinute <= startMinute || intervalMinutes !in 30..180
+        ) return null
+        val nowMillis = now.timeInMillis
+        for (dayOffset in 0..7) {
+            val day = (now.clone() as Calendar).apply {
+                add(Calendar.DAY_OF_YEAR, dayOffset)
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+            val mondayFirstIndex = (day.get(Calendar.DAY_OF_WEEK) + 5) % 7
+            if ((weekdaysMask and (1 shl mondayFirstIndex)) == 0) continue
+            var minute = startMinute + intervalMinutes
+            while (minute < endMinute) {
+                val candidate = (day.clone() as Calendar).apply {
+                    set(Calendar.HOUR_OF_DAY, minute / 60)
+                    set(Calendar.MINUTE, minute % 60)
+                }
+                if (candidate.timeInMillis > nowMillis) return candidate.timeInMillis
+                minute += intervalMinutes
+            }
+        }
+        return null
+    }
+
+    private fun minuteOfDay(value: String): Int? {
+        if (!isValidTime(value)) return null
+        val parts = value.split(":")
+        return parts[0].toInt() * 60 + parts[1].toInt()
     }
 
     fun updateProgress(context: Context, programId: String, sessionsToday: Int, dateKey: String) {
@@ -328,6 +543,20 @@ object ReminderScheduler {
             .createNotificationChannel(channel)
     }
 
+    private fun createWorkPauseChannel(context: Context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        val channel = NotificationChannel(
+            CHANNEL_WORK_PAUSE,
+            "Pausas de trabalho",
+            NotificationManager.IMPORTANCE_LOW
+        ).apply {
+            description = "Lembretes discretos para pausas durante o trabalho"
+            enableVibration(false)
+        }
+        (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            .createNotificationChannel(channel)
+    }
+
     internal fun dailyRequestCode(programId: String, sessionNumber: Int): Int =
         requestCode(programId, sessionNumber, false)
 
@@ -445,18 +674,27 @@ object ReminderScheduler {
         }
     }
 
-    fun hasEffectiveNotificationPermission(context: Context): Boolean {
+    fun hasEffectiveNotificationPermission(context: Context): Boolean =
+        hasNotificationPermissionForChannel(context, CHANNEL_ID)
+
+    fun hasWorkPauseNotificationPermission(context: Context): Boolean =
+        hasNotificationPermissionForChannel(context, CHANNEL_WORK_PAUSE)
+
+    private fun hasNotificationPermissionForChannel(context: Context, channelId: String): Boolean {
+        if (!hasGlobalNotificationPermission(context)) return false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+                .getNotificationChannel(channelId)
+            if (channel != null && channel.importance == NotificationManager.IMPORTANCE_NONE) return false
+        }
+        return true
+    }
+
+    fun hasGlobalNotificationPermission(context: Context): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
         ) return false
-        val manager = NotificationManagerCompat.from(context)
-        if (!manager.areNotificationsEnabled()) return false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
-                .getNotificationChannel(CHANNEL_ID)
-            if (channel?.importance == NotificationManager.IMPORTANCE_NONE) return false
-        }
-        return true
+        return NotificationManagerCompat.from(context).areNotificationsEnabled()
     }
 
     fun isValidTime(value: String): Boolean {
@@ -479,6 +717,7 @@ class ReminderReceiver : BroadcastReceiver() {
         when (intent.action) {
             ReminderScheduler.ACTION_FIRE -> ReminderScheduler.handleFire(context, intent)
             ReminderScheduler.ACTION_MIND_REMINDER_FIRE -> ReminderScheduler.showMindSmartNotification(context)
+            ReminderScheduler.ACTION_WORK_PAUSE_FIRE -> ReminderScheduler.handleWorkPauseFire(context)
             ReminderScheduler.ACTION_SNOOZE -> {
                 val programId = intent.getStringExtra(ReminderScheduler.EXTRA_PROGRAM_ID) ?: return
                 val title = intent.getStringExtra(ReminderScheduler.EXTRA_PROGRAM_TITLE) ?: "Programa CoreFlow"
