@@ -1,5 +1,14 @@
 # Registro de execução
 
+## 2026-10-09 — Correções de regressão E14 — CONCLUÍDO NO CÓDIGO
+
+- **Correções:** sessão solicitada agora define os passos antes da abertura do treino; hidratação migra o título padrão legado de Bracing de 8 semanas sem sobrescrever títulos personalizados; modal `BRACING_PHASES` usa descrições sentadas/em pé.
+- **Escopo preservado:** tempos do modal, metas semanais, IDs, armazenamento e imagens não foram alterados; HTML raiz/assets permanecem idênticos.
+- **RED/GREEN:** `node diagnostics/e07-programas.test.cjs` e `node diagnostics/e14-bracing-pausas-floating.test.cjs` falharam antes do patch nos comportamentos reportados e passaram após.
+- **Gates:** `bash scripts/check.sh` executou todos os diagnósticos e compilou `:app:assembleDebug` e `:wear:assembleDebug`; `:app:testDebugUnitTest` teve 3 falhas de ambiente (`Android SDK 36 requires Java 21`, JDK disponível Java 17). Nenhuma dependência foi instalada.
+- **Arquivos:** `index.html`, `app/src/main/assets/index.html`, `diagnostics/e07-programas.test.cjs`, `diagnostics/e14-bracing-pausas-floating.test.cjs`, `ROADMAP.md` e este registro.
+- **Próximo gate:** repetir `bash scripts/check.sh` com JDK 21; validação física permanece com Rafael.
+
 ## 2026-10-08 — Release v1.1.41 (Code 41): Ilustrações Anatômicas de Bracing & Animações Dinâmicas de Respiração — CONCLUÍDO
 
 - **Objetivos Realizados:**

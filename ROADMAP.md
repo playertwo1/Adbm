@@ -2,7 +2,7 @@
 
 **Atualizado:** 08/10/2026.  
 **Estado Geral:** Todas as etapas fundacionais do aplicativo (E00–E03, E05–E09, E10 concluído, E11, E12) e a etapa **FUTURA 1 (Modo Treino Flutuante CP1 a CP7)** foram totalmente implementadas, auditadas e integradas na `main`. O checklist detalhado e os critérios de aceite dessas etapas estão arquivados em [`docs/arquivados/roadmap-etapas-concluidas.md`](docs/arquivados/roadmap-etapas-concluidas.md). Histórico anterior a 19/09 preservado em [`docs/roadmap/historico-2026-09-19.md`](docs/roadmap/historico-2026-09-19.md).  
-**Foco Imediato:** **E14 — Reformulação Clínica do Bracing no Banco e em Pé (McGill Adaptado)**.
+**Foco Imediato:** **E13 e FUTURA 3 — validação física em aparelho Galaxy e integração Wear OS**.
 
 ---
 

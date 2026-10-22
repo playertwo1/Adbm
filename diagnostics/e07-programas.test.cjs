@@ -296,6 +296,30 @@ function setup() {
     assert.doesNotMatch(env.getElementById('programExerciseDetailModal').innerHTML, /01:00|60 segundos/);
 }
 
+// 17. Hidratação migra apenas o título padrão legado de Bracing e preserva título personalizado.
+{
+  const env = setup();
+  vm.runInContext(`mergeLoadedPrograms([{ id: '1', title: 'Bracing: Controle e Automação (8 Semanas)', phases: Array(8).fill({}) }], '2026-10-09', false)`, env.context);
+  assert.equal(vm.runInContext(`AppState.programs.find(p => p.id === '1').title`, env.context), 'Bracing: Treino de 8 Semanas');
+
+  vm.runInContext(`mergeLoadedPrograms([{ id: '1', title: 'Meu Bracing Personalizado', phases: Array(8).fill({}) }], '2026-10-09', false)`, env.context);
+  assert.equal(vm.runInContext(`AppState.programs.find(p => p.id === '1').title`, env.context), 'Meu Bracing Personalizado');
+}
+
+// 16. A sessão explícita da recomendação determina a sequência, mesmo se divergir de sessionsToday.
+for (const { sessionsToday, requestedSession } of [
+  { sessionsToday: 0, requestedSession: 2 },
+  { sessionsToday: 1, requestedSession: 1 }
+]) {
+  const env = setup();
+  vm.runInContext(`AppState.programs.find(p => p.id === '1').sessionsToday = ${sessionsToday}`, env.context);
+  vm.runInContext(`openDailyExecutionModal('1', 0, ${requestedSession})`, env.context);
+  const actual = vm.runInContext('AppState.dailyExecution.steps.filter(step => step.badge?.startsWith("EX ")).map(step => step.title)', env.context);
+  const expected = vm.runInContext(`getProgramSteps('1', 0, ${requestedSession}).filter(step => step.badge?.startsWith("EX ")).map(step => step.title)`, env.context);
+  assert.deepEqual(actual, expected, `a Sessão ${requestedSession} solicitada deve selecionar sua própria sequência com sessionsToday=${sessionsToday}`);
+  assert.equal(vm.runInContext('AppState.dailyExecution.sessionNumber', env.context), requestedSession);
+}
+
 const htmlPaths = [
   path.join(root, 'index.html'),
   path.join(root, 'app', 'src', 'main', 'assets', 'index.html')

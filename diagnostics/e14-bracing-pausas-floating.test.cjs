@@ -108,7 +108,20 @@ for (let week = 0; week < 8; week++) {
         });
     }
 }
-console.log('✓ Matriz Clínica do Bracing: 8 semanas x 2 sessões x 3 exercícios reais, 100% no banco ou em pé (zero chão) com ilustrações anatômicas validadas');
+console.log('✓ Passos do Bracing: 8 fases e 2 seleções de sessão verificadas quanto a série, postura e imagens');
+
+// 2.2 O modal legado do programa completo também precisa respeitar as posturas vigentes.
+const bracingPhasesSource = htmlContent.match(/const BRACING_PHASES = ([\s\S]*?\n        \]);/);
+assert(bracingPhasesSource, 'BRACING_PHASES deve existir');
+const phasesContext = vm.createContext({});
+vm.runInContext(`const BRACING_PHASES = ${bracingPhasesSource[1]}; this.phases = BRACING_PHASES;`, phasesContext);
+for (const [index, phase] of phasesContext.phases.entries()) {
+    assert(/sentad|cadeira|em pé/i.test(phase.home.pos), `Semana ${index + 1} Em Casa deve indicar posição sentada ou em pé`);
+    assert(/sentad|cadeira|em pé/i.test(phase.work.pos), `Semana ${index + 1} No Trabalho deve indicar posição sentada ou em pé`);
+    const surface = `${phase.title} ${phase.focus} ${phase.home.pos} ${phase.home.inst} ${phase.work.pos} ${phase.work.inst}`.toLowerCase();
+    assert(!/deitad|quatro apoios|de bruços|no chão/.test(surface), `Semana ${index + 1} não pode exibir postura fora do protocolo sentado/em pé`);
+}
+console.log('✓ Superfície BRACING_PHASES compatível com posturas sentada/em pé');
 
 // 3.1 Modal de Execução Diária: Presença dos elementos de imagem de postura
 assert(htmlContent.includes('id="workoutPostureCard"'), 'dailyExecutionModal deve conter #workoutPostureCard');
