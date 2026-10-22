@@ -11659,7 +11659,10 @@
                 return;
             }
             const phase = prog.phases[pIdx];
-            const steps = getProgramSteps(prog.id, pIdx);
+            const resolvedSessionNumber = Number.isInteger(sessionNumber)
+                ? Math.max(1, Math.min(sessionNumber, prog.dailyTarget || 2))
+                : Math.min((prog.sessionsToday || 0) + 1, prog.dailyTarget || 2);
+            const steps = getProgramSteps(prog.id, pIdx, resolvedSessionNumber);
             if (!Array.isArray(steps) || steps.length === 0) {
                 showInlineToast('Não há exercícios cadastrados para essa etapa.');
                 return;
@@ -11680,9 +11683,7 @@
             AppState.dailyExecution.skippedStepIndexes = bracingResume?.contentVersion === 2 ? [...(bracingResume.skippedStepIndexes || [])] : [];
             AppState.dailyExecution.sessionDateKey = bracingResume?.contentVersion === 2 ? bracingResume.dateKey : localDateKey();
             AppState.dailyExecution.bracingSplitRequested = false;
-            AppState.dailyExecution.sessionNumber = Number.isInteger(sessionNumber)
-                ? Math.max(1, Math.min(sessionNumber, (prog.dailyTarget || 2)))
-                : Math.min((prog.sessionsToday || 0) + 1, (prog.dailyTarget || 2));
+            AppState.dailyExecution.sessionNumber = resolvedSessionNumber;
             AppState.dailyExecution.targetSessions = (prog.dailyTarget || 2);
             AppState.dailyExecution.currentDay = currentDay;
             AppState.dailyExecution.targetDays = targetDays;
@@ -15079,7 +15080,7 @@
                 let saved = loaded.find(program => program && String(program.id) === String(defaultProg.id));
                 if (!saved) return;
                 if (defaultProg.id === '1') saved = migrateBracingProgram(saved);
-                const oldDefaultBracingTitle = defaultProg.id === '1' && saved.title === 'Bracing: Automação (6 Semanas)';
+                const oldDefaultBracingTitle = defaultProg.id === '1' && ['Bracing: Automação (6 Semanas)', 'Bracing: Controle e Automação (8 Semanas)'].includes(saved.title);
                 if (saved.title && saved.title !== 'Kegel: Assoalho Pélvico (8 Semanas)' && !oldDefaultBracingTitle) defaultProg.title = saved.title;
                 if (typeof saved.expanded === 'boolean') defaultProg.expanded = saved.expanded;
                 const maxPhase = Math.max(0, defaultProg.phases.length - 1);

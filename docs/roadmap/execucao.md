@@ -1,5 +1,12 @@
 # Registro de execução
 
+## 2026-10-22 — Correção E07/E14 preservada na integração
+
+- A sessão pedida pelo lembrete agora define a sequência de exercícios antes de abrir o player; o número exibido e os passos ficam sincronizados.
+- A migração reconhece também o título padrão legado `Bracing: Controle e Automação (8 Semanas)` sem substituir títulos personalizados.
+- Regressões de seleção explícita de sessão e migração de título foram incorporadas ao diagnóstico E07. A worktree de origem também alterava um modal `BRACING_PHASES` que já não existe na implementação atual; esse trecho obsoleto não foi reintroduzido.
+- Evidência de origem: commit `5256b556`; os diagnósticos não foram executados nesta integração.
+
 ## 2026-10-22 — Preparação da candidata 1.1.48 — PUBLICAÇÃO PENDENTE
 
 - Incrementado o par oficial para `CORE_FLOW_VERSION_CODE=48` e `CORE_FLOW_VERSION_NAME=1.1.48` para incluir os lembretes opcionais de pausas de trabalho já implementados.
