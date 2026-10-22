@@ -5245,6 +5245,10 @@
                 if (step?.phase === 'vacuo') retentionSeconds += elapsed;
                 if (step?.phase === 'descanso') recoverySeconds += elapsed;
             });
+            if (execution && Object.prototype.hasOwnProperty.call(execution, 'retentionElapsedSeconds')) {
+                const nativeRetention = Number(execution.retentionElapsedSeconds);
+                if (Number.isFinite(nativeRetention) && nativeRetention >= 0) retentionSeconds = nativeRetention;
+            }
             return {
                 retentionSeconds,
                 recoverySeconds,
@@ -5317,7 +5321,7 @@
         }
 
         function setPosture(posture, vacSec) {
-            if (AppState.vacuo.isRunning || AppState.vacuo.nativeManaged) return false;
+            if (AppState.vacuo.isRunning || AppState.vacuo.nativeManaged || AppState.dailyExecution.isRunning || AppState.dailyExecution.isPaused) return false;
             AppState.vacuo.posture = posture;
             AppState.vacuo.vacDuration = vacSec;
 
@@ -5356,7 +5360,7 @@
         }
 
         function setVacuumDuration(sec) {
-            if (AppState.vacuo.isRunning || AppState.vacuo.nativeManaged) return false;
+            if (AppState.vacuo.isRunning || AppState.vacuo.nativeManaged || AppState.dailyExecution.isRunning || AppState.dailyExecution.isPaused) return false;
             AppState.vacuo.vacDuration = sec;
             updateVacDurationPills(sec);
             updateVacuumPlayerUI();
@@ -10627,6 +10631,7 @@
                         isRest: true,
                         voice: `Série ${set}. Ajuste a posição.`,
                         badge: `PREPARE ${set}/${setCount}`,
+                        phase: 'prepara',
                         haptic: 'relax',
                         series: set
                     });
@@ -10670,6 +10675,7 @@
                         isRest: true,
                         voice: 'Solte a sucção antes de inspirar calmamente.',
                         badge: 'RETORNO CONTROLADO',
+                        phase: 'retorno',
                         haptic: 'relax',
                         series: set
                     });
@@ -11783,6 +11789,9 @@
 
             // 4. Action Buttons Container
             const btnContainer = document.getElementById('dailyExecutionActionContainer');
+            const retentionExitButton = isRunning && currentStep.phase === 'vacuo' && window.AndroidBridge?.exitRetentionSafely
+                ? '<button onclick="endDailyVacuumRetention()" class="px-3 py-4 bg-cyan-500/20 border border-cyan-400/30 rounded-2xl text-cyan-200 font-semibold text-sm" title="Encerrar retenção">Encerrar retenção</button>'
+                : '';
             if (!isRunning) {
                 btnContainer.innerHTML = `
                     <button onclick="startDailySession()" class="flex-1 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 rounded-2xl text-slate-950 font-bold text-base transition shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
@@ -11795,6 +11804,7 @@
                         <i class="fa-solid fa-play"></i> Continuar
                     </button>
                     ${AppState.dailyExecution.programId === '1' ? '<button onclick="saveBracingSplitAndExit()" class="rounded-2xl border border-cyan-400/40 bg-cyan-500/10 px-3 py-3 text-xs font-bold text-cyan-100">Dividir pausa</button>' : ''}
+                    ${retentionExitButton}
                     <button onclick="skipWorkoutStep()" class="px-4 py-4 bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-2xl text-slate-300 font-semibold text-sm transition flex items-center justify-center gap-1.5" title="Pular Passo">
                         <i class="fa-solid fa-forward-step"></i>
                     </button>
@@ -11808,6 +11818,7 @@
                     <button onclick="pauseDailySession()" class="flex-1 py-4 bg-amber-500 hover:bg-amber-400 rounded-2xl text-slate-950 font-bold text-base transition shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-pause"></i> Pausar
                     </button>
+                    ${retentionExitButton}
                     <button onclick="skipWorkoutStep()" class="px-4 py-4 bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-2xl text-slate-300 font-semibold text-sm transition flex items-center justify-center gap-1.5" title="Pular Passo">
                         <i class="fa-solid fa-forward-step"></i>
                     </button>
@@ -11890,6 +11901,8 @@
             }
 
             if (state.status === 'interrupted' || state.status === 'canceled') {
+                const nativeId = state.session?.sessionId;
+                if (nativeId && AppState.dailyExecution.sessionId && nativeId !== AppState.dailyExecution.sessionId) return;
                 AppState.dailyExecution.isRunning = false;
                 AppState.dailyExecution.isPaused = false;
                 AppState.dailyExecution.intervalId = null;
@@ -11937,14 +11950,14 @@
                         plannedSeries: AppState.dailyExecution.steps ? countWorkoutSeries(AppState.dailyExecution.steps) : (state.steps ? countWorkoutSeries(state.steps) : 1),
                         completedSeries: AppState.dailyExecution.programId === '1'
                             ? new Set(getBracingCompletedStepIndexes(AppState.dailyExecution, false).map(index => AppState.dailyExecution.steps[index]?.series).filter(series => Number.isInteger(series) && series > 0)).size
-                            : (state.steps ? countCompletedSeries(state.steps, state.currentStepIndex) : 0),
+                            : (state.steps ? countCompletedSeries(state.steps, state.currentStepIndex, state.retentionInterruptedSeries) : 0),
                         retentionSeconds: metrics.retentionSeconds,
                         recoverySeconds: metrics.recoverySeconds,
                         totalElapsedSeconds: metrics.totalElapsedSeconds,
                         pausedSeconds: metrics.pausedSeconds,
                         interrupted: true,
-                        volumeStatus: AppState.dailyExecution.programId === '1' ? 'reduced' : null,
-                        feedback: null
+                    volumeStatus: AppState.dailyExecution.programId === '1' ? 'reduced' : null,
+                    feedback: CorePersistence.sessionHistory.find(record => record.id === AppState.dailyExecution.sessionId)?.feedback ?? null
                     });
                     saveState();
                 } catch(e) { console.error(e); }
@@ -12545,6 +12558,13 @@
             renderDailyExecutionUI();
         }
 
+        function endDailyVacuumRetention() {
+            const execution = AppState.dailyExecution;
+            if (!execution.isRunning || execution.steps[execution.currentStepIndex]?.phase !== 'vacuo' || !window.AndroidBridge?.exitRetentionSafely) return false;
+            window.AndroidBridge.exitRetentionSafely();
+            return true;
+        }
+
         function skipWorkoutStep() {
             triggerHaptic([30, 20]);
             if (AppState.dailyExecution.programId === '1') {
@@ -12812,7 +12832,15 @@
             }
 
             try {
-                const metrics = deriveDailySessionMetrics(AppState.dailyExecution);
+                let execution = AppState.dailyExecution;
+                if (window.AndroidBridge?.getWorkoutState) {
+                    try {
+                        const nativeState = JSON.parse(window.AndroidBridge.getWorkoutState());
+                        if (nativeState.session?.sessionId === execution.sessionId &&
+                            ['running', 'paused'].includes(nativeState.status)) execution = nativeState;
+                    } catch (_) { /* Preserva o registro parcial Web se o snapshot nativo falhar. */ }
+                }
+                const metrics = deriveDailySessionMetrics(execution);
                 upsertSessionRecord({
                     id: AppState.dailyExecution.sessionId,
                     schemaVersion: 1,
@@ -12820,15 +12848,15 @@
                     phaseIndex: AppState.dailyExecution.phaseIndex || 0,
                     date: localDateKey(),
                     status: isInterrupted ? 'interrupted' : 'cancelled',
-                    plannedSeries: AppState.dailyExecution.steps ? countWorkoutSeries(AppState.dailyExecution.steps) : 1,
-                    completedSeries: AppState.dailyExecution.steps ? countCompletedSeries(AppState.dailyExecution.steps, AppState.dailyExecution.currentStepIndex) : 0,
+                    plannedSeries: execution.steps ? countWorkoutSeries(execution.steps) : 1,
+                    completedSeries: execution.steps ? countCompletedSeries(execution.steps, execution.currentStepIndex, execution.retentionInterruptedSeries) : 0,
                     retentionSeconds: metrics.retentionSeconds,
                     recoverySeconds: metrics.recoverySeconds,
                     totalElapsedSeconds: metrics.totalElapsedSeconds,
                     pausedSeconds: metrics.pausedSeconds,
                     interrupted: isInterrupted,
                     volumeStatus: AppState.dailyExecution.programId === '1' ? 'reduced' : null,
-                    feedback: null
+                    feedback: CorePersistence.sessionHistory.find(record => record.id === AppState.dailyExecution.sessionId)?.feedback ?? null
                 });
                 saveState();
             } catch(e) {
