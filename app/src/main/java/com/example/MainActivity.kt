@@ -113,6 +113,7 @@ class MainActivity : ComponentActivity() {
     private var pendingReminderProgramId: String? = null
     private var pendingReminderSession: Int = 1
     private var pendingCustomSnooze: Boolean = false
+    private var pendingWorkPauseReminder: Boolean = false
     private var pendingQuickBreathPattern: String? = null
     private var pendingQuickBreathDuration: Int = 0
     private var workoutReceiverRegistered = false
@@ -297,6 +298,11 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun captureReminderIntent(intent: Intent?) {
+        if (intent?.getBooleanExtra("action_work_pause", false) == true) {
+            pendingWorkPauseReminder = true
+            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+                .cancel(ReminderScheduler.WORK_PAUSE_NOTIFICATION_ID)
+        }
         if (intent?.getBooleanExtra("action_quick_breath", false) == true) {
             pendingQuickBreathPattern = intent.getStringExtra("breath_pattern_key") ?: "caixa"
             pendingQuickBreathDuration = intent.getIntExtra("breath_duration_sec", 120)
@@ -311,6 +317,10 @@ class MainActivity : ComponentActivity() {
 
     private fun deliverPendingReminder() {
         val targetWebView = webView ?: return
+        if (pendingWorkPauseReminder) {
+            targetWebView.evaluateJavascript("if (window.onNativeWorkPauseReminderOpened) window.onNativeWorkPauseReminderOpened();", null)
+            pendingWorkPauseReminder = false
+        }
         if (pendingQuickBreathPattern != null) {
             val script = "if (window.onNativeQuickBreath) window.onNativeQuickBreath(" +
                 "${JSONObject.quote(pendingQuickBreathPattern)}, $pendingQuickBreathDuration);"
@@ -463,6 +473,11 @@ class AndroidBridge(
                 activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             }
         }
+    }
+
+    @JavascriptInterface
+    fun setAccessibilityReducedMotion(enabled: Boolean) {
+        WorkoutOverlayController.setAppReducedMotion(context, enabled)
     }
 
     @JavascriptInterface
@@ -815,6 +830,18 @@ class AndroidBridge(
         ReminderScheduler.hasEffectiveNotificationPermission(context)
 
     @JavascriptInterface
+    fun workPauseNotificationsPermissionGranted(): Boolean =
+        ReminderScheduler.hasWorkPauseNotificationPermission(context)
+
+    @JavascriptInterface
+    fun globalNotificationsPermissionGranted(): Boolean =
+        ReminderScheduler.hasGlobalNotificationPermission(context)
+
+    @JavascriptInterface
+    fun workPauseReminderState(): String =
+        ReminderScheduler.workPauseReminderState(context)
+
+    @JavascriptInterface
     fun requestReminderPermission(): Boolean {
         val activity = context as? ComponentActivity ?: return false
         if (notificationsPermissionGranted()) return true
@@ -902,6 +929,24 @@ class AndroidBridge(
             val msg = if (enabled) "Lembrete inteligente de pausa às $timeStr ativado" else "Lembrete de respiração desativado"
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    @JavascriptInterface
+    fun scheduleWorkPauseReminder(
+        weekdaysMask: Int,
+        startTime: String,
+        endTime: String,
+        intervalMinutes: Int,
+        enabled: Boolean
+    ): Boolean {
+        val active = ReminderScheduler.updateWorkPauseReminder(
+            context, weekdaysMask, startTime, endTime, intervalMinutes, enabled
+        )
+        if (enabled && !ReminderScheduler.hasGlobalNotificationPermission(context)) {
+            val activity = context as? ComponentActivity
+            activity?.runOnUiThread { requestNotificationPermission(activity) }
+        }
+        return active
     }
 
     @JavascriptInterface

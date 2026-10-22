@@ -17,6 +17,45 @@ assert(exercisesMatch, 'catálogo de alongamentos deve existir');
 const exercises = vm.runInNewContext(exercisesMatch[1]);
 assert.equal(exercises.length, 4, 'catálogo deve conter os quatro exercícios documentados');
 
+const resolveCueFunction = source.match(/function resolveStretchCue\(stepId, secLeft, totalSec\) \{[\s\S]*?\n        \}/)?.[0];
+const updateActiveDisplayFunction = source.match(/function updateStretchActiveDisplayUI\(stepId, secLeft, totalSec\) \{[\s\S]*?\n        \}/)?.[0];
+const showActiveDisplayFunction = source.match(/function showStretchActiveDisplay\(stepId, totalSec\) \{[\s\S]*?\n        \}/)?.[0];
+assert(resolveCueFunction && updateActiveDisplayFunction && showActiveDisplayFunction,
+    'guia ativo deve derivar fase e lado pelo motor');
+const activeElements = new Map();
+function getActiveElement(id) {
+    if (!activeElements.has(id)) {
+        activeElements.set(id, {
+            innerText: '', alt: '', dataset: {}, style: {},
+            setAttribute(name, value) { this[name] = value; },
+            classList: { toggle() {}, add() {}, remove() {} }
+        });
+    }
+    return activeElements.get(id);
+}
+const activeInstruction = getActiveElement('stretch-phase-instruction');
+activeInstruction.innerText = exercises[0].instruction;
+const activeContext = vm.createContext({
+    STRETCH_EXERCISES: exercises,
+    document: { getElementById: getActiveElement }
+});
+vm.runInContext(`${resolveCueFunction}\n${updateActiveDisplayFunction}`, activeContext);
+activeContext.updateStretchActiveDisplayUI(1, 60, 60);
+assert.equal(activeInstruction.innerText, exercises[0].instruction, 'a instrução inicial deve corresponder ao lado direito');
+activeContext.updateStretchActiveDisplayUI(1, 30, 60);
+assert.equal(activeInstruction.innerText,
+    exercises[0].instruction.replace('tornozelo direito', 'tornozelo esquerdo'),
+    'a instrução deve mudar para a perna esquerda junto com a imagem e o rótulo');
+vm.runInContext(showActiveDisplayFunction, activeContext);
+activeContext.AppState = { pausas: { circuitActive: false, remainingSec: 30 } };
+activeContext.showStretchActiveDisplay(1, 60);
+assert.equal(activeInstruction.innerText,
+    exercises[0].instruction.replace('tornozelo direito', 'tornozelo esquerdo'),
+    'abrir ou retomar no lado esquerdo não deve sobrescrever a instrução derivada do motor');
+assert.equal(getActiveElement('stretch-posture-frame')['aria-label'],
+    `${exercises[0].name}: ${exercises[0].instruction.replace('tornozelo direito', 'tornozelo esquerdo')}`,
+    'o nome acessível da postura deve acompanhar o lado exibido ao abrir ou retomar');
+
 const visibleInstructions = [
     'Cruze o tornozelo sobre o joelho oposto',
     'Gire o tronco segurando o encosto da cadeira',

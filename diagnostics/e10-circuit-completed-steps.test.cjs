@@ -45,6 +45,7 @@ function runOneTick(startFunction) {
         finishStretchCircuit() {},
         startStretchCircuitStep() {}
     });
+    vm.runInContext(extractFunction('notifyStretchSideSwitch'), context);
     vm.runInContext(startFunction, context);
     return { context, getElement, tick: () => tick() };
 }

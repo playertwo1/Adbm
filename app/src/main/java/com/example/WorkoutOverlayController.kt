@@ -1,9 +1,11 @@
 package com.example
 
 import android.annotation.SuppressLint
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -18,17 +20,21 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.text.TextUtils
 import android.util.TypedValue
+import android.util.LruCache
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.WindowManager
+import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import org.json.JSONObject
+import java.io.InputStream
 import kotlin.math.hypot
 
 /**
@@ -112,12 +118,16 @@ object WorkoutOverlayController {
     // Referências aos elementos dinâmicos do Mini
     private var miniIconBadge: TextView? = null
     private var miniTimerText: TextView? = null
+    private var miniActionText: TextView? = null
+    private var miniOpenText: TextView? = null
 
     // Referências aos elementos dinâmicos do Compacto
     private var compactIconBadge: TextView? = null
     private var compactActionText: TextView? = null
     private var compactProgramText: TextView? = null
     private var compactTimerText: TextView? = null
+    private var compactPauseResumeBtn: TextView? = null
+    private var compactCancelBtn: TextView? = null
 
     // Referências aos elementos dinâmicos do Expandido
     private var expandedProgramTitle: TextView? = null
@@ -126,17 +136,116 @@ object WorkoutOverlayController {
     private var expandedTimerText: TextView? = null
     private var expandedTotalTimeText: TextView? = null
     private var expandedExerciseImage: ImageView? = null
+    private var expandedExerciseGuideContainer: FrameLayout? = null
+    private var expandedExerciseFallback: TextView? = null
+    private var expandedExercisePhase: TextView? = null
+    private var expandedExercisePhaseTrack: LinearLayout? = null
     private var breathVisualView: BreathVisualView? = null
     private var expandedNextStepCard: LinearLayout? = null
     private var expandedNextStepLabel: TextView? = null
     private var expandedPauseResumeBtn: TextView? = null
     private var expandedSkipBtn: TextView? = null
+    private var expandedCancelBtn: TextView? = null
     private var expandedSafeExitBtn: TextView? = null
+    private var cancelConfirmationContainer: LinearLayout? = null
+    private var cancelKeepButton: TextView? = null
+    private var cancelWasRunning = false
+    private var cancelPreviousVisualState: VisualState = VisualState.COMPACT
+    private var isCancelConfirmationVisible = false
 
     private var currentState: VisualState = VisualState.COMPACT
+    private var appReducedMotion = false
     private var lastRawState: JSONObject? = null
     private val mainHandler = Handler(Looper.getMainLooper())
     private var autoCollapseRunnable: Runnable? = null
+
+    private val exerciseGuideBitmapCache = object : LruCache<String, android.graphics.Bitmap>(4 * 1024 * 1024) {
+        override fun sizeOf(key: String, value: android.graphics.Bitmap): Int = value.byteCount
+    }
+
+    private data class StretchGuideCue(
+        val frame: Int,
+        val phaseIndex: Int,
+        val phaseLabel: String,
+        val sideLabel: String
+    )
+
+    private fun resolveStretchGuideCue(cardId: Int, duration: Int, timeLeft: Int): StretchGuideCue {
+        val safeDuration = duration.coerceAtLeast(0)
+        val elapsed = (safeDuration - timeLeft.coerceIn(0, safeDuration)).toFloat()
+        val hasSides = cardId in setOf(1, 2, 4)
+        val halfDuration = safeDuration / 2f
+        val sideIndex = if (hasSides && elapsed >= halfDuration) 1 else 0
+        val sideDuration = if (hasSides) halfDuration else safeDuration.toFloat()
+        val sideElapsed = if (hasSides) (elapsed - sideIndex * halfDuration).coerceAtLeast(0f) else elapsed
+        val fraction = if (sideDuration > 0f) (sideElapsed / sideDuration).coerceIn(0f, 1f) else 1f
+        val prepareBoundary = if (hasSides) 0.25f else 0.20f
+        val phaseIndex = when {
+            fraction < prepareBoundary -> 0
+            fraction < 0.35f -> 1
+            fraction < 0.85f -> 2
+            else -> 3
+        }
+        val phaseLabels = listOf("Preparar", "Movimento suave", "Manter", "Retornar")
+        val sideLabel = when {
+            !hasSides -> "Contínuo"
+            sideIndex == 0 -> "Direita"
+            else -> "Esquerda"
+        }
+        val frame = when {
+            phaseIndex == 0 -> 0
+            phaseIndex == 3 -> 3
+            cardId == 3 && phaseIndex == 1 -> 1
+            cardId == 3 -> 2
+            sideIndex == 0 -> 2
+            else -> 1
+        }
+        return StretchGuideCue(frame, phaseIndex, phaseLabels[phaseIndex], sideLabel)
+    }
+
+    private fun exerciseGuideCacheKey(imagePath: String, frameIndex: Int?): String =
+        "$imagePath#${frameIndex?.toString() ?: "full"}"
+
+    private fun loadExerciseGuideBitmap(context: Context, imagePath: String, frameIndex: Int?): Bitmap? {
+        if (imagePath.substringAfterLast('.', "").lowercase() !in setOf("png", "webp", "jpg", "jpeg")) return null
+        val cacheKey = exerciseGuideCacheKey(imagePath, frameIndex)
+        exerciseGuideBitmapCache.get(cacheKey)?.let { return it }
+        return try {
+            val bitmap = context.assets.open(imagePath).use { decodeExerciseGuideBitmap(it, frameIndex) } ?: return null
+            if (bitmap.byteCount <= 4 * 1024 * 1024) exerciseGuideBitmapCache.put(cacheKey, bitmap)
+            bitmap
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun decodeExerciseGuideBitmap(input: InputStream, frameIndex: Int?): Bitmap? {
+        return try {
+            val options = BitmapFactory.Options().apply {
+                inPreferredConfig = Bitmap.Config.ARGB_8888
+                inSampleSize = if (frameIndex != null) 2 else 1
+            }
+            val decoded = BitmapFactory.decodeStream(input, null, options) ?: return null
+            if (frameIndex == null) return decoded
+            if (frameIndex !in 0..3 || decoded.width < 2 || decoded.height < 2) {
+                decoded.recycle()
+                return null
+            }
+            val cellWidth = decoded.width / 2
+            val cellHeight = decoded.height / 2
+            val tile = Bitmap.createBitmap(
+                decoded,
+                (frameIndex % 2) * cellWidth,
+                (frameIndex / 2) * cellHeight,
+                cellWidth,
+                cellHeight
+            )
+            if (tile !== decoded) decoded.recycle()
+            tile
+        } catch (_: Exception) {
+            null
+        }
+    }
 
     // Rastreamento de arrasto (drag & snap to edge)
     private var isDragging = false
@@ -222,6 +331,14 @@ object WorkoutOverlayController {
 
     fun currentVisualState(): VisualState = currentState
 
+    fun setAppReducedMotion(context: Context, enabled: Boolean) {
+        mainHandler.post {
+            if (appReducedMotion == enabled) return@post
+            appReducedMotion = enabled
+            if (rootView != null) lastRawState?.let { bindStateToViews(context, it, getPreferences(context)) }
+        }
+    }
+
     /**
      * Ponto de entrada chamado por WorkoutForegroundService sempre que o estado é atualizado.
      * Consome estritamente o estado do serviço (sem timer próprio).
@@ -238,7 +355,7 @@ object WorkoutOverlayController {
             }
 
             if (rootView == null) {
-                val initialMode = if (prefs.defaultSize == "mini") VisualState.MINI else VisualState.COMPACT
+                val initialMode = initialVisualState(prefs)
                 createAndAttachOverlay(context, initialMode)
             }
 
@@ -257,8 +374,16 @@ object WorkoutOverlayController {
             miniContainer = null
             compactContainer = null
             expandedContainer = null
+            cancelConfirmationContainer = null
+            expandedExerciseImage?.setImageDrawable(null)
             expandedExerciseImage = null
+            expandedExerciseGuideContainer = null
+            expandedExerciseFallback = null
+            expandedExercisePhase = null
+            expandedExercisePhaseTrack = null
             breathVisualView = null
+            isCancelConfirmationVisible = false
+            cancelWasRunning = false
         }
     }
 
@@ -371,6 +496,7 @@ object WorkoutOverlayController {
     }
 
     private fun toggleVisualState(context: Context) {
+        if (isCancelConfirmationVisible) return
         val prefs = getPreferences(context)
         currentState = when (currentState) {
             VisualState.MINI -> VisualState.EXPANDED
@@ -389,9 +515,17 @@ object WorkoutOverlayController {
     }
 
     private fun updateViewVisibility() {
-        miniContainer?.visibility = if (currentState == VisualState.MINI) View.VISIBLE else View.GONE
-        compactContainer?.visibility = if (currentState == VisualState.COMPACT) View.VISIBLE else View.GONE
-        expandedContainer?.visibility = if (currentState == VisualState.EXPANDED) View.VISIBLE else View.GONE
+        if (isCancelConfirmationVisible) {
+            miniContainer?.visibility = View.GONE
+            compactContainer?.visibility = View.GONE
+            expandedContainer?.visibility = View.GONE
+            cancelConfirmationContainer?.visibility = View.VISIBLE
+        } else {
+            miniContainer?.visibility = if (currentState == VisualState.MINI) View.VISIBLE else View.GONE
+            compactContainer?.visibility = if (currentState == VisualState.COMPACT) View.VISIBLE else View.GONE
+            expandedContainer?.visibility = if (currentState == VisualState.EXPANDED) View.VISIBLE else View.GONE
+            cancelConfirmationContainer?.visibility = View.GONE
+        }
         rootView?.let { root ->
             layoutParams?.let { lp ->
                 runCatching { windowManager?.updateViewLayout(root, lp) }
@@ -401,6 +535,7 @@ object WorkoutOverlayController {
 
     private fun scheduleAutoCollapse(context: Context) {
         cancelAutoCollapse()
+        if (isCancelConfirmationVisible) return
         val prefs = getPreferences(context)
         if (currentState == VisualState.EXPANDED && prefs.autoCollapse) {
             autoCollapseRunnable = Runnable {
@@ -414,6 +549,67 @@ object WorkoutOverlayController {
         autoCollapseRunnable = null
     }
 
+    private fun initialVisualState(prefs: OverlayPreferences): VisualState = when (prefs.defaultSize) {
+        SIZE_MINI -> VisualState.MINI
+        SIZE_EXPANDED -> VisualState.EXPANDED
+        else -> VisualState.COMPACT
+    }
+
+    private fun updatePauseButton(button: TextView?, isPaused: Boolean) {
+        button ?: return
+        if (isPaused) {
+            button.text = "▶ Continuar"
+            button.contentDescription = "Continuar treino"
+            button.background = createPillDrawable(Color.parseColor("#10B981"), Color.parseColor("#10B981"), 0)
+        } else {
+            button.text = "⏸ Pausar"
+            button.contentDescription = "Pausar treino"
+            button.background = createPillDrawable(Color.parseColor("#F59E0B"), Color.parseColor("#F59E0B"), 0)
+        }
+    }
+
+    private fun toggleWorkoutPause(context: Context) {
+        val isPaused = lastRawState?.optString("status") == "paused"
+        sendServiceAction(
+            context,
+            if (isPaused) WorkoutForegroundService.ACTION_RESUME else WorkoutForegroundService.ACTION_PAUSE
+        )
+        scheduleAutoCollapse(context)
+    }
+
+    private fun openCancelConfirmation(context: Context) {
+        if (isCancelConfirmationVisible) return
+        cancelPreviousVisualState = currentState
+        cancelWasRunning = lastRawState?.optString("status") == "running"
+        cancelAutoCollapse()
+        cancelKeepButton?.apply {
+            text = if (cancelWasRunning) "Continuar treino" else "Manter treino pausado"
+            contentDescription = text.toString()
+        }
+        isCancelConfirmationVisible = true
+        updateViewVisibility()
+        if (cancelWasRunning) sendServiceAction(context, WorkoutForegroundService.ACTION_PAUSE)
+    }
+
+    private fun dismissCancelConfirmation(context: Context) {
+        if (!isCancelConfirmationVisible) return
+        val shouldResume = cancelWasRunning
+        isCancelConfirmationVisible = false
+        currentState = cancelPreviousVisualState
+        cancelWasRunning = false
+        updateViewVisibility()
+        if (shouldResume) sendServiceAction(context, WorkoutForegroundService.ACTION_RESUME)
+        scheduleAutoCollapse(context)
+    }
+
+    private fun confirmCancelSession(context: Context) {
+        if (!isCancelConfirmationVisible) return
+        isCancelConfirmationVisible = false
+        cancelWasRunning = false
+        cancelAutoCollapse()
+        sendServiceAction(context, WorkoutForegroundService.ACTION_STOP)
+    }
+
     /* -------------------------------------------------------------
        CONSTRUÇÃO DA INTERFACE NATIVA (MATERIAL DESIGN 3 / AMOLED)
     ------------------------------------------------------------- */
@@ -424,7 +620,7 @@ object WorkoutOverlayController {
             gravity = Gravity.CENTER_VERTICAL
             setPadding(dpToPx(context, 6), dpToPx(context, 4), dpToPx(context, 10), dpToPx(context, 4))
             background = createPillDrawable(Color.parseColor("#0B0F19"), Color.parseColor("#10B981"), 1)
-            contentDescription = "Treino ativo flutuante, modo mini. Toque para alternar tamanho."
+            contentDescription = "Treino ativo flutuante, modo mini. Toque em Abrir para ver os controles."
         }
 
         miniIconBadge = TextView(context).apply {
@@ -441,8 +637,33 @@ object WorkoutOverlayController {
             setTextColor(Color.WHITE)
         }
 
+        miniActionText = TextView(context).apply {
+            text = "TREINO"
+            textSize = 9f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(Color.WHITE)
+            maxLines = 1
+            ellipsize = TextUtils.TruncateAt.END
+            setPadding(0, 0, dpToPx(context, 8), 0)
+        }
+        miniOpenText = TextView(context).apply {
+            text = "Abrir"
+            textSize = 10f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(Color.parseColor("#6EE7B7"))
+            contentDescription = "Abrir controles do treino"
+            minHeight = dpToPx(context, 48)
+            setPadding(dpToPx(context, 8), dpToPx(context, 6), dpToPx(context, 2), dpToPx(context, 6))
+            setOnClickListener {
+                cancelAutoCollapse()
+                setVisualState(context, VisualState.EXPANDED)
+            }
+        }
+
         miniContainer?.addView(miniIconBadge)
+        miniContainer?.addView(miniActionText)
         miniContainer?.addView(miniTimerText)
+        miniContainer?.addView(miniOpenText)
         root.addView(miniContainer)
     }
 
@@ -450,6 +671,9 @@ object WorkoutOverlayController {
         compactContainer = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
+            val availableWidth = (context.resources.displayMetrics.widthPixels - dpToPx(context, 32))
+                .coerceAtLeast(dpToPx(context, 280))
+            layoutParams = FrameLayout.LayoutParams(minOf(dpToPx(context, 360), availableWidth), FrameLayout.LayoutParams.WRAP_CONTENT)
             setPadding(dpToPx(context, 8), dpToPx(context, 6), dpToPx(context, 8), dpToPx(context, 6))
             background = createPillDrawable(Color.parseColor("#0B0F19"), Color.parseColor("#1E293B"), 1)
             contentDescription = "Treino ativo flutuante, modo compacto. Toque para alternar tamanho."
@@ -466,6 +690,7 @@ object WorkoutOverlayController {
         val textCol = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER_VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
 
         compactActionText = TextView(context).apply {
@@ -473,6 +698,8 @@ object WorkoutOverlayController {
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.WHITE)
+            maxLines = 1
+            ellipsize = TextUtils.TruncateAt.END
         }
         compactProgramText = TextView(context).apply {
             text = "CoreFlow"
@@ -492,13 +719,41 @@ object WorkoutOverlayController {
         }
 
         val spacer = View(context).apply {
-            layoutParams = LinearLayout.LayoutParams(dpToPx(context, 10), 0)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(context, 6), 0)
+        }
+
+        compactPauseResumeBtn = TextView(context).apply {
+            text = "⏸ Pausar"
+            textSize = 10f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(Color.parseColor("#0F172A"))
+            gravity = Gravity.CENTER
+            minHeight = dpToPx(context, 48)
+            setPadding(dpToPx(context, 8), dpToPx(context, 5), dpToPx(context, 8), dpToPx(context, 5))
+            background = createPillDrawable(Color.parseColor("#F59E0B"), Color.parseColor("#F59E0B"), 0)
+            contentDescription = "Pausar treino"
+            setOnClickListener { toggleWorkoutPause(context) }
+        }
+
+        compactCancelBtn = TextView(context).apply {
+            text = "Cancelar"
+            textSize = 10f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(Color.parseColor("#FDA4AF"))
+            gravity = Gravity.CENTER
+            minHeight = dpToPx(context, 48)
+            setPadding(dpToPx(context, 8), dpToPx(context, 5), dpToPx(context, 8), dpToPx(context, 5))
+            background = createPillDrawable(Color.parseColor("#30121B"), Color.parseColor("#FB7185"), 1)
+            contentDescription = "Cancelar treino"
+            setOnClickListener { openCancelConfirmation(context) }
         }
 
         compactContainer?.addView(compactIconBadge)
         compactContainer?.addView(textCol)
         compactContainer?.addView(spacer)
         compactContainer?.addView(compactTimerText)
+        compactContainer?.addView(compactPauseResumeBtn)
+        compactContainer?.addView(compactCancelBtn)
         root.addView(compactContainer)
     }
 
@@ -535,11 +790,12 @@ object WorkoutOverlayController {
         headerTexts.addView(expandedPhaseSubtitle)
 
         val collapseBtn = TextView(context).apply {
-            text = "✕"
-            textSize = 14f
+            text = "Recolher"
+            textSize = 10f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.parseColor("#94A3B8"))
             contentDescription = "Recolher modo expandido"
+            minHeight = dpToPx(context, 48)
             setPadding(dpToPx(context, 6), dpToPx(context, 4), dpToPx(context, 6), dpToPx(context, 4))
             setOnClickListener {
                 cancelAutoCollapse()
@@ -603,22 +859,82 @@ object WorkoutOverlayController {
         }
         expandedContainer?.addView(expandedTotalTimeText)
 
-        // Imagem da Postura Biomecânica (Bracing McGill e exercícios com guia)
-        expandedExerciseImage = ImageView(context).apply {
+        // Imagem da postura, fallback local e fase derivados do mesmo estado nativo.
+        expandedExerciseGuideContainer = FrameLayout(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                dpToPx(context, 120)
+                dpToPx(context, 150)
             ).apply {
                 topMargin = dpToPx(context, 2)
-                bottomMargin = dpToPx(context, 8)
             }
-            scaleType = ImageView.ScaleType.FIT_CENTER
             background = createCardDrawable(Color.parseColor("#090D16"), Color.parseColor("#1E293B"), dpToPx(context, 12).toFloat())
-            setPadding(dpToPx(context, 6), dpToPx(context, 6), dpToPx(context, 6), dpToPx(context, 6))
             clipToOutline = true
             visibility = View.GONE
         }
-        expandedContainer?.addView(expandedExerciseImage)
+        expandedExerciseImage = ImageView(context).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+            scaleType = ImageView.ScaleType.FIT_CENTER
+            setPadding(dpToPx(context, 6), dpToPx(context, 6), dpToPx(context, 6), dpToPx(context, 6))
+            visibility = View.GONE
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+        }
+        expandedExerciseFallback = TextView(context).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+            text = "Orientação visual indisponível. Siga a instrução do exercício."
+            textSize = 12f
+            gravity = Gravity.CENTER
+            setPadding(dpToPx(context, 16), dpToPx(context, 8), dpToPx(context, 16), dpToPx(context, 8))
+            setTextColor(Color.parseColor("#CBD5E1"))
+            contentDescription = "Orientação visual indisponível. Siga a instrução do exercício."
+            visibility = View.GONE
+        }
+        expandedExerciseGuideContainer?.addView(expandedExerciseImage)
+        expandedExerciseGuideContainer?.addView(expandedExerciseFallback)
+        expandedContainer?.addView(expandedExerciseGuideContainer)
+
+        expandedExercisePhase = TextView(context).apply {
+            text = "Preparar · Direita"
+            textSize = 10f
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            setTextColor(Color.parseColor("#A7F3D0"))
+            contentDescription = "Fase do alongamento"
+            visibility = View.GONE
+        }
+        expandedContainer?.addView(expandedExercisePhase)
+
+        expandedExercisePhaseTrack = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dpToPx(context, 4)
+            ).apply {
+                topMargin = dpToPx(context, 3)
+                bottomMargin = dpToPx(context, 7)
+            }
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            visibility = View.GONE
+        }
+        repeat(4) { index ->
+            expandedExercisePhaseTrack?.addView(View(context).apply {
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f).apply {
+                    if (index < 3) marginEnd = dpToPx(context, 4)
+                }
+                background = createCardDrawable(
+                    if (index == 0) Color.parseColor("#34D399") else Color.parseColor("#334155"),
+                    Color.TRANSPARENT,
+                    dpToPx(context, 4).toFloat()
+                )
+                tag = index
+            })
+        }
+        expandedContainer?.addView(expandedExercisePhaseTrack)
 
         // Card do Próximo Passo
         expandedNextStepCard = LinearLayout(context).apply {
@@ -638,7 +954,7 @@ object WorkoutOverlayController {
         expandedNextStepCard?.addView(expandedNextStepLabel)
         expandedContainer?.addView(expandedNextStepCard)
 
-        // Barra de Controles (CP4): Pausar/Continuar, Pular/Próximo e Saída Segura
+        // Barra de Controles: Pausar/Continuar, Pular e Cancelar são ações distintas.
         val controlsBar = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
@@ -650,6 +966,7 @@ object WorkoutOverlayController {
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.parseColor("#0F172A"))
             contentDescription = "Pausar ou continuar treino"
+            minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER
             background = createPillDrawable(Color.parseColor("#10B981"), Color.parseColor("#10B981"), 0)
             setPadding(dpToPx(context, 14), dpToPx(context, 8), dpToPx(context, 14), dpToPx(context, 8))
@@ -670,6 +987,7 @@ object WorkoutOverlayController {
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.WHITE)
             contentDescription = "Pular para o próximo passo"
+            minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER
             background = createPillDrawable(Color.parseColor("#1E293B"), Color.parseColor("#334155"), 1)
             setPadding(dpToPx(context, 12), dpToPx(context, 8), dpToPx(context, 12), dpToPx(context, 8))
@@ -682,8 +1000,25 @@ object WorkoutOverlayController {
             }
         }
 
+        expandedCancelBtn = TextView(context).apply {
+            text = "Cancelar"
+            textSize = 11f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(Color.parseColor("#FDA4AF"))
+            contentDescription = "Cancelar treino"
+            minHeight = dpToPx(context, 48)
+            gravity = Gravity.CENTER
+            background = createPillDrawable(Color.parseColor("#30121B"), Color.parseColor("#FB7185"), 1)
+            setPadding(dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8))
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                leftMargin = dpToPx(context, 4)
+            }
+            setOnClickListener { openCancelConfirmation(context) }
+        }
+
         controlsBar.addView(expandedPauseResumeBtn)
         controlsBar.addView(expandedSkipBtn)
+        controlsBar.addView(expandedCancelBtn)
         expandedContainer?.addView(controlsBar)
 
         // Botão especial: Saída Segura da Retenção (quando em retenção de Vácuo)
@@ -693,6 +1028,7 @@ object WorkoutOverlayController {
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.parseColor("#F59E0B"))
             contentDescription = "Encerrar retenção de vácuo com segurança e iniciar recuperação"
+            minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER
             background = createCardDrawable(Color.parseColor("#1A1607"), Color.parseColor("#F59E0B"), dpToPx(context, 8).toFloat())
             setPadding(dpToPx(context, 8), dpToPx(context, 6), dpToPx(context, 8), dpToPx(context, 6))
@@ -716,6 +1052,72 @@ object WorkoutOverlayController {
         }
 
         root.addView(expandedContainer)
+        buildCancelConfirmation(context, root)
+    }
+
+    private fun buildCancelConfirmation(context: Context, root: FrameLayout) {
+        cancelConfirmationContainer = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = FrameLayout.LayoutParams(dpToPx(context, 320), FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER)
+            setPadding(dpToPx(context, 16), dpToPx(context, 16), dpToPx(context, 16), dpToPx(context, 14))
+            background = createCardDrawable(Color.parseColor("#0B0F19"), Color.parseColor("#FB7185"), dpToPx(context, 18).toFloat())
+            elevation = dpToPx(context, 12).toFloat()
+            contentDescription = "Confirmação de cancelamento"
+            visibility = View.GONE
+        }
+
+        val title = TextView(context).apply {
+            text = "Cancelar treino?"
+            textSize = 16f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(Color.WHITE)
+        }
+        val explanation = TextView(context).apply {
+            text = "A sessão será encerrada sem ser marcada como concluída. O histórico anterior será mantido."
+            textSize = 12f
+            setTextColor(Color.parseColor("#CBD5E1"))
+            setPadding(0, dpToPx(context, 8), 0, dpToPx(context, 14))
+        }
+        val actions = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+        }
+        cancelKeepButton = TextView(context).apply {
+            text = "Continuar treino"
+            textSize = 11f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(Color.WHITE)
+            gravity = Gravity.CENTER
+            minHeight = dpToPx(context, 48)
+            background = createPillDrawable(Color.parseColor("#1E293B"), Color.parseColor("#475569"), 1)
+            contentDescription = "Continuar treino"
+            setPadding(dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8))
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                rightMargin = dpToPx(context, 5)
+            }
+            setOnClickListener { dismissCancelConfirmation(context) }
+        }
+        val confirmButton = TextView(context).apply {
+            text = "Cancelar sessão"
+            textSize = 11f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(Color.WHITE)
+            gravity = Gravity.CENTER
+            minHeight = dpToPx(context, 48)
+            background = createPillDrawable(Color.parseColor("#BE123C"), Color.parseColor("#FB7185"), 1)
+            contentDescription = "Confirmar cancelamento da sessão"
+            setPadding(dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8))
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                leftMargin = dpToPx(context, 5)
+            }
+            setOnClickListener { confirmCancelSession(context) }
+        }
+        actions.addView(cancelKeepButton)
+        actions.addView(confirmButton)
+        cancelConfirmationContainer?.addView(title)
+        cancelConfirmationContainer?.addView(explanation)
+        cancelConfirmationContainer?.addView(actions)
+        root.addView(cancelConfirmationContainer)
     }
 
     /* -------------------------------------------------------------
@@ -737,11 +1139,20 @@ object WorkoutOverlayController {
         val isRest = currentStep?.optBoolean("isRest", false) ?: false
         val phase = currentStep?.optString("phase", "").orEmpty()
         val badge = currentStep?.optString("badge", "").orEmpty()
+        val breathPhaseKey = when {
+            badge.equals("INSPIRE", ignoreCase = true) || phase == "inspire" -> "inspire"
+            badge.equals("EXPIRE", ignoreCase = true) || phase == "recuperacao" -> "expire"
+            badge.equals("VAZIO", ignoreCase = true) -> "hold2"
+            badge.equals("SEGURE", ignoreCase = true) -> "hold1"
+            else -> phase
+        }
         val title = currentStep?.optString("title", "Treino") ?: "Treino"
         val series = currentStep?.optInt("series", 0) ?: 0
 
         val programTitle = sessionMeta.optString("programTitle", "CoreFlow")
         val phaseTitle = sessionMeta.optString("phaseTitle", "")
+        val programId = sessionMeta.optString("programId", "")
+        val cardId = sessionMeta.optInt("cardId", programId.substringAfterLast('_').toIntOrNull() ?: 0)
 
         val timeStr = formatTime(stepTimeLeft)
         val totalTimeStr = if (duration > 0) "de ${duration}s" else ""
@@ -759,7 +1170,8 @@ object WorkoutOverlayController {
         miniTimerText?.text = timeStr
         miniIconBadge?.setTextColor(accentColor)
         miniContainer?.background = createPillDrawable(Color.parseColor("#0B0F19"), accentColor, 1)
-        miniContainer?.contentDescription = "$programTitle, $actionLabel, restante $timeStr. Toque para alternar tamanho."
+        miniActionText?.text = actionLabel
+        miniContainer?.contentDescription = "$programTitle, $actionLabel, restante $timeStr. Toque em Abrir para ver os controles."
 
         // 2. Atualizar COMPACTO
         compactTimerText?.text = timeStr
@@ -780,12 +1192,21 @@ object WorkoutOverlayController {
             val patternKey = sessionMeta.optString("patternKey", "")
             val isBox = patternKey == "caixa" || phaseTitle.contains("Caixa", ignoreCase = true)
             breathVisualView?.visibility = View.VISIBLE
-            breathVisualView?.updateState(isBox, actionLabel, stepTimeLeft, duration, accentColor, currentStepIndex)
-            breathVisualView?.contentDescription = "Visual da respiração $actionLabel. Tempo restante: $timeStr"
+            breathVisualView?.setAppReducedMotion(appReducedMotion)
+            breathVisualView?.updateState(isBox, actionLabel, stepTimeLeft, duration, accentColor, currentStepIndex, breathPhaseKey, status == "running")
+            val breathDescription = "Respiração: fase $actionLabel."
+            if (breathVisualView?.contentDescription != breathDescription) breathVisualView?.contentDescription = breathDescription
             expandedActionTitle?.visibility = View.GONE
             expandedTimerText?.visibility = View.GONE
             expandedTotalTimeText?.visibility = View.GONE
+            expandedExerciseImage?.setImageDrawable(null)
+            expandedExerciseImage?.tag = null
             expandedExerciseImage?.visibility = View.GONE
+            expandedExerciseFallback?.visibility = View.GONE
+            expandedExerciseGuideContainer?.visibility = View.GONE
+            expandedExercisePhase?.animate()?.cancel()
+            expandedExercisePhase?.visibility = View.GONE
+            expandedExercisePhaseTrack?.visibility = View.GONE
         } else {
             breathVisualView?.visibility = View.GONE
             expandedActionTitle?.visibility = View.VISIBLE
@@ -797,37 +1218,80 @@ object WorkoutOverlayController {
             expandedTotalTimeText?.text = totalTimeStr
 
             val imagePath = currentStep?.optString("image", "").orEmpty()
-            if (imagePath.isNotBlank()) {
-                try {
-                    context.assets.open(imagePath).use { stream ->
-                        val bmp = BitmapFactory.decodeStream(stream)
-                        if (bmp != null) {
-                            expandedExerciseImage?.setImageBitmap(bmp)
-                            expandedExerciseImage?.contentDescription = "Postura correta para o exercício $title"
-                            expandedExerciseImage?.visibility = View.VISIBLE
-                        } else {
-                            expandedExerciseImage?.visibility = View.GONE
-                        }
-                    }
-                } catch (_: Exception) {
-                    expandedExerciseImage?.visibility = View.GONE
+            val isStretchGuide = phase == "stretch" || programId.startsWith("pausa_stretch_") ||
+                sessionMeta.optString("type").startsWith("stretch")
+            val sequenceAssetPath = "img/pausas/stretch-sequence-$cardId.png"
+            val isStretchSequence = isStretchGuide && cardId in 1..4 && imagePath == sequenceAssetPath
+            val cue = if (isStretchSequence) resolveStretchGuideCue(cardId, duration, stepTimeLeft) else null
+            val frameIndex = cue?.frame
+            val cacheKey = if (imagePath.isNotBlank()) exerciseGuideCacheKey(imagePath, frameIndex) else ""
+            val currentImageIsReusable = cacheKey.isNotBlank() && expandedExerciseImage?.tag == cacheKey &&
+                expandedExerciseImage?.drawable != null
+            val bitmap = if (imagePath.isNotBlank() && !currentImageIsReusable) {
+                loadExerciseGuideBitmap(context, imagePath, frameIndex)
+            } else null
+            val imageAvailable = currentImageIsReusable || bitmap != null
+
+            if (imageAvailable) {
+                if (!currentImageIsReusable && bitmap != null) {
+                    expandedExerciseImage?.setImageBitmap(bitmap)
+                    expandedExerciseImage?.tag = cacheKey
                 }
+                expandedExerciseImage?.contentDescription = if (cue != null) {
+                    "Ilustração de $title, lado ${cue.sideLabel.lowercase()}"
+                } else {
+                    "Ilustração de $title"
+                }
+                expandedExerciseImage?.visibility = View.VISIBLE
+                expandedExerciseFallback?.visibility = View.GONE
             } else {
+                expandedExerciseImage?.setImageDrawable(null)
+                expandedExerciseImage?.tag = null
+                expandedExerciseImage?.contentDescription = null
                 expandedExerciseImage?.visibility = View.GONE
+                expandedExerciseFallback?.visibility = if (!isRest && (isStretchGuide || imagePath.isNotBlank())) View.VISIBLE else View.GONE
+            }
+            expandedExerciseGuideContainer?.visibility = if (imageAvailable || (!isRest && (isStretchGuide || imagePath.isNotBlank()))) View.VISIBLE else View.GONE
+
+            if (cue != null) {
+                val cueText = "${cue.phaseLabel} · ${cue.sideLabel}"
+                val cueView = expandedExercisePhase
+                if (isPaused) {
+                    cueView?.animate()?.cancel()
+                    cueView?.alpha = 1f
+                }
+                if (cueView?.text?.toString() != cueText) {
+                    cueView?.animate()?.cancel()
+                    cueView?.text = cueText
+                    cueView?.contentDescription = "Fase do alongamento: ${cue.phaseLabel}, lado ${cue.sideLabel.lowercase()}"
+                    if (!isPaused && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && ValueAnimator.areAnimatorsEnabled()) {
+                        cueView?.alpha = 0.72f
+                        cueView?.animate()?.alpha(1f)?.setDuration(220)?.start()
+                    } else {
+                        cueView?.alpha = 1f
+                    }
+                }
+                cueView?.visibility = View.VISIBLE
+                val track = expandedExercisePhaseTrack
+                if (track?.tag != cue.phaseIndex) {
+                    for (index in 0 until (track?.childCount ?: 0)) {
+                        val color = if (index == cue.phaseIndex) Color.parseColor("#34D399") else Color.parseColor("#334155")
+                        track?.getChildAt(index)?.background = createCardDrawable(color, Color.TRANSPARENT, dpToPx(context, 4).toFloat())
+                    }
+                    track?.tag = cue.phaseIndex
+                }
+                track?.visibility = View.VISIBLE
+            } else {
+                expandedExercisePhase?.animate()?.cancel()
+                expandedExercisePhase?.visibility = View.GONE
+                expandedExercisePhaseTrack?.visibility = View.GONE
             }
         }
         expandedContainer?.contentDescription = "Card expandido do treino. $programTitle, $actionLabel, restante $timeStr."
 
-        // Botão Pausar / Continuar
-        if (isPaused) {
-            expandedPauseResumeBtn?.text = "▶ Continuar"
-            expandedPauseResumeBtn?.contentDescription = "Continuar treino"
-            expandedPauseResumeBtn?.background = createPillDrawable(Color.parseColor("#10B981"), Color.parseColor("#10B981"), 0)
-        } else {
-            expandedPauseResumeBtn?.text = "⏸ Pausar"
-            expandedPauseResumeBtn?.contentDescription = "Pausar treino"
-            expandedPauseResumeBtn?.background = createPillDrawable(Color.parseColor("#F59E0B"), Color.parseColor("#F59E0B"), 0)
-        }
+        // Os três tamanhos recebem o mesmo estado vindo do motor nativo.
+        updatePauseButton(compactPauseResumeBtn, isPaused)
+        updatePauseButton(expandedPauseResumeBtn, isPaused)
 
         // Próximo passo
         if (prefs.showNextStep && nextStep != null) {
@@ -946,16 +1410,115 @@ class BreathVisualView(context: Context) : View(context) {
     var phaseLabel: String = "INSPIRE"
     var phaseIndex: Int = 0
     var accentColor: Int = Color.parseColor("#10B981")
+    var phaseKey: String = "inspire"
+    private var motionProgress: Float = 0f
+    private var motionAnimator: ValueAnimator? = null
+    private var appReducedMotion = false
+    private var lastTimeLeft: Int? = null
+    private var lastPhaseIndex: Int? = null
+    private var wasRunning: Boolean = false
 
-    fun updateState(isBox: Boolean, label: String, timeLeft: Int, duration: Int, color: Int, stepIndex: Int) {
+    private val systemReducedMotion: Boolean
+        get() = try {
+            Settings.Global.getFloat(
+                context.contentResolver,
+                Settings.Global.ANIMATOR_DURATION_SCALE,
+                1f
+            ) <= 0f
+        } catch (_: Exception) {
+            false
+        }
+
+    fun setAppReducedMotion(enabled: Boolean) {
+        appReducedMotion = enabled
+    }
+
+    fun updateState(
+        isBox: Boolean,
+        label: String,
+        timeLeft: Int,
+        duration: Int,
+        color: Int,
+        stepIndex: Int,
+        nextPhaseKey: String = "",
+        isRunning: Boolean = true
+    ) {
+        val nextDuration = duration.coerceAtLeast(0)
+        val effectiveDuration = nextDuration.coerceAtLeast(1)
+        val nextTimeLeft = timeLeft.coerceIn(0, effectiveDuration)
+        val nextIndex = (stepIndex % 4).coerceIn(0, 3)
+        val normalizedPhaseKey = nextPhaseKey.ifBlank { label.lowercase() }
+        val phaseChanged = lastPhaseIndex != nextIndex || phaseKey != normalizedPhaseKey
+        val tickChanged = lastTimeLeft != nextTimeLeft
+        val authoritativeProgress = ((effectiveDuration - nextTimeLeft).toFloat() / effectiveDuration).coerceIn(0f, 1f)
+
         isBoxPattern = isBox
         phaseLabel = label
-        stepTimeLeft = timeLeft
-        phaseDuration = duration.coerceAtLeast(1)
+        stepTimeLeft = nextTimeLeft
+        phaseDuration = effectiveDuration
         accentColor = color
-        phaseIndex = (stepIndex % 4).coerceIn(0, 3)
+        phaseIndex = nextIndex
+        phaseKey = normalizedPhaseKey
         activePaint.color = color
+
+        if (nextDuration == 0) {
+            motionAnimator?.cancel()
+            motionAnimator = null
+            motionProgress = 1f
+        } else if (systemReducedMotion || appReducedMotion) {
+            motionAnimator?.cancel()
+            motionAnimator = null
+            motionProgress = 0f
+        } else if (!isRunning) {
+            if (phaseChanged || lastTimeLeft == null) {
+                motionAnimator?.cancel()
+                motionAnimator = null
+                motionProgress = authoritativeProgress
+            } else {
+                motionAnimator?.pause()
+            }
+        } else if (phaseChanged || tickChanged || lastTimeLeft == null) {
+            motionAnimator?.cancel()
+            motionAnimator = null
+            motionProgress = authoritativeProgress
+            val nextTickProgress = (authoritativeProgress + 1f / effectiveDuration).coerceAtMost(1f)
+            if (nextTimeLeft > 0 && nextTickProgress > authoritativeProgress) {
+                motionAnimator = ValueAnimator.ofFloat(authoritativeProgress, nextTickProgress).apply {
+                    this.duration = 1000L
+                    interpolator = LinearInterpolator()
+                    addUpdateListener { animator ->
+                        motionProgress = animator.animatedValue as Float
+                        postInvalidateOnAnimation()
+                    }
+                    start()
+                }
+            }
+        } else if (!wasRunning && motionAnimator?.isPaused == true) {
+            motionAnimator?.resume()
+        }
+
+        lastTimeLeft = nextTimeLeft
+        lastPhaseIndex = nextIndex
+        wasRunning = isRunning
         postInvalidate()
+    }
+
+    private fun circleScale(progress: Float): Float = when (phaseKey) {
+        "inspire" -> 0.70f + 0.35f * progress
+        "expire" -> 1.05f - 0.35f * progress
+        "hold2", "vazio" -> 0.70f
+        "hold1", "retencao" -> 1.05f
+        else -> 1.05f
+    }
+
+    override fun onDetachedFromWindow() {
+        motionAnimator?.pause()
+        super.onDetachedFromWindow()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (wasRunning && motionAnimator?.isPaused == true && !systemReducedMotion) motionAnimator?.resume()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -965,8 +1528,7 @@ class BreathVisualView(context: Context) : View(context) {
         if (w <= 0f || h <= 0f) return
 
         val pad = dpToPx(12).toFloat()
-        val elapsed = (phaseDuration - stepTimeLeft).coerceAtLeast(0)
-        val fraction = (elapsed.toFloat() / phaseDuration.toFloat()).coerceIn(0f, 1f)
+        val fraction = motionProgress.coerceIn(0f, 1f)
         val cx = w / 2f
         val cy = h / 2f
 
@@ -1008,7 +1570,7 @@ class BreathVisualView(context: Context) : View(context) {
                     path.lineTo(left, bottom - sideH * fraction)
                 }
             }
-            canvas.drawPath(path, activePaint)
+            if (!systemReducedMotion && !appReducedMotion) canvas.drawPath(path, activePaint)
 
             // Indicadores discretos dos cantos do quadrado
             canvas.drawCircle(left, top, 4f, dotPaint)
@@ -1018,11 +1580,7 @@ class BreathVisualView(context: Context) : View(context) {
         } else {
             // Pulsação circular suave para outras respirações
             val baseR = (w / 2f) - pad - 8f
-            val scale = when {
-                phaseLabel.contains("INSPIRE", ignoreCase = true) -> 0.70f + (0.35f * fraction)
-                phaseLabel.contains("EXPIRE", ignoreCase = true) -> 1.05f - (0.35f * fraction)
-                else -> 1.05f
-            }
+            val scale = circleScale(fraction)
             val currentR = baseR * scale
             trackPaint.style = Paint.Style.STROKE
             canvas.drawCircle(cx, cy, baseR, trackPaint)

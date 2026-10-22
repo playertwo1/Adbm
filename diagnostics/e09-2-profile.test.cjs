@@ -103,6 +103,7 @@ function setup(source) {
     const toastLog = [];
     const html = makeElement('html');
     const body = makeElement('body');
+    body.appendChild = node => { node.parentNode = body; return node; };
     const context = vm.createContext({
         console: { log() {} },
         window: { scrollTo() {} },
@@ -124,6 +125,8 @@ function setup(source) {
         setTimeout() {},
         triggerHaptic() {},
         showInlineToast(message) { toastLog.push(message); },
+        pauseBreathVisuals() {},
+        resumeBreathVisuals() {},
         renderGreeting() {},
         updateHeaderStats() {},
         renderTodaySummary() {},
@@ -274,7 +277,9 @@ for (const htmlSource of sources) {
     vm.runInContext('toggleAmoledTheme();', env.context);
     assert.equal(vm.runInContext('AppState.theme', env.context), 'amoled');
     // Acessibilidade abre uma área real; cada controle altera a classe/DOM e persiste.
+    env.getElementById('accessibilitySettingsModal').parentNode = { id: 'tab-perfil' };
     vm.runInContext('openAccessibilitySettings();', env.context);
+    assert.equal(env.getElementById('accessibilitySettingsModal').parentNode, env.body, 'modal de acessibilidade deve sair da aba Perfil transformada');
     assert.equal(env.getElementById('accessibilitySettingsModal').classList.contains('hidden'), false);
     vm.runInContext("setAccessibilityTextScale('large');", env.context);
     vm.runInContext('toggleAccessibilityHighContrast(); toggleAccessibilityReducedMotion();', env.context);

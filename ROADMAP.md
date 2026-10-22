@@ -1,5 +1,34 @@
 # CoreFlow — Roadmap ativo
 
+## Nova frente solicitada em 21/10/2026 — Pílulas e pausas de trabalho
+
+- [x] Preparar diagnóstico e plano de execução das dimensões das pílulas e da rotina opcional de pausas no trabalho.
+- [ ] A0 — Aprovar o contrato visual da prancha refinada das pílulas.
+- [ ] A1–A2 — Alinhar as pílulas do overlay e validar acessibilidade, capturas Android, auditoria e aceite visual.
+- [x] B0–B1 — Implementar a rotina configurável no app e integrá-la ao agendador Android existente; diagnósticos e builds passaram.
+- [x] B2 — Ligar os lembretes às orientações e à mobilidade existentes, com início deliberado.
+- [ ] B3 — Testes, diagnósticos, builds e auditoria passaram; falta validar notificações e permissões em runtime, reinício/fuso e aparelho real.
+
+Detalhamento, critérios e fontes: [roadmap de pílulas e pausas de trabalho](docs/roadmap/pilulas-e-pausas-trabalho-2026-10-21.md). A prancha está em [referências refinadas](docs/design/pilulas-overlay-2026-10-21/README.md). A rotina de trabalho está implementada no worktree; verificação em dispositivo `NOT_RUN`. A mudança visual das pílulas aguarda aprovação humana `PENDING_HUMAN`.
+
+---
+
+## Prioridade solicitada em 18/10/2026 — Corpo, Respiração e modo flutuante
+
+Base remota verificada: `main`/`origin/main` em `cbb9be0` (1.1.46/46). Cabeçalho abaixo preservado como contexto anterior.
+
+- [x] Preparar diagnóstico estático, roadmap e três pranchas de referência; planejamento apenas, sem correção do produto.
+- [x] CP0 — Referências aprovadas/corrigidas e matriz reproduzida no emulador Pixel 9 com APK 1.1.46/46; homologação física pendente.
+- [ ] CP1 — Regressões RED e rastreamento dos assets/payload nativos.
+- [ ] CP2 — Cancelar explícito e confirmação no overlay; limpeza consistente da sessão.
+- [ ] CP3 — Guias e sequências dos quatro alongamentos, web e Android.
+- [ ] CP4 — Respiração em caixa/igual/longa/personalizada com movimento sincronizado e acessível.
+- [ ] CP5 — Gate integrado, auditoria independente e homologação física.
+
+Plano, dependências, critérios e limites: [Pausas e flutuante — 18/10](docs/roadmap/pausas-flutuante-2026-10-18.md). Referências: [pranchas revisadas](docs/design/pausas-2026-10-18/). Direção visual aprovada; reprodução de exercícios/overlay no emulador concluída em 18/10. Homologação física `NOT_RUN` e revisão visual final `PENDING_HUMAN`.
+
+---
+
 **Atualizado:** 11/10/2026.
 **Release atual:** 1.1.45 — pausas entre repetições da semana 1 do Bracing reduzidas para 5s.
 **Foco:** E15 — Correção do Bracing de 8 semanas, conforme o documento fornecido por Rafael.
@@ -83,3 +112,10 @@ Estado: EM VALIDAÇÃO FÍSICA. Declarações anteriores de TalkBack e Google Pl
 - `documentation_parent_sha=51041a9c95cd329a9b67dfbfb13f74ed07e573f5`
 
 Snapshot desta reconciliação: HEAD `f08ff31bc8c30acdc3832636f075ea748a18118e`. Os SHAs acima são históricos preservados; não são evidência de testes atuais.
+
+## 8. Correção solicitada em 17/10 — players de Pausas
+
+- [x] Guia dos quatro alongamentos trazido à vista, referências ilustradas locais, estado inicial e troca de lado corretos; Pausar/Continuar individual e Cancelar no guia. Regressões em `diagnostics/pause-player-controls.test.cjs`.
+- [x] Cancelar explícito no player diário, na respiração e no modo OLED; pausa/retomada do circuito encaminhadas ao motor nativo sem segundo timer web.
+- [ ] Revisão visual/homologação física e aprovação das imagens: PENDING_HUMAN. Imagens estáticas com indicador animado; demonstração anatômica animada não implementada.
+- [ ] Gate completo: bloqueado por divergência preexistente README/versão (`version-contract.test.cjs`). Evidência em `docs/roadmap/pausas-player-check.log`.

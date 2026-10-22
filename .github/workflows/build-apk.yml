@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -39,13 +41,15 @@ jobs:
 
   release:
     needs: verify
-    if: github.event_name == 'workflow_dispatch' && inputs.publish_release == true
+    if: github.event_name == 'workflow_dispatch' && inputs.publish_release == true && github.ref == 'refs/heads/codex/pausas-flutuante-cp5'
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -82,40 +86,129 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          BUILD_VERSION_CODE: ${{ github.run_number }}
-          BUILD_VERSION_NAME: 1.1.${{ github.run_number }}
         run: ./gradlew --no-daemon :app:assembleRelease :wear:assembleRelease
+      - name: Verify APK version, signatures, and update compatibility
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version_code="$(sed -n 's/^CORE_FLOW_VERSION_CODE=//p' gradle.properties | tr -d '\r')"
+          version_name="$(sed -n 's/^CORE_FLOW_VERSION_NAME=//p' gradle.properties | tr -d '\r')"
+          release_tag="v${version_name}"
+          build_tools="$ANDROID_HOME/build-tools/36.0.0"
+          previous_dir="$RUNNER_TEMP/previous-release"
+          mkdir -p "$previous_dir"
+          previous_tag="$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq '.tagName')"
+
+          if [[ "$version_name" =~ ^1\.1\.([0-9]+)$ ]]; then
+            name_code="${BASH_REMATCH[1]}"
+          else
+            echo "Unexpected release version name: ${version_name}"
+            exit 1
+          fi
+          if [[ "$version_code" != "$name_code" ]]; then
+            echo "versionCode and versionName must advance together."
+            exit 1
+          fi
+          if [[ "$previous_tag" =~ ^v1\.1\.([0-9]+)$ ]]; then
+            previous_code="${BASH_REMATCH[1]}"
+          else
+            echo "Cannot compare release version with latest tag ${previous_tag}."
+            exit 1
+          fi
+          if (( version_code <= previous_code )); then
+            echo "Refusing to publish a version that does not advance the latest release."
+            exit 1
+          fi
+          if gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${release_tag}" >/dev/null 2>&1; then
+            echo "Refusing to reuse existing tag ${release_tag}."
+            exit 1
+          fi
+          gh release download "$previous_tag" --repo "$GITHUB_REPOSITORY" \
+            --pattern app-release.apk --pattern wear-release.apk --dir "$previous_dir"
+
+          signer_digest() {
+            "$build_tools/apksigner" verify --print-certs "$1" 2>&1 \
+              | sed -n 's/.*Signer #1 certificate SHA-256 digest: //p' \
+              | head -n 1 | tr '[:upper:]' '[:lower:]'
+          }
+          verify_apk() {
+            local apk="$1"
+            "$build_tools/apksigner" verify --verbose "$apk"
+            "$build_tools/aapt" dump badging "$apk" \
+              | grep -F "package: name='com.aistudio.coreflow.vdfpkw' versionCode='${version_code}' versionName='${version_name}'" >/dev/null
+          }
+
+          app_apk="app/build/outputs/apk/release/app-release.apk"
+          wear_apk="wear/build/outputs/apk/release/wear-release.apk"
+          verify_apk "$app_apk"
+          verify_apk "$wear_apk"
+
+          app_signer="$(signer_digest "$app_apk")"
+          wear_signer="$(signer_digest "$wear_apk")"
+          previous_app_signer="$(signer_digest "$previous_dir/app-release.apk")"
+          previous_wear_signer="$(signer_digest "$previous_dir/wear-release.apk")"
+          if [[ -z "$app_signer" || "$app_signer" != "$wear_signer" \
+            || "$app_signer" != "$previous_app_signer" \
+            || "$app_signer" != "$previous_wear_signer" ]]; then
+            echo "APK signing identity differs from the latest release."
+            exit 1
+          fi
+          echo "Verified ${release_tag}: app and Wear APKs use the current version and the previous release signing key."
       - name: Upload signed release APKs
         uses: actions/upload-artifact@v4
         with:
-          name: CoreFlow-release-${{ github.run_number }}
+          name: CoreFlow-release-${{ github.sha }}
           path: |
-            app/build/outputs/apk/release/*.apk
-            wear/build/outputs/apk/release/*.apk
+            app/build/outputs/apk/release/app-release.apk
+            wear/build/outputs/apk/release/wear-release.apk
+            docs/releases/1.1.48.md
           if-no-files-found: error
+
+  publish:
+    needs: release
+    if: needs.release.result == 'success' && github.event_name == 'workflow_dispatch' && inputs.publish_release == true && github.ref == 'refs/heads/codex/pausas-flutuante-cp5'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout release notes
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Download verified APKs
+        uses: actions/download-artifact@v4
+        with:
+          name: CoreFlow-release-${{ github.sha }}
+          path: release-artifact
       - name: Publish phone and watch APKs
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: v1.1.${{ github.run_number }}
         run: |
           shopt -s nullglob
-          phone_apks=(app/build/outputs/apk/release/*.apk)
-          watch_apks=(wear/build/outputs/apk/release/*.apk)
-          if [ "${#phone_apks[@]}" -ne 1 ] || [ "${#watch_apks[@]}" -ne 1 ]; then
-            echo "Expected exactly one phone APK and one Wear APK."
+          set -euo pipefail
+          version_code="$(sed -n 's/^CORE_FLOW_VERSION_CODE=//p' gradle.properties | tr -d '\r')"
+          version_name="$(sed -n 's/^CORE_FLOW_VERSION_NAME=//p' gradle.properties | tr -d '\r')"
+          RELEASE_TAG="v${version_name}"
+          latest_tag="$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq '.tagName')"
+          if [[ "$latest_tag" =~ ^v1\.1\.([0-9]+)$ ]]; then
+            latest_code="${BASH_REMATCH[1]}"
+          else
+            echo "Cannot compare release version with latest tag ${latest_tag}."
             exit 1
           fi
-          phone_asset="CoreFlow-${RELEASE_TAG}.apk"
-          watch_asset="CoreFlow-Watch-${RELEASE_TAG}.apk"
-          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            gh release upload "$RELEASE_TAG" \
-              "${phone_apks[0]}#${phone_asset}" \
-              "${watch_apks[0]}#${watch_asset}" --clobber
-          else
-            gh release create "$RELEASE_TAG" \
-              "${phone_apks[0]}#${phone_asset}" \
-              "${watch_apks[0]}#${watch_asset}" \
-              --target "$GITHUB_SHA" \
-              --title "CoreFlow ${RELEASE_TAG}" \
-              --notes "Signed phone and Wear OS APKs."
+          if (( version_code <= latest_code )); then
+            echo "Refusing to publish a version that does not advance the latest release."
+            exit 1
           fi
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 \
+            || gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${RELEASE_TAG}" >/dev/null 2>&1; then
+            echo "Refusing to reuse existing release tag ${RELEASE_TAG}."
+            exit 1
+          fi
+          gh release create "$RELEASE_TAG" \
+            "release-artifact/app/build/outputs/apk/release/app-release.apk#app-release.apk" \
+            "release-artifact/wear/build/outputs/apk/release/wear-release.apk#wear-release.apk" \
+            --target "$GITHUB_SHA" \
+            --title "CoreFlow ${RELEASE_TAG}" \
+            --notes-file "release-artifact/docs/releases/${version_name}.md"

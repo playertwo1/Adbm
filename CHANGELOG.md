@@ -7,6 +7,34 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
+## [1.1.48] - 2026-10-22
+
+### Adicionado
+- Lembretes opcionais de pausa no trabalho, configuráveis por dias, horário e intervalo; a sugestão inicial é seg–sex, 8h–17h, a cada 60 minutos, desligada até ativação.
+- A notificação abre orientações curtas de descanso visual, mudança de posição, mobilidade confortável, hidratação sem meta e respiração natural. Iniciar mobilidade exige ação separada e não interrompe outra sessão.
+
+### Validação
+- A publicação depende do workflow GitHub passar `bash scripts/check.sh`, validar versão e assinatura dos APKs de celular/Wear e confirmar compatibilidade do certificado com a release anterior.
+- Runtime da notificação, permissão, reinício/fuso e uso em aparelho físico: `NOT_RUN`.
+- Referências de redesign das pílulas são propostas (`PENDING_HUMAN`); o layout das pílulas não foi alterado nesta versão.
+
+---
+
+## [1.1.47] - 2026-10-20
+
+### Corrigido
+- Cancelamento consistente de sessões no guia e no overlay Android, preservando a saída segura da retenção de Vácuo.
+- Leitura e exibição de imagens locais no overlay; Respiração e suas animações acompanham o tempo do motor nativo.
+- Instruções e ações de pausa alinhadas para Corpo e modos flutuantes.
+
+### Validação
+- `bash scripts/check.sh`: `CHECK PASS` (diagnósticos, paridade HTML, testes Android e builds debug).
+- `:app:assembleRelease :wear:assembleRelease`: `BUILD SUCCESSFUL`; APKs 1.1.47/47 assinados e verificados com `apksigner` e `aapt`.
+- Certificado SHA-256 igual ao da 1.1.46: `56052883ad4841ab226e4c41dc573d7c9862f89519c8ff74c74979443fb2d4dd`.
+- Fluxos Maestro anteriores estão registrados em `docs/roadmap/execucao.md`. Execução do APK 1.1.47 no emulador `NOT_RUN`; revisão visual humana `PENDING_HUMAN`, S25 físico e Data Layer/vibração Wear `NOT_RUN`.
+
+---
+
 ## [1.1.45] - 2026-10-11
 
 ### Alterado
