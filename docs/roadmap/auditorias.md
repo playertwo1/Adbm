@@ -142,3 +142,13 @@ existe por causa do segundo; a classificação ENUMERÁVEL/ABERTA, por causa do 
 - regressao_pos_pass: nenhuma conhecida até 2026-09-22.
 
 _Registro substitui o marcador de seção vazia._
+
+### 2026-09-23 — `t_47ab1fd4` — E09.4 — rodada 1/3 — FAIL
+
+- target_sha: `a1e405d2c8c51937ec73ac5892f2a22f31873831`
+- classe: ENUMERÁVEL; um achado confirmado (F1): persistência de voz, hápticos e Watch foi escrita em definições duplicadas de `saveState`/`loadSavedState` que não eram as executadas.
+- causa registrada: declarações duplicadas no escopo global eram resolvidas por hoisting; o pipeline ativo `CorePersistence` não gravava nem restaurava as três preferências.
+- gates registrados naquele SHA: `scripts/check.sh` e equivalência dos HTMLs passaram; o diagnóstico E09.4 existente usava verificações de texto e não detectava shadowing.
+- cobertura: execução do script de produção em `vm` com `localStorage` simulado; Android/Watch físicos e TalkBack não cobertos.
+- regressão pós-PASS: n/a; esta rodada terminou em FAIL.
+- Nota de integração (2026-10-22): o registro é histórico do SHA acima; o estado atual não foi revalidado nesta tarefa.
