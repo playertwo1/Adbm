@@ -1906,10 +1906,37 @@
                 </div>
             </div>
 
+            <div id="programsListError" class="hidden cf-error rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-100" role="alert">
+                <strong class="block text-amber-300">Não foi possível ler os programas com segurança.</strong>
+                <span class="mt-1 block text-xs">Os dados preservados não serão substituídos. Tente recuperar o progresso antes de iniciar uma sessão.</span>
+                <button type="button" onclick="retryProgramListRead()" class="mt-3 rounded-xl border border-amber-400/50 px-3 py-2 text-xs font-bold text-amber-100">Tentar recuperação</button>
+            </div>
+            <div id="programsListEmpty" class="hidden cf-empty rounded-2xl border border-slate-700 bg-slate-900/70 p-4 text-sm text-slate-300" role="status">
+                <strong class="block text-white">Ainda não há sessões registradas.</strong>
+                <span class="mt-1 block text-xs text-slate-400">Escolha um programa para ver a etapa atual e iniciar a primeira sessão.</span>
+            </div>
             <div id="programsListContainer" class="space-y-4 pb-12">
                 <!-- Preenchido via JS -->
             </div>
         </section>
+
+        <div id="programDetailModal" class="hidden fixed inset-0 z-[124] items-end justify-center bg-slate-950/85 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="programDetailTitle">
+            <div class="w-full max-w-md rounded-3xl border border-indigo-400/30 bg-slate-900 p-5 shadow-2xl">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <p id="programDetailEyebrow" class="text-[10px] font-black uppercase tracking-widest text-indigo-300">Programa</p>
+                        <h2 id="programDetailTitle" class="mt-1 text-lg font-black text-white"></h2>
+                    </div>
+                    <button type="button" onclick="closeProgramDetail()" class="h-9 w-9 rounded-full bg-slate-800 text-slate-300" aria-label="Fechar detalhe do programa"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <p id="programDetailPhase" class="mt-4 text-sm font-bold text-indigo-200"></p>
+                <p id="programDetailStatus" class="mt-2 text-xs leading-relaxed text-slate-400"></p>
+                <div class="mt-5 grid grid-cols-2 gap-3">
+                    <button id="programDetailStartButton" type="button" class="rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-400 px-3 py-3 text-xs font-black text-slate-950"><i class="fa-solid fa-play mr-2"></i>Iniciar etapa</button>
+                    <button id="programDetailRepeatButton" type="button" onclick="repeatProgramPhase()" class="rounded-2xl border border-indigo-400/40 bg-indigo-500/10 px-3 py-3 text-xs font-bold text-indigo-100"><i class="fa-solid fa-rotate-left mr-2"></i>Repetir etapa</button>
+                </div>
+            </div>
+        </div>
 
         <!-- ============================================================ -->
         <!-- ABA 4: CRONOGRAMA & DASHBOARD -->
