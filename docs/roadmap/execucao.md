@@ -1,5 +1,22 @@
 # Registro de execução
 
+## 2026-09-25 — E13 instalada sobre E12 no Pixel_9
+
+- A worktree válida da E13 passou a ser `work/e13-after-e12-20260925`, baseada no commit E12 publicado `77bf1e0`; a tentativa anterior baseada em `origin/main` não incluía toda E12 e foi substituída no AVD. `scripts/check.sh` PASS, APK contém o asset E13, `:app:installDebug` no Pixel_9 sem limpar dados, `MainActivity` em foco. Evolução manteve seletor E12.
+- Stomach Vacuum programado iniciou com `phase=prepara` persistida, avançou por retenção e descanso; ao cancelar por confirmação voltou à lista com `0/1` sessões feitas, serviço `idle`, nenhum erro fatal/JS. `retorno` e botão `Encerrar retenção` no programa ainda sem evidência direta. `ROADMAP.md` e `docs/roadmap/execucao.md` da worktree E13 guardam detalhes; nenhum dos oito itens E04 foi fechado.
+
+## 2026-09-25 — E12 publicada em branch; E13 iniciada separadamente
+
+- E12 `77bf1e0aa9218933bfac0b1365fafb78f4abdc59` publicada em `origin/work/e12-2-day-session-20260924` após `scripts/check.sh` PASS; `git ls-remote` e GitHub API confirmaram o SHA. **Não integrada à `main`**, auditoria das mudanças posteriores à E12.1 segue adiada; dossiê no NexusVault foi atualizado.
+- E13 tem worktree própria `work/e13-e04-verification-20260925` baseada em `origin/main` (`284a0b9`), sem E12 integrada. No primeiro item E04, diagnóstico real RED→GREEN tornou as fases `prepara` e `retorno` explícitas nas duas cópias HTML, com `scripts/check.sh` PASS; detalhes no registro dessa worktree. APK E13 não instalado/exercitado no AVD e nenhum item E04 foi fechado. Sem commit/push E13.
+
+## 2026-09-25 — E12/E13 / atualização documental sem integração de código
+
+- E12: implementação e correção do modal de conquistas seguem apenas na worktree `work/e12-2-day-session-20260924` (base `65a5efa`), sem commit/push/merge; E12.1 publicada em `7fad2f3` já teve PASS anterior, mas as mudanças posteriores **não foram auditadas**. Rafael autorizou avançar sem auditoria agora, não declarou a etapa DONE.
+- Registro técnico da nova verificação no topo de `docs/roadmap/execucao.md` da worktree E12. Dossiê consolidado com manifesto de nove arquivos e hashes no NexusVault: `01_Projetos/Adbm - Dossiê E12 para auditoria futura.md`. `ROADMAP.md` desta worktree documental foi alinhado ao estado vigente sem marcar E04/E13 como concluídas.
+- AVD Pixel_9/API 37 com `-gpu swiftshader`: modal Primeiro Passo visível após correção, diário vazio expansível, preview PDF cancelado sem salvar/imprimir e app redesenhado; períodos vazios com 0 min/comparação indisponível. `scripts/check.sh` PASS, HTMLs equivalentes, `git diff --check` limpo; evidência física/Watch/TalkBack e sessões parcial/completa em aparelho pendentes.
+- E13: somente verificações locais preliminares. Nenhum dos oito itens diferidos da E04 foi aprovado por inferência. Próximo: validar cada um com evidência própria quando o ambiente necessário estiver disponível e, antes de integrar E12, reconciliar com `origin/main`, auditar posteriormente e obter decisão de Rafael.
+
 ## 2026-09-24 — E12 / Smoke visual no Pixel_9 — PARCIAL; bloqueio visual aberto
 
 - Base: implementação local na worktree `work/e12-2-day-session-20260924`, base `65a5efa`, ainda sem commit/push; app ID `com.aistudio.coreflow.vdfpkw`.
