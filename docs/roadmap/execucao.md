@@ -1,5 +1,12 @@
 # Registro de execução
 
+## 2026-09-25 — E13 / E04 fases da sessão — IMPLEMENTADA localmente, validação integrada pendente
+
+- Base: `origin/main` em `284a0b91d3d7afe01223aef9d12e04517ee91ab1`, worktree isolada `work/e13-e04-verification-20260925`; E12 foi publicada separadamente em `origin/work/e12-2-day-session-20260924` (`77bf1e0aa9218933bfac0b1365fafb78f4abdc59`), **não** mesclada na `main` nem nesta worktree.
+- Primeiro item diferido E04: `getProgramSteps('3', 0)` já criava preparação, inspiração, expiração, retenção, retorno e descanso, mas preparação e retorno não tinham `phase` explícita. Novo diagnóstico `diagnostics/e13-e04-vacuum-phases.test.cjs` executa a função real para duas séries e exige as seis identidades, com descanso só entre séries. RED observado (`undefined` nas duas fases); adicionados somente `phase: 'prepara'` e `phase: 'retorno'` nos dois HTMLs, mantendo-os idênticos. GREEN após a correção.
+- `bash scripts/check.sh` com JBR/SDK → `CHECK PASS` (diagnósticos, `:app:testDebugUnitTest`, `:app:assembleDebug`, `:wear:assembleDebug`); `git diff --check` e `cmp -s` passaram. Há AVD Pixel_9 conectado, mas **não foi instalado o APK E13 nem exercitado o fluxo nele**, para não substituir o app E12 nem alterar os dados persistidos do emulador sem preparar um cenário isolado. Esta evidência automatizada não fecha o item E04 nem a E13; validar sequência nativa/voz/UI no AVD e em aparelho antes de marcar `[x]`.
+- Arquivos locais alterados: `index.html`, `app/src/main/assets/index.html`, novo `diagnostics/e13-e04-vacuum-phases.test.cjs`, este registro. Sem commit/push E13. Próximo: verificar semântica de `Encerrar retenção` (execução registrada, retorno/recuperação), com regressão comportamental antes de qualquer correção; não inferir os demais itens.
+
 ## 2026-09-24 — E12 / Smoke visual no Pixel_9 — PARCIAL; bloqueio visual aberto
 
 - Base: implementação local na worktree `work/e12-2-day-session-20260924`, base `65a5efa`, ainda sem commit/push; app ID `com.aistudio.coreflow.vdfpkw`.
