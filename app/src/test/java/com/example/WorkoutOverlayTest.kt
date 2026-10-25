@@ -163,10 +163,32 @@ class WorkoutOverlayTest {
   fun `compact overlay exposes textual pause resume and cancel controls`() {
     val context = ApplicationProvider.getApplicationContext<Context>()
     val views = overlayViews(buildOverlayPart(context, "buildCompactView"))
-    val labels = views.filterIsInstance<TextView>().map { it.text.toString() }
+    val controls = views.filterIsInstance<TextView>()
+    val timer = controls.firstOrNull { it.text == "00:00" }
+    val pause = controls.firstOrNull { it.contentDescription == "Pausar treino" }
+    val cancel = controls.firstOrNull { it.contentDescription == "Cancelar treino" }
 
-    assertTrue("Compacto em andamento deve mostrar Pausar", labels.contains("⏸ Pausar"))
-    assertTrue("Compacto deve oferecer Cancelar textual", labels.contains("Cancelar"))
+    assertNotNull("Compacto deve mostrar o timer", timer)
+    assertNotNull("Compacto em andamento deve mostrar Pausar", pause)
+    assertNotNull("Compacto deve oferecer Cancelar textual", cancel)
+    assertEquals("Pausar", pause!!.text.toString())
+    val expectedWidth = (76 * context.resources.displayMetrics.density).toInt()
+    val expectedHeight = (52 * context.resources.displayMetrics.density).toInt()
+    val measuredControls = listOf(timer!!, pause, cancel!!)
+    measuredControls.forEach { control ->
+      assertEquals("${control.contentDescription ?: control.text} deve ter largura 76 dp", expectedWidth, control.layoutParams.width)
+      assertEquals("${control.contentDescription ?: control.text} deve ter altura 52 dp", expectedHeight, control.layoutParams.height)
+      val background = control.background as? android.graphics.drawable.GradientDrawable
+      val backgroundColor = background?.color?.defaultColor
+      assertNotNull("${control.contentDescription ?: control.text} precisa de fundo verificável", backgroundColor)
+      assertTrue(
+        "${control.contentDescription ?: control.text} precisa de contraste mínimo 4.5:1",
+        ColorUtils.calculateContrast(control.currentTextColor, backgroundColor!!) >= 4.5
+      )
+    }
+    val expectedGap = (4 * context.resources.displayMetrics.density).toInt()
+    assertEquals(expectedGap, (timer.layoutParams as ViewGroup.MarginLayoutParams).marginEnd)
+    assertEquals(expectedGap, (pause.layoutParams as ViewGroup.MarginLayoutParams).marginEnd)
   }
 
   @Test
@@ -179,7 +201,31 @@ class WorkoutOverlayTest {
     }
 
     assertNotNull("Compacto pausado deve oferecer Continuar", pause)
-    assertEquals("▶ Continuar", pause!!.text.toString())
+    assertEquals("Continuar", pause!!.text.toString())
+    assertEquals((76 * context.resources.displayMetrics.density).toInt(), pause.layoutParams.width)
+    assertEquals((52 * context.resources.displayMetrics.density).toInt(), pause.layoutParams.height)
+    assertTrue(ColorUtils.calculateContrast(pause.currentTextColor, (pause.background as android.graphics.drawable.GradientDrawable).color!!.defaultColor) >= 4.5)
+  }
+
+  @Test
+  fun `compact timer keeps accessible text contrast for Kegel accent`() {
+    val context = ApplicationProvider.getApplicationContext<Context>()
+    val root = buildOverlayPart(context, "buildCompactView")
+    val state = stateWithImage(null).put(
+      "session",
+      JSONObject().put("type", "stretch").put("programTitle", "Kegel: Assoalho Pélvico")
+    )
+    bindOverlayState(context, state)
+    val timer = overlayViews(root).filterIsInstance<TextView>().firstOrNull { it.text == "01:00" }
+
+    assertNotNull("Timer compacto precisa estar visível", timer)
+    val background = timer!!.background as android.graphics.drawable.GradientDrawable
+    assertEquals(Color.parseColor("#A855F7"), WorkoutOverlayController.resolveThemeColor("Kegel: Assoalho Pélvico", "stretch"))
+    assertEquals("Texto deve usar a cor clara de alto contraste", Color.parseColor("#39D5A0"), timer.currentTextColor)
+    assertTrue(
+      "Texto do timer precisa manter contraste mínimo 4.5:1 sobre o fundo neutro",
+      ColorUtils.calculateContrast(timer.currentTextColor, background.color!!.defaultColor) >= 4.5
+    )
   }
 
   @Test
@@ -660,7 +706,12 @@ class WorkoutOverlayTest {
       it.contentDescription in setOf("Pausar treino", "Cancelar treino")
     }
     assertEquals("modo compacto deve ter Pausar e Cancelar", 2, compactButtons.size)
-    compactButtons.forEach { assert48(it, it.contentDescription.toString()) }
+    compactButtons.forEach {
+      assertTrue(
+        "${it.contentDescription} precisa ter alvo real de pelo menos 48 dp",
+        it.layoutParams.height / density >= 48f
+      )
+    }
 
     val expanded = createExpandedOverlay(context)
     bindOverlayState(

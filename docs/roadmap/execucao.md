@@ -1305,3 +1305,19 @@ Próximo passo:
 - Verificações desta fase: `node diagnostics/e09-perfil-red.cjs` retornou exit 1 intencional com os achados acima; a saída reproduziu cada verificação nos dois HTMLs. `for f in diagnostics/*.test.cjs; do node "$f" || exit $?; done` retornou `DIAGNOSTICS_OK=21`; SHA-256 dos dois HTMLs foi `4b521cd63858a6de50530e495bd725e6f97affac1edc8b33a4b29edb955c7bb8`; `cmp -s` e `git diff --check` retornaram 0; `JAVA_HOME='C:/Program Files/Android/Android Studio/jbr' ANDROID_HOME='C:/Users/notefael/AppData/Local/Android/Sdk' bash scripts/check.sh` terminou `BUILD SUCCESSFUL`/exit 0. O RED intencional não é suíte GREEN.
 - Limitações: não houve validação física em Android, Watch, desconexão/reconexão, TalkBack, fonte ampliada ou seletor de arquivos; essas evidências permanecem dependentes de E13. E09.2–E09.7 ficam bloqueadas até PASS independente deste recorte.
 
+
+## 2026-10-25 — Skill impeccable-mobile instalada no projeto
+
+- Pacote do commit 9a401e2 do Impeccable-Mobile-Studio instalado em .agents, .claude, .agent e .gemini/skills/impeccable-mobile. Os 32 hashes de cada cópia foram conferidos.
+- Regra /.impeccable-mobile/ adicionada ao ignore da raiz para evidências e backups locais. Alterações e arquivos concorrentes preservados.
+- Sem alteração de código do aplicativo ou versão. scripts/check.sh executado após configurar Java/ADB: CHECK PASS; diagnósticos, paridade HTML, testes unitários e builds debug app/Wear passaram (BUILD SUCCESSFUL). Reconhecimento após recarga e validação em aparelho/emulador pendentes.
+
+## 2026-10-25 — Opção A aprovada e aplicada à fileira compacta
+
+- Aprovação humana restrita à opção A: timer, Pausar/Continuar e Cancelar com medidas iguais de 76 × 52 dp, rótulos simples e intervalo de 4 dp. Mini, expandido, confirmação e saída segura não foram redesenhados.
+- `WorkoutOverlayController.kt`: medidas fixas iguais, timer centralizado e contorno discreto com cor semântica preservada; ação Pausar/Continuar verde nos dois estados; Cancelar contornado em rosa escuro. Sem mudanças em IDs, armazenamento, protocolo ou versão.
+- `WorkoutOverlayTest.kt`: regressões para execução e pausa, três medidas iguais, espaçamento, contraste mínimo 4,5:1 inclusive com o acento roxo Kegel, e alvos reais de toque de pelo menos 48 dp. A regressão falhou no baseline antigo e passou após as correções; teste focado: 34 testes, `BUILD SUCCESSFUL`.
+- `bash scripts/check.sh`: `CHECK PASS` após a correção final; diagnósticos, equivalência dos HTMLs, testes unitários e builds debug do app e Wear passaram (`BUILD SUCCESSFUL`, 82 tarefas).
+- `git diff --check`: `PASS`. Auditoria independente A1 `PASS`, sem achados materiais; a primeira revisão detectou contraste Kegel de 4,21:1 e uma alteração acidental no mini, ambas corrigidas e reavaliadas.
+- Captura/runtime Android, TalkBack, fonte ampliada e larguras menores: `NOT_RUN`; ADB/emulador não disponíveis no caminho configurado do SDK durante esta sessão. A aparência renderizada e os demais estados seguem `PENDING_HUMAN`.
+- Release v1.1.49/49: `scripts/check.sh` terminou em `CHECK PASS`; app e Wear compilados com assinatura release. `aapt` confirmou package/version dos dois; `apksigner` confirmou assinatura e certificado igual à v1.1.48.

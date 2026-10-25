@@ -19,13 +19,19 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, estabiliza�
 
 ## Versão Atual
 
-- **Versão base local:** `1.1.48` (`versionCode 48`)
-- **Candidata à release:** `1.1.48` — adiciona lembretes opcionais e configuráveis de pausas durante o trabalho, com orientações breves e integração ao agendador Android. Publicação no GitHub: pendente.
-- **Validação prevista:** o workflow exige `scripts/check.sh`, verificação de versão e assinatura dos dois APKs e compatibilidade do certificado com a release anterior. Runtime da notificação, permissão, reinício/fuso, S25 físico e Wear físico `NOT_RUN`; revisão visual humana das pílulas `PENDING_HUMAN`. Consulte o [registro de execução](docs/roadmap/execucao.md).
+- **Versão atual:** `1.1.49` (`versionCode 49`)
+- **Release:** o redesenho aprovado da fileira compacta alinha timer, Pausar/Continuar e Cancelar em controles de `76 × 52 dp`, com intervalo de `4 dp`.
+- **Validação:** confira o [registro de execução](docs/roadmap/execucao.md). Captura em aparelho, TalkBack, fonte ampliada e larguras menores `NOT_RUN`; outros estados do overlay aguardam avaliação visual.
 - **Downloads:** O APK assinado para celular e relógio está disponível na aba de [Releases](https://github.com/playertwo1/Adbm/releases).
 - **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.
 
 ---
+
+## O que mudou na 1.1.49
+
+- Na fileira compacta do treino flutuante, timer e ações têm dimensões iguais de `76 × 52 dp` e intervalos de `4 dp`.
+- Pausar/Continuar usa rótulos simples e estado visual consistente; Cancelar mantém texto legível e contorno discreto.
+- A opção A aprovada foi aplicada somente à fileira compacta. Outros estados do overlay aguardam avaliação visual.
 
 ## O que mudou na 1.1.48
 
@@ -106,8 +112,8 @@ $env:KEYSTORE_PATH = "caminho/para/coreflow-upload.jks"
 $env:KEYSTORE_PASSWORD = "sua_senha_keystore"
 $env:KEY_ALIAS = "seu_alias"
 $env:KEY_PASSWORD = "sua_senha_chave"
-$env:BUILD_VERSION_CODE = "48"
-$env:BUILD_VERSION_NAME = "1.1.48"
+$env:BUILD_VERSION_CODE = "49"
+$env:BUILD_VERSION_NAME = "1.1.49"
 
 .\gradlew.bat :app:assembleRelease :wear:assembleRelease
 ```

@@ -3,13 +3,14 @@
 ## Nova frente solicitada em 21/10/2026 — Pílulas e pausas de trabalho
 
 - [x] Preparar diagnóstico e plano de execução das dimensões das pílulas e da rotina opcional de pausas no trabalho.
-- [ ] A0 — Aprovar o contrato visual da prancha refinada das pílulas.
-- [ ] A1–A2 — Alinhar as pílulas do overlay e validar acessibilidade, capturas Android, auditoria e aceite visual.
+- [x] A0-parcial — Aprovar a opção A apenas para a fileira compacta: timer, Pausar/Continuar e Cancelar em 76 × 52 dp.
+- [x] A1-parcial — Aplicar medidas iguais, intervalos de 4 dp e rótulos simples no compacto; regressão focada aprovada.
+- [ ] A1–A2 — Conferir larguras menores e fonte ampliada, validar runtime/acessibilidade e aceite visual; auditoria A1 passou, enquanto os demais estados aguardam aprovação.
 - [x] B0–B1 — Implementar a rotina configurável no app e integrá-la ao agendador Android existente; diagnósticos e builds passaram.
 - [x] B2 — Ligar os lembretes às orientações e à mobilidade existentes, com início deliberado.
 - [ ] B3 — Testes, diagnósticos, builds e auditoria passaram; falta validar notificações e permissões em runtime, reinício/fuso e aparelho real.
 
-Detalhamento, critérios e fontes: [roadmap de pílulas e pausas de trabalho](docs/roadmap/pilulas-e-pausas-trabalho-2026-10-21.md). A prancha está em [referências refinadas](docs/design/pilulas-overlay-2026-10-21/README.md). A rotina de trabalho está implementada no worktree; verificação em dispositivo `NOT_RUN`. A mudança visual das pílulas aguarda aprovação humana `PENDING_HUMAN`.
+Detalhamento, critérios e fontes: [roadmap de pílulas e pausas de trabalho](docs/roadmap/pilulas-e-pausas-trabalho-2026-10-21.md). A [opção A compacta aprovada](docs/design/pilulas-overlay-2026-10-25/01-opcoes-compactas.png) define somente essa fileira; os demais estados aguardam aprovação. Rotina de trabalho implementada; verificação de runtime em dispositivo `NOT_RUN`.
 
 ---
 

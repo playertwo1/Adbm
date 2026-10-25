@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Mapa visual dos estados do overlay CoreFlow</title>
+  <desc id="desc">Referência para mini, compacto, expandido, confirmação de cancelamento e saída segura da retenção, com hierarchy consistente e sem glifos de emoji.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0A1422"/><stop offset="1" stop-color="#101B2A"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="9" stdDeviation="12" flood-color="#000814" flood-opacity=".35"/></filter>
+    <style>
+      text { font-family: Inter, Roboto, Arial, sans-serif; }
+      .muted { fill: #A4B4C8; }
+      .soft { fill: #8193AA; }
+      .cyan { fill: #58C9F5; }
+      .green { fill: #39D5A0; }
+      .caps { letter-spacing: 2px; }
+    </style>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <circle cx="1500" cy="50" r="210" fill="#102235" opacity=".45"/>
+  <text x="56" y="50" class="green caps" font-size="16" font-weight="700">COREFLOW / REFERÊNCIA DE COMPONENTES</text>
+  <text x="56" y="108" fill="#F5F8FC" font-size="40" font-weight="750">Uma linguagem visual para todos os estados</text>
+  <text x="58" y="145" class="muted" font-size="21">Hierarquia clara, alturas alinhadas e ações destrutivas mais contidas</text>
+
+  <!-- Mini state -->
+  <rect x="40" y="180" width="720" height="240" rx="24" fill="#142234" stroke="#2A4058" stroke-width="2"/>
+  <text x="72" y="222" class="cyan caps" font-size="15" font-weight="750">01 / MINI</text>
+  <text x="72" y="255" class="muted" font-size="16">Resumo e acesso textual aos controles</text>
+  <rect x="68" y="288" width="664" height="88" rx="44" fill="#0A111B" stroke="#28775E" stroke-width="2"/>
+  <circle cx="96" cy="332" r="7" fill="#10B981"/>
+  <text x="120" y="339" fill="#F5F8FC" font-size="19" font-weight="750">TREINO</text>
+  <text x="268" y="339" fill="#E6EEF7" font-family="monospace" font-size="20" font-weight="700">00:10</text>
+  <line x1="350" y1="308" x2="350" y2="356" stroke="#2A4058" stroke-width="2"/>
+  <text x="388" y="339" class="green" font-size="18" font-weight="700">Abrir</text>
+  <text x="72" y="410" class="soft" font-size="14">Alvo de toque em Abrir ≥ 48 dp</text>
+
+  <!-- Expanded running and paused states -->
+  <rect x="790" y="180" width="770" height="470" rx="24" fill="#142234" stroke="#2A4058" stroke-width="2"/>
+  <text x="822" y="222" class="cyan caps" font-size="15" font-weight="750">02 / EXPANDIDO</text>
+  <text x="822" y="255" class="muted" font-size="16">Mesma altura de controle; nenhuma ação quebra</text>
+
+  <rect x="820" y="282" width="710" height="144" rx="22" fill="#0A111B" stroke="#293B50" stroke-width="2"/>
+  <text x="844" y="322" fill="#F5F8FC" font-size="20" font-weight="750">PREPARAÇÃO</text>
+  <text x="844" y="351" class="muted" font-size="15">Próximo: Recuperação · 60 s</text>
+  <text x="844" y="392" class="green" font-family="monospace" font-size="24" font-weight="700">00:10</text>
+  <rect x="980" y="356" width="132" height="52" rx="26" fill="#10B981"/>
+  <text x="1046" y="389" text-anchor="middle" fill="#052E24" font-size="18" font-weight="750">Pausar</text>
+  <rect x="1124" y="356" width="120" height="52" rx="26" fill="#1C2939" stroke="#36495F" stroke-width="2"/>
+  <text x="1184" y="389" text-anchor="middle" fill="#E2EAF4" font-size="18" font-weight="700">Pular</text>
+  <rect x="1256" y="356" width="142" height="52" rx="26" fill="#21151A" stroke="#A65469" stroke-width="2"/>
+  <text x="1327" y="389" text-anchor="middle" fill="#FDA4AF" font-size="17" font-weight="700">Cancelar</text>
+  <text x="1414" y="389" class="soft" font-size="13">Em execução</text>
+
+  <rect x="820" y="454" width="710" height="144" rx="22" fill="#0A111B" stroke="#293B50" stroke-width="2"/>
+  <text x="844" y="494" fill="#F5F8FC" font-size="20" font-weight="750">PREPARAÇÃO</text>
+  <text x="844" y="523" class="muted" font-size="15">Treino pausado · retome quando quiser</text>
+  <text x="844" y="564" class="green" font-family="monospace" font-size="24" font-weight="700">00:10</text>
+  <rect x="980" y="528" width="132" height="52" rx="26" fill="#10B981"/>
+  <text x="1046" y="561" text-anchor="middle" fill="#052E24" font-size="18" font-weight="750">Continuar</text>
+  <rect x="1124" y="528" width="120" height="52" rx="26" fill="#1C2939" stroke="#36495F" stroke-width="2"/>
+  <text x="1184" y="561" text-anchor="middle" fill="#E2EAF4" font-size="18" font-weight="700">Pular</text>
+  <rect x="1256" y="528" width="142" height="52" rx="26" fill="#21151A" stroke="#A65469" stroke-width="2"/>
+  <text x="1327" y="561" text-anchor="middle" fill="#FDA4AF" font-size="17" font-weight="700">Cancelar</text>
+  <text x="1414" y="561" class="soft" font-size="13">Em pausa</text>
+
+  <!-- Confirmation -->
+  <rect x="40" y="440" width="720" height="488" rx="24" fill="#142234" stroke="#2A4058" stroke-width="2"/>
+  <text x="72" y="484" class="cyan caps" font-size="15" font-weight="750">03 / CONFIRMAÇÃO</text>
+  <rect x="70" y="512" width="660" height="384" rx="28" fill="#0A111B" stroke="#35475D" stroke-width="2"/>
+  <text x="102" y="562" fill="#F5F8FC" font-size="26" font-weight="750">Cancelar treino?</text>
+  <text x="102" y="604" class="muted" font-size="17">A sessão será encerrada sem ser marcada</text>
+  <text x="102" y="630" class="muted" font-size="17">como concluída. O histórico será mantido.</text>
+  <rect x="102" y="678" width="302" height="70" rx="35" fill="#10B981"/>
+  <text x="253" y="721" text-anchor="middle" fill="#052E24" font-size="17" font-weight="750">Manter treino pausado</text>
+  <rect x="420" y="678" width="276" height="70" rx="35" fill="#21151A" stroke="#A65469" stroke-width="2"/>
+  <text x="558" y="721" text-anchor="middle" fill="#FDA4AF" font-size="17" font-weight="700">Cancelar sessão</text>
+  <text x="102" y="798" class="soft" font-size="14">A opção de manter tem mais peso; cancelar fica contornado.</text>
+
+  <!-- Safety exit remains a distinct rectangular action -->
+  <rect x="790" y="690" width="770" height="238" rx="24" fill="#142234" stroke="#2A4058" stroke-width="2"/>
+  <text x="822" y="734" class="cyan caps" font-size="15" font-weight="750">04 / SAÍDA SEGURA DURANTE RETENÇÃO</text>
+  <text x="822" y="768" class="muted" font-size="16">Ação especial, fora da fileira de controles frequentes</text>
+  <rect x="822" y="794" width="706" height="76" rx="14" fill="#241E12" stroke="#C68B25" stroke-width="2"/>
+  <text x="854" y="827" fill="#F2C76B" font-size="19" font-weight="750">Encerrar Retenção com Segurança</text>
+  <text x="854" y="852" class="muted" font-size="14">Inicia a recuperação</text>
+  <text x="56" y="970" class="soft" font-size="15">PROPOSTA PARA APROVAÇÃO · As medidas finais ainda dependem de captura real e revisão em largura compacta.</text>
+</svg>

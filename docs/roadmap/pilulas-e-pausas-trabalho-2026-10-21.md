@@ -8,22 +8,22 @@ Data: 21/10/2026. Estado: EM EXECUÇÃO. As frentes B0–B2 foram implementadas 
 - O app já tem `ReminderScheduler` com alarmes Android, permissão de notificações, horários por programa e lembrete de respiração às 15:30. O WebView também oferece Pausa Responsiva, exercícios corporais e práticas de respiração. A nova rotina deve reutilizar essas peças e manter a agenda de treino separada.
 - A agenda informada nesta conversa é segunda a sexta, das 8h às 17h. Como sugestão inicial editável, um intervalo de 60 minutos dispararia lembretes entre 9h e 16h. A configuração fica desligada até a pessoa ativá-la.
 
-Referências visuais: [prancha refinada das pílulas](../design/pilulas-overlay-2026-10-21/05-prancha-refinada.png) e [anotações e critérios](../design/pilulas-overlay-2026-10-21/README.md). São propostas, ainda com revisão visual humana `PENDING_HUMAN`.
+Referências visuais: [opções de tamanho compacto](../design/pilulas-overlay-2026-10-25/01-opcoes-compactas.png), [mapa dos estados](../design/pilulas-overlay-2026-10-25/02-mapa-dos-estados.png) e [prancha refinada anterior](../design/pilulas-overlay-2026-10-21/05-prancha-refinada.png). Rafael aprovou a opção A somente para o compacto; os demais estados e a aparência renderizada continuam `PENDING_HUMAN`.
 
 ## Frente A — alinhamento das pílulas
 
 ### A0 — Aprovar contrato visual
 
-- [ ] Rafael aprova a prancha ou registra os ajustes de cor, hierarquia e rótulos.
-- [ ] Confirmar a altura comum de 52 dp na fileira compacta; cada alvo interativo segue com no mínimo 48 dp.
+- [x] Rafael aprovou a opção A para o compacto: timer, Pausar/Continuar e Cancelar com 76 × 52 dp, rótulos simples e espaçamento uniforme.
+- [x] Cada pílula compacta tem área de 52 dp de altura; os alvos interativos superam o mínimo de 48 dp.
 - [ ] Fechar a matriz de captura: mini, compacto em execução, compacto pausado, expandido, confirmação de cancelamento e saída segura durante retenção do Vácuo.
 
-**Gate:** nenhuma mudança visual material antes da aprovação da referência. A prancha não substitui captura do app.
+**Gate:** a aprovação cobre apenas a fileira compacta e a opção A. Outros estados visuais continuam pendentes; a prancha não substitui captura do app.
 
 ### A1 — Corrigir dimensões e hierarquia
 
-- [ ] Criar regressão focada para alinhamento/altura dos componentes compactos antes de alterar o comportamento visual.
-- [ ] Aplicar dimensões consistentes ao timer e às ações na fileira compacta; manter nomes, estados e ações corretos em execução e pausa.
+- [x] Criar regressão focada antes da mudança visual; ela verifica rótulos, medidas 76 × 52 dp, intervalos de 4 dp e contraste, inclusive no acento roxo de Kegel.
+- [x] Aplicar dimensões consistentes ao timer e às ações na fileira compacta; manter nomes, estados e ações corretos em execução e pausa.
 - [ ] Conferir espaçamento em larguras menores, fonte ampliada, modo mini e modo expandido. Ajustar quebra/ocultação sem sobrepor ou reduzir os alvos de toque.
 - [ ] Manter `ACTION_SAFE_EXIT_RETENTION` e o rótulo Encerrar Retenção com Segurança distintos de Cancelar.
 
@@ -90,8 +90,10 @@ As pausas são lembretes gerais de autocuidado, não uma prescrição individual
 
 ## Estado desta preparação
 
-- A0 da mudança visual: aprovação humana `PENDING_HUMAN`; A1–A2 `NOT_STARTED`.
+- A0: opção A aprovada apenas para a fileira compacta; a matriz dos outros estados continua `PENDING_HUMAN`.
+- A1: fileira compacta implementada com 76 × 52 dp por controle e intervalos de 4 dp; regressão de contraste inclui o acento roxo Kegel e está `PASS`. Capturas Android, larguras menores e fonte ampliada ainda não validadas.
+- A2: revisão de TalkBack/foco e captura em runtime `NOT_RUN`; revisão visual humana do app renderizado `PENDING_HUMAN`.
 - B0–B2 implementados: configuração em Pausas, armazenamento local, alarme em dias úteis, canal dedicado discreto, checagem de permissão global e por canal, entrada por notificação e guias curtos existentes.
 - Diagnósticos, teste unitário focado, `git diff --check` e `bash scripts/check.sh`: `PASS`.
-- Auditoria independente: sem achados materiais. Validação de runtime/aparelho: `NOT_RUN`.
-- Aprovação humana da prancha refinada: `PENDING_HUMAN`.
+- Auditoria independente de A1 compacto: `PASS`, sem achados materiais após corrigir contraste Kegel e restaurar o indicador mini. Auditoria anterior de B3: sem achados materiais. Validação de runtime/aparelho: `NOT_RUN`.
+- Aprovação humana da opção A compacta: `PASS`; aprovação dos demais estados: `PENDING_HUMAN`.

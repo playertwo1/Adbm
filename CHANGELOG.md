@@ -7,6 +7,18 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
+## [1.1.49] - 2026-10-25
+
+### Alterado
+- A fileira compacta do overlay alinha timer, Pausar/Continuar e Cancelar em controles de 76 × 52 dp com intervalos de 4 dp.
+- Pausar/Continuar usa rótulos simples e cor de ação consistente; o timer e Cancelar mantêm contraste legível.
+
+### Validação
+- Regressões focadas cobrem dimensões, espaçamento, estados e contraste mínimo de 4,5:1.
+- Captura em Android, TalkBack, fonte ampliada e larguras menores: `NOT_RUN`; a aprovação visual cobre somente a fileira compacta.
+
+---
+
 ## [1.1.48] - 2026-10-22
 
 ### Adicionado

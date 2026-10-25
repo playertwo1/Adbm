@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Opções de tamanho para a cápsula compacta CoreFlow</title>
+  <desc id="desc">Comparação entre controles com largura idêntica e controles com largura adaptável. Ambos mantêm a mesma altura de 52 dp, estados em execução e pausa, ação principal verde e cancelamento contornado.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0A1422"/><stop offset="1" stop-color="#101B2A"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000814" flood-opacity=".42"/></filter>
+    <style>
+      text { font-family: Inter, Roboto, Arial, sans-serif; }
+      .muted { fill: #A4B4C8; }
+      .soft { fill: #8193AA; }
+      .cyan { fill: #58C9F5; }
+      .green { fill: #39D5A0; }
+      .caps { letter-spacing: 2px; }
+    </style>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <circle cx="1510" cy="55" r="210" fill="#102235" opacity=".5"/>
+  <text x="56" y="50" class="green caps" font-size="16" font-weight="700">COREFLOW / SOBREPOSIÇÃO DE TREINO</text>
+  <text x="56" y="108" fill="#F5F8FC" font-size="40" font-weight="750">Compacto: qual regra de tamanho aprovar?</text>
+  <text x="58" y="145" class="muted" font-size="21">Timer, Pausar/Continuar e Cancelar · mesma identidade, duas soluções de largura</text>
+
+  <rect x="40" y="180" width="740" height="748" rx="24" fill="#142234" stroke="#2A4058" stroke-width="2"/>
+  <rect x="820" y="180" width="740" height="748" rx="24" fill="#142234" stroke="#2A4058" stroke-width="2"/>
+
+  <rect x="70" y="208" width="42" height="34" rx="17" fill="#55C7F1"/>
+  <text x="91" y="232" text-anchor="middle" fill="#081522" font-size="20" font-weight="800">A</text>
+  <text x="128" y="233" fill="#8BD9F9" font-size="22" font-weight="750" letter-spacing="1">MESMA LARGURA</text>
+  <text x="70" y="272" class="muted" font-size="17">Os três controles recebem exatamente a mesma medida.</text>
+  <rect x="70" y="292" width="168" height="38" rx="19" fill="#1D3045" stroke="#45627D"/>
+  <text x="154" y="317" text-anchor="middle" fill="#E6EEF7" font-size="17" font-weight="650">76 × 52 dp cada</text>
+
+  <rect x="850" y="208" width="42" height="34" rx="17" fill="#55C7F1"/>
+  <text x="871" y="232" text-anchor="middle" fill="#081522" font-size="20" font-weight="800">B</text>
+  <text x="908" y="233" fill="#8BD9F9" font-size="22" font-weight="750" letter-spacing="1">LARGURA ADAPTÁVEL</text>
+  <text x="850" y="272" class="muted" font-size="17">Altura e alinhamento iguais; largura respeita cada rótulo.</text>
+  <rect x="850" y="292" width="302" height="38" rx="19" fill="#1D3045" stroke="#45627D"/>
+  <text x="1001" y="317" text-anchor="middle" fill="#E6EEF7" font-size="17" font-weight="650">52 dp de altura · ação estável</text>
+
+  <text x="70" y="365" class="cyan caps" font-size="14" font-weight="750">EM EXECUÇÃO</text>
+  <text x="70" y="575" class="cyan caps" font-size="14" font-weight="750">EM PAUSA</text>
+  <text x="850" y="365" class="cyan caps" font-size="14" font-weight="750">EM EXECUÇÃO</text>
+  <text x="850" y="575" class="cyan caps" font-size="14" font-weight="750">EM PAUSA</text>
+
+  <!-- Option A: 76 dp by 52 dp for all three controls. -->
+  <g filter="url(#shadow)">
+    <rect x="58" y="380" width="704" height="142" rx="71" fill="#0A111B" stroke="#293B50" stroke-width="2"/>
+    <rect x="58" y="590" width="704" height="142" rx="71" fill="#0A111B" stroke="#293B50" stroke-width="2"/>
+  </g>
+  <circle cx="82" cy="451" r="8" fill="#10B981"/>
+  <circle cx="82" cy="661" r="8" fill="#10B981"/>
+  <text x="108" y="444" fill="#F6F8FC" font-size="21" font-weight="750">PREPARAÇÃO</text>
+  <text x="108" y="474" class="muted" font-size="15">Bracing: Controle e Automação…</text>
+  <text x="108" y="654" fill="#F6F8FC" font-size="21" font-weight="750">PREPARAÇÃO</text>
+  <text x="108" y="684" class="muted" font-size="15">Bracing: Controle e Automação…</text>
+  <rect x="276" y="399" width="152" height="104" rx="52" fill="#10202A" stroke="#27785F" stroke-width="2"/>
+  <rect x="436" y="399" width="152" height="104" rx="52" fill="#10B981"/>
+  <rect x="596" y="399" width="152" height="104" rx="52" fill="#21151A" stroke="#A65469" stroke-width="2"/>
+  <rect x="276" y="609" width="152" height="104" rx="52" fill="#10202A" stroke="#27785F" stroke-width="2"/>
+  <rect x="436" y="609" width="152" height="104" rx="52" fill="#10B981"/>
+  <rect x="596" y="609" width="152" height="104" rx="52" fill="#21151A" stroke="#A65469" stroke-width="2"/>
+  <text x="352" y="460" text-anchor="middle" class="green" font-size="23" font-family="monospace" font-weight="700">00:10</text>
+  <text x="512" y="460" text-anchor="middle" fill="#052E24" font-size="19" font-weight="750">Pausar</text>
+  <text x="672" y="460" text-anchor="middle" fill="#FDA4AF" font-size="17" font-weight="700">Cancelar</text>
+  <text x="352" y="670" text-anchor="middle" class="green" font-size="23" font-family="monospace" font-weight="700">00:10</text>
+  <text x="512" y="670" text-anchor="middle" fill="#052E24" font-size="19" font-weight="750">Continuar</text>
+  <text x="672" y="670" text-anchor="middle" fill="#FDA4AF" font-size="17" font-weight="700">Cancelar</text>
+
+  <!-- Option B: same 52 dp height; the primary action reserves width for Continuar. -->
+  <g filter="url(#shadow)">
+    <rect x="838" y="380" width="704" height="142" rx="71" fill="#0A111B" stroke="#293B50" stroke-width="2"/>
+    <rect x="838" y="590" width="704" height="142" rx="71" fill="#0A111B" stroke="#293B50" stroke-width="2"/>
+  </g>
+  <circle cx="862" cy="451" r="8" fill="#10B981"/>
+  <circle cx="862" cy="661" r="8" fill="#10B981"/>
+  <text x="888" y="444" fill="#F6F8FC" font-size="21" font-weight="750">PREPARAÇÃO</text>
+  <text x="888" y="474" class="muted" font-size="15">Bracing: Controle e Automação…</text>
+  <text x="888" y="654" fill="#F6F8FC" font-size="21" font-weight="750">PREPARAÇÃO</text>
+  <text x="888" y="684" class="muted" font-size="15">Bracing: Controle e Automação…</text>
+  <rect x="1050" y="399" width="136" height="104" rx="52" fill="#10202A" stroke="#27785F" stroke-width="2"/>
+  <rect x="1194" y="399" width="172" height="104" rx="52" fill="#10B981"/>
+  <rect x="1374" y="399" width="144" height="104" rx="52" fill="#21151A" stroke="#A65469" stroke-width="2"/>
+  <rect x="1050" y="609" width="136" height="104" rx="52" fill="#10202A" stroke="#27785F" stroke-width="2"/>
+  <rect x="1194" y="609" width="172" height="104" rx="52" fill="#10B981"/>
+  <rect x="1374" y="609" width="144" height="104" rx="52" fill="#21151A" stroke="#A65469" stroke-width="2"/>
+  <text x="1118" y="460" text-anchor="middle" class="green" font-size="23" font-family="monospace" font-weight="700">00:10</text>
+  <text x="1280" y="460" text-anchor="middle" fill="#052E24" font-size="19" font-weight="750">Pausar</text>
+  <text x="1446" y="460" text-anchor="middle" fill="#FDA4AF" font-size="17" font-weight="700">Cancelar</text>
+  <text x="1118" y="670" text-anchor="middle" class="green" font-size="23" font-family="monospace" font-weight="700">00:10</text>
+  <text x="1280" y="670" text-anchor="middle" fill="#052E24" font-size="19" font-weight="750">Continuar</text>
+  <text x="1446" y="670" text-anchor="middle" fill="#FDA4AF" font-size="17" font-weight="700">Cancelar</text>
+
+  <line x1="70" y1="778" x2="750" y2="778" stroke="#2B4057"/>
+  <text x="70" y="815" fill="#E5EDF6" font-size="18" font-weight="700">Vantagem</text>
+  <text x="70" y="846" class="muted" font-size="16">Ritmo visual rigorosamente uniforme.</text>
+  <text x="70" y="873" class="soft" font-size="15">Atenção: o texto do programa recebe menos espaço.</text>
+  <line x1="850" y1="778" x2="1530" y2="778" stroke="#2B4057"/>
+  <text x="850" y="815" fill="#E5EDF6" font-size="18" font-weight="700">Vantagem</text>
+  <text x="850" y="846" class="muted" font-size="16">Pausar e Continuar mantêm a mesma largura.</text>
+  <text x="850" y="873" class="soft" font-size="15">Atenção: as larguras do timer e de Cancelar variam.</text>
+
+  <text x="56" y="970" class="soft" font-size="15">PROPOSTAS PARA APROVAÇÃO · Ambas mantêm alvo mínimo de 48 dp, alinhamento vertical e espaço entre controles.</text>
+</svg>
