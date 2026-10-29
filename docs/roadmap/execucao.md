@@ -1362,3 +1362,10 @@ Próximo passo:
 - Modal Editar Programa: removida a nota de desenvolvimento ("Em um app de produção…"). Selo de volume reduzido encurtado para "Meta feita com volume reduzido (n/n)…".
 - Regressão `diagnostics/e17-critique-p3.test.cjs` falhou antes e passou depois; `bash scripts/check.sh`: `CHECK PASS`. Emulador `agente`: Hoje e Programas conferidos em captura (`.craft/critique/p3-*`).
 - Não feito: os ~61 cards aninhados (detector Impeccable) e o toast sobre o cabeçalho (não reproduzi o toast de boas-vindas; o aviso "Progresso salvo" empurra o conteúdo, mas não foi alterado). Craft Score não recalculado. Sem alteração de IDs, armazenamento ou protocolo.
+
+## 2026-10-29 — Critique android-premium-craft: cards aninhados (parcial)
+
+- Detector Impeccable (`impeccable detect index.html`): `nested-cards` 61 → 34 (total 118 → 91 achados). O modo arquivo não informa linha; a localização veio de uma heurística própria no HTML estático e de contagem por seção (Pausas 25, Dashboard 14, Discreto 8, Vácuo 5 antes do último passo).
+- Achatado o segundo nível, sem mudar IDs, handlers nem comportamento: painéis de alongamento (Corpo/Mente), dicas, resumo e detalhe expansível dentro deles viraram divisor/filete lateral; Trilha da Semana em Programas com divisor; 4 mini-cards do Vácuo com filete; contêiner externo dos blocos colapsáveis Corpo/Mente sem caixa própria (os cards de exercício passam a ser de primeiro nível).
+- Regressão `diagnostics/e18-flat-panels.test.cjs` falhou antes e passou depois; `bash scripts/check.sh`: `CHECK PASS`. Emulador `agente`: Pausas e Programas conferidos em captura (`.craft/critique/f-*`); Vácuo (mini-cards) conferido só pelo teste.
+- Pendente: ~34 achados, sobretudo Dashboard (14), Discreto (8) e o que restar em Pausas/Vácuo; CTA âmbar→laranja do botão de sessão em Programas (`sessionBtnBg`) segue em gradiente; "Pausa de Resposta" mantém gradiente roxo. Dashboard, Discreto, TalkBack, fonte 200% e modo claro: `NOT_RUN`.
