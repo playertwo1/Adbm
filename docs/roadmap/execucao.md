@@ -1354,3 +1354,11 @@ Próximo passo:
 - Regressões novas em `WorkoutOverlayTest` (rótulos/espaços/cor, título, 2 linhas, primeiro plano, centralização). A compilação falhou antes de `setAppForeground` existir; o teste de centralização foi escrito junto da correção, sem execução vermelha prévia. `bash scripts/check.sh`: `CHECK PASS`.
 - Emulador `agente`, build anterior à centralização: com o app visível não há card; fora do app aparecem a pílula MINI e o expandido com Pausar verde, gaps iguais e sem glifos. Capturas em `.craft/critique/o-*`. Alinhamento de "Abrir"/"Recolher" no aparelho: `NOT_RUN` (sessões do dia já fechadas); coberto só por teste unitário. Compacto no aparelho, TalkBack e fonte ampliada: `NOT_RUN`.
 - Observação: o app (WebView) mantém o Pausar âmbar durante a sessão; só o overlay é verde, conforme a decisão de 2026-10-25.
+
+## 2026-10-29 — Critique android-premium-craft: P2/P3 da UI web (parcial)
+
+- Ações rápidas da aba Hoje: emoji trocado por ícones Font Awesome já vendorizados; a fileira deixou de rolar na horizontal e passou a quebrar linha (nenhum chip cortado, ao custo de 3 linhas no cartão de saudação).
+- Card "Treino recomendado" da aba Programas sem gradiente roxo e sem o brilho decorativo; CTA em verde sólido. "Backup criptografado" deixou o gradiente roxo e virou botão secundário contornado.
+- Modal Editar Programa: removida a nota de desenvolvimento ("Em um app de produção…"). Selo de volume reduzido encurtado para "Meta feita com volume reduzido (n/n)…".
+- Regressão `diagnostics/e17-critique-p3.test.cjs` falhou antes e passou depois; `bash scripts/check.sh`: `CHECK PASS`. Emulador `agente`: Hoje e Programas conferidos em captura (`.craft/critique/p3-*`).
+- Não feito: os ~61 cards aninhados (detector Impeccable) e o toast sobre o cabeçalho (não reproduzi o toast de boas-vindas; o aviso "Progresso salvo" empurra o conteúdo, mas não foi alterado). Craft Score não recalculado. Sem alteração de IDs, armazenamento ou protocolo.
