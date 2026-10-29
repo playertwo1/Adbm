@@ -1338,3 +1338,11 @@ Próximo passo:
 - Cabeçalho: Voz, Vibração, Galaxy Watch e Lembretes foram para um menu "⋮" (mesmos ids e estados); atalho de Perfil removido por decisão do usuário (a aba Perfil da navegação permanece). `e08-6` atualizado para exigir o caminho da navegação.
 - Regressão nova `diagnostics/e15-critique-p2.test.cjs` (falhou antes, passa depois). `bash scripts/check.sh`: `CHECK PASS`. Validação no emulador via Maestro, capturas em `.craft/critique/`.
 - Craft Score: 50D → 55C → 58C. Pendentes: CTAs multicoloridos/gradiente roxo, cards aninhados, emoji como ícone, toast sobre o cabeçalho. TalkBack real, fonte 200%, overlay nativo e Wear: `NOT_RUN`.
+
+## 2026-10-29 — Aviso de cancelamento do Bracing coerente com a regra de sessão reduzida
+
+- Problema: o modal "Interromper Treino?" dizia que o progresso não seria computado, mas desde a v1.1.43 o Bracing cancelado após começar conta como sessão de volume reduzido. Regra mantida por decisão do usuário; só o texto foi corrigido.
+- `requestCancelDailySession` escolhe o texto por programa: não-Bracing mantém o original; Bracing com repetições concluídas informa que ficam registradas como volume reduzido e contam para a meta; Bracing sem repetições informa que a sessão não conta. Novo selo "Meta diária feita com volume reduzido" (`isBracingTodayReduced`) no botão do card recomendado e no da trilha, em vez de "Meta Diária Concluída ✓".
+- Regressão `diagnostics/e16-cancel-copy.test.cjs`; `bash scripts/check.sh`: `CHECK PASS`. `e15-bracing-integration` (regra da v1.1.43) intacto.
+- Emulador `agente`: Kegel mantém o texto original; Bracing sem repetições e com 6 repetições mostram os textos novos; após cancelar com repetições o card marcou 1/2 sessões; selo reduzido visível nos dois botões da aba Programas. Data do emulador avançada um dia para obter estado limpo e depois restaurada. Capturas em `.craft/critique/e16-*` (local).
+- Achados novos, não corrigidos: modal "Editar Programa" com texto de desenvolvimento ("Em um app de produção, você adicionaria aqui…"); o rótulo longo do selo quebra em duas linhas no botão e quase toca a borda na trilha.

@@ -2484,7 +2484,7 @@
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
             <h3 class="text-lg font-bold text-white">Interromper Treino?</h3>
-            <p class="text-xs text-slate-300 leading-relaxed">
+            <p id="cancelDailyConfirmText" class="text-xs text-slate-300 leading-relaxed">
                 Se você cancelar agora, o progresso desta sessão não será computado para a meta diária (2x ao dia).
             </p>
             <div class="pt-2 space-y-2">
@@ -11152,7 +11152,7 @@
                     if (mainProg.programCompleted) heroBtn.innerText = 'Programa de 8 semanas concluído ✓ • Repetir sessão final';
                     else if (sToday === 0) heroBtn.innerText = `Iniciar Sessão 1/${targetSessions} (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • ${currentDayLabel})`;
                     else if (sToday < targetSessions) heroBtn.innerText = `Iniciar Sessão ${sToday + 1}/${targetSessions} (Semana ${(mainProg.currentPhaseIndex || 0) + 1} • ${currentDayLabel})`;
-                    else heroBtn.innerText = `Meta Diária Concluída (${targetSessions}/${targetSessions}) ✓ - Repetir Treino`;
+                    else heroBtn.innerText = isBracingTodayReduced(mainProg) ? `Meta diária feita com volume reduzido (${targetSessions}/${targetSessions}) - Repetir Treino` : `Meta Diária Concluída (${targetSessions}/${targetSessions}) ✓ - Repetir Treino`;
                 }
             }
 
@@ -11243,7 +11243,7 @@
                         sessionBtnBg = 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 to-orange-600 text-slate-950';
                     }
                 } else {
-                    sessionBtnText = `Meta Diária Concluída (${targetSessions}/${targetSessions}) ✓ • ${currentDayLabel}/${targetDaysLabel}`;
+                    sessionBtnText = isBracingTodayReduced(prog) ? `Meta diária feita com volume reduzido (${targetSessions}/${targetSessions}) • ${currentDayLabel}/${targetDaysLabel}` : `Meta Diária Concluída (${targetSessions}/${targetSessions}) ✓ • ${currentDayLabel}/${targetDaysLabel}`;
                     sessionBtnIcon = 'fa-check-double';
                     sessionBtnBg = 'bg-emerald-600/80 text-white cursor-default';
                 }
@@ -12844,6 +12844,17 @@
 
         function requestCancelDailySession() {
             triggerHaptic([20, 50, 20]);
+            // Bracing registra prática parcial ao cancelar (v1.1.43); o aviso não pode prometer o contrário.
+            const execution = AppState.dailyExecution;
+            const text = document.getElementById('cancelDailyConfirmText');
+            if (text) {
+                const doneReps = execution?.programId === '1' ? getBracingCompletedStepIndexes(execution, false).length : 0;
+                text.textContent = execution?.programId !== '1'
+                    ? 'Se você cancelar agora, o progresso desta sessão não será computado para a meta diária (2x ao dia).'
+                    : doneReps > 0
+                        ? `As ${doneReps} repetições já feitas ficam registradas como uma sessão de volume reduzido e contam para a meta de hoje (2x ao dia).`
+                        : 'Nenhuma repetição foi concluída; esta sessão não conta para a meta de hoje.';
+            }
             document.getElementById('cancelDailyConfirmModal').classList.remove('hidden');
         }
 
@@ -15246,6 +15257,13 @@
                 if (execution.steps[index]?.isRest !== true && !skipped.has(index)) completed.add(index);
             }
             return [...completed].sort((a, b) => a - b);
+        }
+
+        // True when today's Bracing sessions count for the goal but at least one was cut short.
+        function isBracingTodayReduced(program) {
+            if (String(program?.id) !== '1') return false;
+            const today = program.bracingDailyPractice?.[localDateKey()];
+            return today?.reduced === true && today?.phaseIndex === program.currentPhaseIndex;
         }
 
         function recordBracingPartialPractice(execution, program) {
