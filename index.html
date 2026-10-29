@@ -126,7 +126,7 @@
         .cf-notice { border-left: 3px solid var(--cf-color-cyan); background: rgba(103,217,255,.08); color: var(--cf-color-text-secondary); }
         .cf-empty { border: 1px dashed rgba(255,255,255,.2); color: var(--cf-color-text-secondary); }
         .cf-error { border: 1px solid rgba(255,127,138,.4); background: rgba(255,127,138,.1); color: #FFD5D8; }
-        .cf-bottom-nav { padding-bottom: max(.5rem, var(--cf-safe-bottom)); background: rgba(10,10,11,.96); border-color: rgba(255,255,255,.1); }
+        .cf-bottom-nav { padding-bottom: max(.5rem, var(--cf-safe-bottom)); background: rgb(10,10,11); border-color: rgba(255,255,255,.1); }
         .cf-nav-label { font-size: .68rem; line-height: 1.1; }
         .cf-status-dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--cf-color-menta); }
         @media (min-width: 520px) { main { max-width: 38rem; } }
@@ -361,7 +361,7 @@
     <main class="max-w-md mx-auto px-4 pt-3 pb-6 space-y-4">
 
         <!-- Top Greeting Header with Quick Action Chips -->
-        <div class="bg-gradient-to-br from-slate-850 to-slate-900 border border-slate-800/90 rounded-3xl p-4 shadow-lg no-print">
+        <div id="todayGreetingBlock" class="bg-gradient-to-br from-slate-850 to-slate-900 border border-slate-800/90 rounded-3xl p-4 shadow-lg no-print">
             <div class="flex items-center justify-between">
                 <div>
                     <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
@@ -4730,6 +4730,8 @@
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             const target = document.getElementById('tab-' + tabName);
             if (target) target.classList.add('active');
+            // Saudação e ações rápidas só na aba Hoje; nas demais o conteúdo começa no topo.
+            document.getElementById('todayGreetingBlock')?.classList.toggle('hidden', tabName !== 'hoje');
 
             // Update Nav buttons and trigger bouncy icon animation
             document.querySelectorAll('.nav-item').forEach(btn => {
@@ -4955,10 +4957,17 @@
             AppState.onboardingCompleted = true;
             const modal = document.getElementById('onboardingModal');
             if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+            setOnboardingBackgroundInert(false);
             saveState();
             switchTab('hoje');
             renderAfterProgressLoad();
             showInlineToast('Meta salva. Bem-vindo(a) ao CoreFlow!');
+        }
+
+        // A WebView do Android ignora aria-modal; inert tira o fundo do TalkBack e do foco.
+        function setOnboardingBackgroundInert(on) {
+            document.querySelectorAll('body > header, body > main, #coreflow-bottom-nav, #core-persistence-status')
+                .forEach(el => { el.inert = on; });
         }
 
         function openOnboardingIfNeeded() {
@@ -4971,6 +4980,7 @@
             };
             const modal = document.getElementById('onboardingModal');
             if (modal) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
+            setOnboardingBackgroundInert(true);
             onboardingRenderStep();
         }
 

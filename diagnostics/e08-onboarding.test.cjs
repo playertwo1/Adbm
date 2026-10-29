@@ -167,7 +167,7 @@ function setup() {
         onboardingFocusLabels,
         'let onboardingState = { step: 1, focus: null, dailyGoalInput: "", weeklyDaysInput: "" };',
         validateGoal, validateWeekly, showStepError, renderStep, selectFocus, updateGoalInput,
-        updateWeeklyInput, goBack, goNext, complete, openIfNeeded,
+        updateWeeklyInput, goBack, goNext, complete, openIfNeeded, extractFunction(source, 'setOnboardingBackgroundInert'),
         localDateKey, getConfiguredWeeklyTargetDays, isStrictNonNegativeInteger,
         isValidReminderTime, isReminderScheduleComplete, synchronizeProgramProgress, extractFunction(source, 'getBracingPracticeDays'), extractFunction(source, 'migrateBracingProgram'), mergeLoadedPrograms,
         isValidSessionRecord, normalizeSessionHistory,

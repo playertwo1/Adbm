@@ -1321,3 +1321,11 @@ Próximo passo:
 - `git diff --check`: `PASS`. Auditoria independente A1 `PASS`, sem achados materiais; a primeira revisão detectou contraste Kegel de 4,21:1 e uma alteração acidental no mini, ambas corrigidas e reavaliadas.
 - Captura/runtime Android, TalkBack, fonte ampliada e larguras menores: `NOT_RUN`; ADB/emulador não disponíveis no caminho configurado do SDK durante esta sessão. A aparência renderizada e os demais estados seguem `PENDING_HUMAN`.
 - Release v1.1.49/49: `scripts/check.sh` terminou em `CHECK PASS`; app e Wear compilados com assinatura release. `aapt` confirmou package/version dos dois; `apksigner` confirmou assinatura e certificado igual à v1.1.48.
+
+## 2026-10-29 — Critique android-premium-craft: 4 P1 corrigidos
+
+- Critique mestre no emulador `agente` (API 36, Maestro): Craft Score 50/100 (D) com 4 P1. Evidências em `.craft/critique/` (local, não versionado).
+- Corrigido: onboarding isola o fundo com `inert` (a WebView ignora `aria-modal`); ícones claros nas barras do sistema via `SystemBarStyle.dark`; navegação inferior opaca; saudação e ações rápidas só na aba Hoje.
+- Regressão nova `diagnostics/e14-critique-p1.test.cjs` falhou antes e passou depois; `e08-onboarding` e `e08-existing-user` passaram a carregar o helper novo no sandbox.
+- `bash scripts/check.sh`: `CHECK PASS` (diagnósticos, equivalência HTML, testes unitários, builds debug app/Wear). Validação visual no emulador com Maestro: barras legíveis, navegação opaca, Programas começa no topo, fundo do onboarding fora da árvore de acessibilidade.
+- Nova nota: 55/100 (C). Pendentes P2/P3: cabeçalho estoura a largura, Continuar sem escolha silencioso, CTAs multicoloridos/gradiente roxo, cards aninhados, emoji como ícone. TalkBack real, fonte 200%, overlay nativo e Wear: `NOT_RUN`.

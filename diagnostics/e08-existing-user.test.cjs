@@ -125,6 +125,7 @@ function setup() {
         isStrictNonNegativeInteger, isValidReminderTime, isReminderScheduleComplete,
         synchronizeProgramProgress, migrateBracingProgram, applyProgramProgressAdjustment,
         source.slice(persistenceStart, persistenceEnd),
+        extractFunction(source, 'setOnboardingBackgroundInert'),
         openOnboardingIfNeeded
     ].join('\n');
     vm.runInContext(src, context);
