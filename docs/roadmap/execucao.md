@@ -1329,3 +1329,12 @@ Próximo passo:
 - Regressão nova `diagnostics/e14-critique-p1.test.cjs` falhou antes e passou depois; `e08-onboarding` e `e08-existing-user` passaram a carregar o helper novo no sandbox.
 - `bash scripts/check.sh`: `CHECK PASS` (diagnósticos, equivalência HTML, testes unitários, builds debug app/Wear). Validação visual no emulador com Maestro: barras legíveis, navegação opaca, Programas começa no topo, fundo do onboarding fora da árvore de acessibilidade.
 - Nova nota: 55/100 (C). Pendentes P2/P3: cabeçalho estoura a largura, Continuar sem escolha silencioso, CTAs multicoloridos/gradiente roxo, cards aninhados, emoji como ícone. TalkBack real, fonte 200%, overlay nativo e Wear: `NOT_RUN`.
+
+## 2026-10-29 — Critique android-premium-craft: segunda rodada
+
+- Pausas: a regra global de 48px aplicada ao próprio checkbox gerava caixas nativas gigantes e escondia Seg–Sáb. Checkbox dentro de `label` volta ao tamanho normal; os rótulos de dia passaram a `min-h-12` como alvo de toque.
+- Onboarding: `onboardingStepError` estava dentro do passo 2 e ficava oculto no passo 1; movido para fora dos passos. "Continuar" sem foco agora mostra o aviso.
+- Evolução: card de backup movido para o fim da aba; a evolução do usuário abre a tela.
+- Cabeçalho: Voz, Vibração, Galaxy Watch e Lembretes foram para um menu "⋮" (mesmos ids e estados); atalho de Perfil removido por decisão do usuário (a aba Perfil da navegação permanece). `e08-6` atualizado para exigir o caminho da navegação.
+- Regressão nova `diagnostics/e15-critique-p2.test.cjs` (falhou antes, passa depois). `bash scripts/check.sh`: `CHECK PASS`. Validação no emulador via Maestro, capturas em `.craft/critique/`.
+- Craft Score: 50D → 55C → 58C. Pendentes: CTAs multicoloridos/gradiente roxo, cards aninhados, emoji como ícone, toast sobre o cabeçalho. TalkBack real, fonte 200%, overlay nativo e Wear: `NOT_RUN`.

@@ -79,6 +79,11 @@
             min-width: 48px;
             min-height: 48px;
         }
+        /* The wrapping label is the touch target; growing the box itself renders a giant native checkbox. */
+        label input[type="checkbox"], label input[type="radio"] {
+            min-width: 0;
+            min-height: 0;
+        }
         .cf-btn {
             display: inline-flex;
             align-items: center;
@@ -294,7 +299,6 @@
                 <label class="block text-xs font-bold text-slate-300">Dias por semana (opcional)
                     <input id="onboardingWeeklyDaysInput" type="number" min="1" max="7" inputmode="numeric" oninput="onboardingUpdateWeeklyDaysInput(this.value)" class="mt-1 w-full rounded-xl bg-slate-800 p-3 text-white" aria-label="Frequência semanal em dias" />
                 </label>
-                <p id="onboardingStepError" class="hidden rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-200" role="alert"></p>
             </div>
 
             <div id="onboardingStep3" class="mt-4 hidden space-y-3">
@@ -306,6 +310,7 @@
                 </div>
             </div>
 
+            <p id="onboardingStepError" class="mt-4 hidden rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-200" role="alert"></p>
             <div class="mt-5 flex gap-2">
                 <button type="button" id="onboardingBackBtn" onclick="onboardingGoBack()" class="cf-btn hidden flex-1 border border-slate-700 px-3 py-3 text-sm text-slate-200">Voltar</button>
                 <button type="button" id="onboardingNextBtn" onclick="onboardingGoNext()" class="cf-btn flex-1 bg-emerald-500 px-3 py-3 text-sm text-slate-950">Continuar</button>
@@ -334,24 +339,29 @@
                 <i class="fa-solid fa-fire text-amber-500 text-sm"></i>
                 <span id="headerStreakCount">0</span> <span class="text-slate-400 font-normal">dias</span>
             </button>
-            <!-- Audio voice toggle -->
-            <button id="voiceToggleBtn" type="button" onclick="toggleVoice()" aria-label="Voz ativada" aria-pressed="true" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
-                <i id="voiceIcon" class="fa-solid fa-volume-high text-emerald-400"></i>
-            </button>
-            <!-- Haptic Vibration toggle -->
-            <button id="hapticToggleBtn" type="button" onclick="toggleHaptics()" aria-label="Vibração ativada" aria-pressed="true" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
-                <i id="hapticIcon" class="fa-solid fa-mobile-screen-button text-cyan-400"></i>
-            </button>
-            <!-- Galaxy Watch vibration toggle -->
-            <button id="watchHapticToggleBtn" type="button" onclick="toggleWatchHaptics()" title="Galaxy Watch: vibração ativada" aria-label="Galaxy Watch: vibração ativada" aria-pressed="true" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
-                <i id="watchHapticIcon" class="fa-solid fa-clock text-emerald-400"></i>
-            </button>
-            <button type="button" onclick="openTodayReminderConfig()" aria-label="Configurar lembretes" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-amber-400 transition text-sm">
-                <i class="fa-solid fa-bell" aria-hidden="true"></i>
-            </button>
-            <button type="button" onclick="switchTab('perfil')" aria-label="Abrir Perfil" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
-                <i class="fa-solid fa-user" aria-hidden="true"></i>
-            </button>
+            <!-- Secondary toggles live in a menu so the header fits 360dp screens. -->
+            <div class="relative">
+                <button id="headerMoreBtn" type="button" onclick="toggleHeaderMenu()" aria-label="Mais opções" aria-haspopup="true" aria-expanded="false" aria-controls="headerMoreMenu" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-200">
+                    <i class="fa-solid fa-ellipsis-vertical" aria-hidden="true"></i>
+                </button>
+                <div id="headerMoreMenu" class="hidden absolute right-0 top-full mt-2 flex gap-2 rounded-2xl border border-slate-700 bg-slate-900 p-2 shadow-xl">
+                    <!-- Audio voice toggle -->
+                    <button id="voiceToggleBtn" type="button" onclick="toggleVoice()" aria-label="Voz ativada" aria-pressed="true" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
+                        <i id="voiceIcon" class="fa-solid fa-volume-high text-emerald-400"></i>
+                    </button>
+                    <!-- Haptic Vibration toggle -->
+                    <button id="hapticToggleBtn" type="button" onclick="toggleHaptics()" aria-label="Vibração ativada" aria-pressed="true" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
+                        <i id="hapticIcon" class="fa-solid fa-mobile-screen-button text-cyan-400"></i>
+                    </button>
+                    <!-- Galaxy Watch vibration toggle -->
+                    <button id="watchHapticToggleBtn" type="button" onclick="toggleWatchHaptics()" title="Galaxy Watch: vibração ativada" aria-label="Galaxy Watch: vibração ativada" aria-pressed="true" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition text-sm">
+                        <i id="watchHapticIcon" class="fa-solid fa-clock text-emerald-400"></i>
+                    </button>
+                    <button type="button" onclick="openTodayReminderConfig()" aria-label="Configurar lembretes" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-amber-400 transition text-sm">
+                        <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -887,13 +897,13 @@
                 <fieldset class="mt-4">
                     <legend class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Dias</legend>
                     <div class="mt-2 grid grid-cols-7 gap-1.5">
-                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="0"><span>Seg</span></label>
-                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="1"><span>Ter</span></label>
-                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="2"><span>Qua</span></label>
-                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="3"><span>Qui</span></label>
-                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="4"><span>Sex</span></label>
-                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="5"><span>Sáb</span></label>
-                        <label class="flex min-h-11 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="6"><span>Dom</span></label>
+                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="0"><span>Seg</span></label>
+                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="1"><span>Ter</span></label>
+                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="2"><span>Qua</span></label>
+                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="3"><span>Qui</span></label>
+                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="4"><span>Sex</span></label>
+                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="5"><span>Sáb</span></label>
+                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="6"><span>Dom</span></label>
                     </div>
                 </fieldset>
                 <div class="mt-4 grid grid-cols-2 gap-3">
@@ -2086,21 +2096,6 @@
         <!-- ABA 4: CRONOGRAMA & DASHBOARD -->
         <!-- ============================================================ -->
         <section id="tab-dashboard" class="tab-content space-y-6">
-            <div class="rounded-2xl border border-emerald-500/30 bg-slate-800/90 p-4 space-y-3">
-                <h3 class="text-lg font-heading font-extrabold text-white"><i class="fa-solid fa-shield-halved text-emerald-400 mr-2"></i>Backup dos meus dados</h3>
-                <p class="text-xs text-slate-300">Guarde seus programas, evolução, agenda e históricos em um arquivo. Ao importar, confira os dados antes de substituir o progresso atual.</p>
-                <div class="grid grid-cols-2 gap-3">
-                    <button onclick="openProgressProtection(); exportProgressCopy()" class="rounded-xl bg-emerald-500 px-3 py-3 text-sm font-bold text-slate-950">Exportar backup</button>
-                    <button onclick="openProgressProtection(); chooseProgressImport()" class="rounded-xl border border-sky-400/40 bg-sky-500/10 px-3 py-3 text-sm font-bold text-sky-200">Importar backup</button>
-                </div>
-                <!-- E09.5: Backup Seguro com Criptografia -->
-                <div class="grid grid-cols-2 gap-3 mt-3">
-                    <button onclick="openProgressProtection(); exportProgressSecure()" class="rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 px-3 py-3 text-xs font-bold text-white flex items-center justify-center gap-1"><i class="fa-solid fa-lock mr-1"></i>Backup criptografado</button>
-                    <button onclick="openProgressProtection(); document.getElementById('progressImportFile').accept='.cbk'; document.getElementById('progressImportFile').onchange=async (e)=>{const f=e.target.files?.[0]; if(f?.name.endsWith('.cbk'))await importProgressSecure(f);else await readProgressImportFile(e.target)}; document.getElementById('progressImportFile').click()" class="rounded-xl border border-violet-500/40 bg-violet-500/10 px-3 py-3 text-xs font-bold text-violet-200 flex items-center justify-center gap-1"><i class="fa-solid fa-key mr-1"></i>Importar seguro</button>
-                </div>
-                <button onclick="openProgressProtection()" class="text-xs text-emerald-300 underline">Ver última gravação e cópia anterior</button>
-            </div>
-
             <!-- Header com Seletor de Período da Evolução -->
             <div class="flex items-center justify-between gap-3">
                 <div>
@@ -2221,6 +2216,21 @@
                     <p class="font-bold">Notificações Ativas</p>
                     <p class="text-slate-400 text-[11px] mt-0.5">Você receberá vibração e lembrete 5 minutos antes de cada bloco de treino.</p>
                 </div>
+            </div>
+
+            <div id="dashboardBackupCard" class="rounded-2xl border border-emerald-500/30 bg-slate-800/90 p-4 space-y-3">
+                <h3 class="text-lg font-heading font-extrabold text-white"><i class="fa-solid fa-shield-halved text-emerald-400 mr-2"></i>Backup dos meus dados</h3>
+                <p class="text-xs text-slate-300">Guarde seus programas, evolução, agenda e históricos em um arquivo. Ao importar, confira os dados antes de substituir o progresso atual.</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="openProgressProtection(); exportProgressCopy()" class="rounded-xl bg-emerald-500 px-3 py-3 text-sm font-bold text-slate-950">Exportar backup</button>
+                    <button onclick="openProgressProtection(); chooseProgressImport()" class="rounded-xl border border-sky-400/40 bg-sky-500/10 px-3 py-3 text-sm font-bold text-sky-200">Importar backup</button>
+                </div>
+                <!-- E09.5: Backup Seguro com Criptografia -->
+                <div class="grid grid-cols-2 gap-3 mt-3">
+                    <button onclick="openProgressProtection(); exportProgressSecure()" class="rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 px-3 py-3 text-xs font-bold text-white flex items-center justify-center gap-1"><i class="fa-solid fa-lock mr-1"></i>Backup criptografado</button>
+                    <button onclick="openProgressProtection(); document.getElementById('progressImportFile').accept='.cbk'; document.getElementById('progressImportFile').onchange=async (e)=>{const f=e.target.files?.[0]; if(f?.name.endsWith('.cbk'))await importProgressSecure(f);else await readProgressImportFile(e.target)}; document.getElementById('progressImportFile').click()" class="rounded-xl border border-violet-500/40 bg-violet-500/10 px-3 py-3 text-xs font-bold text-violet-200 flex items-center justify-center gap-1"><i class="fa-solid fa-key mr-1"></i>Importar seguro</button>
+                </div>
+                <button onclick="openProgressProtection()" class="text-xs text-emerald-300 underline">Ver última gravação e cópia anterior</button>
             </div>
         </section>
 
@@ -4969,6 +4979,18 @@
             document.querySelectorAll('body > header, body > main, #coreflow-bottom-nav, #core-persistence-status')
                 .forEach(el => { el.inert = on; });
         }
+
+        function toggleHeaderMenu(force) {
+            const menu = document.getElementById('headerMoreMenu');
+            const btn = document.getElementById('headerMoreBtn');
+            if (!menu || !btn) return;
+            const open = typeof force === 'boolean' ? force : menu.classList.contains('hidden');
+            menu.classList.toggle('hidden', !open);
+            btn.setAttribute('aria-expanded', String(open));
+        }
+        document.addEventListener('click', event => {
+            if (!event.target.closest?.('#headerMoreMenu, #headerMoreBtn')) toggleHeaderMenu(false);
+        });
 
         function openOnboardingIfNeeded() {
             if (AppState.onboardingCompleted === true) return;

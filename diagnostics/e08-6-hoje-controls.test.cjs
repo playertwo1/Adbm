@@ -29,7 +29,8 @@ function extractFunction(name) {
     throw new Error(`Função incompleta: ${name}`);
 }
 
-assert.match(source, /onclick="switchTab\('perfil'\)"[^>]*aria-label="Abrir Perfil"/, 'avatar deve abrir Perfil real');
+// 2026-10-29: atalho de Perfil saiu do cabeçalho (estourava a largura); a aba Perfil da navegação é o caminho real.
+assert.match(source, /onclick="switchTab\('perfil'\)" id="nav-btn-perfil"/, 'navegação deve abrir Perfil real');
 assert.match(source, /onclick="openTodayReminderConfig\(\)"[^>]*aria-label="Configurar lembretes"/, 'sino deve abrir configuração de lembretes');
 for (const shortcut of ['vacuo', 'pausa', 'kegel', 'meditar', 'discreto']) {
     assert.match(source, new RegExp(`openTodayShortcut\\('${shortcut}'\\)`), `atalho ${shortcut} deve existir em Hoje`);
