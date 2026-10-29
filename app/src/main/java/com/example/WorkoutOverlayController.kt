@@ -109,6 +109,7 @@ object WorkoutOverlayController {
     private var windowManager: WindowManager? = null
     private var rootView: FrameLayout? = null
     private var layoutParams: WindowManager.LayoutParams? = null
+    private var appInForeground = false
 
     // Sub-views para os 3 estados visuais (Material 3 + AMOLED)
     private var miniContainer: LinearLayout? = null
@@ -325,6 +326,18 @@ object WorkoutOverlayController {
         true
     }.getOrDefault(false)
 
+    /** Com o app visível o card flutuante só cobriria o timer e o Cancelar da própria tela. */
+    fun setAppForeground(foreground: Boolean) {
+        mainHandler.post {
+            appInForeground = foreground
+            applyForegroundVisibility()
+        }
+    }
+
+    private fun applyForegroundVisibility() {
+        rootView?.visibility = if (appInForeground) View.GONE else View.VISIBLE
+    }
+
     fun isShowing(): Boolean = rootView != null && rootView?.isAttachedToWindow == true
 
     fun isOverlayVisible(): Boolean = isShowing()
@@ -472,6 +485,7 @@ object WorkoutOverlayController {
         }
 
         updateViewVisibility()
+        applyForegroundVisibility()
         runCatching { windowManager?.addView(root, params) }
     }
 
@@ -555,18 +569,16 @@ object WorkoutOverlayController {
         else -> VisualState.COMPACT
     }
 
-    private fun updatePauseButton(button: TextView?, isPaused: Boolean, compact: Boolean = false) {
+    private fun updatePauseButton(button: TextView?, isPaused: Boolean) {
         button ?: return
         if (isPaused) {
-            button.text = if (compact) "Continuar" else "▶ Continuar"
+            button.text = "Continuar"
             button.contentDescription = "Continuar treino"
-            button.background = createPillDrawable(Color.parseColor("#10B981"), Color.parseColor("#10B981"), 0)
         } else {
-            button.text = if (compact) "Pausar" else "⏸ Pausar"
+            button.text = "Pausar"
             button.contentDescription = "Pausar treino"
-            val color = if (compact) Color.parseColor("#10B981") else Color.parseColor("#F59E0B")
-            button.background = createPillDrawable(color, color, 0)
         }
+        button.background = createPillDrawable(Color.parseColor("#10B981"), Color.parseColor("#10B981"), 0)
     }
 
     private fun toggleWorkoutPause(context: Context) {
@@ -654,6 +666,7 @@ object WorkoutOverlayController {
             setTextColor(Color.parseColor("#6EE7B7"))
             contentDescription = "Abrir controles do treino"
             minHeight = dpToPx(context, 48)
+            gravity = Gravity.CENTER_VERTICAL
             setPadding(dpToPx(context, 8), dpToPx(context, 6), dpToPx(context, 2), dpToPx(context, 6))
             setOnClickListener {
                 cancelAutoCollapse()
@@ -699,7 +712,7 @@ object WorkoutOverlayController {
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.WHITE)
-            maxLines = 1
+            maxLines = 2
             ellipsize = TextUtils.TruncateAt.END
         }
         compactProgramText = TextView(context).apply {
@@ -803,6 +816,7 @@ object WorkoutOverlayController {
             setTextColor(Color.parseColor("#94A3B8"))
             contentDescription = "Recolher modo expandido"
             minHeight = dpToPx(context, 48)
+            gravity = Gravity.CENTER_VERTICAL
             setPadding(dpToPx(context, 6), dpToPx(context, 4), dpToPx(context, 6), dpToPx(context, 4))
             setOnClickListener {
                 cancelAutoCollapse()
@@ -954,7 +968,7 @@ object WorkoutOverlayController {
             }
         }
         expandedNextStepLabel = TextView(context).apply {
-            text = "➔ Próximo: Recuperação · 60s"
+            text = "Próximo: Recuperação · 60s"
             textSize = 10f
             setTextColor(Color.parseColor("#94A3B8"))
         }
@@ -968,7 +982,7 @@ object WorkoutOverlayController {
         }
 
         expandedPauseResumeBtn = TextView(context).apply {
-            text = "⏸ Pausar"
+            text = "Pausar"
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.parseColor("#0F172A"))
@@ -977,9 +991,7 @@ object WorkoutOverlayController {
             gravity = Gravity.CENTER
             background = createPillDrawable(Color.parseColor("#10B981"), Color.parseColor("#10B981"), 0)
             setPadding(dpToPx(context, 14), dpToPx(context, 8), dpToPx(context, 14), dpToPx(context, 8))
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-                rightMargin = dpToPx(context, 6)
-            }
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             setOnClickListener {
                 val isPaused = lastRawState?.optString("status") == "paused"
                 val action = if (isPaused) WorkoutForegroundService.ACTION_RESUME else WorkoutForegroundService.ACTION_PAUSE
@@ -989,7 +1001,7 @@ object WorkoutOverlayController {
         }
 
         expandedSkipBtn = TextView(context).apply {
-            text = "⏭ Pular"
+            text = "Pular"
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.WHITE)
@@ -999,7 +1011,7 @@ object WorkoutOverlayController {
             background = createPillDrawable(Color.parseColor("#1E293B"), Color.parseColor("#334155"), 1)
             setPadding(dpToPx(context, 12), dpToPx(context, 8), dpToPx(context, 12), dpToPx(context, 8))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-                leftMargin = dpToPx(context, 6)
+                leftMargin = dpToPx(context, 4)
             }
             setOnClickListener {
                 sendServiceAction(context, WorkoutForegroundService.ACTION_SKIP)
@@ -1195,7 +1207,7 @@ object WorkoutOverlayController {
         compactContainer?.contentDescription = "$programTitle, $actionLabel, restante $timeStr. Toque para alternar tamanho."
 
         // 3. Atualizar EXPANDIDO
-        expandedProgramTitle?.text = programTitle.uppercase()
+        expandedProgramTitle?.text = programTitle
         expandedPhaseSubtitle?.text = if (phaseTitle.isNotBlank()) phaseTitle else "$programTitle$seriesText"
 
         val isBreath = sessionMeta.optString("type") == "breath" || programTitle.contains("Respiração", ignoreCase = true)
@@ -1301,7 +1313,7 @@ object WorkoutOverlayController {
         expandedContainer?.contentDescription = "Card expandido do treino. $programTitle, $actionLabel, restante $timeStr."
 
         // Os três tamanhos recebem o mesmo estado vindo do motor nativo.
-        updatePauseButton(compactPauseResumeBtn, isPaused, compact = true)
+        updatePauseButton(compactPauseResumeBtn, isPaused)
         updatePauseButton(expandedPauseResumeBtn, isPaused)
 
         // Próximo passo
@@ -1310,7 +1322,7 @@ object WorkoutOverlayController {
             val nextTitle = nextStep.optString("title", "Próximo passo")
             val nextDuration = nextStep.optInt("duration", 0)
             val durLabel = if (nextDuration > 0) " · ${nextDuration}s" else ""
-            expandedNextStepLabel?.text = "➔ Próximo: $nextTitle$durLabel"
+            expandedNextStepLabel?.text = "Próximo: $nextTitle$durLabel"
         } else {
             expandedNextStepCard?.visibility = View.GONE
         }

@@ -690,6 +690,79 @@ class WorkoutOverlayTest {
   }
 
   @Test
+  fun `expanded controls use plain labels, equal 4dp gaps and the same pause green as compact`() {
+    val context = ApplicationProvider.getApplicationContext<Context>()
+    val density = context.resources.displayMetrics.density
+    val root = createExpandedOverlay(context)
+    bindOverlayState(context, stateWithImage(null).put("status", "running"))
+    val controls = overlayViews(root).filterIsInstance<TextView>()
+    val pause = controls.first { it.contentDescription == "Pausar treino" }
+    val skip = controls.first { it.contentDescription == "Pular para o próximo passo" }
+    val cancel = controls.first { it.contentDescription == "Cancelar treino" }
+
+    assertEquals("Pausar", pause.text.toString())
+    assertEquals("Pular", skip.text.toString())
+    val gap = (4 * density).toInt()
+    val lp = listOf(pause, skip, cancel).map { it.layoutParams as ViewGroup.MarginLayoutParams }
+    assertEquals("Pausar encosta no início da barra", 0, lp[0].leftMargin + lp[0].rightMargin)
+    assertEquals("espaço Pausar→Pular", gap, lp[0].rightMargin + lp[1].leftMargin)
+    assertEquals("espaço Pular→Cancelar", gap, lp[1].rightMargin + lp[2].leftMargin)
+    val expandedGreen = (pause.background as android.graphics.drawable.GradientDrawable).color!!.defaultColor
+    assertEquals(Color.parseColor("#10B981"), expandedGreen)
+    assertTrue(
+      "Próximo passo sem caractere-ícone",
+      controls.none { it.text.toString().startsWith("➔") }
+    )
+  }
+
+  @Test
+  fun `expanded program title keeps the original case`() {
+    val context = ApplicationProvider.getApplicationContext<Context>()
+    val root = createExpandedOverlay(context)
+    bindOverlayState(context, stateWithImage(null).put("status", "running"))
+    assertTrue(
+      "Título do programa não deve ser forçado para caixa alta",
+      overlayViews(root).filterIsInstance<TextView>().any { it.text.toString() == "Pausa: Alongamento" }
+    )
+  }
+
+  @Test
+  fun `open and collapse labels are vertically centered in their 48dp targets`() {
+    val context = ApplicationProvider.getApplicationContext<Context>()
+    val open = overlayViews(buildOverlayPart(context, "buildMiniView")).filterIsInstance<TextView>().first { it.text == "Abrir" }
+    val collapse = overlayViews(createExpandedOverlay(context)).filterIsInstance<TextView>().first { it.text == "Recolher" }
+    listOf(open, collapse).forEach {
+      assertEquals("${it.text} centralizado na vertical", android.view.Gravity.CENTER_VERTICAL, it.gravity and android.view.Gravity.VERTICAL_GRAVITY_MASK)
+    }
+  }
+
+  @Test
+  fun `compact action text may wrap to two lines instead of truncating at one`() {
+    val context = ApplicationProvider.getApplicationContext<Context>()
+    val root = buildOverlayPart(context, "buildCompactView")
+    val action = overlayViews(root).filterIsInstance<TextView>().first { it.text == "TREINO" }
+    assertEquals(2, action.maxLines)
+  }
+
+  @Test
+  fun `overlay is hidden while the app is in the foreground and shown when it leaves`() {
+    val context = ApplicationProvider.getApplicationContext<Context>()
+    val rootField = WorkoutOverlayController::class.java.getDeclaredField("rootView").apply { isAccessible = true }
+    val root = FrameLayout(context)
+    rootField.set(WorkoutOverlayController, root)
+    try {
+      WorkoutOverlayController.setAppForeground(true)
+      Shadows.shadowOf(Looper.getMainLooper()).idle()
+      assertEquals(View.GONE, root.visibility)
+      WorkoutOverlayController.setAppForeground(false)
+      Shadows.shadowOf(Looper.getMainLooper()).idle()
+      assertEquals(View.VISIBLE, root.visibility)
+    } finally {
+      rootField.set(WorkoutOverlayController, null)
+    }
+  }
+
+  @Test
   fun `mini compact collapse and safe exit actions keep 48dp targets`() {
     val context = ApplicationProvider.getApplicationContext<Context>()
     val density = context.resources.displayMetrics.density

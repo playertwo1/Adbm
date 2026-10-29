@@ -274,6 +274,16 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
     }
 
+    override fun onStart() {
+        super.onStart()
+        WorkoutOverlayController.setAppForeground(true)
+    }
+
+    override fun onStop() {
+        WorkoutOverlayController.setAppForeground(false)
+        super.onStop()
+    }
+
     override fun onResume() {
         super.onResume()
         val reminderPermission = ReminderScheduler.hasEffectiveNotificationPermission(this)
