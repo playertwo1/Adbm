@@ -132,7 +132,8 @@
         .cf-empty { border: 1px dashed rgba(255,255,255,.2); color: var(--cf-color-text-secondary); }
         .cf-error { border: 1px solid rgba(255,127,138,.4); background: rgba(255,127,138,.1); color: #FFD5D8; }
         .cf-bottom-nav { padding-bottom: max(.5rem, var(--cf-safe-bottom)); background: rgb(10,10,11); border-color: rgba(255,255,255,.1); }
-        .cf-nav-label { font-size: .68rem; line-height: 1.1; }
+        .cf-nav-label { font-size: .68rem; line-height: 1.1; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .cf-bottom-nav .nav-item { min-width: 0; }
         .cf-status-dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--cf-color-menta); }
         @media (min-width: 520px) { main { max-width: 38rem; } }
         @media (max-width: 380px) {
@@ -319,21 +320,21 @@
     </div>
 
     <!-- Top Status Bar & App Header -->
-    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3.5 flex items-center justify-between no-print">
-        <div class="flex items-center gap-3">
-            <div class="cf-icon w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-emerald-900/30" aria-hidden="true">
+    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3.5 flex flex-wrap items-center justify-between gap-y-2 no-print">
+        <div class="flex min-w-0 items-center gap-3">
+            <div class="cf-icon w-10 h-10 flex-shrink-0 rounded-xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-emerald-900/30" aria-hidden="true">
                 <i class="fa-solid fa-lungs text-white text-lg"></i>
             </div>
-            <div>
+            <div class="min-w-0">
                 <h1 class="font-heading font-extrabold text-lg tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">CoreFlow</h1>
-                <p class="text-xs text-slate-400 flex items-center gap-1 font-medium">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                    Saúde, Vácuo & Postura
+                <p class="text-xs text-slate-400 flex min-w-0 items-center gap-1 font-medium">
+                    <span class="w-1.5 h-1.5 flex-shrink-0 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span class="truncate">Saúde, Vácuo & Postura</span>
                 </p>
             </div>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="ml-auto flex flex-shrink-0 items-center gap-2">
             <!-- Streak badge -->
             <button onclick="switchTab('dashboard')" class="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/70 rounded-full text-xs font-bold text-amber-400 transition shadow-sm">
                 <i class="fa-solid fa-fire text-amber-500 text-sm"></i>
@@ -896,14 +897,14 @@
                 </label>
                 <fieldset class="mt-4">
                     <legend class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Dias</legend>
-                    <div class="mt-2 grid grid-cols-7 gap-1.5">
-                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="0"><span>Seg</span></label>
-                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="1"><span>Ter</span></label>
-                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="2"><span>Qua</span></label>
-                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="3"><span>Qui</span></label>
-                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="4"><span>Sex</span></label>
-                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="5"><span>Sáb</span></label>
-                        <label class="flex min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="6"><span>Dom</span></label>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="0"><span>Seg</span></label>
+                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="1"><span>Ter</span></label>
+                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="2"><span>Qua</span></label>
+                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="3"><span>Qui</span></label>
+                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="4"><span>Sex</span></label>
+                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="5"><span>Sáb</span></label>
+                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="6"><span>Dom</span></label>
                     </div>
                 </fieldset>
                 <div class="mt-4 grid grid-cols-2 gap-3">
@@ -936,7 +937,7 @@
                             <i class="fa-solid fa-child-reaching"></i>
                         </div>
                         <div>
-                            <div class="flex items-center gap-2">
+                            <div class="flex flex-wrap items-center gap-2">
                                 <h3 class="text-base font-bold text-white tracking-tight">Corpo</h3>
                                 <span class="text-[10px] bg-emerald-500/15 text-emerald-400 font-bold px-2 py-0.5 rounded-full border border-emerald-500/25 font-mono" id="corpo-badge-summary">4 técnicas • Circuito Ergonômico</span>
                             </div>
@@ -1487,7 +1488,7 @@
                             <i class="fa-solid fa-brain"></i>
                         </div>
                         <div>
-                            <div class="flex items-center gap-2">
+                            <div class="flex flex-wrap items-center gap-2">
                                 <h3 class="text-base font-bold text-white tracking-tight">Mente</h3>
                                 <span class="text-[10px] bg-cyan-500/15 text-cyan-400 font-bold px-2 py-0.5 rounded-full border border-cyan-500/25 font-mono" id="mente-badge-summary">4 técnicas • Respiração Guiada</span>
                             </div>
@@ -2095,8 +2096,8 @@
         <!-- ============================================================ -->
         <section id="tab-dashboard" class="tab-content space-y-6">
             <!-- Header com Seletor de Período da Evolução -->
-            <div class="flex items-center justify-between gap-3">
-                <div>
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="min-w-0">
                     <h2 class="text-xl font-heading font-extrabold text-white tracking-tight">Sua evolução</h2>
                     <p class="text-xs text-slate-400">Pequenos passos, grandes resultados.</p>
                 </div>
@@ -3109,7 +3110,7 @@
             <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
                 <div class="min-w-0">
                     <p class="text-[10px] font-extrabold uppercase tracking-[.18em] text-cyan-300">Resumo do perfil</p>
-                    <p id="profileNameValue" class="mt-1 truncate text-lg font-black text-white">Nome não configurado</p>
+                    <p id="profileNameValue" class="mt-1 break-words text-lg font-black text-white">Nome não configurado</p>
                     <p id="profileGoalValue" class="mt-1 text-xs text-slate-400">Meta diária não configurada</p>
                 </div>
                 <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/25 bg-cyan-400/10 text-cyan-300" aria-hidden="true"><i class="fa-solid fa-user"></i></div>
@@ -14135,9 +14136,9 @@
                             </div>
                         </div>
 
-                        <div class="flex items-end justify-between mt-2 relative z-10">
+                        <div class="flex flex-wrap items-end justify-between gap-2 mt-2 relative z-10">
                             <div class="flex items-baseline gap-1">
-                                <span class="text-4xl font-black text-white tracking-tight">${currentTotal} min</span>
+                                <span class="text-4xl font-black text-white tracking-tight whitespace-nowrap">${currentTotal} min</span>
                             </div>
                             ${diffHtml}
                         </div>
