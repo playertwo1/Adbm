@@ -1418,3 +1418,9 @@ Próximo passo:
 - Decisão do usuário: CTA de sessão pendente em Programas vira `bg-amber-500 hover:bg-amber-600` (sólido); o cartão do atalho "Pausa de Resposta" vira `bg-slate-900` com a borda violeta. O typo `to-orange-600` sem `hover:` some junto.
 - Regressão: `diagnostics/e25-solid-cta-and-pause-card.test.cjs`.
 - NOT_RUN: conferência visual no emulador.
+
+## 2026-10-30 - Verificação em emulador (AVD agente, 100%)
+
+- Conferido: tiles de fase do Vácuo (ativo com filete esmeralda), Pausa de Resposta (etapas com filete; botão "Começar 3 min" ainda tem gradiente violeta→azul), cabeçalho de Programas, modal Bracing (dicas com filete lateral legíveis). Evidência: `.craft/critique/u1`–`u5` (não versionada).
+- Achado: no card de programa a 100%, os 4 ícones do cabeçalho deixam título e descrição numa coluna estreita (descrição em 5 linhas). Anterior a esta rodada; não alterado.
+- NOT_RUN: TalkBack, Wear OS, overlay compacto no aparelho, erros inline do Dashboard (vivem dentro de modais; não exibidos), 200% após os passos 3 e 4.
