@@ -1391,3 +1391,10 @@ Próximo passo:
 - Regressão `diagnostics/e21-vacuo-large-text.test.cjs` falhou antes e passou depois; `bash scripts/check.sh`: `CHECK PASS`. Emulador `agente` a 200%: seletor empilhado, tiles 2x2, expiração e retenção legíveis sem tocar o anel (`.craft/critique/r2-*`, `r3-*`). A 100%: tiles continuam em 4 colunas; escala do anel a 100% e seletor a 100% após a correção: `NOT_RUN` (capturas chegaram atrasadas).
 - Observado, não corrigido: `resetVacuo()` seguido de `togglePlayVacuo()` no mesmo tick (via script) derrubou o app com `ForegroundServiceDidNotStartInTimeException` (`WorkoutForegroundService` recebe `STOP` e é encerrado antes de `startForeground`). Reset isolado em repouso não derruba. Não reproduzido por toque humano; avaliar guarda no serviço.
 - Observado no passo 2: a 200% o título "Bracing: Treino de 8 Semanas" fica numa coluna estreita em Programas (cabeçalho do card com ícones lado a lado).
+
+## 2026-10-29 — Critique android-premium-craft: aba Programas a 200%
+
+- A 200% os ícones (guia, lembrete, editar, expandir) do cabeçalho de cada card ocupavam a direita e título e descrição ficavam numa coluna de uma palavra por linha; o selo "2x ao dia" e a linha do hero ("Treino recomendado" + "0/2 Sessões Hoje") também espremiam em 3 linhas.
+- Corrigido em `index.html` (e cópia em assets): cabeçalho do card de programa com `flex-wrap`, coluna de texto com `basis-[14ch]` e grupo de ícones com `ml-auto` (descem para a linha de baixo, à direita, quando falta espaço; a 100% seguem ao lado do título); cabeçalho da aba e linha do hero com `flex-wrap gap-2` e selos com `whitespace-nowrap`. Sem alteração de IDs, handlers, armazenamento ou protocolo.
+- Regressão `diagnostics/e22-programas-large-text.test.cjs` falhou antes e passou depois; `bash scripts/check.sh`: `CHECK PASS`. Emulador `agente`: Programas a 200% (`.craft/critique/s3-prog-*`) e a 100% (`s3-100-prog.png`) conferidos.
+- Restante a 200% em Programas: linha "Sessões de hoje" (rótulo, contagem e horário em três colunas apertadas) e chip da 2ª sessão com o ponto de status encostando no texto. Não alterados.

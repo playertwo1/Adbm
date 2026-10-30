@@ -2050,13 +2050,13 @@
         <!-- ABA 4: PROGRAMAS DE EVOLUÇÃO (TREINOS GUIADOS PASSO A PASSO) -->
         <!-- ============================================================ -->
         <section id="tab-programas" class="tab-content space-y-5">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-wrap items-center justify-between gap-2">
                 <div>
                     <h2 class="text-xl font-heading font-extrabold text-white tracking-tight">Programas de Evolução</h2>
                     <p class="text-xs text-slate-400 mt-0.5">Treinos guiados passo a passo (2 sessões ao dia)</p>
                 </div>
                 <div class="flex items-center gap-1.5">
-                    <span class="text-xs bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                    <span class="text-xs bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 font-bold px-2.5 py-1 rounded-full flex items-center gap-1 whitespace-nowrap">
                         <i class="fa-solid fa-fire text-amber-400"></i> 2x ao dia
                     </span>
                 </div>
@@ -2065,11 +2065,11 @@
             <!-- Hero Banner: Treino do Dia Ativo -->
             <div id="todayWorkoutHeroBanner" class="bg-slate-900 rounded-3xl p-5 border border-indigo-400/30 relative overflow-hidden">
                 <div class="relative z-10 space-y-3">
-                    <div class="flex items-center justify-between">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
                         <span class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-200 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-400/20 flex items-center gap-1.5">
                             <i class="fa-solid fa-play text-emerald-400 text-xs"></i> Treino Recomendado de Hoje
                         </span>
-                        <span id="heroSessionsTodayBadge" class="text-xs font-black text-amber-300 bg-black/40 px-2.5 py-0.5 rounded-full border border-amber-400/30">0/2 Sessões</span>
+                        <span id="heroSessionsTodayBadge" class="whitespace-nowrap text-xs font-black text-amber-300 bg-black/40 px-2.5 py-0.5 rounded-full border border-amber-400/30">0/2 Sessões</span>
                     </div>
 
                     <div>
@@ -11280,13 +11280,13 @@
                     <div data-program-id="${prog.id}" class="bg-slate-850 rounded-3xl overflow-hidden border border-slate-700/80 shadow-2xl transition-all">
                         <div class="p-5">
                             <!-- Card Header -->
-                            <div class="flex items-start justify-between">
-                                <div class="flex-1 pr-3 cursor-pointer" onclick="openProgramDetail('${prog.id}')">
+                            <div class="flex flex-wrap items-start justify-between gap-y-2">
+                                <div class="flex-1 basis-[14ch] min-w-0 pr-3 cursor-pointer" onclick="openProgramDetail('${prog.id}')">
                                     <h3 class="text-lg font-bold text-white tracking-tight">${prog.title}</h3>
                                     <p class="text-xs text-slate-400 mt-1 leading-relaxed">${prog.description}</p>
                                     ${progressionReviewHtml}
                                 </div>
-                                <div class="flex items-center gap-1.5 flex-shrink-0">
+                                <div class="ml-auto flex items-center gap-1.5 flex-shrink-0">
                                     ${guideBtnHtml}
                                     <button onclick="openReminderConfigModal('${prog.id}')" title="Configurar lembrete${targetSessions > 1 ? 's' : ''}" class="w-8 h-8 rounded-full bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 flex items-center justify-center transition">
                                         <i class="fa-solid fa-bell text-xs"></i>
