@@ -1430,3 +1430,11 @@ Próximo passo:
 - Os 4 ícones deixavam título e descrição numa coluna de ~134px. A base da coluna de texto subiu de `14ch` para `22ch`: nos celulares os ícones descem para a linha de baixo, em telas largas seguem ao lado.
 - Regressão: `e22-programas-large-text` atualizado e visto falhar antes.
 - Evidência: emulador a 100%, título em 1 linha, descrição em 2 e ícones na linha de baixo (`.craft/critique/u7-programas-card-100.png`, não versionada). `check.sh` passou.
+
+## 2026-10-30 - Overlay nativo: contador sem caixa e botões iguais
+
+- Problema (relato do usuário): no compacto o contador era uma pílula com borda do mesmo tamanho dos botões, com dígitos de 13sp contra 10sp nos botões, e três caixas de 76x52 dp espremiam o título. No expandido, Cancelar usava 11sp e padding diferente de Pausar/Pular (12sp).
+- Decisão: no compacto o contador é texto simples de 20sp, sem caixa nem medida fixa (informação, não controle); Pausar/Continuar e Cancelar passam a 80x48 dp, 12sp, espaçamento de 8 dp. No expandido os três botões usam 12sp e o mesmo padding. Sem mudança de IDs, armazenamento, protocolo ou versão.
+- Regressão: `WorkoutOverlayTest` atualizado (compacto: timer sem fundo/WRAP_CONTENT, botões idênticos, contador maior que o texto dos botões; novo teste de texto/padding iguais no expandido); 3 testes falharam antes da mudança.
+- Evidência: render do compacto por Robolectric (Canvas, 400 dp), contador e dois botões alinhados. `bash scripts/check.sh` passou.
+- NOT_RUN: conferência no aparelho/emulador com o app em segundo plano (o emulador caiu durante a tentativa), fonte do sistema em 200%.

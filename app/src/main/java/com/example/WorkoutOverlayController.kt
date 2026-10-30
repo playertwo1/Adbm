@@ -698,7 +698,7 @@ object WorkoutOverlayController {
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.parseColor("#10B981"))
-            setPadding(dpToPx(context, 4), 0, dpToPx(context, 8), 0)
+            setPadding(dpToPx(context, 2), 0, dpToPx(context, 6), 0)
         }
 
         val textCol = LinearLayout(context).apply {
@@ -725,52 +725,46 @@ object WorkoutOverlayController {
 
         compactTimerText = TextView(context).apply {
             text = "00:00"
-            textSize = 13f
+            textSize = 20f
             typeface = Typeface.MONOSPACE
             gravity = Gravity.CENTER
             setTextColor(Color.parseColor("#39D5A0"))
-            setPadding(dpToPx(context, 8), dpToPx(context, 3), dpToPx(context, 8), dpToPx(context, 3))
-            background = createPillDrawable(Color.parseColor("#10202A"), Color.parseColor("#27785F"), 1)
-            layoutParams = LinearLayout.LayoutParams(dpToPx(context, 76), dpToPx(context, 52)).apply {
-                marginEnd = dpToPx(context, 4)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                marginStart = dpToPx(context, 4)
+                marginEnd = dpToPx(context, 12)
             }
-        }
-
-        val spacer = View(context).apply {
-            layoutParams = LinearLayout.LayoutParams(dpToPx(context, 6), 0)
         }
 
         compactPauseResumeBtn = TextView(context).apply {
             text = "Pausar"
-            textSize = 10f
+            textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.parseColor("#052E24"))
             gravity = Gravity.CENTER
-            setPadding(dpToPx(context, 8), dpToPx(context, 5), dpToPx(context, 8), dpToPx(context, 5))
+            setPadding(dpToPx(context, 8), 0, dpToPx(context, 8), 0)
             background = createPillDrawable(Color.parseColor("#10B981"), Color.parseColor("#10B981"), 0)
             contentDescription = "Pausar treino"
-            layoutParams = LinearLayout.LayoutParams(dpToPx(context, 76), dpToPx(context, 52)).apply {
-                marginEnd = dpToPx(context, 4)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(context, 80), dpToPx(context, 48)).apply {
+                marginEnd = dpToPx(context, 8)
             }
             setOnClickListener { toggleWorkoutPause(context) }
         }
 
         compactCancelBtn = TextView(context).apply {
             text = "Cancelar"
-            textSize = 10f
+            textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.parseColor("#FDA4AF"))
             gravity = Gravity.CENTER
-            setPadding(dpToPx(context, 8), dpToPx(context, 5), dpToPx(context, 8), dpToPx(context, 5))
+            setPadding(dpToPx(context, 8), 0, dpToPx(context, 8), 0)
             background = createPillDrawable(Color.parseColor("#21151A"), Color.parseColor("#A65469"), 1)
             contentDescription = "Cancelar treino"
-            layoutParams = LinearLayout.LayoutParams(dpToPx(context, 76), dpToPx(context, 52))
+            layoutParams = LinearLayout.LayoutParams(dpToPx(context, 80), dpToPx(context, 48))
             setOnClickListener { openCancelConfirmation(context) }
         }
 
         compactContainer?.addView(compactIconBadge)
         compactContainer?.addView(textCol)
-        compactContainer?.addView(spacer)
         compactContainer?.addView(compactTimerText)
         compactContainer?.addView(compactPauseResumeBtn)
         compactContainer?.addView(compactCancelBtn)
@@ -990,7 +984,7 @@ object WorkoutOverlayController {
             minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER
             background = createPillDrawable(Color.parseColor("#10B981"), Color.parseColor("#10B981"), 0)
-            setPadding(dpToPx(context, 14), dpToPx(context, 8), dpToPx(context, 14), dpToPx(context, 8))
+            setPadding(dpToPx(context, 12), dpToPx(context, 8), dpToPx(context, 12), dpToPx(context, 8))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             setOnClickListener {
                 val isPaused = lastRawState?.optString("status") == "paused"
@@ -1021,14 +1015,14 @@ object WorkoutOverlayController {
 
         expandedCancelBtn = TextView(context).apply {
             text = "Cancelar"
-            textSize = 11f
+            textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.parseColor("#FDA4AF"))
             contentDescription = "Cancelar treino"
             minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER
             background = createPillDrawable(Color.parseColor("#30121B"), Color.parseColor("#FB7185"), 1)
-            setPadding(dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8))
+            setPadding(dpToPx(context, 12), dpToPx(context, 8), dpToPx(context, 12), dpToPx(context, 8))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
                 leftMargin = dpToPx(context, 4)
             }
@@ -1195,11 +1189,6 @@ object WorkoutOverlayController {
         // 2. Atualizar COMPACTO
         compactTimerText?.text = timeStr
         compactTimerText?.setTextColor(Color.parseColor("#39D5A0"))
-        compactTimerText?.background = createPillDrawable(
-            Color.parseColor("#10202A"),
-            ColorUtils.setAlphaComponent(accentColor, 144),
-            1
-        )
         compactIconBadge?.setTextColor(accentColor)
         compactActionText?.text = actionLabel
         val seriesText = if (series > 0) " · Série $series" else ""
