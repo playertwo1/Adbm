@@ -7,6 +7,24 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
+## [1.1.50] - 2026-10-30
+
+### Alterado
+- Fonte do sistema em 200%: Vácuo (seletor de postura, tiles de fase, anel), Programas (cabeçalhos, hero, card de programa) e Discreto (seletor, anéis, orbe, legenda e botões) quebram linha e crescem com o texto.
+- O cabeçalho do card de programa deixa de espremer título e descrição; os ícones descem para a linha de baixo quando falta espaço.
+- Vácuo, Pausas e Dashboard: tiles de fase, guia da postura, etapas da Pausa de Resposta, passos do ritmo, aviso de checkpoint, adiamento personalizado e linha Pré/Pós BPM deixam de ser cards dentro de cards (divisor ou filete lateral).
+- Botão de sessão pendente em Programas em âmbar sólido, sem gradiente; o atalho "Pausa de Resposta" usa fundo sólido.
+- Overlay compacto: contador em texto simples de 20sp, sem caixa; Pausar/Continuar e Cancelar iguais (80 × 48 dp, 12sp, intervalo de 8 dp). Overlay expandido: Pausar, Pular e Cancelar com o mesmo texto e respiro.
+
+### Corrigido
+- Classe de hover do botão âmbar de Programas (`to-orange-600` sem prefixo) mantinha o laranja sempre ativo.
+
+### Validação
+- Regressões `e21` a `e25` e `WorkoutOverlayTest`; `bash scripts/check.sh` passou.
+- Conferido no emulador a 100%: Vácuo, Pausas, Programas e Bracing. Overlay em aparelho, TalkBack, Wear OS, 200% após os cards achatados e erros inline do Dashboard: `NOT_RUN`.
+
+---
+
 ## [1.1.49] - 2026-10-25
 
 ### Alterado

@@ -1438,3 +1438,10 @@ Próximo passo:
 - Regressão: `WorkoutOverlayTest` atualizado (compacto: timer sem fundo/WRAP_CONTENT, botões idênticos, contador maior que o texto dos botões; novo teste de texto/padding iguais no expandido); 3 testes falharam antes da mudança.
 - Evidência: render do compacto por Robolectric (Canvas, 400 dp), contador e dois botões alinhados. `bash scripts/check.sh` passou.
 - NOT_RUN: conferência no aparelho/emulador com o app em segundo plano (o emulador caiu durante a tentativa), fonte do sistema em 200%.
+
+## 2026-10-30 - Release 1.1.50 (versionCode 50)
+
+- Versão: `CORE_FLOW_VERSION_CODE=50` / `CORE_FLOW_VERSION_NAME=1.1.50` em `gradle.properties`; README, CHANGELOG e `docs/releases/v1.1.50.md` descrevem tudo o que mudou desde a 1.1.49.
+- Assinatura: backup de assinatura do Drive (`secrets/adbm`); keystore extraído só no scratchpad e apagado após o build; nenhum valor sensível registrado.
+- Validação: `bash scripts/check.sh` `CHECK PASS`; APKs de celular e Wear com versão e package confirmados por `aapt`, assinatura válida por `apksigner`, certificado SHA-256 `56052883...b2d4dd` igual ao da `v1.1.49`.
+- NOT_RUN: instalação do APK em aparelho, overlay em segundo plano, TalkBack, Wear OS físico.

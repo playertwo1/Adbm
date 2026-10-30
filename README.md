@@ -19,13 +19,39 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, estabiliza�
 
 ## Versão Atual
 
-- **Versão atual:** `1.1.49` (`versionCode 49`)
-- **Release:** o redesenho aprovado da fileira compacta alinha timer, Pausar/Continuar e Cancelar em controles de `76 × 52 dp`, com intervalo de `4 dp`.
-- **Validação:** confira o [registro de execução](docs/roadmap/execucao.md). Captura em aparelho, TalkBack, fonte ampliada e larguras menores `NOT_RUN`; outros estados do overlay aguardam avaliação visual.
+- **Versão atual:** `1.1.50` (`versionCode 50`)
+- **Release:** acabamento visual: telas legíveis com a fonte do sistema em 200%, menos cards aninhados, cores sólidas e o overlay do treino com contador e botões consistentes. Veja "O que mudou na 1.1.50".
+- **Validação:** confira o [registro de execução](docs/roadmap/execucao.md). Overlay em aparelho, TalkBack e Wear OS `NOT_RUN`.
 - **Downloads:** O APK assinado para celular e relógio está disponível na aba de [Releases](https://github.com/playertwo1/Adbm/releases).
 - **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.
 
 ---
+
+## O que mudou na 1.1.50
+
+Rodada de acabamento visual com a fonte do sistema em 200% e com menos caixas dentro de caixas. IDs de programas, armazenamento local e protocolo de treino não mudaram.
+
+**Fonte grande (200%)**
+- **Vácuo:** seletor de postura, tiles de fase e anel da respiração passam a quebrar linha em vez de sobrepor o texto. O anel de contração/expiração ficou menor para o texto caber.
+- **Programas:** cabeçalho da aba, "Treino recomendado" e o selo "2x ao dia" quebram linha. O cabeçalho do card de programa deixa de espremer título e descrição numa coluna estreita; os ícones descem para a linha de baixo quando falta espaço, também em celulares a 100%.
+- **Discreto:** seletor de modos, anéis de Resistência e Bracing, orbe de Velocidade, legenda do slider e linhas de botões cabem na tela e crescem com o texto.
+
+**Menos cards aninhados**
+- Vácuo, Pausas e Dashboard: itens internos agrupam por divisor ou filete lateral; a caixa fica só no cartão externo. Inclui os tiles de fase do Vácuo (o ativo ganha filete esmeralda), o guia da postura, as etapas e os passos da "Pausa de Resposta", o aviso de checkpoint, o adiamento personalizado e a linha Pré/Pós BPM.
+- Os detalhes de Discreto e Dashboard já tinham sido achatados na rodada anterior. O detector de design passou de 17 para 2 achados de card aninhado.
+
+**Cores**
+- O botão de sessão pendente em Programas é âmbar sólido (antes gradiente âmbar→laranja; o hover tinha um erro de classe que deixava o laranja sempre ativo).
+- O atalho "Pausa de Resposta" usa fundo sólido, sem o gradiente violeta/ciano.
+
+**Treino flutuante (overlay)**
+- Compacto: o contador é texto simples de 20sp, sem caixa, e deixa de parecer um botão. Pausar/Continuar e Cancelar têm o mesmo tamanho (`80 × 48 dp`), o mesmo texto (12sp) e intervalo de `8 dp`.
+- Expandido: Pausar, Pular e Cancelar usam o mesmo tamanho de texto e o mesmo respiro lateral.
+
+**Como foi validado e o que não foi**
+- Cada mudança tem regressão (`diagnostics/e21` a `e25` para a interface; `WorkoutOverlayTest` para o overlay) e `bash scripts/check.sh` passou. O registro está em [docs/roadmap/execucao.md](docs/roadmap/execucao.md).
+- Conferido no emulador a 100%: Vácuo, Pausas, Programas e modal de Bracing. O overlay foi conferido só por renderização em teste.
+- `NOT_RUN`: overlay em aparelho em segundo plano, TalkBack, Wear OS, fonte em 200% depois dos cards achatados e erros inline do Dashboard.
 
 ## O que mudou na 1.1.49
 
@@ -112,8 +138,8 @@ $env:KEYSTORE_PATH = "caminho/para/coreflow-upload.jks"
 $env:KEYSTORE_PASSWORD = "sua_senha_keystore"
 $env:KEY_ALIAS = "seu_alias"
 $env:KEY_PASSWORD = "sua_senha_chave"
-$env:BUILD_VERSION_CODE = "49"
-$env:BUILD_VERSION_NAME = "1.1.49"
+$env:BUILD_VERSION_CODE = "50"
+$env:BUILD_VERSION_NAME = "1.1.50"
 
 .\gradlew.bat :app:assembleRelease :wear:assembleRelease
 ```
