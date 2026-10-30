@@ -524,19 +524,19 @@
 
                 <!-- Phase Indicators Row -->
                 <div class="w-full grid grid-cols-[repeat(auto-fit,minmax(7ch,1fr))] gap-1 mt-4 z-10 pt-2 border-t border-slate-700/50 text-center">
-                    <div id="phase-card-inspira" class="py-1.5 px-1 rounded-lg bg-slate-800/60 border border-slate-700/40 transition">
+                    <div id="phase-card-inspira" class="py-1.5 px-1 border-b-2 border-slate-700/40 transition">
                         <p class="text-[10px] text-slate-400 font-medium">1. Inspira</p>
                         <p class="text-xs font-bold text-sky-400 font-mono">4s</p>
                     </div>
-                    <div id="phase-card-expira" class="py-1.5 px-1 rounded-lg bg-slate-800/60 border border-slate-700/40 transition">
+                    <div id="phase-card-expira" class="py-1.5 px-1 border-b-2 border-slate-700/40 transition">
                         <p class="text-[10px] text-slate-400 font-medium">2. Expira</p>
                         <p class="text-xs font-bold text-sky-400 font-mono">6s</p>
                     </div>
-                    <div id="phase-card-vacuo" class="py-1.5 px-1 rounded-lg bg-slate-800/60 border border-slate-700/40 transition">
+                    <div id="phase-card-vacuo" class="py-1.5 px-1 border-b-2 border-slate-700/40 transition">
                         <p class="text-[10px] text-slate-400 font-medium">3. Vácuo</p>
                         <p id="indicatorVacSec" class="text-xs font-bold text-emerald-400 font-mono">15s</p>
                     </div>
-                    <div id="phase-card-descanso" class="py-1.5 px-1 rounded-lg bg-slate-800/60 border border-slate-700/40 transition">
+                    <div id="phase-card-descanso" class="py-1.5 px-1 border-b-2 border-slate-700/40 transition">
                         <p class="text-[10px] text-slate-400 font-medium">4. Descanso</p>
                         <p class="text-xs font-bold text-slate-400 font-mono">60s</p>
                     </div>
@@ -581,7 +581,7 @@
                 <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
                     <i class="fa-solid fa-circle-info text-cyan-400"></i> Instruções da Postura Atual
                 </h4>
-                <div id="postureGuideText" class="text-xs text-slate-300 leading-relaxed bg-slate-900/70 p-3 rounded-xl border border-slate-800">
+                <div id="postureGuideText" class="text-xs text-slate-300 leading-relaxed border-l-2 border-slate-700 pl-3">
                     <strong class="text-emerald-400 block mb-1">Deitado com Joelhos Flexionados:</strong>
                     1. Mantenha os pés no chão e coluna neutra.<br>
                     2. Inspire pelo nariz expandindo as costelas por 4 segundos.<br>
@@ -1456,9 +1456,9 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-3 gap-1.5 mt-3 text-[10px] font-bold text-center" aria-label="Etapas da pausa">
-                    <div class="rounded-lg bg-violet-500/15 border border-violet-500/25 px-1 py-2 text-violet-200">1 · Reconhecer</div>
-                    <div class="rounded-lg bg-cyan-500/10 border border-cyan-500/20 px-1 py-2 text-cyan-200">2 · Ancorar</div>
-                    <div class="rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-1 py-2 text-emerald-200">3 · Escolher</div>
+                    <div class="border-b-2 border-violet-500/40 px-1 py-2 text-violet-200">1 · Reconhecer</div>
+                    <div class="border-b-2 border-cyan-500/40 px-1 py-2 text-cyan-200">2 · Ancorar</div>
+                    <div class="border-b-2 border-emerald-500/40 px-1 py-2 text-emerald-200">3 · Escolher</div>
                 </div>
                 <div class="grid grid-cols-2 gap-2 mt-3">
                     <button onclick="openResponsivePauseGuide()" class="min-h-12 rounded-xl bg-slate-800/80 border border-slate-600 text-slate-200 font-bold text-xs active:scale-95 transition">
@@ -1934,7 +1934,7 @@
                                 <div class="text-[11px] text-slate-300 font-medium">Ajuste os 4 tempos (0 a 10s individualmente):</div>
                                 <div class="grid grid-cols-4 gap-2 text-center">
                                     <!-- Inspire -->
-                                    <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                                    <div class="border-t border-slate-800 pt-2">
                                         <span class="text-[10px] text-slate-400 block mb-1">Inspire</span>
                                         <div class="flex items-center justify-center gap-1">
                                             <button onclick="changeCustomBreath('inspire', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold">-</button>
@@ -1943,7 +1943,7 @@
                                         </div>
                                     </div>
                                     <!-- Segure 1 -->
-                                    <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                                    <div class="border-t border-slate-800 pt-2">
                                         <span class="text-[10px] text-slate-400 block mb-1">Segure</span>
                                         <div class="flex items-center justify-center gap-1">
                                             <button onclick="changeCustomBreath('hold1', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold">-</button>
@@ -1952,7 +1952,7 @@
                                         </div>
                                     </div>
                                     <!-- Expire -->
-                                    <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                                    <div class="border-t border-slate-800 pt-2">
                                         <span class="text-[10px] text-slate-400 block mb-1">Expire</span>
                                         <div class="flex items-center justify-center gap-1">
                                             <button onclick="changeCustomBreath('expire', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold">-</button>
@@ -1961,7 +1961,7 @@
                                         </div>
                                     </div>
                                     <!-- Segure 2 -->
-                                    <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                                    <div class="border-t border-slate-800 pt-2">
                                         <span class="text-[10px] text-slate-400 block mb-1">Vazio</span>
                                         <div class="flex items-center justify-center gap-1">
                                             <button onclick="changeCustomBreath('hold2', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold">-</button>
@@ -2301,7 +2301,7 @@
             </div>
 
             <!-- Checkpoint Card -->
-            <div class="bg-[#451A1A] rounded-2xl p-4 flex gap-3 shadow-lg mb-8 mt-2 border border-[#7f1d1d]/50">
+            <div class="border-l-2 border-[#7f1d1d] pl-4 flex gap-3 mb-8 mt-2">
                 <i class="fa-solid fa-triangle-exclamation text-[#FCA5A5] text-lg mt-0.5"></i>
                 <div>
                     <h4 class="text-sm font-bold text-[#FCA5A5] mb-1">Regras de Evolução</h4>
@@ -2582,7 +2582,7 @@
                     </button>
                 </div>
 
-                <div class="flex gap-2 rounded-xl border border-slate-700 bg-slate-900/80 p-2">
+                <div class="flex gap-2">
                     <input type="number" id="customSnoozeMinutes" min="1" max="720" value="30" inputmode="numeric" class="min-w-0 flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-xs font-bold text-white focus:border-amber-500 focus:outline-none" aria-label="Minutos para adiar">
                     <button onclick="snoozeReminderCustom()" class="rounded-lg bg-amber-500 px-3 py-2 text-xs font-extrabold text-slate-950 active:scale-95 transition">
                         Adiar minutos
@@ -2836,7 +2836,7 @@
                     </span>
                     <span id="deceleration-badge" class="font-mono font-bold text-emerald-400 text-xs">--</span>
                 </div>
-                <div class="flex items-center justify-between text-xs font-mono bg-slate-900/80 px-2 py-1 rounded-lg border border-slate-800">
+                <div class="flex items-center justify-between text-xs font-mono border-t border-slate-800 pt-1">
                     <span id="pre-bpm-display" class="text-slate-400">Pré: -- BPM</span>
                     <i class="fa-solid fa-arrow-right text-[10px] text-slate-600"></i>
                     <span id="post-bpm-display" class="text-emerald-300 font-bold">Pós: -- BPM</span>
@@ -5803,9 +5803,9 @@
                 const card = document.getElementById('phase-card-' + p);
                 if (card) {
                     if (p === phase) {
-                        card.className = 'py-1.5 px-1 rounded-lg bg-emerald-500/20 border border-emerald-500 shadow-md shadow-emerald-500/20';
+                        card.className = 'py-1.5 px-1 border-b-2 border-emerald-500';
                     } else {
-                        card.className = 'py-1.5 px-1 rounded-lg bg-slate-800/60 border border-slate-700/40';
+                        card.className = 'py-1.5 px-1 border-b-2 border-slate-700/40';
                     }
                 }
             });

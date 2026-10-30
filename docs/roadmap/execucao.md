@@ -1405,3 +1405,10 @@ Próximo passo:
 - Corrigido em `index.html` (e cópia em assets; as classes do seletor também no JS de `setDeskMode`): seletor com `flex-wrap` e `basis-[11ch]`; anel do Kegel Resistência e medidor do Bracing em `w-[26ch] aspect-square`; orbe do Velocidade em `w-[18ch]`; botões e legenda com `flex-wrap`. Unidade `ch` pelo mesmo motivo de e21. IDs, handlers, armazenamento e protocolo intactos.
 - Regressão `diagnostics/e23-discreto-large-text.test.cjs` falhou antes e passou depois; `bash scripts/check.sh`: `CHECK PASS`. Emulador `agente` a 200%: Resistência, Velocidade e Bracing conferidos (`.craft/critique/t-*`). A 100% após a correção: `NOT_RUN`; o `ch` faz os anéis mudarem de tamanho em relação ao `w-48/w-52` antigo (26ch ≈ 12,5rem a 100%), vale conferir no aparelho.
 - Restante a 200%: "Contração Sustentada" ainda toca o traço do anel nas pontas, e o selo "20% - 30% Ideal" do Bracing quebra em 3 linhas. Não alterados.
+
+## 2026-10-30 - UI: achata cards aninhados restantes (Vácuo, Pausas, Dashboard)
+
+- Decisão: itens internos de um cartão agrupam por divisor (`border-t`/`border-b-2`) ou filete lateral (`border-l-2`); a caixa fica só no cartão externo, como no e19. Tiles de fase do Vácuo (inclusive as classes que `highlightPhaseCard` aplica), guia da postura, etapas e passos da Pausa de Resposta, aviso de checkpoint, adiamento personalizado e linha Pré/Pós BPM.
+- Regressão: `diagnostics/e24-flat-panels-vacuo-pausas-dashboard.test.cjs` (falhou antes, passou depois); `bash scripts/check.sh` passou.
+- Evidência: `impeccable detect index.html` `nested-cards` 17 → 2. Os 2 restantes não estão nas abas citadas (selos/painéis do Perfil), não alterados.
+- NOT_RUN: conferência visual no emulador (100% e 200%) do tile ativo do Vácuo e do aviso de checkpoint.
