@@ -1412,3 +1412,9 @@ Próximo passo:
 - Regressão: `diagnostics/e24-flat-panels-vacuo-pausas-dashboard.test.cjs` (falhou antes, passou depois); `bash scripts/check.sh` passou.
 - Evidência: `impeccable detect index.html` `nested-cards` 17 → 2. Os 2 restantes não estão nas abas citadas (selos/painéis do Perfil), não alterados.
 - NOT_RUN: conferência visual no emulador (100% e 200%) do tile ativo do Vácuo e do aviso de checkpoint.
+
+## 2026-10-30 - UI: CTA âmbar e atalho Pausa de Resposta sem gradiente
+
+- Decisão do usuário: CTA de sessão pendente em Programas vira `bg-amber-500 hover:bg-amber-600` (sólido); o cartão do atalho "Pausa de Resposta" vira `bg-slate-900` com a borda violeta. O typo `to-orange-600` sem `hover:` some junto.
+- Regressão: `diagnostics/e25-solid-cta-and-pause-card.test.cjs`.
+- NOT_RUN: conferência visual no emulador.

@@ -1442,7 +1442,7 @@
             </div>
 
             <!-- PAUSA DE RESPOSTA: acesso rápido mesmo com o bloco Mente recolhido -->
-            <div class="bg-gradient-to-br from-violet-950/90 via-slate-900 to-cyan-950/70 border border-violet-500/40 rounded-2xl md:rounded-3xl p-4 shadow-xl shadow-violet-950/20">
+            <div class="bg-slate-900 border border-violet-500/40 rounded-2xl md:rounded-3xl p-4">
                 <div class="flex items-start gap-3">
                     <div class="w-11 h-11 rounded-xl bg-violet-500/20 border border-violet-400/30 flex items-center justify-center text-violet-300 flex-shrink-0">
                         <i class="fa-solid fa-hand"></i>
@@ -11238,7 +11238,7 @@
                 } else if (sessionsToday < targetSessions) {
                     sessionBtnText = `Iniciar Sessão ${sessionsToday + 1} de ${targetSessions} (${activePhase.title.split(':')[0]} • ${currentDayLabel})`;
                     if (sessionsToday > 0) {
-                        sessionBtnBg = 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 to-orange-600 text-slate-950';
+                        sessionBtnBg = 'bg-amber-500 hover:bg-amber-600 text-slate-950';
                     }
                 } else {
                     sessionBtnText = isBracingTodayReduced(prog) ? `Meta feita com volume reduzido (${targetSessions}/${targetSessions}) • ${currentDayLabel}/${targetDaysLabel}` : `Meta Diária Concluída (${targetSessions}/${targetSessions}) ✓ • ${currentDayLabel}/${targetDaysLabel}`;
