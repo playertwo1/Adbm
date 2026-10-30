@@ -193,11 +193,11 @@
             transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .breathe-contract {
-            transform: scale(0.35);
+            transform: scale(0.65);
             transition: transform 6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .breathe-vacuum {
-            transform: scale(0.3);
+            transform: scale(0.75);
             filter: drop-shadow(0 0 28px rgba(16, 185, 129, 0.85));
             transition: transform 0.6s ease-in-out;
         }
@@ -443,21 +443,21 @@
                     <span id="currentLevelBadge" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Iniciante</span>
                 </div>
                 <!-- Posture selector buttons (Chips) -->
-                <div class="grid grid-cols-3 gap-2">
+                <div class="grid grid-cols-[repeat(auto-fit,minmax(11ch,1fr))] gap-2">
                     <button type="button" onclick="setPosture('deitado', 15)" id="posture-deitado" aria-pressed="true" class="cf-selector posture-btn active py-2.5 px-1.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 bg-emerald-500/15 border-emerald-500 text-emerald-400 shadow-sm">
                         <i class="fa-solid fa-bed text-sm"></i>
                         <span class="text-xs font-bold leading-tight">Deitado</span>
-                        <span class="text-[10px] text-slate-400 font-mono">(Iniciante)</span>
+                        <span class="text-[10px] text-slate-400 font-mono [overflow-wrap:anywhere]">(Iniciante)</span>
                     </button>
                     <button type="button" onclick="setPosture('4apoios', 20)" id="posture-4apoios" aria-pressed="false" class="cf-selector posture-btn py-2.5 px-1.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 bg-slate-900/60 border-slate-700 text-slate-300 hover:border-slate-600">
                         <i class="fa-solid fa-dog text-sm"></i>
                         <span class="text-xs font-bold leading-tight">4 Apoios</span>
-                        <span class="text-[10px] text-slate-400 font-mono">(Intermediário)</span>
+                        <span class="text-[10px] text-slate-400 font-mono [overflow-wrap:anywhere]">(Intermediário)</span>
                     </button>
                     <button type="button" onclick="setPosture('empe', 30)" id="posture-empe" aria-pressed="false" class="cf-selector posture-btn py-2.5 px-1.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 bg-slate-900/60 border-slate-700 text-slate-300 hover:border-slate-600">
                         <i class="fa-solid fa-person-walking text-sm"></i>
                         <span class="text-xs font-bold leading-tight">Em Pé</span>
-                        <span class="text-[10px] text-slate-400 font-mono">(Avançado)</span>
+                        <span class="text-[10px] text-slate-400 font-mono [overflow-wrap:anywhere]">(Avançado)</span>
                     </button>
                 </div>
 
@@ -523,7 +523,7 @@
                 </div>
 
                 <!-- Phase Indicators Row -->
-                <div class="w-full grid grid-cols-4 gap-1 mt-4 z-10 pt-2 border-t border-slate-700/50 text-center">
+                <div class="w-full grid grid-cols-[repeat(auto-fit,minmax(7ch,1fr))] gap-1 mt-4 z-10 pt-2 border-t border-slate-700/50 text-center">
                     <div id="phase-card-inspira" class="py-1.5 px-1 rounded-lg bg-slate-800/60 border border-slate-700/40 transition">
                         <p class="text-[10px] text-slate-400 font-medium">1. Inspira</p>
                         <p class="text-xs font-bold text-sky-400 font-mono">4s</p>
