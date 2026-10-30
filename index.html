@@ -614,14 +614,14 @@
             </div>
 
             <!-- Sub-selector for Desk Modalities -->
-            <div class="flex bg-slate-800 p-1 rounded-2xl border border-slate-700">
-                <button onclick="setDeskMode('kegel-resistencia')" id="btn-sub-resistencia" class="desk-sub-btn flex-1 py-2 rounded-xl text-xs font-bold transition text-emerald-400 bg-slate-900 shadow">
+            <div class="flex flex-wrap gap-1 bg-slate-800 p-1 rounded-2xl border border-slate-700">
+                <button onclick="setDeskMode('kegel-resistencia')" id="btn-sub-resistencia" class="desk-sub-btn flex-1 basis-[11ch] min-w-0 py-2 rounded-xl text-xs font-bold transition text-emerald-400 bg-slate-900 shadow">
                     <i class="fa-solid fa-shield-halved mr-1"></i> Kegel Resistência
                 </button>
-                <button onclick="setDeskMode('kegel-velocidade')" id="btn-sub-velocidade" class="desk-sub-btn flex-1 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-slate-200">
+                <button onclick="setDeskMode('kegel-velocidade')" id="btn-sub-velocidade" class="desk-sub-btn flex-1 basis-[11ch] min-w-0 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-slate-200">
                     <i class="fa-solid fa-bolt mr-1"></i> Kegel Velocidade
                 </button>
-                <button onclick="setDeskMode('bracing')" id="btn-sub-bracing" class="desk-sub-btn flex-1 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-slate-200">
+                <button onclick="setDeskMode('bracing')" id="btn-sub-bracing" class="desk-sub-btn flex-1 basis-[11ch] min-w-0 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-slate-200">
                     <i class="fa-solid fa-circle-notch mr-1"></i> Bracing 30%
                 </button>
             </div>
@@ -635,7 +635,7 @@
                     </div>
 
                     <!-- Circular Progress Display -->
-                    <div class="relative w-48 h-48 mx-auto my-3 flex items-center justify-center">
+                    <div class="relative w-[26ch] max-w-full aspect-square mx-auto my-3 flex items-center justify-center">
                         <svg class="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
                             <circle cx="100" cy="100" r="80" class="text-slate-900" stroke-width="10" stroke="currentColor" fill="none" />
                             <circle id="kegelResRing" cx="100" cy="100" r="80" stroke-linecap="round" class="ring-circle text-emerald-400" stroke-width="10" stroke="currentColor" fill="none" stroke-dasharray="502" stroke-dashoffset="0" />
@@ -648,7 +648,7 @@
                     </div>
 
                     <!-- Controls -->
-                    <div class="flex items-center justify-center gap-3 mt-4">
+                    <div class="flex flex-wrap items-center justify-center gap-3 mt-4">
                         <button onclick="resetKegelRes()" class="p-3 bg-slate-900 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-300 text-sm"><i class="fa-solid fa-stop mr-1" aria-hidden="true"></i><span>Cancelar</span></button>
                         <button id="btnKegelResPlay" onclick="toggleKegelRes()" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-extrabold rounded-xl flex items-center gap-2 shadow-lg shadow-emerald-500/20 text-sm">
                             <i id="kegelResIcon" class="fa-solid fa-play"></i>
@@ -673,8 +673,8 @@
                     </div>
 
                     <!-- Metronome Dynamic Visual Orb -->
-                    <div class="relative w-44 h-44 mx-auto my-2 flex items-center justify-center">
-                        <div id="fastMetronomeOrb" class="w-32 h-32 rounded-full bg-slate-900 border-4 border-cyan-500/40 flex flex-col items-center justify-center transition-all duration-150 shadow-inner">
+                    <div class="relative w-[22ch] max-w-full aspect-square mx-auto my-2 flex items-center justify-center">
+                        <div id="fastMetronomeOrb" class="w-[18ch] max-w-full aspect-square rounded-full bg-slate-900 border-4 border-cyan-500/40 flex flex-col items-center justify-center transition-all duration-150 shadow-inner">
                             <i id="fastMetronomeIcon" class="fa-solid fa-bolt text-2xl text-cyan-400 mb-1"></i>
                             <span id="fastMetronomeState" class="text-sm font-extrabold text-white">Pressione</span>
                             <span id="fastMetronomeCounter" class="text-2xl font-mono font-black text-cyan-400">0</span>
@@ -682,7 +682,7 @@
                     </div>
 
                     <!-- Speed controller -->
-                    <div class="flex items-center justify-center gap-2 mt-4">
+                    <div class="flex flex-wrap items-center justify-center gap-2 mt-4">
                         <button onclick="resetKegelFast()" class="p-3 bg-slate-900 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-300 text-sm"><i class="fa-solid fa-stop mr-1" aria-hidden="true"></i><span>Cancelar</span></button>
                         <button id="btnKegelFastPlay" onclick="toggleKegelFast()" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-slate-950 font-extrabold rounded-xl flex items-center gap-2 shadow-lg shadow-cyan-500/20 text-sm">
                             <i id="kegelFastIcon" class="fa-solid fa-play"></i>
@@ -710,7 +710,7 @@
                     </div>
 
                     <!-- Visual Diagram: Torso Expansion 360° with Animated Lateral Arrows -->
-                    <div class="relative w-52 h-52 mx-auto my-3 flex items-center justify-center">
+                    <div class="relative w-[26ch] max-w-full aspect-square mx-auto my-3 flex items-center justify-center">
                         <!-- Outer Glow Ring (Breathing Expansion) -->
                         <div id="bracingVisualGlow" class="absolute inset-0 rounded-full bg-emerald-500/15 animate-pulse blur-xl pointer-events-none"></div>
 
@@ -740,7 +740,7 @@
 
                     <!-- Slider to adjust simulated load -->
                     <div class="px-2 mt-1">
-                        <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                        <div class="flex flex-wrap justify-between gap-x-2 text-[10px] text-slate-400 mb-1">
                             <span>0% (Solto)</span>
                             <span class="text-emerald-400 font-bold">25% (Trabalho / Sentado)</span>
                             <span>100% (Carga Pesada)</span>
@@ -749,7 +749,7 @@
                     </div>
 
                     <!-- Timer Controls -->
-                    <div class="flex items-center justify-center gap-3 mt-4">
+                    <div class="flex flex-wrap items-center justify-center gap-3 mt-4">
                         <button onclick="resetBracingTimer()" class="p-3 bg-slate-900 hover:bg-slate-750 border border-slate-700 rounded-xl text-slate-300 text-sm"><i class="fa-solid fa-stop mr-1" aria-hidden="true"></i><span>Cancelar</span></button>
                         <button id="btnBracingPlay" onclick="toggleBracingTimer()" class="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-95 text-slate-950 font-extrabold rounded-xl flex items-center gap-2 shadow-lg shadow-emerald-500/20 text-sm transition">
                             <i id="bracingIcon" class="fa-solid fa-play"></i>
@@ -5827,11 +5827,11 @@
 
             // Update sub-buttons
             document.querySelectorAll('.desk-sub-btn').forEach(btn => {
-                btn.className = 'desk-sub-btn flex-1 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-slate-200';
+                btn.className = 'desk-sub-btn flex-1 basis-[11ch] min-w-0 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-slate-200';
             });
             const activeSub = document.getElementById('btn-sub-' + mode.replace('kegel-', ''));
             if (activeSub) {
-                activeSub.className = 'desk-sub-btn flex-1 py-2 rounded-xl text-xs font-bold transition text-emerald-400 bg-slate-900 shadow';
+                activeSub.className = 'desk-sub-btn flex-1 basis-[11ch] min-w-0 py-2 rounded-xl text-xs font-bold transition text-emerald-400 bg-slate-900 shadow';
             }
 
             // Animações de saída (fade out & slide down)
