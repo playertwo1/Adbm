@@ -75,9 +75,9 @@ const stepsContext = vm.createContext({
 });
 const extractConst = name => {
     const start = htmlContent.indexOf(`const ${name} =`);
-    const end = htmlContent.indexOf(';\r\n', start);
-    assert(start >= 0 && end > start, `constante ausente: ${name}`);
-    return htmlContent.slice(start, end + 1);
+    const terminator = start >= 0 ? /;\r?\n/.exec(htmlContent.slice(start)) : null;
+    assert(terminator, `constante ausente: ${name}`);
+    return htmlContent.slice(start, start + terminator.index + 1);
 };
 vm.runInContext([
     extractConst('BRACING_EXERCISES'), extractConst('BRACING_WEEKS'),
