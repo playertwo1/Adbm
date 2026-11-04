@@ -25,9 +25,9 @@ function extractFunction(name) {
 function extractConst(name) {
     const start = html.indexOf(`const ${name} =`);
     assert(start >= 0, `Constante ausente: ${name}`);
-    const end = html.indexOf(';\r\n', start);
-    assert(end > start, `Constante incompleta: ${name}`);
-    return html.slice(start, end + 1);
+    const terminator = /;\r?\n/.exec(html.slice(start));
+    assert(terminator, `Constante incompleta: ${name}`);
+    return html.slice(start, start + terminator.index + 1);
 }
 
 const appState = html.slice(html.indexOf('        const AppState = {'), html.indexOf('        const CORE_DATA_VERSION'));
