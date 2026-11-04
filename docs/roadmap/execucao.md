@@ -1456,3 +1456,11 @@ Próximo passo:
 - Verificação técnica final após esta edição: `bash scripts/check.sh` — `CHECK PASS: diagnostics, equivalência HTML e builds debug passaram.` Build de app e Wear incluídos.
 - NOT_RUN: aparelho físico, TalkBack, fonte do sistema a 200% nesta direção visual e relógio Wear OS. Este registro de QA foi escrito antes do bump de release; `1.1.51` foi definida no preparo subsequente da publicação.
 - Publicação: o runner Ubuntu revelou que os extratores dos diagnósticos E07, E14, E15, persistência de progresso e motor de sessão procuravam apenas o terminador CRLF. Os helpers foram corrigidos para aceitar LF e CRLF; as reproduções dos casos reportados passaram, e `bash scripts/check.sh` passou antes de novo despacho de release. A checagem então encontrou `gradlew` registrado em Git como `100644`; o modo foi ajustado para `100755` para que Ubuntu consiga executá-lo. Depois, três testes Robolectric falharam porque os dois jobs usavam JDK 17, incompatível com API 36; workflow e regressão de política alinhados a JDK 21, com novo `bash scripts/check.sh` passando localmente.
+
+## 2026-11-03 — Publicação CoreFlow 1.1.51
+
+- Release publicada: [v1.1.51](https://github.com/playertwo1/Adbm/releases/tag/v1.1.51), gerada pelo [workflow 41751297374](https://github.com/playertwo1/Adbm/actions/runs/41751297374) a partir do commit `9ca29ab3300a760b6d4efdbda8baf86b6dffaf3d`.
+- `app-release.apk`: 100.941.528 bytes; SHA-256 `1064b9e194fa2b56857f72bde555ece52b2cb8326f0aecbbb3cdc5b8db1f2155`.
+- `wear-release.apk`: 6.645.307 bytes; SHA-256 `bbb740decedbd4bcf2ab79ac0ed1a78d8031a5b15a1ec99c3c0fef09d4adc8d15`.
+- Verificação após download: ambos com package `com.aistudio.coreflow.vdfpkw`, versionCode `51`, versionName `1.1.51`, assinatura APK v2 válida e certificado SHA-256 `56052883ad4841ab226e4c41dc573d7c9862f89519c8ff74c74979443fb2d4dd`; igual à versão `1.1.50` conferida pelo workflow antes da publicação.
+- GitHub Actions e o workflow de release foram reativados somente para a publicação e voltaram ao estado desativado original após concluir.
