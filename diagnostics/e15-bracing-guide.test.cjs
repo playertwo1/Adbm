@@ -11,9 +11,9 @@ assert(!html.includes('BRACING_PHASES'), 'legacy guide matrix must not be duplic
 function extractConst(name) {
     const start = html.indexOf(`const ${name} =`);
     assert(start >= 0, `Constante ausente: ${name}`);
-    const end = html.indexOf(';\r\n', start);
-    assert(end > start, `Constante incompleta: ${name}`);
-    return html.slice(start, end + 1);
+    const terminator = /;\r?\n/.exec(html.slice(start));
+    assert(terminator, `Constante incompleta: ${name}`);
+    return html.slice(start, start + terminator.index + 1);
 }
 
 function extractFunction(name) {

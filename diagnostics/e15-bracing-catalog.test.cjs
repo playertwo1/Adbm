@@ -23,9 +23,9 @@ function extractBlock(start, label, openingIndex = html.indexOf('{', start)) {
 function extractConst(name) {
     const start = html.indexOf(`const ${name} =`);
     assert(start >= 0, `${name} must exist`);
-    const end = html.indexOf(';\r\n', start);
-    assert(end > start, `${name} must terminate with a semicolon`);
-    return html.slice(start, end + 1);
+    const terminator = /;\r?\n/.exec(html.slice(start));
+    assert(terminator, `${name} must terminate with a semicolon`);
+    return html.slice(start, start + terminator.index + 1);
 }
 
 function extractFunction(name) {
