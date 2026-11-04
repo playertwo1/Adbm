@@ -10,6 +10,7 @@ const versionName = versionProperties.match(/^CORE_FLOW_VERSION_NAME=(.+)$/m)?.[
 assert.match(workflow, /^  push:/m, 'CI must validate pushes');
 assert.match(workflow, /^  pull_request:/m, 'CI must validate pull requests');
 assert.match(workflow, /bash scripts\/check\.sh/, 'CI must run the shared project check');
+assert.equal((workflow.match(/java-version: '21'/g) ?? []).length, 2, 'CI and signed release builds need Java 21 for Robolectric API 36');
 assert.match(workflow, /permissions:\s*\n\s+contents: read/, 'Verification must default to read-only repository permissions');
 assert.match(workflow, /release:\s*\n\s+needs: verify[\s\S]*?permissions:\s*\n\s+contents: read/, 'Signed builds must not receive repository write permission');
 assert.match(workflow, /publish:\s*\n\s+needs: release[\s\S]*?permissions:\s*\n\s+contents: write/, 'Only the artifact publication job may write releases');
