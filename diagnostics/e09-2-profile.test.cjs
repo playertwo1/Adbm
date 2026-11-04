@@ -221,9 +221,11 @@ for (const htmlSource of sources) {
         AppState.dailyGoal = 30;
         AppState.theme = 'standard';
         AppState.accessibility = { textScale: 'normal', highContrast: false, reducedMotion: false };
+        document.getElementById('profileEditorModal').parentNode = { id: 'tab-perfil' };
         renderProfilePreferences();
         openProfileEditor();
     `, env.context);
+    assert.equal(env.getElementById('profileEditorModal').parentNode, env.body, 'editor de perfil deve sair da aba transformada');
 
     // Salvar nome/meta válidos é atômico, fecha o editor e persiste o estado real.
     env.getElementById('profileNameInput').value = 'Marina';

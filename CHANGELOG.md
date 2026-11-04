@@ -7,6 +7,22 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
+## [1.1.51] - 2026-11-03
+
+### Alterado
+- Identidade visual em grafite e verde-floresta, com ações em sálvia, superfícies mais calmas e cores de apoio suavizadas em todas as telas, overlays, player, ícone Android e módulo Wear OS.
+- Modal de edição do Perfil reposicionado fora da aba transformada para ficar visível e centralizado.
+- README, capturas reais do app e notas de release atualizados para descrever a versão.
+
+### Preservado
+- Navegação, ordem do conteúdo, IDs de programas, armazenamento, dados existentes e protocolo de treino.
+
+### Validação
+- Regressão do editor de Perfil e política do workflow de release; `bash scripts/check.sh` aprovado.
+- Telas principais e overlays conferidos no emulador Android API 36; aparelho físico, TalkBack, fonte a 200% nesta direção visual e Wear físico: `NOT_RUN`.
+
+---
+
 ## [1.1.50] - 2026-10-30
 
 ### Alterado

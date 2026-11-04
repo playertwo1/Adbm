@@ -12,7 +12,7 @@ O aplicativo aparece no relógio como **CoreFlow Watch**. Atualmente ele recebe 
 
 ## 1. Preparar os arquivos e a rede
 
-1. No PC, abra as [Releases do Adbm](https://github.com/playertwo1/Adbm/releases/latest), expanda **Assets** e baixe `wear-release.apk`. A versão latest confirmada em 22/10/2026 é [v1.1.47](https://github.com/playertwo1/Adbm/releases/tag/v1.1.47); o link será atualizado após a publicação da próxima versão.
+1. No PC, abra as [Releases do Adbm](https://github.com/playertwo1/Adbm/releases/latest), expanda **Assets** e baixe `wear-release.apk` da versão mais recente.
 2. Salve o arquivo na pasta **Downloads** com esse nome. Não use `app-release.apk` no relógio.
 3. No celular, use o `app-release.apk` da mesma release para evitar misturar compilações. Não misture APK debug com release: a comunicação Wear exige mesmo identificador de pacote e mesma assinatura nos dois dispositivos. Neste projeto, ambos usam `com.aistudio.coreflow.vdfpkw`.
 4. Deixe o relógio pareado ao celular pelo **Galaxy Wearable**, com Bluetooth conectado. Esse é o pareamento para uso do app; o pareamento ADB abaixo serve para instalação pelo computador.

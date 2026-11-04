@@ -1,6 +1,34 @@
 # CoreFlow
 
-Aplicativo Android de práticas guiadas para fortalecimento do core, estabilização espinhal, postura, respiração, assoalho pélvico e atenção plena. A interface principal é executada em uma WebView local integrada aos recursos nativos do Android e com suporte complementar a relógios inteligentes Wear OS (Galaxy Watch).
+<p align="center">
+  <img src="docs/readme/banner.svg" alt="CoreFlow — movimento, respiração e presença" width="100%" />
+</p>
+
+Práticas guiadas para desenvolver força física, postura, respiração e atenção plena. O CoreFlow combina uma interface Android com recursos nativos para sessões, áudio, janela flutuante e um módulo complementar Wear OS.
+
+<p align="center">
+  <img src="docs/readme/hoje.png" alt="Tela Hoje do CoreFlow com práticas rápidas e progresso do dia" width="48%" />
+  <img src="docs/readme/programas.png" alt="Tela Programas com o plano guiado de Bracing e progresso semanal" width="48%" />
+</p>
+
+<details>
+  <summary>Ver captura da prática de Vácuo</summary>
+  <p align="center">
+    <img src="docs/readme/vacuo.png" alt="Tela Vácuo com seletor de postura e anel de respiração" width="48%" />
+  </p>
+</details>
+
+## Índice
+
+- [Recursos principais](#recursos-principais)
+- [Versão atual](#versão-atual)
+- [O que mudou na 1.1.51](#o-que-mudou-na-1151)
+- [Instalar no Android](#instalar-no-android)
+- [Instalar no Samsung Galaxy Watch](#instalar-no-samsung-galaxy-watch)
+- [Requisitos de desenvolvimento](#requisitos-de-desenvolvimento)
+- [Compilação e validação](#compilação-e-validação)
+- [Arquitetura do projeto](#arquitetura-do-projeto)
+- [Licença e privacidade](#licença-e-privacidade)
 
 ---
 
@@ -8,24 +36,40 @@ Aplicativo Android de práticas guiadas para fortalecimento do core, estabiliza�
 
 - **Modo Treino Flutuante (Overlay Nativo):** Acompanhe e controle sua sessão ativa sobre qualquer outro aplicativo Android com janela flutuante Material 3 AMOLED (estados Mini, Compacto e Expandido, arrasto e recolhimento automático).
 - **Programa de Bracing e Automação Postural (8 Semanas):** Progressão funcional do core baseada no método McGill, executável sentado em banco ou em pé.
-- **Programa de Stomach Vacuum (8 Semanas):** Treino guiado de sucção abdominal com fases clínicas de preparação, inspiração, expiração, apneia/retenção, retorno controlado e recuperação.
+- **Programa de Stomach Vacuum (8 Semanas):** Treino guiado com etapas de preparação, inspiração, expiração, retenção, retorno controlado e recuperação.
 - **Programa de Kegel e Assoalho Pélvico (8 Semanas):** Foco em resistência, agilidade reflexa e suporte pélvico com agenda diária calibrada.
 - **Programa de Mindfulness / MBCT (8 Semanas):** Oito meditações guiadas em áudio nativo com reprodução contínua em segundo plano e tela bloqueada.
 - **Pausa de Resposta e Micro-Pausas Ativas:** Sessões rápidas para descompressão e alívio postural no trabalho (Alongamentos, Respiração e Pausa de Resposta), 100% integradas ao Modo Treino Flutuante nativo.
 - **Sincronização com Galaxy Watch (Wear OS):** Vibrações táteis espelhadas no relógio em tempo real via Bluetooth.
-- **Privacidade e Operação 100% Offline:** Sem login obrigatório, sem telemetria externa; dados e histórico salvos localmente no dispositivo.
+- **Progresso local:** Preferências, programas e histórico de prática ficam no dispositivo. O backup Android pode incluir os dados conforme as configurações da conta e do sistema; consulte [PRIVACY.md](PRIVACY.md).
 
 ---
 
 ## Versão Atual
 
-- **Versão atual:** `1.1.50` (`versionCode 50`)
-- **Release:** acabamento visual: telas legíveis com a fonte do sistema em 200%, menos cards aninhados, cores sólidas e o overlay do treino com contador e botões consistentes. Veja "O que mudou na 1.1.50".
-- **Validação:** confira o [registro de execução](docs/roadmap/execucao.md). Overlay em aparelho, TalkBack e Wear OS `NOT_RUN`.
-- **Downloads:** O APK assinado para celular e relógio está disponível na aba de [Releases](https://github.com/playertwo1/Adbm/releases).
+- **Versão atual:** `1.1.51` (`versionCode 51`)
+- **Release:** identidade visual premium unificada nas telas Android, no overlay, no player e no módulo Wear. Veja [o que mudou na 1.1.51](docs/releases/v1.1.51.md).
+- **Validação:** `bash scripts/check.sh` passou e as telas principais foram conferidas no emulador Android API 36. Aparelho físico, TalkBack, escala de fonte 200% nesta direção visual e Wear físico: `NOT_RUN`.
+- **Downloads:** baixe os APKs assinados de celular e Wear OS na aba de [Releases](https://github.com/playertwo1/Adbm/releases/latest).
 - **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.
 
 ---
+
+## O que mudou na 1.1.51
+
+- Identidade visual em grafite e verde-floresta, com ações em sálvia, superfícies mais calmas e cores de apoio suavizadas.
+- Paleta alinhada entre as telas Hoje, Programas, Pausas, Evolução, Perfil, Vácuo, Discreto e onboarding, além do player Compose, do overlay nativo, do ícone Android e do Wear OS.
+- Editor de Perfil corrigido para abrir acima da aba transformada.
+- Navegação, ordem de conteúdo, IDs de programas, dados persistidos e protocolo dos treinos preservados.
+- Referências de produto e detalhes da verificação: [registro de execução](docs/roadmap/execucao.md).
+
+## Instalar no Android
+
+1. Baixe `app-release.apk` na página da [release mais recente](https://github.com/playertwo1/Adbm/releases/latest).
+2. Abra o APK no celular e autorize a instalação para o navegador ou gerenciador de arquivos, se o Android solicitar.
+3. Abra o CoreFlow. O módulo `wear-release.apk` é separado e precisa ser instalado no relógio; veja o [manual do Galaxy Watch](docs/INSTALAR-GALAXY-WATCH.md).
+
+Instalação por APK requer Android 7.0 ou posterior. O aplicativo não é publicado pela Play Store nesta entrega.
 
 ## O que mudou na 1.1.50
 
@@ -138,8 +182,8 @@ $env:KEYSTORE_PATH = "caminho/para/coreflow-upload.jks"
 $env:KEYSTORE_PASSWORD = "sua_senha_keystore"
 $env:KEY_ALIAS = "seu_alias"
 $env:KEY_PASSWORD = "sua_senha_chave"
-$env:BUILD_VERSION_CODE = "50"
-$env:BUILD_VERSION_NAME = "1.1.50"
+$env:BUILD_VERSION_CODE = "51"
+$env:BUILD_VERSION_NAME = "1.1.51"
 
 .\gradlew.bat :app:assembleRelease :wear:assembleRelease
 ```
@@ -152,15 +196,24 @@ Os pacotes gerados ficam localizados em:
 
 ## Arquitetura do Projeto
 
-- `index.html`: Interface web principal e lógica de estado (fonte de verdade).
-- `app/src/main/assets/index.html`: Cópia idêntica byte a byte embarcada no build Android.
-- `app/src/main/java/com/example/WorkoutOverlayController.kt`: Controlador da janela flutuante nativa (`SYSTEM_ALERT_WINDOW`).
-- `app/src/main/java/com/example/WorkoutForegroundService.kt`: Motor de sessão e timer nativo (fonte única da verdade).
-- `app/src/main/java/com/example/MindfulnessAudioService.kt`: Serviço de reprodução de áudio em primeiro plano com `MediaSession`.
-- `app/src/main/java/com/example/WearHapticsRelay.kt`: Comunicação Bluetooth e retransmissão de vibrações para o Wear OS.
-- `wear/`: Módulo independente do aplicativo para Wear OS (Galaxy Watch).
+- `index.html`: interface de treino e fonte de verdade da lógica web.
+- `app/src/main/assets/index.html`: cópia embarcada idêntica byte a byte.
+- `app/src/main/java/com/example/MainActivity.kt`: hospeda a WebView local e contém a bridge JavaScript para os recursos nativos.
+- `WorkoutForegroundService.kt`, `WorkoutOverlayController.kt` e `MindfulnessAudioService.kt`: controlam sessão, janela flutuante e áudio em primeiro plano.
+- `WearHapticsRelay.kt` e `wear/`: enviam padrões táteis ao módulo Wear OS.
 - `ROADMAP.md`: Planejamento ativo e backlog de desenvolvimento do projeto.
 - `docs/arquivados/roadmap-etapas-concluidas.md`: Histórico e critérios de aceite das etapas concluídas.
+
+```mermaid
+flowchart LR
+    Pessoa --> WebView["Interface local · index.html"]
+    WebView --> Bridge["AndroidBridge"]
+    Bridge --> Session["WorkoutForegroundService"]
+    Bridge --> Audio["MindfulnessAudioService"]
+    Session --> Overlay["WorkoutOverlayController"]
+    Session --> Haptics["WearHapticsRelay"]
+    Haptics --> Watch["CoreFlow Watch · Wear OS"]
+```
 
 ---
 

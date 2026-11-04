@@ -16,7 +16,10 @@ assert.match(workflow, /publish:\s*\n\s+needs: release[\s\S]*?permissions:\s*\n\
 assert.match(workflow, /release:\s*\n\s+needs: verify[\s\S]*?if: [^\n]*github\.ref == 'refs\/heads\/main'/, 'Release signing must run from main');
 assert.match(workflow, /publish:\s*\n\s+needs: release[\s\S]*?if: [^\n]*github\.ref == 'refs\/heads\/main'/, 'Release publication must run from main');
 assert.doesNotMatch(workflow, /refs\/heads\/codex\/pausas-flutuante-cp5/, 'The merged release branch must not remain the publication source');
-assert.match(workflow, /docs\/releases\/v\$\{version_name\}\.md/, 'The release artifact must include the canonical versioned notes file');
+const buildRelease = workflow.match(/- name: Build signed release APKs([\s\S]*?)(?=^      - name: )/m)?.[1] ?? '';
+assert.match(buildRelease, /id: release_build/, 'The signed build step must expose its version to later release steps');
+assert.match(buildRelease, /echo "version_name=\$\{version_name\}" >> "\$GITHUB_OUTPUT"/, 'The signed build step must publish the version name as an output');
+assert.match(workflow, /docs\/releases\/v\$\{\{ steps\.release_build\.outputs\.version_name \}\}\.md/, 'The release artifact must include the canonical versioned notes file');
 assert.match(workflow, /--notes-file "release-artifact\/docs\/releases\/v\$\{version_name\}\.md"/, 'GitHub release notes must use the canonical v-prefixed filename');
 assert.ok(fs.existsSync(path.join(__dirname, '..', 'docs', 'releases', `v${versionName}.md`)), 'The current release notes file must exist');
 assert.match(workflow, /persist-credentials: false/, 'Checkout must not leave a GitHub token in the build worktree');

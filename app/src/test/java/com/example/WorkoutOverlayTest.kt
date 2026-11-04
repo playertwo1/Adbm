@@ -220,11 +220,11 @@ class WorkoutOverlayTest {
     val timer = overlayViews(root).filterIsInstance<TextView>().firstOrNull { it.text == "01:00" }
 
     assertNotNull("Timer compacto precisa estar visível", timer)
-    assertEquals(Color.parseColor("#A855F7"), WorkoutOverlayController.resolveThemeColor("Kegel: Assoalho Pélvico", "stretch"))
-    assertEquals("Texto deve usar a cor clara de alto contraste", Color.parseColor("#39D5A0"), timer!!.currentTextColor)
+    assertEquals(Color.parseColor("#B6A1C1"), WorkoutOverlayController.resolveThemeColor("Kegel: Assoalho Pélvico", "stretch"))
+    assertEquals("Texto deve usar a cor clara de alto contraste", Color.parseColor("#C8E6A0"), timer!!.currentTextColor)
     assertTrue(
       "Texto do timer precisa manter contraste mínimo 4.5:1 sobre o fundo neutro",
-      ColorUtils.calculateContrast(timer.currentTextColor, Color.parseColor("#0B0F19")) >= 4.5
+      ColorUtils.calculateContrast(timer.currentTextColor, Color.parseColor("#111916")) >= 4.5
     )
   }
 
@@ -718,7 +718,7 @@ class WorkoutOverlayTest {
     assertEquals("espaço Pausar→Pular", gap, lp[0].rightMargin + lp[1].leftMargin)
     assertEquals("espaço Pular→Cancelar", gap, lp[1].rightMargin + lp[2].leftMargin)
     val expandedGreen = (pause.background as android.graphics.drawable.GradientDrawable).color!!.defaultColor
-    assertEquals(Color.parseColor("#10B981"), expandedGreen)
+    assertEquals(Color.parseColor("#B6D987"), expandedGreen)
     assertTrue(
       "Próximo passo sem caractere-ícone",
       controls.none { it.text.toString().startsWith("➔") }
@@ -959,21 +959,21 @@ class WorkoutOverlayTest {
 
   @Test
   fun `program theme color resolves accurately per exercise type`() {
-    // Vacuo em fase de apneia (esmeralda)
+    // A família de cores do treino mantém acentos calmos e distinguíveis.
     val colorVacuo = WorkoutOverlayController.resolveThemeColor("Vácuo Abdominal", "vacuo", false)
-    assertEquals(Color.parseColor("#10B981"), colorVacuo)
+    assertEquals(Color.parseColor("#B6D987"), colorVacuo)
 
-    // Descanso / recuperação (sky / azul)
     val colorDescanso = WorkoutOverlayController.resolveThemeColor("Vácuo Abdominal", "descanso", true)
-    assertEquals(Color.parseColor("#0EA5E9"), colorDescanso)
+    assertEquals(Color.parseColor("#A4B9BB"), colorDescanso)
 
-    // Kegel (roxo)
     val colorKegel = WorkoutOverlayController.resolveThemeColor("Kegel: Assoalho Pélvico", "contracao", false)
-    assertEquals(Color.parseColor("#A855F7"), colorKegel)
+    assertEquals(Color.parseColor("#B6A1C1"), colorKegel)
 
-    // Bracing (âmbar)
     val colorBracing = WorkoutOverlayController.resolveThemeColor("Bracing Avançado", "isometria", false)
-    assertEquals(Color.parseColor("#F59E0B"), colorBracing)
+    assertEquals(Color.parseColor("#D9BC82"), colorBracing)
+
+    val colorBreathing = WorkoutOverlayController.resolveThemeColor("Respiração", "inspire", false)
+    assertEquals(Color.parseColor("#95C0B4"), colorBreathing)
   }
 
   @Test

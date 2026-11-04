@@ -60,9 +60,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.ui.theme.CoreFlowCanvas
 import com.example.ui.theme.MyApplicationTheme
 import java.util.Locale
 import org.json.JSONObject
@@ -210,8 +211,8 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color(0xFF0F172A)),
-                    color = Color(0xFF0F172A)
+                        .background(CoreFlowCanvas),
+                    color = CoreFlowCanvas
                 ) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         CoreFlowWebView(
@@ -378,7 +379,7 @@ fun CoreFlowWebView(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
-                setBackgroundColor(android.graphics.Color.parseColor("#0F172A"))
+                setBackgroundColor(CoreFlowCanvas.toArgb())
 
                 settings.apply {
                     javaScriptEnabled = true

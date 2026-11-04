@@ -1,5 +1,17 @@
 # CoreFlow — Roadmap ativo
 
+## Redesign visual premium solicitado em 03/11/2026
+
+- [x] Pesquisar referências atuais de apps conhecidos no iOS e traduzir os padrões para as telas reais do CoreFlow, sem importar imagens alheias ao produto.
+- [x] Aplicar uma direção visual coerente a Hoje, Programas, Pausas, Evolução, Perfil, Vácuo, Discreto, onboarding, Wear, player e overlays, preservando a navegação e a ordem de conteúdo existentes.
+- [x] Corrigir o modal de edição do Perfil, que ficava invisível dentro da aba transformada; regressão RED/GREEN registrada em `diagnostics/e09-2-profile.test.cjs`.
+- [x] Verificar telas e sobreposições no emulador Android API 36 e executar `bash scripts/check.sh`.
+- [ ] Revisar em aparelho físico, TalkBack e relógio Wear OS; esta entrega não foi homologada nesses dispositivos.
+
+Evidências, referências iOS e limites desta rodada: registro de execução de 03/11/2026 em `docs/roadmap/execucao.md`.
+
+---
+
 ## Nova frente solicitada em 21/10/2026 — Pílulas e pausas de trabalho
 
 - [x] Preparar diagnóstico e plano de execução das dimensões das pílulas e da rotina opcional de pausas no trabalho.

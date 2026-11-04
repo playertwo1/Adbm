@@ -5,15 +5,31 @@ const assert = require('node:assert/strict');
 const root = path.join(__dirname, '..');
 const source = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const embedded = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'assets', 'index.html'), 'utf8');
+const nativeColors = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'res', 'values', 'colors.xml'), 'utf8');
+const launcherIcon = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'res', 'drawable', 'ic_launcher_foreground.xml'), 'utf8');
+const launcherBackground = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'res', 'drawable', 'ic_launcher_background.xml'), 'utf8');
+const composeColors = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'java', 'com', 'example', 'ui', 'theme', 'Color.kt'), 'utf8');
 
 assert.equal(embedded, source, 'HTML raiz e asset embarcado precisam permanecer idênticos');
-assert.match(source, /--cf-color-canvas:\s*#000000/i);
-assert.match(source, /--cf-color-surface:\s*#0A0A0B/i);
-assert.match(source, /--cf-color-surface-raised:\s*#111214/i);
+assert.match(source, /--cf-color-canvas:\s*#0B110F/i);
+assert.match(source, /--cf-color-surface:\s*#111916/i);
+assert.match(source, /--cf-color-surface-raised:\s*#18231C/i);
 assert.match(source, /--cf-color-text-primary:/i);
 assert.match(source, /--cf-color-menta:/i);
 assert.match(source, /--cf-color-cyan:/i);
 assert.match(source, /--cf-color-alert:/i);
+assert.match(source, /--cf-color-menta:\s*#B6D987/i);
+assert.match(source, /--cf-color-cyan:\s*#9CC4B3/i);
+for (const [name, value] of [['coreflow_canvas', '#FF0B110F'], ['coreflow_sage', '#FFB6D987'], ['coreflow_sea_glass', '#FF9CC4B3'], ['coreflow_on_surface', '#FFF3F5F0']]) {
+    assert.match(nativeColors, new RegExp(`<color name="${name}">${value}</color>`, 'i'), `cor ausente ou divergente: ${name}`);
+}
+for (const [name, value] of [['CoreFlowCanvas', 'FF0B110F'], ['CoreFlowPrimary', 'FFB6D987'], ['CoreFlowSecondary', 'FF9CC4B3'], ['CoreFlowOnSurface', 'FFF3F5F0']]) {
+    assert.match(composeColors, new RegExp(`${name} = Color\\(0x${value}\\)`, 'i'), `token Compose ausente ou divergente: ${name}`);
+}
+assert.match(launcherIcon, /android:strokeColor="@color\/coreflow_sea_glass"/i);
+assert.match(launcherIcon, /android:fillColor="@color\/coreflow_sage"/i);
+assert.match(launcherIcon, /android:strokeColor="@color\/coreflow_on_surface"/i);
+assert.match(launcherBackground, /android:fillColor="@color\/coreflow_canvas"/i);
 assert.match(source, /\.cf-btn/);
 assert.match(source, /\.cf-icon/);
 assert.match(source, /\.cf-card/);

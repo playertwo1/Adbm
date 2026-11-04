@@ -14,19 +14,50 @@
                 extend: {
                     colors: {
                         slate: {
-                            850: '#131f37',
-                            900: '#0f172a',
-                            950: '#080d1a',
+                            50: '#F7F8F6',
+                            100: '#EDF1EC',
+                            200: '#DAE2DB',
+                            300: '#C4D0C6',
+                            400: '#AAB7AC',
+                            500: '#849286',
+                            600: '#647266',
+                            700: '#435046',
+                            750: '#344238',
+                            800: '#26342A',
+                            850: '#1E2A22',
+                            855: '#1B2720',
+                            900: '#111916',
+                            950: '#0B110F',
                         },
                         emerald: {
-                            400: '#34d399',
-                            500: '#10b981',
-                            600: '#059669',
+                            100: '#E6F0DA',
+                            200: '#D7E8C2',
+                            300: '#CCE1AE',
+                            400: '#C8E6A0',
+                            500: '#B6D987',
+                            600: '#92B963',
+                            950: '#17231A',
                         },
                         cyan: {
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                        }
+                            100: '#E2EEE9',
+                            200: '#C9DFD4',
+                            300: '#B1D0C1',
+                            400: '#9CC4B3',
+                            500: '#7FAF9B',
+                            950: '#16251F',
+                        },
+                        amber: { 100: '#F2E7D2', 200: '#EAD9B3', 300: '#DFCCA0', 400: '#D9BC82', 500: '#C7A667', 600: '#9E8150' },
+                        blue: { 300: '#B3C3CD', 400: '#97ACB9', 500: '#788F9C' },
+                        fuchsia: { 400: '#B4A8B8', 500: '#8E828F' },
+                        indigo: { 200: '#D4D7E2', 300: '#BCC0D1', 400: '#A3A9B9', 500: '#6F778B', 600: '#5B6374', 900: '#222B35', 950: '#172119' },
+                        orange: { 400: '#DDB68F', 500: '#C69369' },
+                        pink: { 400: '#D6A8AA', 500: '#BB868A' },
+                        purple: { 500: '#877A8C', 700: '#5A4F5B' },
+                        rose: { 100: '#F4E3E2', 200: '#EBC9C7', 300: '#D9ADAC', 400: '#EAA4A5', 500: '#C67F82', 600: '#A26468', 900: '#3A2023', 950: '#211416' },
+                        sky: { 200: '#C7D8D6', 300: '#AEC9C7', 400: '#97BABB', 500: '#7D9E9E', 600: '#607F80' },
+                        teal: { 300: '#C0D7C3', 400: '#A8C9AF', 500: '#86AB91', 600: '#678873' },
+                        violet: { 100: '#F0EAF3', 200: '#DED4E6', 300: '#C8BCD2', 400: '#B6A1C1', 500: '#8E799B', 600: '#71607E', 950: '#241D29' },
+                        zinc: { 200: '#D7DED8', 300: '#C1CBC3', 400: '#A8B4AA', 500: '#849185', 600: '#616E63', 800: '#26322A', 900: '#151D18', 950: '#0B110F' },
                     },
                     animation: {
                         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -35,8 +66,8 @@
                     },
                     keyframes: {
                         glow: {
-                            '0%': { boxShadow: '0 0 15px rgba(16, 185, 129, 0.3)' },
-                            '100%': { boxShadow: '0 0 30px rgba(56, 189, 248, 0.6)' },
+                            '0%': { boxShadow: '0 0 10px rgba(182, 217, 135, 0.18)' },
+                            '100%': { boxShadow: '0 0 18px rgba(156, 196, 179, 0.3)' },
                         }
                     }
                 }
@@ -48,18 +79,18 @@
 
     <style>
         :root {
-            --cf-color-canvas: #000000;
-            --cf-color-surface: #0A0A0B;
-            --cf-color-surface-raised: #111214;
-            --cf-color-surface-interactive: #18191B;
-            --cf-color-text-primary: #F7F7F8;
-            --cf-color-text-secondary: #A7A9AD;
-            --cf-color-text-muted: #73767C;
-            --cf-color-menta: #5EE6B1;
-            --cf-color-cyan: #67D9FF;
-            --cf-color-alert: #FFB86B;
-            --cf-color-danger: #FF7F8A;
-            --cf-focus-ring: 0 0 0 3px rgba(103, 217, 255, 0.42);
+            --cf-color-canvas: #0B110F;
+            --cf-color-surface: #111916;
+            --cf-color-surface-raised: #18231C;
+            --cf-color-surface-interactive: #1F2B23;
+            --cf-color-text-primary: #F3F5F0;
+            --cf-color-text-secondary: #C0C8C0;
+            --cf-color-text-muted: #909B90;
+            --cf-color-menta: #B6D987;
+            --cf-color-cyan: #9CC4B3;
+            --cf-color-alert: #D9BC82;
+            --cf-color-danger: #E78D90;
+            --cf-focus-ring: 0 0 0 3px rgba(200, 230, 160, 0.42);
             --cf-radius-card: 1.25rem;
             --cf-safe-top: env(safe-area-inset-top, 0px);
             --cf-safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -71,6 +102,8 @@
         body.cf-app {
             padding-top: var(--cf-safe-top);
             padding-bottom: calc(6rem + var(--cf-safe-bottom));
+            background: var(--cf-color-canvas);
+            color: var(--cf-color-text-primary);
         }
         .cf-btn, .cf-icon, .cf-card, .cf-selector, .cf-toggle, .cf-modal,
         .cf-notice, .cf-empty, .cf-error { box-sizing: border-box; }
@@ -98,12 +131,12 @@
         select:focus-visible, textarea:focus-visible { outline: none; box-shadow: var(--cf-focus-ring); }
         .cf-btn:active, .cf-icon:active, button:active { transform: scale(.98); }
         .cf-icon { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; }
-        .cf-card { background: var(--cf-color-surface-raised); border: 1px solid rgba(255,255,255,.09); border-radius: var(--cf-radius-card); }
-        .cf-selector { border: 1px solid rgba(103,217,255,.28); background: var(--cf-color-surface); border-radius: 1rem; }
+        .cf-card { background: var(--cf-color-surface-raised); border: 1px solid rgba(220,235,215,.08); border-radius: var(--cf-radius-card); }
+        .cf-selector { border: 1px solid rgba(200,230,160,.18); background: var(--cf-color-surface); border-radius: 1rem; }
         .cf-selector[aria-pressed="true"], .cf-toggle[aria-checked="true"] { border-color: var(--cf-color-menta); box-shadow: inset 0 0 0 1px var(--cf-color-menta); }
-        .cf-toggle { position: relative; display: inline-flex; align-items: center; justify-content: flex-start; padding: .25rem; border-radius: 999px; background: #24262A; border: 1px solid #3A3D42; }
+        .cf-toggle { position: relative; display: inline-flex; align-items: center; justify-content: flex-start; padding: .25rem; border-radius: 999px; background: #253128; border: 1px solid #3C4A3E; }
         .cf-toggle::after { content: ''; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--cf-color-text-secondary); transition: transform .18s ease, background-color .18s ease; }
-        .cf-toggle[aria-checked="true"] { justify-content: flex-end; background: rgba(94,230,177,.2); }
+        .cf-toggle[aria-checked="true"] { justify-content: flex-end; background: rgba(182,217,135,.2); }
         .cf-toggle[aria-checked="true"]::after { background: var(--cf-color-menta); }
         html.cf-theme-amoled, html.cf-theme-amoled body,
         body.cf-app.cf-theme-amoled { background: #000000 !important; }
@@ -120,21 +153,23 @@
             scroll-behavior: auto !important;
             transition-duration: .01ms !important;
         }
-        body.cf-high-contrast { --cf-color-text-secondary: #E5E7EB; --cf-color-text-muted: #CBD5E1; }
+        body.cf-high-contrast { --cf-color-text-secondary: #E5E7EB; --cf-color-text-muted: #D0D8D0; }
         body.cf-high-contrast .text-slate-300,
         body.cf-high-contrast .text-slate-400,
         body.cf-high-contrast .text-slate-500 { color: #E5E7EB !important; }
         body.cf-high-contrast .border-slate-700,
-        body.cf-high-contrast .border-slate-800 { border-color: #94A3B8 !important; }
+        body.cf-high-contrast .border-slate-800 { border-color: #AAB7AC !important; }
         body.cf-high-contrast .cf-card { border-color: #CBD5E1; }
         .cf-modal { overscroll-behavior: contain; padding-top: max(1rem, var(--cf-safe-top)); padding-bottom: max(1rem, var(--cf-safe-bottom)); }
-        .cf-notice { border-left: 3px solid var(--cf-color-cyan); background: rgba(103,217,255,.08); color: var(--cf-color-text-secondary); }
-        .cf-empty { border: 1px dashed rgba(255,255,255,.2); color: var(--cf-color-text-secondary); }
-        .cf-error { border: 1px solid rgba(255,127,138,.4); background: rgba(255,127,138,.1); color: #FFD5D8; }
-        .cf-bottom-nav { padding-bottom: max(.5rem, var(--cf-safe-bottom)); background: rgb(10,10,11); border-color: rgba(255,255,255,.1); }
+        .cf-notice { border-left: 3px solid var(--cf-color-menta); background: rgba(182,217,135,.08); color: var(--cf-color-text-secondary); }
+        .cf-empty { border: 1px dashed rgba(220,235,215,.22); color: var(--cf-color-text-secondary); }
+        .cf-error { border: 1px solid rgba(231,141,144,.4); background: rgba(231,141,144,.1); color: #F3C8C8; }
+        .cf-bottom-nav { padding-bottom: max(.5rem, var(--cf-safe-bottom)); background: rgb(17,25,22); border-color: rgba(220,235,215,.09); }
         .cf-nav-label { font-size: .68rem; line-height: 1.1; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .cf-bottom-nav .nav-item { min-width: 0; }
         .cf-status-dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--cf-color-menta); }
+        input[type="checkbox"], input[type="radio"] { accent-color: var(--cf-color-menta); }
+        #stretch-posture-frame { background: #111916; }
         @media (min-width: 520px) { main { max-width: 38rem; } }
         @media (max-width: 380px) {
             .cf-nav-label { font-size: .6rem; }
@@ -167,21 +202,21 @@
             transform: translateY(0);
         }
         #stretch-active-display, #breath-active-display { scroll-margin-top: 90px; }
-        .stretch-posture { position: relative; overflow: hidden; isolation: isolate; width: 100%; max-width: 220px; aspect-ratio: 1; margin: 0 auto; border-radius: 12px; background: #090d16; }
+        .stretch-posture { position: relative; overflow: hidden; isolation: isolate; width: 100%; max-width: 220px; aspect-ratio: 1; margin: 0 auto; border-radius: 12px; background: #111916; }
         .stretch-posture-image { position: absolute; left: 0; top: 0; width: 200%; height: 200%; max-width: none; object-fit: fill; pointer-events: none; transition: left .28s ease, top .28s ease, opacity .28s ease; }
         #stretch-posture-frame[data-frame="0"] .stretch-posture-image { left: 0; top: 0; }
         #stretch-posture-frame[data-frame="1"] .stretch-posture-image { left: -100%; top: 0; }
         #stretch-posture-frame[data-frame="2"] .stretch-posture-image { left: 0; top: -100%; }
         #stretch-posture-frame[data-frame="3"] .stretch-posture-image { left: -100%; top: -100%; }
-        .stretch-direction { position: absolute; z-index: 2; right: 8px; top: 8px; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: #064e3b; color: #6ee7b7; }
+        .stretch-direction { position: absolute; z-index: 2; right: 8px; top: 8px; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: #26342A; color: #C8E6A0; }
         #stretch-posture-frame[data-exercise="4"] .stretch-direction { transform: rotate(45deg); }
         @keyframes stretch-phase-cue { from { transform: translateY(2px) scale(.94); opacity: .45; } to { transform: translateY(0) scale(1); opacity: 1; } }
         #stretch-posture-frame[data-phase="enter"] .stretch-direction i { animation: stretch-phase-cue .42s ease-out both; }
         #stretch-active-display[data-paused="true"] .stretch-direction i { animation-play-state: paused; }
         #stretch-active-display[data-paused="true"] .stretch-posture-image, #stretch-active-display[data-paused="true"] .stretch-phase-segment { transition: none; }
         .stretch-phase-track { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; max-width: 220px; margin: 6px auto 0; }
-        .stretch-phase-segment { height: 3px; border-radius: 999px; background: #334155; transition: background-color .2s ease; }
-        .stretch-phase-segment.is-current { background: #34d399; }
+        .stretch-phase-segment { height: 3px; border-radius: 999px; background: #435046; transition: background-color .2s ease; }
+        .stretch-phase-segment.is-current { background: #B6D987; }
         @media (prefers-reduced-motion: reduce) { .stretch-posture-image, .stretch-phase-segment, .stretch-direction i { transition: none !important; animation: none !important; } }
         html.cf-reduced-motion .stretch-posture-image, html.cf-reduced-motion .stretch-phase-segment, html.cf-reduced-motion .stretch-direction i { transition: none !important; animation: none !important; }
         /* Breathing ring animations */
@@ -198,7 +233,7 @@
         }
         .breathe-vacuum {
             transform: scale(0.75);
-            filter: drop-shadow(0 0 28px rgba(16, 185, 129, 0.85));
+            filter: drop-shadow(0 0 16px rgba(182, 217, 135, 0.38));
             transition: transform 0.6s ease-in-out;
         }
         .breathe-rest {
@@ -208,8 +243,8 @@
         /* Metronome beat pulse */
         .beat-active {
             transform: scale(1.25);
-            background-color: #10b981 !important;
-            box-shadow: 0 0 25px #10b981;
+            background-color: #B6D987 !important;
+            box-shadow: 0 0 12px rgba(182,217,135,.4);
         }
         /* Bottom navigation bounce & scale animation */
         @keyframes navBounce {
@@ -320,15 +355,14 @@
     </div>
 
     <!-- Top Status Bar & App Header -->
-    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3.5 flex flex-wrap items-center justify-between gap-y-2 no-print">
+    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 py-3.5 flex flex-wrap items-center justify-between gap-y-2 no-print">
         <div class="flex min-w-0 items-center gap-3">
-            <div class="cf-icon w-10 h-10 flex-shrink-0 rounded-xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-emerald-900/30" aria-hidden="true">
+            <div class="cf-icon w-10 h-10 flex-shrink-0 rounded-xl bg-emerald-600 flex items-center justify-center" aria-hidden="true">
                 <i class="fa-solid fa-lungs text-white text-lg"></i>
             </div>
             <div class="min-w-0">
-                <h1 class="font-heading font-extrabold text-lg tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">CoreFlow</h1>
+                <h1 class="font-heading font-extrabold text-lg tracking-tight text-emerald-300">CoreFlow</h1>
                 <p class="text-xs text-slate-400 flex min-w-0 items-center gap-1 font-medium">
-                    <span class="w-1.5 h-1.5 flex-shrink-0 rounded-full bg-emerald-400 animate-ping"></span>
                     <span class="truncate">Saúde, Vácuo & Postura</span>
                 </p>
             </div>
@@ -390,8 +424,8 @@
                 <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Ações Rápidas Imediatas:</p>
                 <div class="flex flex-wrap items-center gap-2">
                     <!-- Nova Ação Rápida: Meus Programas -->
-                    <button onclick="triggerHaptic([30]); switchTab('programas')" class="flex-shrink-0 px-3 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 active:scale-95 border border-indigo-500/30 hover:border-indigo-500/60 rounded-xl text-xs font-bold text-indigo-400 transition shadow-sm flex items-center gap-1.5">
-                        <i class="fa-solid fa-calendar-days text-indigo-400" aria-hidden="true"></i> Meus Programas
+                    <button onclick="triggerHaptic([30]); switchTab('programas')" class="flex-shrink-0 px-3 py-2 bg-slate-850 hover:bg-slate-800 active:scale-95 border border-slate-700 hover:border-emerald-500/50 rounded-xl text-xs font-bold text-slate-200 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-days text-emerald-400" aria-hidden="true"></i> Meus Programas
                     </button>
 
                     <button onclick="triggerQuickAction('bracing_2min')" class="flex-shrink-0 px-3 py-2 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 hover:border-emerald-500/50 rounded-xl text-xs font-semibold text-slate-200 hover:text-emerald-300 transition shadow-sm flex items-center gap-1.5">
@@ -1210,9 +1244,9 @@
 
                                     <svg class="w-36 h-36 relative z-10" viewBox="0 0 120 120">
                                         <!-- Anel orbital de fundo -->
-                                        <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(51, 65, 85, 0.4)" stroke-width="4" />
+                                        <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(67, 80, 70, 0.4)" stroke-width="4" />
                                         <!-- Arco de progresso ativo -->
-                                        <circle id="stretch-progress-arc" cx="60" cy="60" r="48" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-dasharray="301.6" stroke-dashoffset="0" style="transform: rotate(-90deg); transform-origin: 60px 60px; transition: stroke-dashoffset 0.95s linear;" class="drop-shadow-[0_0_8px_rgba(16,185,129,0.75)]" />
+                                        <circle id="stretch-progress-arc" cx="60" cy="60" r="48" fill="none" stroke="#B6D987" stroke-width="5" stroke-linecap="round" stroke-dasharray="301.6" stroke-dashoffset="0" style="transform: rotate(-90deg); transform-origin: 60px 60px; transition: stroke-dashoffset 0.95s linear;" class="drop-shadow-[0_0_4px_rgba(182,217,135,0.35)]" />
                                     </svg>
 
                                     <!-- Centro do Círculo com Ícone Dinâmico, Segundos e Fase -->
@@ -1761,9 +1795,9 @@
                                 <div id="visual-container-caixa" class="visual-breath-container relative w-36 h-36 flex items-center justify-center">
                                     <svg class="w-36 h-36" viewBox="0 0 120 120">
                                         <!-- Fundo do quadrado -->
-                                        <rect x="15" y="15" width="90" height="90" rx="16" fill="none" stroke="rgba(51, 65, 85, 0.4)" stroke-width="4" />
+                                        <rect x="15" y="15" width="90" height="90" rx="16" fill="none" stroke="rgba(67, 80, 70, 0.4)" stroke-width="4" />
                                         <!-- Traço contínuo brilhante neon -->
-                                        <rect id="box-track-rect" x="15" y="15" width="90" height="90" rx="16" fill="none" stroke="#22d3ee" stroke-width="5" stroke-linecap="round" stroke-dasharray="335" stroke-dashoffset="335" style="transition: stroke-dashoffset 0.95s linear;" class="drop-shadow-[0_0_8px_rgba(34,211,238,0.75)]" />
+                                        <rect id="box-track-rect" x="15" y="15" width="90" height="90" rx="16" fill="none" stroke="#9CC4B3" stroke-width="5" stroke-linecap="round" stroke-dasharray="335" stroke-dashoffset="335" style="transition: stroke-dashoffset 0.95s linear;" class="drop-shadow-[0_0_4px_rgba(156,196,179,0.35)]" />
                                     </svg>
                                     <!-- Centro do Quadrado com Contagem e Fase -->
                                     <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
@@ -2387,7 +2421,7 @@
         <div class="w-full max-w-md overflow-hidden rounded-[2rem] border border-violet-400/30 bg-gradient-to-b from-violet-950 via-slate-900 to-slate-950 shadow-2xl shadow-violet-900/50">
             <div class="relative p-6 text-center">
                 <button onclick="closeMindfulnessAudioModal()" class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-300"><i class="fa-solid fa-xmark"></i></button>
-                <div id="mindfulnessPulse" class="mx-auto mb-5 mt-4 flex h-32 w-32 items-center justify-center rounded-full border border-violet-300/30 bg-violet-500/15 shadow-[0_0_60px_rgba(139,92,246,.35)]">
+                <div id="mindfulnessPulse" class="mx-auto mb-5 mt-4 flex h-32 w-32 items-center justify-center rounded-full border border-violet-300/30 bg-violet-500/15 shadow-[0_0_24px_rgba(182,217,135,.18)]">
                     <i class="fa-solid fa-brain text-5xl text-violet-300"></i>
                 </div>
                 <span id="mindfulnessWeekLabel" class="rounded-full border border-violet-400/30 bg-violet-500/15 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-violet-200">Semana 1</span>
@@ -2753,8 +2787,8 @@
                 <div class="relative w-48 h-48 rounded-full bg-black border-4 border-slate-800 shadow-2xl shadow-cyan-500/10 flex flex-col items-center justify-center p-4 select-none overflow-hidden">
                     <!-- Arco de Progresso Circular -->
                     <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="44" fill="none" stroke="#1e293b" stroke-width="6" />
-                        <circle id="watch-progress-arc" cx="50" cy="50" r="44" fill="none" stroke="#22d3ee" stroke-width="6" stroke-linecap="round" stroke-dasharray="276" stroke-dashoffset="0" class="transition-all duration-1000" />
+                        <circle cx="50" cy="50" r="44" fill="none" stroke="#26342A" stroke-width="6" />
+                        <circle id="watch-progress-arc" cx="50" cy="50" r="44" fill="none" stroke="#9CC4B3" stroke-width="6" stroke-linecap="round" stroke-dasharray="276" stroke-dashoffset="0" class="transition-all duration-1000" />
                     </svg>
                     <!-- Centro do Mostrador -->
                     <div class="relative z-10 flex flex-col items-center justify-center text-center">
@@ -2918,8 +2952,8 @@
             <!-- 1. Caixa OLED (Contorno sutil neon) -->
             <div id="oled-visual-caixa" class="oled-visual-item relative w-56 h-56 flex items-center justify-center">
                 <svg class="w-56 h-56" viewBox="0 0 160 160">
-                    <rect x="20" y="20" width="120" height="120" rx="20" fill="none" stroke="#18181b" stroke-width="3" />
-                    <rect id="oled-box-track-rect" x="20" y="20" width="120" height="120" rx="20" fill="none" stroke="#22d3ee" stroke-width="4" stroke-linecap="round" stroke-dasharray="448" stroke-dashoffset="448" style="transition: stroke-dashoffset 0.95s linear;" />
+                    <rect x="20" y="20" width="120" height="120" rx="20" fill="none" stroke="#26342A" stroke-width="3" />
+                    <rect id="oled-box-track-rect" x="20" y="20" width="120" height="120" rx="20" fill="none" stroke="#9CC4B3" stroke-width="4" stroke-linecap="round" stroke-dasharray="448" stroke-dashoffset="448" style="transition: stroke-dashoffset 0.95s linear;" />
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                     <span id="oled-caixa-phase" class="text-xs font-black tracking-widest uppercase text-cyan-400">INSPIRE</span>
@@ -2929,7 +2963,7 @@
 
             <!-- 2. Longa OLED -->
             <div id="oled-visual-longa" class="oled-visual-item hidden relative w-56 h-56 flex items-center justify-center">
-                <div id="oled-longa-sphere" class="w-36 h-36 rounded-full border-2 border-indigo-400/80 bg-transparent flex flex-col items-center justify-center transition-all duration-1000 shadow-[0_0_20px_rgba(99,102,241,0.2)]">
+                <div id="oled-longa-sphere" class="w-36 h-36 rounded-full border-2 border-indigo-400/80 bg-transparent flex flex-col items-center justify-center transition-all duration-1000 shadow-[0_0_12px_rgba(156,196,179,0.16)]">
                     <span id="oled-longa-phase" class="text-xs font-black tracking-widest uppercase text-indigo-400">INSPIRE</span>
                     <span id="oled-longa-sec" class="text-6xl font-black font-mono text-white mt-1">4</span>
                 </div>
@@ -3066,7 +3100,7 @@
             <div id="responsive-pause-session" class="flex-1 flex flex-col items-center justify-center text-center py-6">
                 <div id="responsive-pause-total" class="font-mono text-4xl font-black text-white tabular-nums">03:00</div>
                 <div id="responsive-pause-stage-time" class="text-xs text-slate-400 mt-1">Etapa 1 de 3 · 01:00</div>
-                <div id="responsive-breath-orb" class="mt-7 w-32 h-32 rounded-full border-2 border-violet-400/50 bg-violet-500/10 shadow-[0_0_45px_rgba(139,92,246,0.18)] flex items-center justify-center transition-transform ease-in-out">
+                <div id="responsive-breath-orb" class="mt-7 w-32 h-32 rounded-full border-2 border-violet-400/50 bg-violet-500/10 shadow-[0_0_24px_rgba(156,196,179,0.16)] flex items-center justify-center transition-transform ease-in-out">
                     <i id="responsive-pause-icon" class="fa-solid fa-hand text-3xl text-violet-300"></i>
                 </div>
                 <h3 id="responsive-pause-instruction" class="mt-6 text-xl leading-snug font-extrabold text-white max-w-md">Pare por um instante. A resposta pode esperar esta pausa.</h3>
@@ -3728,12 +3762,14 @@
 
         function openProfileEditor() {
             triggerHaptic([20]);
+            const modal = document.getElementById('profileEditorModal');
+            if (modal && modal.parentNode !== document.body) document.body.appendChild(modal);
             const nameInput = document.getElementById('profileNameInput');
             const goalInput = document.getElementById('profileDailyGoalInput');
             if (nameInput) nameInput.value = typeof AppState.userName === 'string' ? AppState.userName : '';
             if (goalInput) goalInput.value = Number.isFinite(Number(AppState.dailyGoal)) ? String(AppState.dailyGoal) : '';
             clearProfileEditorErrors();
-            document.getElementById('profileEditorModal')?.classList.remove('hidden');
+            modal?.classList.remove('hidden');
         }
 
         function closeProfileEditor() {
@@ -8524,26 +8560,24 @@
                 applyOledPhaseUI(phase, motionSeconds, animateMotion, visualScale);
             }
 
-            // Dynamic Chroma: Transição suave do gradiente cromático da área de respiração
-            // Inspiração: tom azul/índigo clareando suavemente
-            // Expiração: escurecendo gradualmente para tons profundos de quietude
+            // Contraste suave para acompanhar as fases sem flashes saturados.
             const activeDisplay = document.getElementById('breath-active-display');
             if (activeDisplay) {
                 activeDisplay.style.transition = 'background 1.5s ease-in-out, border-color 1.5s ease-in-out';
                 const chromaGradients = {
-                    inspire: 'radial-gradient(circle at 50% 25%, rgba(37, 99, 235, 0.35) 0%, rgba(30, 58, 138, 0.25) 45%, rgba(15, 23, 42, 0.95) 85%)',
-                    hold1: 'radial-gradient(circle at 50% 45%, rgba(14, 116, 144, 0.35) 0%, rgba(15, 23, 42, 0.95) 80%)',
-                    expire: 'radial-gradient(circle at 50% 75%, rgba(6, 78, 59, 0.3) 0%, rgba(2, 6, 23, 0.98) 85%)',
-                    hold2: 'rgba(2, 6, 23, 0.98)'
+                    inspire: 'radial-gradient(circle at 50% 25%, rgba(156, 196, 179, 0.2) 0%, rgba(30, 42, 34, 0.48) 45%, rgba(11, 17, 15, 0.98) 85%)',
+                    hold1: 'radial-gradient(circle at 50% 45%, rgba(127, 175, 155, 0.18) 0%, rgba(11, 17, 15, 0.98) 80%)',
+                    expire: 'radial-gradient(circle at 50% 75%, rgba(182, 217, 135, 0.16) 0%, rgba(11, 17, 15, 0.98) 85%)',
+                    hold2: 'rgba(11, 17, 15, 0.98)'
                 };
                 const chromaBorders = {
-                    inspire: 'rgba(59, 130, 246, 0.5)',
-                    hold1: 'rgba(6, 182, 212, 0.5)',
-                    expire: 'rgba(16, 185, 129, 0.4)',
-                    hold2: 'rgba(51, 65, 85, 0.4)'
+                    inspire: 'rgba(156, 196, 179, 0.42)',
+                    hold1: 'rgba(127, 175, 155, 0.42)',
+                    expire: 'rgba(182, 217, 135, 0.42)',
+                    hold2: 'rgba(67, 80, 70, 0.42)'
                 };
-                activeDisplay.style.background = chromaGradients[phase.key] || 'rgba(2, 6, 23, 0.8)';
-                activeDisplay.style.borderColor = chromaBorders[phase.key] || 'rgba(51, 65, 85, 0.8)';
+                activeDisplay.style.background = chromaGradients[phase.key] || 'rgba(11, 17, 15, 0.8)';
+                activeDisplay.style.borderColor = chromaBorders[phase.key] || 'rgba(67, 80, 70, 0.8)';
             }
 
             // Atualiza visor do Smartwatch Companion
@@ -13997,7 +14031,7 @@
             celebration.innerHTML = `
                 <div class="absolute inset-0 bg-emerald-500/10 backdrop-blur-sm animate-pulse"></div>
                 <div class="relative z-10 flex flex-col items-center animate-bounce">
-                    <i class="fa-solid fa-trophy text-6xl text-amber-400 mb-3 drop-shadow-[0_0_20px_rgba(251,191,36,0.8)]"></i>
+                    <i class="fa-solid fa-trophy text-6xl text-amber-400 mb-3 drop-shadow-[0_0_10px_rgba(217,188,130,0.28)]"></i>
                     <h2 class="text-3xl font-black text-white uppercase tracking-widest drop-shadow-lg text-center leading-tight">Meta Diária<br>Batida!</h2>
                     <p class="text-emerald-300 font-bold mt-2 text-lg drop-shadow-md">${AppState.totalMinutesToday} min hoje</p>
                 </div>
@@ -14170,7 +14204,7 @@
                     return `
                         <div class="flex flex-col items-center justify-end h-full w-9 group">
                             <div class="flex flex-col items-center justify-end h-6 mb-0.5">
-                                ${isAboveAvg ? '<i class="fa-solid fa-star text-amber-400 text-[10px] animate-pulse drop-shadow-[0_0_3px_rgba(251,191,36,0.6)]"></i>' : ''}
+                                ${isAboveAvg ? '<i class="fa-solid fa-star text-amber-400 text-[10px] animate-pulse drop-shadow-[0_0_2px_rgba(217,188,130,0.35)]"></i>' : ''}
                             </div>
                             <span class="text-[10px] ${isActive ? 'text-slate-200' : 'text-slate-500'} font-mono font-medium mb-1 transition-opacity">${mins > 0 ? mins + 'm' : ''}</span>
                             <div class="w-5 h-full rounded-t-lg bg-slate-900/60 flex items-end overflow-hidden border-b border-slate-700/50 relative">

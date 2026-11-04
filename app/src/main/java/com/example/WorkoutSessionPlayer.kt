@@ -14,7 +14,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -94,15 +93,15 @@ fun WorkoutSessionPlayer(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { showCancelDialog = true }) {
-                Icon(Icons.Default.Close, contentDescription = "Cancelar", tint = Color.Gray)
+                Icon(Icons.Default.Close, contentDescription = "Cancelar", tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            Text("Passo ${currentStepIndex + 1} de ${steps.size}", color = Color.Gray, fontWeight = FontWeight.Bold)
+            Text("Passo ${currentStepIndex + 1} de ${steps.size}", color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.width(48.dp)) // Balanço visual
         }
         
         Spacer(modifier = Modifier.height(16.dp))
         Text(programName, color = MaterialTheme.colorScheme.primary, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-        Text(phaseName, color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        Text(phaseName, color = MaterialTheme.colorScheme.onSurface, fontSize = 20.sp, fontWeight = FontWeight.Bold)
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -115,7 +114,7 @@ fun WorkoutSessionPlayer(
                         .size(240.dp)
                         .clip(CircleShape)
                         .background(
-                            if (currentStep.isRest) Color(0xFF1E293B) else MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                            if (currentStep.isRest) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
                         ),
                     contentAlignment = Alignment.Center
                 ) {
@@ -124,12 +123,12 @@ fun WorkoutSessionPlayer(
                             text = String.format("%02d:%02d", timeLeft / 60, timeLeft % 60),
                             fontSize = 64.sp,
                             fontWeight = FontWeight.Bold,
-                            color = if (currentStep.isRest) Color(0xFF38BDF8) else MaterialTheme.colorScheme.primary
+                            color = if (currentStep.isRest) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
                         )
                         Text(
                             text = if (currentStep.isRest) "DESCANSO" else "EM AÇÃO",
                             fontWeight = FontWeight.Bold,
-                            color = if (currentStep.isRest) Color(0xFF38BDF8) else MaterialTheme.colorScheme.primary
+                            color = if (currentStep.isRest) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -140,14 +139,14 @@ fun WorkoutSessionPlayer(
                     text = currentStep.title,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = currentStep.instruction,
                     fontSize = 16.sp,
-                    color = Color.LightGray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -164,11 +163,11 @@ fun WorkoutSessionPlayer(
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             ) {
                 Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.SkipNext, contentDescription = null, tint = Color.Gray)
+                    Icon(Icons.Default.SkipNext, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
-                        Text("A seguir:", fontSize = 12.sp, color = Color.Gray)
-                        Text(nextStep.title, fontSize = 14.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                        Text("A seguir:", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(nextStep.title, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -183,7 +182,7 @@ fun WorkoutSessionPlayer(
                 onClick = { isRunning = !isRunning },
                 modifier = Modifier.fillMaxWidth().height(60.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isRunning) Color.DarkGray else MaterialTheme.colorScheme.primary
+                    containerColor = if (isRunning) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primary
                 )
             ) {
                 Icon(if (isRunning) Icons.Default.Close else Icons.Default.PlayArrow, contentDescription = null)
