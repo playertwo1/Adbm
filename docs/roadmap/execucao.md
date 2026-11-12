@@ -1496,3 +1496,13 @@ Próximo passo:
 - Verificação completa em 12/11/2026: `bash scripts/check.sh` — `CHECK PASS`; diagnósticos, paridade HTML, `:app:testDebugUnitTest`, `:app:assembleDebug` e `:wear:assembleDebug` passaram. `git diff --check` passou.
 - QA no emulador Android `sdk_gphone64_x86_64` (API 36, 1080×2400): instalado o APK com `adb install -r` (sem limpar dados); conferidas Hoje e seus atalhos em largura total, Programas, Pausas, Evolução, Perfil, tela de configuração do Vácuo, navegação inferior e diálogo de edição do Perfil. Nenhuma sessão de treino foi iniciada; a overlay nativa em execução não foi fotografada.
 - NOT_RUN: inspeção visual da overlay durante sessão ativa, aparelho físico, TalkBack e relógio Wear OS. A inspeção independente pedida por `AGENTS.md` também não foi executada: não havia ferramenta de revisão/delegação independente disponível nesta sessão.
+
+## 2026-11-12 — Release CoreFlow 1.1.52 publicada
+
+- Workflow oficial [43319535608](https://github.com/playertwo1/Adbm/actions/runs/43319535608): `verify`, `release` e `publish` concluídos com sucesso no commit `3291924040bfed36e885a6e4606b318ebc89cdba`. O `scripts/check.sh` passou no CI; a etapa de release validou os segredos, assinou os APKs e comparou versão e identidade de assinatura com `v1.1.51`.
+- Release publicada: [v1.1.52](https://github.com/playertwo1/Adbm/releases/tag/v1.1.52), `versionCode 52`, `versionName 1.1.52`. Pacote `com.aistudio.coreflow.vdfpkw` nos dois APKs.
+- Assets baixados da release e verificados com `apksigner`/`aapt`; ambos passam na validação e usam o certificado SHA-256 `56052883ad4841ab226e4c41dc573d7c9862f89519c8ff74c74979443fb2d4dd`.
+  - [app-release.apk](https://github.com/playertwo1/Adbm/releases/download/v1.1.52/app-release.apk) — SHA-256 `be1d67f2227882a909f9d2ae9d143a47e244dd660fe3f96dffb9c9dbccd1ae46`.
+  - [wear-release.apk](https://github.com/playertwo1/Adbm/releases/download/v1.1.52/wear-release.apk) — SHA-256 `99ecdd3f9d57e6c16f6c095a22d1f5ad0d7dcc4001f71160efa30bd0911ae0ff`.
+- Actions estava desativado no repositório e mantinha execuções antigas sem jobs. Foi habilitado temporariamente com allowlist apenas para as cinco actions usadas pelo workflow; após a publicação, o repositório voltou a `enabled=false` e o workflow a `disabled_manually`.
+- O primeiro disparo desta rodada (`43316777309`), feito enquanto Actions estava desativado, permaneceu como entrada órfã em fila e a API recusou seu cancelamento como concluído. O segundo disparo, após habilitar Actions, executou e publicou a release; o workflow e Actions estão novamente desativados.

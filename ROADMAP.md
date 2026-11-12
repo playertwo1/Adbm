@@ -21,8 +21,8 @@ Evidências, referências iOS e limites desta rodada: registro de execução de 
 - [x] Aplicar a identidade Fluxo às telas WebView e à overlay Android, mantendo recursos locais, atribuição/licença PulsoIcon, callbacks, dados, IDs, armazenamento, protocolos e integração com Wear OS.
 - [x] Conferir o inventário de telas e o diff de produção; documentar limites do QA e preservar alterações locais que não fazem parte do release.
 - [x] Atualizar regressões, versão e notas para `1.1.52` (`versionCode 52`); executar `bash scripts/check.sh` e inspeção visual no emulador.
-- [ ] Produzir APKs assinados de app e Wear pelo workflow oficial, conferir versão/assinatura contra `v1.1.51` e publicar a release `v1.1.52` no GitHub.
-- [ ] Confirmar assets e URLs da release; devolver o workflow ao estado desativado anterior.
+- [x] Produzir APKs assinados de app e Wear pelo workflow oficial, conferir versão/assinatura contra `v1.1.51` e publicar a release `v1.1.52` no GitHub.
+- [x] Confirmar assets e URLs da release; devolver o workflow ao estado desativado anterior.
 
 ---
 
@@ -56,10 +56,10 @@ Plano, dependências, critérios e limites: [Pausas e flutuante — 18/10](docs/
 
 ---
 
-**Atualizado:** 11/10/2026.
-**Release atual:** 1.1.45 — pausas entre repetições da semana 1 do Bracing reduzidas para 5s.
-**Foco:** E15 — Correção do Bracing de 8 semanas, conforme o documento fornecido por Rafael.
-**Estado:** implementação funcional verificada; aprovação visual das imagens novas e homologação física PENDENTES.
+**Atualizado:** 12/11/2026.
+**Release atual:** 1.1.52 — redesign integral Fluxo para WebView e overlay Android.
+**Foco:** homologação da overlay durante sessão ativa, TalkBack, aparelho físico e Wear OS.
+**Estado:** redesign publicado; checks e QA visual em emulador concluídos; homologação física/acessibilidade pendentes.
 
 ## 1. Procedimento obrigatório para qualquer IA
 
