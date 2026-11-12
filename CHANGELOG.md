@@ -7,6 +7,24 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
+## [1.1.52] - 2026-11-12
+
+### Alterado
+- Direção visual Fluxo aplicada às telas Hoje, Programas, Pausas, Evolução, Perfil, práticas, sessões e diálogos, com atalhos PulsoIcon estáticos em largura total.
+- Overlay nativa alinhada à paleta Fluxo nos estados mini, compacto, pausado e expandido, incluindo confirmação de cancelamento e recuperação segura do Vácuo.
+- Contraste do timer e distinção das cores por tipo de prática cobertos pelas regressões do overlay.
+
+### Preservado
+- Navegação, textos funcionais, IDs, dados persistidos, exercícios, protocolos de treino, timers e integração com Galaxy Watch.
+- Recursos visuais e licenças locais; sem novas dependências, CDN ou fonte remota.
+
+### Validação
+- `bash scripts/check.sh`: diagnósticos, paridade HTML, testes unitários e builds debug do app e Wear aprovados.
+- Inspeção no emulador Android API 36: Hoje, atalhos, Programas, Pausas, Evolução, Perfil, configuração do Vácuo e diálogo de edição do Perfil.
+- Overlay durante sessão ativa, aparelho físico, TalkBack e Wear físico: `NOT_RUN`.
+
+---
+
 ## [1.1.51] - 2026-11-03
 
 ### Alterado

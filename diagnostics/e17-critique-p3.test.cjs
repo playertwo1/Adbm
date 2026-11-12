@@ -14,7 +14,7 @@ for (const file of [path.join(root, 'index.html'), path.join(root, 'app', 'src',
     const html = fs.readFileSync(file, 'utf8');
     const name = path.relative(root, file);
 
-    const quick = between(html, 'Ações Rápidas Imediatas', '<section id="tab-hoje"');
+    const quick = between(html, 'Ações rápidas', '<section id="tab-hoje"');
     assert.doesNotMatch(quick, /[\u{1F300}-\u{1FAFF}☀-➿]/u, `${name}: ações rápidas não devem usar emoji como ícone`);
     assert.match(quick, /fa-solid fa-calendar-days/, `${name}: ícone de Meus Programas`);
     assert.doesNotMatch(quick, /overflow-x-auto/, `${name}: chips não devem ficar cortados em rolagem horizontal`);

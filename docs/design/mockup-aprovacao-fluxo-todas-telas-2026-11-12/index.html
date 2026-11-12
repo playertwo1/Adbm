@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CoreFlow · Mockup de aprovação Fluxo</title>
+    <style>
+        :root { color-scheme: dark; --canvas: #0c1710; --surface: #14251a; --line: #2b4433; --text: #eff5ef; --muted: #a6b9a9; --accent: #8bd3a8; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--canvas); color: var(--text); font: 16px/1.55 system-ui, sans-serif; }
+        a { color: var(--accent); }
+        .wrap { width: min(100% - 32px, 1120px); margin: 0 auto; }
+        header { padding: 52px 0 30px; border-bottom: 1px solid var(--line); }
+        .kicker { margin: 0 0 8px; color: var(--accent); font-size: .72rem; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; }
+        h1, h2, h3 { line-height: 1.15; letter-spacing: -.025em; }
+        h1 { max-width: 760px; margin: 0; font-size: clamp(2rem, 6vw, 3.5rem); }
+        h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2rem); }
+        h3 { margin: 0; font-size: 1.1rem; }
+        .lede { max-width: 760px; margin: 16px 0 0; color: var(--muted); font-size: 1.05rem; }
+        .callout { margin: 24px 0 0; padding: 16px 18px; border: 1px solid var(--line); border-left: 3px solid var(--accent); background: var(--surface); color: var(--muted); }
+        .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+        .link-button { display: inline-block; padding: 10px 14px; border: 1px solid var(--line); background: var(--surface); color: var(--text); text-decoration: none; }
+        nav { display: flex; flex-wrap: wrap; gap: 8px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+        nav a { padding: 8px 10px; border: 1px solid var(--line); color: var(--muted); text-decoration: none; font-size: .9rem; }
+        main { padding: 26px 0 64px; }
+        section { margin: 0 0 40px; scroll-margin-top: 16px; }
+        .section-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 16px; }
+        .section-head p { max-width: 650px; margin: 0; color: var(--muted); }
+        figure { margin: 0; padding: 12px; border: 1px solid var(--line); background: var(--surface); }
+        figure img { display: block; width: 100%; height: auto; }
+        figcaption { padding: 10px 4px 2px; color: var(--muted); font-size: .82rem; }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
+        .tags li { padding: 6px 9px; border: 1px solid var(--line); color: var(--muted); font-size: .86rem; }
+        .catalog { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+        article { padding: 16px; border: 1px solid var(--line); background: var(--surface); }
+        article p { margin: 7px 0 0; color: var(--muted); font-size: .9rem; }
+        .priority { border-color: #52705b; }
+        .priority h3 { color: var(--accent); }
+        .note { margin: 12px 0 0; color: var(--muted); font-size: .84rem; }
+        footer { padding: 22px 0 36px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+        @media (max-width: 620px) { header { padding-top: 34px; } .section-head { display: block; } .section-head p { margin-top: 8px; } figure { padding: 6px; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="wrap">
+            <p class="kicker">CoreFlow · proposta visual</p>
+            <h1>Fluxo em todas as telas</h1>
+            <p class="lede">Pranchas para revisar a direção visual das abas, práticas, programas, diálogos auxiliares, configurações e overlay das pílulas antes de avançar para a aplicação completa.</p>
+            <div class="callout"><strong>Como avaliar:</strong> aprove ou peça ajustes na hierarquia, organização, superfícies, contraste e tratamento visual. Os textos e números dentro das pranchas geradas são ilustrativos; use o inventário abaixo e o protótipo interativo aprovado para consultar os rótulos e fluxos reais. O conteúdo, os IDs, as metas, os protocolos, os dados, as rotas e a integração real com o Galaxy Watch seguem os valores e comportamentos atuais do CoreFlow.</div>
+            <div class="actions">
+                <a class="link-button" href="../prototipo-fluxo-completo-2026-11-12/index.html">Abrir protótipo interativo Fluxo aprovado</a>
+                <a class="link-button" href="#pilulas">Ir direto às pílulas · prioridade</a>
+            </div>
+        </div>
+    </header>
+    <nav class="wrap" aria-label="Seções do mockup">
+        <a href="#abas">Abas principais</a><a href="#praticas">Práticas</a><a href="#programas">Programas e sessões</a><a href="#configuracoes">Configurações</a><a href="#dialogos">Diálogos</a><a href="#pilulas">Pílulas flutuantes</a><a href="#inventario">Inventário completo</a>
+    </nav>
+    <main class="wrap">
+        <section id="abas">
+            <div class="section-head"><div><p class="kicker">01 · Navegação principal</p><h2>Hoje, Programas, Pausas, Evolução e Perfil</h2></div><p>Hoje mantém os cinco atalhos de prática em largura total e os ícones aprovados; a navegação conserva os cinco destinos.</p></div>
+            <figure><img src="pranchas/01-telas-principais.png" alt="Conceitos Fluxo para Hoje, Programas, Pausas, Evolução e Perfil"><figcaption>As telas representam as cinco áreas da navegação inferior.</figcaption></figure>
+            <ul class="tags"><li>House</li><li>ListChecks</li><li>PersonStanding</li><li>ChartLine</li><li>UserRound</li></ul>
+        </section>
+        <section id="praticas">
+            <div class="section-head"><div><p class="kicker">02 · Práticas</p><h2>Player, modo discreto e pausas</h2></div><p>Tratamento das práticas continua distinguindo configuração, instrução, execução e recuperação, sem alterar a sequência dos exercícios.</p></div>
+            <figure><img src="pranchas/02-praticas.png" alt="Conceitos Fluxo para Vácuo abdominal, Modo discreto, Pausas e Mindfulness"><figcaption>Vácuo abdominal, Modo discreto, Pausas e Mindfulness.</figcaption></figure>
+            <ul class="tags"><li>Wind · Vácuo abdominal</li><li>PersonStanding · Pausas</li><li>Activity · Kegel / Modo discreto</li><li>Brain · Mindfulness</li></ul>
+        </section>
+        <section id="programas">
+            <div class="section-head"><div><p class="kicker">03 · Programas e sessões</p><h2>Do catálogo à conclusão</h2></div><p>Cards e diálogos devem manter nomes, passos, tempos, metas diárias e regras dos protocolos configurados.</p></div>
+            <figure><img src="pranchas/03-programas-sessoes.png" alt="Conceitos Fluxo para programas, execução guiada, confirmação de cancelamento e conclusão"><figcaption>Os números apresentados nos timers são apenas exemplos visuais para discutir composição.</figcaption></figure>
+            <ul class="tags"><li>Bracing: Treino de 8 Semanas</li><li>Programa Kegel</li><li>Stomach Vacuum: 8 Semanas no Escritório</li><li>Sessão guiada</li><li>Detalhe do exercício</li><li>Interromper treino</li><li>Sessão concluída</li></ul>
+        </section>
+        <section id="configuracoes">
+            <div class="section-head"><div><p class="kicker">04 · Configurações e apoio</p><h2>Onboarding, acessibilidade, dados e Watch</h2></div><p>As telas auxiliares preservam opções e avisos já disponíveis, com foco em leitura, controles claros e uso local.</p></div>
+            <figure><img src="pranchas/04-configuracoes.png" alt="Conceitos Fluxo para onboarding, perfil, acessibilidade, lembretes, backup e treino flutuante"><figcaption>Configuração inicial, perfil, acessibilidade, lembretes, backup e modo flutuante.</figcaption></figure>
+            <ul class="tags"><li>Configuração inicial</li><li>Editar nome e meta</li><li>Acessibilidade</li><li>Lembretes dos programas</li><li>Backup local / importação</li><li>Galaxy Watch</li></ul>
+        </section>
+        <section id="pilulas">
+            <div class="section-head"><div><p class="kicker">05 · Área crítica</p><h2>Pílulas flutuantes do treino</h2></div><p>Esta prancha separa os estados mini, compacto, pausado e expandido e evidencia confirmação de cancelamento e saída segura da retenção.</p></div>
+            <figure class="priority"><img src="pranchas/05-pilulas-overlay.png" alt="Estados mini, compacto, pausado, expandido, confirmação de cancelamento e recuperação segura da pílula de treino"><figcaption>As pílulas continuam sobre outros apps; cada controle mantém área de toque, descrição acessível, retorno ao serviço e estado atual.</figcaption></figure>
+            <ul class="tags"><li>Mini · abrir controles</li><li>Compacta · pausar / cancelar</li><li>Pausada · continuar / cancelar</li><li>Expandida · pausar / pular / cancelar</li><li>Confirmação de cancelamento</li><li>Encerrar Retenção com Segurança</li><li>Recuperação segura</li></ul>
+        </section>
+        <section id="dialogos">
+            <div class="section-head"><div><p class="kicker">06 · Diálogos auxiliares</p><h2>Agendamento, lembretes e detalhes</h2></div><p>Referências visuais para diálogos secundários usados em agenda, registro, medição, conquistas e conexão com o relógio.</p></div>
+            <figure><img src="pranchas/06-dialogos-auxiliares.png" alt="Conceitos de diálogos para agenda semanal, nota da sessão, lembrete, medição de BPM, Galaxy Watch e detalhes de conquista"><figcaption>Seis exemplos de diálogos auxiliares. Estados de conexão, BPM, progresso e textos menores são ilustrativos.</figcaption></figure>
+            <ul class="tags"><li>Agenda da semana</li><li>Nota da sessão</li><li>Hora do seu Treino!</li><li>Medir BPM Pré-Sessão</li><li>Acompanhamento Galaxy Watch</li><li>Detalhes da conquista</li></ul>
+        </section>
+        <section id="inventario">
+            <div class="section-head"><div><p class="kicker">07 · Cobertura</p><h2>Inventário de telas e diálogos incluídos</h2></div><p>Este mapa é a referência para concluir o redesign sem perder caminhos existentes.</p></div>
+            <div class="catalog">
+                <article><h3>Abas principais</h3><p>Hoje; Programas; Pausas; Evolução; Perfil.</p></article>
+                <article><h3>Práticas e estados</h3><p>Vácuo: postura, série, timer, tutorial, resumo e saída segura. Modo discreto: resistência, velocidade e Bracing. Pausas: Corpo, Mente, circuito e pausa de resposta. Mindfulness: seleção, áudio, progresso e conclusão. Respiração guiada: SOS, Em Caixa, Expiração Longa, Igual e Personalizado, com ajuste de fases e conclusão.</p></article>
+                <article><h3>Programas e sessão diária</h3><p>Catálogo; detalhes de Bracing e Kegel; edição; exercícios da sequência; execução passo a passo; avançar, pausar, pular, cancelar; confirmação; conclusão; ajuste manual do progresso; lembretes por sessão.</p></article>
+                <article><h3>Evolução e conteúdo</h3><p>Períodos; resumo de tempo; gráfico semanal e mensal; agenda; sessões por dia; conquistas e detalhes; dica de saúde e reprodução de voz.</p></article>
+                <article><h3>Perfil e dados</h3><p>Editar nome/meta; lembretes dos programas; voz e vibração; tema AMOLED; acessibilidade; modo treino flutuante; Galaxy Watch; backup, importação e proteção do progresso.</p></article>
+                <article><h3>Diálogos auxiliares</h3><p>Onboarding em três passos; meta diária; editar programa; agenda; nota; medição de BPM; companion do smartwatch; lembrete interativo; tutorial e resumo do Vácuo; conclusão da respiração guiada.</p></article>
+                <article class="priority"><h3>Pílulas do treino · todas as transições</h3><p>Mini → compacto → expandido; pausa e retomada; próximo passo; cancelamento com confirmação; recolhimento automático; overlay sobre outro app; saída segura da retenção para recuperação.</p></article>
+            </div>
+            <p class="note">Os fluxos interativos já aprovados podem ser percorridos no <a href="../prototipo-fluxo-completo-2026-11-12/index.html">protótipo Fluxo completo</a>, incluindo os seletores das pílulas e o caminho de recuperação segura.</p>
+        </section>
+    </main>
+    <footer><div class="wrap">Mockup de aprovação · 12 nov 2026 · recursos visuais locais · sem alterações na interface de produção.</div></footer>
+</body>
+</html>

@@ -10,7 +10,7 @@ for (const file of [path.join(root, 'index.html'), path.join(root, 'app', 'src',
     const name = path.relative(root, file);
 
     const nav = html.match(/\.cf-bottom-nav \{[^}]*\}/)[0];
-    assert.match(nav, /background: rgb\(17, ?25, ?22\)/, `${name}: navegação inferior precisa ser opaca`);
+    assert.match(nav, /background:\s*#0c1710/i, `${name}: navegação inferior precisa ser opaca`);
 
     assert.match(html, /id="todayGreetingBlock"/, `${name}: bloco de saudação precisa de id`);
     const switchTab = html.slice(html.indexOf('function switchTab('), html.indexOf('function switchTab(') + 600);

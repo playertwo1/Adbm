@@ -24,7 +24,7 @@ for (const file of [path.join(root, 'index.html'), path.join(root, 'app', 'src',
     assert.equal((html.match(/<div class="flex flex-wrap items-center gap-2">\s*<h3 class="text-base font-bold text-white tracking-tight">/g) || []).length, 2,
         `${name}: título e selo de Corpo/Mente devem quebrar linha`);
 
-    assert.match(html, /<div class="flex flex-wrap items-center justify-between gap-3">\s*<div class="min-w-0">\s*<h2[^>]*>Sua evolução/, `${name}: título e seletor de período da Evolução devem quebrar linha`);
+    assert.match(html, /<div class="cf-fluxo-page-heading flex flex-wrap items-center justify-between gap-3">[\s\S]{0,700}<h2 id="evolution-heading">Evolução<\/h2>[\s\S]{0,700}id="evolutionPeriodSelect"/, `${name}: título e seletor de período da Evolução devem quebrar linha`);
 
     const days = html.slice(html.indexOf('<legend class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Dias</legend>'));
     assert.match(days.slice(0, 400), /<div class="mt-2 flex flex-wrap gap-1">/, `${name}: dias do trabalho devem quebrar linha`);

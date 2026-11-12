@@ -11,15 +11,13 @@ const launcherBackground = fs.readFileSync(path.join(root, 'app', 'src', 'main',
 const composeColors = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'java', 'com', 'example', 'ui', 'theme', 'Color.kt'), 'utf8');
 
 assert.equal(embedded, source, 'HTML raiz e asset embarcado precisam permanecer idênticos');
-assert.match(source, /--cf-color-canvas:\s*#0B110F/i);
-assert.match(source, /--cf-color-surface:\s*#111916/i);
-assert.match(source, /--cf-color-surface-raised:\s*#18231C/i);
-assert.match(source, /--cf-color-text-primary:/i);
-assert.match(source, /--cf-color-menta:/i);
-assert.match(source, /--cf-color-cyan:/i);
+assert.match(source, /--cf-color-canvas:\s*#0C1710/i);
+assert.match(source, /--cf-color-surface:\s*#14251A/i);
+assert.match(source, /--cf-color-surface-raised:\s*#14251A/i);
+assert.match(source, /--cf-color-text-primary:\s*#EFF5EF/i);
+assert.match(source, /--cf-color-menta:\s*#8BD3A8/i);
+assert.match(source, /--cf-color-cyan:\s*#A6B9A9/i);
 assert.match(source, /--cf-color-alert:/i);
-assert.match(source, /--cf-color-menta:\s*#B6D987/i);
-assert.match(source, /--cf-color-cyan:\s*#9CC4B3/i);
 for (const [name, value] of [['coreflow_canvas', '#FF0B110F'], ['coreflow_sage', '#FFB6D987'], ['coreflow_sea_glass', '#FF9CC4B3'], ['coreflow_on_surface', '#FFF3F5F0']]) {
     assert.match(nativeColors, new RegExp(`<color name="${name}">${value}</color>`, 'i'), `cor ausente ou divergente: ${name}`);
 }
@@ -43,7 +41,7 @@ for (const id of ['hoje', 'programas', 'pausas', 'dashboard', 'perfil']) {
     assert.match(source, new RegExp(`id="nav-btn-${id}"`), `navegação ausente: ${id}`);
     assert.match(source, new RegExp(`id="tab-${id}"`), `tela ausente: ${id}`);
 }
-for (const shortcut of ['Vácuo', 'Discreto', 'Mindfulness']) {
+for (const shortcut of ['Vácuo abdominal', 'Modo discreto', 'Mindfulness']) {
     assert.match(source, new RegExp(shortcut), `atalho ausente: ${shortcut}`);
 }
 assert.match(source, /min-height:\s*48px/);

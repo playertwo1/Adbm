@@ -10,6 +10,20 @@
 
 Evidências, referências iOS e limites desta rodada: registro de execução de 03/11/2026 em `docs/roadmap/execucao.md`.
 
+## Continuação do Fluxo aprovada em 12/11/2026
+
+- [x] Estender a direção visual aprovada às práticas, cards dinâmicos, diálogos, sessões e overlay nativa, preservando callbacks, dados, protocolos e integração com o Galaxy Watch.
+- [x] Conferir paridade dos HTMLs, regressões/verificações do projeto e apresentação visual em dispositivo disponível.
+
+## Redesign integral Fluxo e release 1.1.52 — 12/11/2026
+
+- [x] Consolidar o protótipo aprovado como referência para Hoje, Programas, Pausas, Evolução, Perfil, práticas, sessões, diálogos e pílulas.
+- [x] Aplicar a identidade Fluxo às telas WebView e à overlay Android, mantendo recursos locais, atribuição/licença PulsoIcon, callbacks, dados, IDs, armazenamento, protocolos e integração com Wear OS.
+- [x] Conferir o inventário de telas e o diff de produção; documentar limites do QA e preservar alterações locais que não fazem parte do release.
+- [x] Atualizar regressões, versão e notas para `1.1.52` (`versionCode 52`); executar `bash scripts/check.sh` e inspeção visual no emulador.
+- [ ] Produzir APKs assinados de app e Wear pelo workflow oficial, conferir versão/assinatura contra `v1.1.51` e publicar a release `v1.1.52` no GitHub.
+- [ ] Confirmar assets e URLs da release; devolver o workflow ao estado desativado anterior.
+
 ---
 
 ## Nova frente solicitada em 21/10/2026 — Pílulas e pausas de trabalho

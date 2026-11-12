@@ -10,7 +10,7 @@ for (const file of [path.join(root, 'index.html'), path.join(root, 'app', 'src',
     const html = fs.readFileSync(file, 'utf8');
     const name = path.relative(root, file);
 
-    assert.match(html, /<div class="flex flex-wrap items-center justify-between gap-2">\s*<div>\s*<h2 class="text-xl font-heading font-extrabold text-white tracking-tight">Programas de Evolução/, `${name}: cabeçalho da aba deve quebrar linha`);
+    assert.match(html, /<div class="cf-fluxo-page-heading flex flex-wrap items-end justify-between gap-3">\s*<div>\s*<p class="cf-fluxo-kicker">Seu percurso<\/p>\s*<h2 id="programs-heading">Programas<\/h2>/, `${name}: cabeçalho da aba deve quebrar linha`);
     assert.match(html, /<span class="text-xs bg-indigo-500\/15 border border-indigo-500\/30 text-indigo-400 font-bold px-2\.5 py-1 rounded-full flex items-center gap-1 whitespace-nowrap">/, `${name}: selo "2x ao dia" não pode quebrar`);
 
     assert.match(html, /<div class="relative z-10 space-y-3">\s*<div class="flex flex-wrap items-center justify-between gap-2">/, `${name}: linha do hero deve quebrar linha`);

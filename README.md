@@ -22,7 +22,7 @@ Práticas guiadas para desenvolver força física, postura, respiração e aten�
 
 - [Recursos principais](#recursos-principais)
 - [Versão atual](#versão-atual)
-- [O que mudou na 1.1.51](#o-que-mudou-na-1151)
+- [O que mudou na 1.1.52](#o-que-mudou-na-1152)
 - [Instalar no Android](#instalar-no-android)
 - [Instalar no Samsung Galaxy Watch](#instalar-no-samsung-galaxy-watch)
 - [Requisitos de desenvolvimento](#requisitos-de-desenvolvimento)
@@ -47,13 +47,21 @@ Práticas guiadas para desenvolver força física, postura, respiração e aten�
 
 ## Versão Atual
 
-- **Versão atual:** `1.1.51` (`versionCode 51`)
-- **Release:** identidade visual premium unificada nas telas Android, no overlay, no player e no módulo Wear. Veja [o que mudou na 1.1.51](docs/releases/v1.1.51.md).
-- **Validação:** `bash scripts/check.sh` passou e as telas principais foram conferidas no emulador Android API 36. Aparelho físico, TalkBack, escala de fonte 200% nesta direção visual e Wear físico: `NOT_RUN`.
+- **Versão atual:** `1.1.52` (`versionCode 52`)
+- **Release:** direção Fluxo aprovada aplicada às práticas, sessões, diálogos e overlay flutuante. Veja [o que mudou na 1.1.52](docs/releases/v1.1.52.md).
+- **Validação:** `bash scripts/check.sh` passou; as telas principais, a configuração do Vácuo e o editor do Perfil foram conferidos no emulador Android API 36. Inspeção da pílula durante uma sessão ativa, aparelho físico, TalkBack, escala de fonte 200% e Wear físico: `NOT_RUN`.
 - **Downloads:** baixe os APKs assinados de celular e Wear OS na aba de [Releases](https://github.com/playertwo1/Adbm/releases/latest).
 - **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.
 
 ---
+
+## O que mudou na 1.1.52
+
+- Hoje usa atalhos de prática PulsoIcon em largura total; as cinco abas mantêm destinos e navegação existentes.
+- A direção Fluxo se estende a cards de programas e evolução, práticas, formulários, diálogos, mensagens dinâmicas e estados de sessão.
+- A overlay flutuante Android usa a paleta Fluxo para os estados mini, compacto, pausado, expandido, confirmação de cancelamento e saída segura do Vácuo.
+- IDs, armazenamento, histórico, exercícios, protocolos de treino, timers e integração com Galaxy Watch foram preservados.
+- Referências aprovadas, atribuição/licença PulsoIcon e evidências: [registro de execução](docs/roadmap/execucao.md).
 
 ## O que mudou na 1.1.51
 
@@ -182,8 +190,8 @@ $env:KEYSTORE_PATH = "caminho/para/coreflow-upload.jks"
 $env:KEYSTORE_PASSWORD = "sua_senha_keystore"
 $env:KEY_ALIAS = "seu_alias"
 $env:KEY_PASSWORD = "sua_senha_chave"
-$env:BUILD_VERSION_CODE = "51"
-$env:BUILD_VERSION_NAME = "1.1.51"
+$env:BUILD_VERSION_CODE = "52"
+$env:BUILD_VERSION_NAME = "1.1.52"
 
 .\gradlew.bat :app:assembleRelease :wear:assembleRelease
 ```

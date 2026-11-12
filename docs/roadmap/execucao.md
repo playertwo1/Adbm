@@ -1464,3 +1464,35 @@ Próximo passo:
 - `wear-release.apk`: 6.645.307 bytes; SHA-256 `bbb740decedbd4bcf2ab79ac0ed1a78d8031a5b15a1ec99c3c0fef09d4adc8d15`.
 - Verificação após download: ambos com package `com.aistudio.coreflow.vdfpkw`, versionCode `51`, versionName `1.1.51`, assinatura APK v2 válida e certificado SHA-256 `56052883ad4841ab226e4c41dc573d7c9862f89519c8ff74c74979443fb2d4dd`; igual à versão `1.1.50` conferida pelo workflow antes da publicação.
 - GitHub Actions e o workflow de release foram reativados somente para a publicação e voltaram ao estado desativado original após concluir.
+
+## 2026-11-11 — Skill UI/UX Pro Max adicionada ao projeto
+
+- Instalada para Codex em `.agents/skills/ui-ux-pro-max` via `ui-ux-pro-max-cli` 2.15.0; inclui `SKILL.md`, scripts de busca e catálogos locais.
+- Consulta de sistema visual para CoreFlow executada com Python 3.12.10. O guia do projeto orienta adaptar resultados à WebView HTML/CSS/JS, à direção visual atual e à política de recursos locais.
+- Origem e versão registradas em `UPSTREAM.md`; licença MIT incluída. Nenhuma tela ou comportamento do app foi alterado.
+
+## 2026-11-12 — Direção Fluxo aplicada à WebView
+
+- Comparado o protótipo Fluxo aprovado com `index.html` e o asset empacotado. Aplicados os tokens escuros de floresta/sálvia, hierarquia de títulos, superfícies planas e títulos de contexto nas telas Hoje, Vácuo, Modo discreto, Pausas, Programas, Evolução e Perfil.
+- Hoje ganhou cinco atalhos em largura total, com SVGs PulsoIcon estáticos: Wind, PersonStanding, Activity (Kegel e Modo discreto) e Brain. A navegação mantém os cinco destinos e IDs existentes, usa House, ListChecks, PersonStanding, ChartLine e UserRound e indica a tela ativa sem animação.
+- Preservados os callbacks existentes, textos funcionais, IDs, dados e integrações. Liberado o zoom do viewport. A licença integral do PulsoIcon foi incluída nos assets do app e registrada em `THIRD_PARTY_NOTICES.md`.
+- Regressões: `diagnostics/fluxo-home-navigation.test.cjs` cobre ícones, largura, callbacks, navegação, zoom, recursos locais, atribuição e licença. Expectativas antigas da paleta e da estrutura de títulos foram alinhadas em E05, E14, E17, E20 e E22.
+- Verificação: `bash scripts/check.sh` — `CHECK PASS`; diagnósticos e paridade HTML passaram, assim como `:app:testDebugUnitTest`, `:app:assembleDebug` e `:wear:assembleDebug`. `git diff --check` passou; os dois HTMLs são idênticos.
+- QA visual no emulador Android `Medium_Phone` (1080×2400): onboarding, Hoje, atalhos, Vácuo, Programas, Pausas, Evolução e Perfil exibidos; navegação inferior e abertura do atalho Vácuo conferidas. Nenhuma sessão de treino foi iniciada.
+- NOT_RUN: aparelho físico, TalkBack, texto do sistema a 200% e relógio Wear OS. O Gradle reportou ausência de `google-services.json` no source set debug, mas os testes e builds concluíram com sucesso.
+
+## 2026-11-12 — Mockup de aprovação Fluxo para todas as áreas
+
+- Criada a galeria local `docs/design/mockup-aprovacao-fluxo-todas-telas-2026-11-12/index.html`, com inventário das abas, práticas, programas, diálogos, configurações, dados, Galaxy Watch e estados de treino.
+- Incluídas seis pranchas PNG para telas principais, práticas, programas/sessões, configurações, diálogos auxiliares e, em destaque, pílulas mini, compacta, pausada e expandida, confirmação de cancelamento e recuperação segura do Vácuo.
+- As pranchas indicam que timers, BPM, conexão, progresso e microtextos pequenos são ilustrativos; a galeria identifica o protótipo interativo aprovado e registra que a revisão é visual, preservando conteúdo e comportamento do app.
+- Nenhuma interface de produção, protocolo, dado ou integração foi alterada nesta etapa de aprovação.
+
+## 2026-11-12 — Continuação da direção Fluxo em produção
+
+- Aplicada a direção aprovada aos cards de programas e evolução, estados de sessão, diálogos, formulários e mensagens dinâmicas da WebView; mantidos os atalhos de sessão rápida existentes. `index.html` e `app/src/main/assets/index.html` permaneceram idênticos.
+- Aplicada a paleta Fluxo à overlay flutuante nativa: superfícies escuras planas, ações primárias sálvia, pausas e recuperações diferenciadas, confirmação de cancelamento em superfície de perigo e texto de timer com contraste. Preservados dimensões/handlers dos controles, serviço como fonte de estado, timers, encerramento seguro e protocolo do Galaxy Watch.
+- Atualizadas as expectativas de cor em `WorkoutOverlayTest`; contraste mínimo do timer, cores distinguíveis por prática e ações do overlay são cobertos pelos testes existentes.
+- Verificação completa em 12/11/2026: `bash scripts/check.sh` — `CHECK PASS`; diagnósticos, paridade HTML, `:app:testDebugUnitTest`, `:app:assembleDebug` e `:wear:assembleDebug` passaram. `git diff --check` passou.
+- QA no emulador Android `sdk_gphone64_x86_64` (API 36, 1080×2400): instalado o APK com `adb install -r` (sem limpar dados); conferidas Hoje e seus atalhos em largura total, Programas, Pausas, Evolução, Perfil, tela de configuração do Vácuo, navegação inferior e diálogo de edição do Perfil. Nenhuma sessão de treino foi iniciada; a overlay nativa em execução não foi fotografada.
+- NOT_RUN: inspeção visual da overlay durante sessão ativa, aparelho físico, TalkBack e relógio Wear OS. A inspeção independente pedida por `AGENTS.md` também não foi executada: não havia ferramenta de revisão/delegação independente disponível nesta sessão.

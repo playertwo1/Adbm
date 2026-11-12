@@ -37,6 +37,29 @@ import org.json.JSONObject
 import java.io.InputStream
 import kotlin.math.hypot
 
+private object FluxoOverlayPalette {
+    val surface = Color.parseColor("#101B14")
+    val surfaceRaised = Color.parseColor("#14251A")
+    val surfaceInteractive = Color.parseColor("#1A3020")
+    val line = Color.parseColor("#2B4433")
+    val lineStrong = Color.parseColor("#536258")
+    val textPrimary = Color.parseColor("#EFF5EF")
+    val textSecondary = Color.parseColor("#A6B9A9")
+    val textMuted = Color.parseColor("#829486")
+    val textSubtle = Color.parseColor("#D0D8D0")
+    val accent = Color.parseColor("#8BD3A8")
+    val accentBright = Color.parseColor("#BDE6C9")
+    val kegelAccent = Color.parseColor("#BDE6C9")
+    val breathAccent = Color.parseColor("#A8C9AF")
+    val accentInk = Color.parseColor("#0B1910")
+    val warning = Color.parseColor("#D9BC82")
+    val warningSurface = Color.parseColor("#2D291D")
+    val danger = Color.parseColor("#E78D90")
+    val dangerBright = Color.parseColor("#EAA4A5")
+    val dangerSurface = Color.parseColor("#211416")
+    val dangerButton = Color.parseColor("#762D35")
+}
+
 /**
  * Controlador da Sobreposição Flutuante (Modo Treino Flutuante) do CoreFlow.
  *
@@ -578,7 +601,7 @@ object WorkoutOverlayController {
             button.text = "Pausar"
             button.contentDescription = "Pausar treino"
         }
-        button.background = createPillDrawable(Color.parseColor("#B6D987"), Color.parseColor("#B6D987"), 0)
+        button.background = createPillDrawable(FluxoOverlayPalette.accent, FluxoOverlayPalette.accent, 0)
     }
 
     private fun toggleWorkoutPause(context: Context) {
@@ -632,7 +655,7 @@ object WorkoutOverlayController {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(dpToPx(context, 6), dpToPx(context, 4), dpToPx(context, 10), dpToPx(context, 4))
-            background = createPillDrawable(Color.parseColor("#111916"), Color.parseColor("#B6D987"), 1)
+            background = createPillDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.accent, 1)
             contentDescription = "Treino ativo flutuante, modo mini. Toque em Abrir para ver os controles."
         }
 
@@ -640,21 +663,21 @@ object WorkoutOverlayController {
             text = "◉"
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.parseColor("#B6D987"))
+            setTextColor(FluxoOverlayPalette.accent)
             setPadding(0, 0, dpToPx(context, 6), 0)
         }
         miniTimerText = TextView(context).apply {
             text = "00:00"
             textSize = 13f
             typeface = Typeface.MONOSPACE
-            setTextColor(Color.WHITE)
+            setTextColor(FluxoOverlayPalette.textPrimary)
         }
 
         miniActionText = TextView(context).apply {
             text = "TREINO"
             textSize = 9f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.WHITE)
+            setTextColor(FluxoOverlayPalette.textPrimary)
             maxLines = 1
             ellipsize = TextUtils.TruncateAt.END
             setPadding(0, 0, dpToPx(context, 8), 0)
@@ -663,7 +686,7 @@ object WorkoutOverlayController {
             text = "Abrir"
             textSize = 10f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.parseColor("#C8E6A0"))
+            setTextColor(FluxoOverlayPalette.accentBright)
             contentDescription = "Abrir controles do treino"
             minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER_VERTICAL
@@ -689,7 +712,7 @@ object WorkoutOverlayController {
                 .coerceAtLeast(dpToPx(context, 280))
             layoutParams = FrameLayout.LayoutParams(minOf(dpToPx(context, 360), availableWidth), FrameLayout.LayoutParams.WRAP_CONTENT)
             setPadding(dpToPx(context, 8), dpToPx(context, 6), dpToPx(context, 8), dpToPx(context, 6))
-            background = createPillDrawable(Color.parseColor("#111916"), Color.parseColor("#26342A"), 1)
+            background = createPillDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.line, 1)
             contentDescription = "Treino ativo flutuante, modo compacto. Toque para alternar tamanho."
         }
 
@@ -697,7 +720,7 @@ object WorkoutOverlayController {
             text = "◉"
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.parseColor("#B6D987"))
+            setTextColor(FluxoOverlayPalette.accent)
             setPadding(dpToPx(context, 2), 0, dpToPx(context, 6), 0)
         }
 
@@ -711,14 +734,14 @@ object WorkoutOverlayController {
             text = "TREINO"
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.WHITE)
+            setTextColor(FluxoOverlayPalette.textPrimary)
             maxLines = 2
             ellipsize = TextUtils.TruncateAt.END
         }
         compactProgramText = TextView(context).apply {
             text = "CoreFlow"
             textSize = 9f
-            setTextColor(Color.parseColor("#AAB7AC"))
+            setTextColor(FluxoOverlayPalette.textSecondary)
         }
         textCol.addView(compactActionText)
         textCol.addView(compactProgramText)
@@ -728,7 +751,7 @@ object WorkoutOverlayController {
             textSize = 20f
             typeface = Typeface.MONOSPACE
             gravity = Gravity.CENTER
-            setTextColor(Color.parseColor("#C8E6A0"))
+            setTextColor(FluxoOverlayPalette.accentBright)
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 marginStart = dpToPx(context, 4)
                 marginEnd = dpToPx(context, 12)
@@ -739,10 +762,10 @@ object WorkoutOverlayController {
             text = "Pausar"
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.parseColor("#052E24"))
+            setTextColor(FluxoOverlayPalette.accentInk)
             gravity = Gravity.CENTER
             setPadding(dpToPx(context, 8), 0, dpToPx(context, 8), 0)
-            background = createPillDrawable(Color.parseColor("#B6D987"), Color.parseColor("#B6D987"), 0)
+            background = createPillDrawable(FluxoOverlayPalette.accent, FluxoOverlayPalette.accent, 0)
             contentDescription = "Pausar treino"
             layoutParams = LinearLayout.LayoutParams(dpToPx(context, 80), dpToPx(context, 48)).apply {
                 marginEnd = dpToPx(context, 8)
@@ -754,10 +777,10 @@ object WorkoutOverlayController {
             text = "Cancelar"
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.parseColor("#EAA4A5"))
+            setTextColor(FluxoOverlayPalette.dangerBright)
             gravity = Gravity.CENTER
             setPadding(dpToPx(context, 8), 0, dpToPx(context, 8), 0)
-            background = createPillDrawable(Color.parseColor("#21151A"), Color.parseColor("#A65469"), 1)
+            background = createPillDrawable(FluxoOverlayPalette.dangerSurface, FluxoOverlayPalette.danger, 1)
             contentDescription = "Cancelar treino"
             layoutParams = LinearLayout.LayoutParams(dpToPx(context, 80), dpToPx(context, 48))
             setOnClickListener { openCancelConfirmation(context) }
@@ -777,7 +800,7 @@ object WorkoutOverlayController {
             orientation = LinearLayout.VERTICAL
             layoutParams = FrameLayout.LayoutParams(widthPx, FrameLayout.LayoutParams.WRAP_CONTENT)
             setPadding(dpToPx(context, 14), dpToPx(context, 12), dpToPx(context, 14), dpToPx(context, 12))
-            background = createCardDrawable(Color.parseColor("#111916"), Color.parseColor("#26342A"), dpToPx(context, 20).toFloat())
+            background = createCardDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.line, dpToPx(context, 12).toFloat())
         }
 
         // Header: Ícone + Título do Programa + Botão recolher
@@ -793,12 +816,12 @@ object WorkoutOverlayController {
             text = "VÁCUO ABDOMINAL"
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.WHITE)
+            setTextColor(FluxoOverlayPalette.textPrimary)
         }
         expandedPhaseSubtitle = TextView(context).apply {
             text = "Semana 1 · Série 1/3"
             textSize = 10f
-            setTextColor(Color.parseColor("#AAB7AC"))
+            setTextColor(FluxoOverlayPalette.textSecondary)
         }
         headerTexts.addView(expandedProgramTitle)
         headerTexts.addView(expandedPhaseSubtitle)
@@ -807,7 +830,7 @@ object WorkoutOverlayController {
             text = "Recolher"
             textSize = 10f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.parseColor("#AAB7AC"))
+            setTextColor(FluxoOverlayPalette.textSecondary)
             contentDescription = "Recolher modo expandido"
             minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER_VERTICAL
@@ -827,7 +850,7 @@ object WorkoutOverlayController {
                 topMargin = dpToPx(context, 8)
                 bottomMargin = dpToPx(context, 8)
             }
-            setBackgroundColor(Color.parseColor("#26342A"))
+            setBackgroundColor(FluxoOverlayPalette.line)
         }
         expandedContainer?.addView(divider)
 
@@ -850,7 +873,7 @@ object WorkoutOverlayController {
             text = "RETENÇÃO"
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.parseColor("#B6D987"))
+            setTextColor(FluxoOverlayPalette.accent)
             gravity = Gravity.CENTER
             setPadding(0, dpToPx(context, 2), 0, dpToPx(context, 2))
         }
@@ -860,7 +883,7 @@ object WorkoutOverlayController {
             text = "00:14"
             textSize = 28f
             typeface = Typeface.MONOSPACE
-            setTextColor(Color.WHITE)
+            setTextColor(FluxoOverlayPalette.textPrimary)
             gravity = Gravity.CENTER
         }
         expandedContainer?.addView(expandedTimerText)
@@ -868,7 +891,7 @@ object WorkoutOverlayController {
         expandedTotalTimeText = TextView(context).apply {
             text = "de 30s"
             textSize = 10f
-            setTextColor(Color.parseColor("#909B90"))
+            setTextColor(FluxoOverlayPalette.textMuted)
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, dpToPx(context, 6))
         }
@@ -882,7 +905,7 @@ object WorkoutOverlayController {
             ).apply {
                 topMargin = dpToPx(context, 2)
             }
-            background = createCardDrawable(Color.parseColor("#0B110F"), Color.parseColor("#26342A"), dpToPx(context, 12).toFloat())
+            background = createCardDrawable(FluxoOverlayPalette.accentInk, FluxoOverlayPalette.line, dpToPx(context, 12).toFloat())
             clipToOutline = true
             visibility = View.GONE
         }
@@ -905,7 +928,7 @@ object WorkoutOverlayController {
             textSize = 12f
             gravity = Gravity.CENTER
             setPadding(dpToPx(context, 16), dpToPx(context, 8), dpToPx(context, 16), dpToPx(context, 8))
-            setTextColor(Color.parseColor("#D0D8D0"))
+            setTextColor(FluxoOverlayPalette.textSubtle)
             contentDescription = "Orientação visual indisponível. Siga a instrução do exercício."
             visibility = View.GONE
         }
@@ -918,7 +941,7 @@ object WorkoutOverlayController {
             textSize = 10f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setTextColor(Color.parseColor("#DDEBCF"))
+            setTextColor(FluxoOverlayPalette.accentBright)
             contentDescription = "Fase do alongamento"
             visibility = View.GONE
         }
@@ -942,7 +965,7 @@ object WorkoutOverlayController {
                     if (index < 3) marginEnd = dpToPx(context, 4)
                 }
                 background = createCardDrawable(
-                    if (index == 0) Color.parseColor("#B6D987") else Color.parseColor("#334155"),
+                    if (index == 0) FluxoOverlayPalette.accent else FluxoOverlayPalette.lineStrong,
                     Color.TRANSPARENT,
                     dpToPx(context, 4).toFloat()
                 )
@@ -956,7 +979,7 @@ object WorkoutOverlayController {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(dpToPx(context, 10), dpToPx(context, 6), dpToPx(context, 10), dpToPx(context, 6))
-            background = createCardDrawable(Color.parseColor("#18231C"), Color.parseColor("#26342A"), dpToPx(context, 10).toFloat())
+            background = createCardDrawable(FluxoOverlayPalette.surfaceRaised, FluxoOverlayPalette.line, dpToPx(context, 6).toFloat())
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 bottomMargin = dpToPx(context, 10)
             }
@@ -964,7 +987,7 @@ object WorkoutOverlayController {
         expandedNextStepLabel = TextView(context).apply {
             text = "Próximo: Recuperação · 60s"
             textSize = 10f
-            setTextColor(Color.parseColor("#AAB7AC"))
+            setTextColor(FluxoOverlayPalette.textSecondary)
         }
         expandedNextStepCard?.addView(expandedNextStepLabel)
         expandedContainer?.addView(expandedNextStepCard)
@@ -979,11 +1002,11 @@ object WorkoutOverlayController {
             text = "Pausar"
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.parseColor("#0B110F"))
+            setTextColor(FluxoOverlayPalette.accentInk)
             contentDescription = "Pausar ou continuar treino"
             minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER
-            background = createPillDrawable(Color.parseColor("#B6D987"), Color.parseColor("#B6D987"), 0)
+            background = createPillDrawable(FluxoOverlayPalette.accent, FluxoOverlayPalette.accent, 0)
             setPadding(dpToPx(context, 12), dpToPx(context, 8), dpToPx(context, 12), dpToPx(context, 8))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             setOnClickListener {
@@ -998,11 +1021,11 @@ object WorkoutOverlayController {
             text = "Pular"
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.WHITE)
+            setTextColor(FluxoOverlayPalette.textPrimary)
             contentDescription = "Pular para o próximo passo"
             minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER
-            background = createPillDrawable(Color.parseColor("#26342A"), Color.parseColor("#334155"), 1)
+            background = createPillDrawable(FluxoOverlayPalette.surfaceInteractive, FluxoOverlayPalette.lineStrong, 1)
             setPadding(dpToPx(context, 12), dpToPx(context, 8), dpToPx(context, 12), dpToPx(context, 8))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
                 leftMargin = dpToPx(context, 4)
@@ -1017,11 +1040,11 @@ object WorkoutOverlayController {
             text = "Cancelar"
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.parseColor("#EAA4A5"))
+            setTextColor(FluxoOverlayPalette.dangerBright)
             contentDescription = "Cancelar treino"
             minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER
-            background = createPillDrawable(Color.parseColor("#351C20"), Color.parseColor("#E78D90"), 1)
+            background = createPillDrawable(FluxoOverlayPalette.dangerSurface, FluxoOverlayPalette.danger, 1)
             setPadding(dpToPx(context, 12), dpToPx(context, 8), dpToPx(context, 12), dpToPx(context, 8))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
                 leftMargin = dpToPx(context, 4)
@@ -1039,11 +1062,11 @@ object WorkoutOverlayController {
             text = "Encerrar Retenção com Segurança"
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.parseColor("#D9BC82"))
+            setTextColor(FluxoOverlayPalette.warning)
             contentDescription = "Encerrar retenção de vácuo com segurança e iniciar recuperação"
             minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER
-            background = createCardDrawable(Color.parseColor("#2D291D"), Color.parseColor("#D9BC82"), dpToPx(context, 8).toFloat())
+            background = createCardDrawable(FluxoOverlayPalette.warningSurface, FluxoOverlayPalette.warning, dpToPx(context, 4).toFloat())
             setPadding(dpToPx(context, 8), dpToPx(context, 6), dpToPx(context, 8), dpToPx(context, 6))
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 topMargin = dpToPx(context, 8)
@@ -1073,8 +1096,7 @@ object WorkoutOverlayController {
             orientation = LinearLayout.VERTICAL
             layoutParams = FrameLayout.LayoutParams(dpToPx(context, 320), FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER)
             setPadding(dpToPx(context, 16), dpToPx(context, 16), dpToPx(context, 16), dpToPx(context, 14))
-            background = createCardDrawable(Color.parseColor("#111916"), Color.parseColor("#E78D90"), dpToPx(context, 18).toFloat())
-            elevation = dpToPx(context, 12).toFloat()
+            background = createCardDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.danger, dpToPx(context, 12).toFloat())
             contentDescription = "Confirmação de cancelamento"
             visibility = View.GONE
         }
@@ -1083,12 +1105,12 @@ object WorkoutOverlayController {
             text = "Cancelar treino?"
             textSize = 16f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.WHITE)
+            setTextColor(FluxoOverlayPalette.textPrimary)
         }
         val explanation = TextView(context).apply {
             text = "A sessão será encerrada sem ser marcada como concluída. O histórico anterior será mantido."
             textSize = 12f
-            setTextColor(Color.parseColor("#D0D8D0"))
+            setTextColor(FluxoOverlayPalette.textSubtle)
             setPadding(0, dpToPx(context, 8), 0, dpToPx(context, 14))
         }
         val actions = LinearLayout(context).apply {
@@ -1099,10 +1121,10 @@ object WorkoutOverlayController {
             text = "Continuar treino"
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.WHITE)
+            setTextColor(FluxoOverlayPalette.textPrimary)
             gravity = Gravity.CENTER
             minHeight = dpToPx(context, 48)
-            background = createPillDrawable(Color.parseColor("#26342A"), Color.parseColor("#536258"), 1)
+            background = createPillDrawable(FluxoOverlayPalette.surfaceInteractive, FluxoOverlayPalette.lineStrong, 1)
             contentDescription = "Continuar treino"
             setPadding(dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
@@ -1114,10 +1136,10 @@ object WorkoutOverlayController {
             text = "Cancelar sessão"
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(Color.WHITE)
+            setTextColor(FluxoOverlayPalette.textPrimary)
             gravity = Gravity.CENTER
             minHeight = dpToPx(context, 48)
-            background = createPillDrawable(Color.parseColor("#762D35"), Color.parseColor("#E78D90"), 1)
+            background = createPillDrawable(FluxoOverlayPalette.dangerButton, FluxoOverlayPalette.danger, 1)
             contentDescription = "Confirmar cancelamento da sessão"
             setPadding(dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
@@ -1182,13 +1204,13 @@ object WorkoutOverlayController {
         // 1. Atualizar MINI
         miniTimerText?.text = timeStr
         miniIconBadge?.setTextColor(accentColor)
-        miniContainer?.background = createPillDrawable(Color.parseColor("#111916"), accentColor, 1)
+        miniContainer?.background = createPillDrawable(FluxoOverlayPalette.surface, accentColor, 1)
         miniActionText?.text = actionLabel
         miniContainer?.contentDescription = "$programTitle, $actionLabel, restante $timeStr. Toque em Abrir para ver os controles."
 
         // 2. Atualizar COMPACTO
         compactTimerText?.text = timeStr
-        compactTimerText?.setTextColor(Color.parseColor("#C8E6A0"))
+        compactTimerText?.setTextColor(FluxoOverlayPalette.accentBright)
         compactIconBadge?.setTextColor(accentColor)
         compactActionText?.text = actionLabel
         val seriesText = if (series > 0) " · Série $series" else ""
@@ -1287,7 +1309,7 @@ object WorkoutOverlayController {
                 val track = expandedExercisePhaseTrack
                 if (track?.tag != cue.phaseIndex) {
                     for (index in 0 until (track?.childCount ?: 0)) {
-                        val color = if (index == cue.phaseIndex) Color.parseColor("#B6D987") else Color.parseColor("#334155")
+                        val color = if (index == cue.phaseIndex) FluxoOverlayPalette.accent else FluxoOverlayPalette.lineStrong
                         track?.getChildAt(index)?.background = createCardDrawable(color, Color.TRANSPARENT, dpToPx(context, 4).toFloat())
                     }
                     track?.tag = cue.phaseIndex
@@ -1348,12 +1370,12 @@ object WorkoutOverlayController {
 
     fun resolveThemeColor(programTitle: String, phase: String, isRest: Boolean = false): Int {
         return when {
-            phase == "vacuo" -> Color.parseColor("#B6D987") // Sálvia
-            isRest || phase == "recuperacao" -> Color.parseColor("#A4B9BB") // Repouso
-            programTitle.contains("Kegel", ignoreCase = true) -> Color.parseColor("#B6A1C1") // Malva
-            programTitle.contains("Bracing", ignoreCase = true) -> Color.parseColor("#D9BC82") // Areia
-            programTitle.contains("Respiração", ignoreCase = true) -> Color.parseColor("#95C0B4") // Ar
-            else -> Color.parseColor("#B6D987")
+            phase == "vacuo" -> FluxoOverlayPalette.accent // Sálvia
+            isRest || phase == "recuperacao" -> FluxoOverlayPalette.textSecondary // Repouso
+            programTitle.contains("Kegel", ignoreCase = true) -> FluxoOverlayPalette.kegelAccent
+            programTitle.contains("Bracing", ignoreCase = true) -> FluxoOverlayPalette.warning
+            programTitle.contains("Respiração", ignoreCase = true) -> FluxoOverlayPalette.breathAccent
+            else -> FluxoOverlayPalette.accent
         }
     }
 
@@ -1396,7 +1418,7 @@ class BreathVisualView(context: Context) : View(context) {
     private val trackPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 6f
-        color = Color.parseColor("#26342A")
+        color = FluxoOverlayPalette.line
         strokeCap = Paint.Cap.ROUND
     }
     private val activePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -1413,7 +1435,7 @@ class BreathVisualView(context: Context) : View(context) {
     }
     private val dotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = Color.parseColor("#334155")
+        color = FluxoOverlayPalette.lineStrong
     }
 
     var isBoxPattern: Boolean = true
@@ -1421,7 +1443,7 @@ class BreathVisualView(context: Context) : View(context) {
     var phaseDuration: Int = 4
     var phaseLabel: String = "INSPIRE"
     var phaseIndex: Int = 0
-    var accentColor: Int = Color.parseColor("#B6D987")
+    var accentColor: Int = FluxoOverlayPalette.accent
     var phaseKey: String = "inspire"
     private var motionProgress: Float = 0f
     private var motionAnimator: ValueAnimator? = null
@@ -1609,7 +1631,7 @@ class BreathVisualView(context: Context) : View(context) {
         textPaint.typeface = Typeface.DEFAULT_BOLD
         canvas.drawText(phaseLabel.uppercase(), cx, cy - dpToPx(4).toFloat(), textPaint)
 
-        textPaint.color = Color.WHITE
+        textPaint.color = FluxoOverlayPalette.textPrimary
         textPaint.textSize = spToPx(26).toFloat()
         textPaint.typeface = Typeface.MONOSPACE
         val secStr = "%02d".format(stepTimeLeft)
