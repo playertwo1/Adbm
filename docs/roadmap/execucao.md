@@ -1583,7 +1583,7 @@ Próximo passo:
 
 ## 2026-11-14 — Release CoreFlow 1.1.53
 
-- Extraída somente a keystore do backup fornecido e guardada em `C:\Users\notefael\keys\CoreFlow\coreflow-upload.jks`, com acesso restrito à conta local. Os arquivos temporários com credenciais foram removidos; nenhuma chave ou senha entrou no commit ou nos assets do GitHub.
+- Extraída somente a keystore do backup fornecido e guardada fora do repositório, em `keys/CoreFlow/coreflow-upload.jks`, com acesso restrito à conta local. O arquivo textual de recuperação foi removido; nenhuma chave ou senha entrou no commit ou nos assets do GitHub.
 - A impressão digital da keystore confere com o app 1.1.52 instalado e com os APKs de app e Wear da release 1.1.52.
 - `:app:assembleRelease` e `:wear:assembleRelease` passaram. `apksigner` e `aapt` confirmaram assinatura, pacote e versão 1.1.53 (`versionCode 53`) nos dois APKs.
 - Instalado `app-release.apk` no Galaxy S25 Ultra via `adb install -r`; `dumpsys` confirmou a versão 1.1.53 e `MainActivity` ficou em primeiro plano. Os dados do app foram preservados.
