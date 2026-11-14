@@ -28,8 +28,8 @@ for (const htmlPath of htmlPaths) {
   const html = readHtml(htmlPath);
   const relativePath = path.relative(root, htmlPath);
   assert.match(html, /id="nav-btn-hoje"[\s\S]*?aria-current="page"/, `${relativePath} must expose Hoje as the home destination`);
-  assert.match(html, /id="voiceToggleBtn"[^>]*aria-label="[^"]+"[^>]*aria-pressed=/, `${relativePath} voice toggle needs an accessible name and state`);
-  assert.match(html, /id="hapticToggleBtn"[^>]*aria-label="[^"]+"[^>]*aria-pressed=/, `${relativePath} haptic toggle needs an accessible name and state`);
+  assert.match(html, /onclick="toggleVoice\(\)" aria-label="Alternar condução por voz"[\s\S]{0,240}id="profileVoiceToggle"[^>]*role="switch"[^>]*aria-checked=/, `${relativePath} voice preference must remain accessible in Profile`);
+  assert.match(html, /onclick="toggleHaptics\(\)" aria-label="Alternar vibração do aparelho"[\s\S]{0,240}id="profileHapticsToggle"[^>]*role="switch"[^>]*aria-checked=/, `${relativePath} haptics preference must remain accessible in Profile`);
   assert.match(html, /function ensureAccessibleButtonNames\(\)/, `${relativePath} must guard dynamically rendered buttons`);
   assert.match(html, /ensureAccessibleButtonNames\(\);/, `${relativePath} must run the accessible-name guard after rendering`);
   for (const component of ['cf-icon', 'cf-selector', 'cf-modal', 'cf-error']) {

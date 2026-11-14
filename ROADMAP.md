@@ -24,7 +24,41 @@ Evidências, referências iOS e limites desta rodada: registro de execução de 
 - [x] Produzir APKs assinados de app e Wear pelo workflow oficial, conferir versão/assinatura contra `v1.1.51` e publicar a release `v1.1.52` no GitHub.
 - [x] Confirmar assets e URLs da release; devolver o workflow ao estado desativado anterior.
 
+## Ajuste incremental de animações e controles — 13/11/2026
+
+- [x] Animar a troca real entre telas em 180 ms e respeitar movimento reduzido no app e no Android; não repetir a animação ao selecionar a tela atual.
+- [x] Animar mudanças de estado da overlay nativa em 180 ms, respeitando a preferência de movimento reduzido e a escala de animação do sistema.
+- [x] Refinar botões secundários, ação principal e atalhos para melhorar proporção, hierarquia e feedback ao toque, preservando destinos e ações existentes.
+- [x] Atualizar regressões; todos os 80 diagnósticos, testes unitários Android, builds debug de app/Wear, paridade HTML e `git diff --check` passaram.
+- [x] Instalar e conferir via ADB no AVD `Pixel_10a` (API 37): onboarding, Hoje, Programas, Evolução e navegação com toques rápidos; nenhum treino iniciado.
+- [ ] Conferir a overlay durante um treino ativo, aparelho físico, TalkBack e Wear OS.
+
+Esta rodada não altera versão nem publica release. `bash scripts/check.sh` não pôde iniciar neste ambiente; diagnósticos, tarefas Gradle e verificações de paridade foram executados diretamente. Detalhes em `docs/roadmap/execucao.md`.
+
+## Identidade CoreFlow e onboarding — 13/11/2026
+
+- [x] Registrar o contexto do produto em `PRODUCT.md` e a identidade visual em `DESIGN.md`, reconhecidos pelo contexto Impeccable; manter o launcher da skill como entrada no Windows.
+- [x] Corrigir contraste das opções do onboarding, alinhar estado selecionado, progresso e marca do cabeçalho ao azul de ação e preservar `index.html` idêntico ao asset Android.
+- [x] Gerar APK debug, instalar por ADB no AVD API 36 limpo e conferir onboarding, seleção, avanço de etapas e tela Hoje.
+- [ ] Homologar em aparelho físico, TalkBack, Wear OS e overlay durante uma atividade.
+
+O Pixel_10a API 37 mantém dados e app instalados. O Package Manager desse AVD reteve a sessão 1196442191; os logs registraram ausência do serviço `persistent_data_block`, timeout do verificador e falha ao renomear `install_sessions.xml`. A validação prosseguiu no AVD API 36, sem apagar dados do Pixel_10a. O APK debug não foi publicado nem teve versão alterada.
+
 ---
+
+## Redireção do DESIGN.md — 13/11/2026
+
+- [x] Reescrever a direção visual com base nas práticas, fases, controles e recursos locais reais do CoreFlow; remover slogans e padrões genéricos de cartão, ícones coloridos e telas de marketing.
+- [ ] Aplicar a direção revisada na WebView e na overlay, preservando os fluxos atuais; este pedido alterou apenas a especificação.
+
+## Direção do CoreFlow baseada na Apple HIG — 13/11/2026
+
+- [x] Consultar as páginas oficiais Apple sobre princípios, iOS, cor, layout, materiais, tipografia, movimento, feedback, acessibilidade, escrita, abas e folhas.
+- [x] Refazer `DESIGN.md` a partir dos princípios Apple HIG e consolidar os tokens após o questionário.
+- [x] Conduzir o questionário de 18 escolhas e registrar as respostas do usuário.
+- [x] Finalizar `DESIGN.md` conforme respostas: caderno de prática, verde profundo e marfim, cartões suaves, ilustrações instrucionais, AMOLED padrão e respiração sincronizada.
+  - [ ] Escolher uma das três composições da tela Hoje em docs/design/mockups-coreflow-opcoes-2026-11-13/.
+  - [ ] Aplicar a direção na WebView/overlay e conferir no AVD, preservando Android e fluxos atuais.
 
 ## Nova frente solicitada em 21/10/2026 — Pílulas e pausas de trabalho
 
@@ -56,10 +90,10 @@ Plano, dependências, critérios e limites: [Pausas e flutuante — 18/10](docs/
 
 ---
 
-**Atualizado:** 12/11/2026.
+**Atualizado:** 13/11/2026.
 **Release atual:** 1.1.52 — redesign integral Fluxo para WebView e overlay Android.
 **Foco:** homologação da overlay durante sessão ativa, TalkBack, aparelho físico e Wear OS.
-**Estado:** redesign publicado; checks e QA visual em emulador concluídos; homologação física/acessibilidade pendentes.
+**Estado:** release 1.1.52 publicada; ajustes locais de identidade e onboarding validados em AVD API 36, sem release; homologação física/acessibilidade pendentes.
 
 ## 1. Procedimento obrigatório para qualquer IA
 

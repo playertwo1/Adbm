@@ -63,7 +63,7 @@ const context = vm.createContext({
             res: { isRunning: false, isContract: true, timer: 1, series: 1, totalSeries: 10, intervalId: null }
         }
     },
-    KEGEL_CIRCUMFERENCE: 502,
+    KEGEL_CIRCUMFERENCE: 100,
     document: { getElementById: getElement },
     window: { speechSynthesis: { cancel() {}, speak() { spokenCount += 1; } } },
     SpeechSynthesisUtterance: function SpeechSynthesisUtterance() {},
@@ -98,10 +98,17 @@ context.speakVoice('Relaxe');
 assert.equal(oscillatorCount, 0, 'Modo Ultra-Silencioso no Discreto deve suprimir bipes e sinos');
 assert.equal(spokenCount, 0, 'Modo Ultra-Silencioso no Discreto deve suprimir voz');
 
+context.setKegelResRing(0);
+assert.equal(getElement('kegelResRing').style.strokeDashoffset, 100, 'o anel deve iniciar sem trecho preenchido');
+assert.equal(getElement('kegelResRing').style.opacity, '0', 'o marcador não deve aparecer antes do início');
+context.setKegelResRing(0.5);
+assert.equal(getElement('kegelResRing').style.strokeDashoffset, 50, 'a metade do timer deve preencher metade do anel');
+assert.equal(getElement('kegelResRing').style.opacity, '1', 'o indicador aparece quando há progresso');
+
 context.startKegelRes();
-assert.equal(getElement('kegelResStateText').innerText, 'CONTRAIA', 'orientação visual deve começar mesmo em modo silencioso');
+assert.equal(getElement('kegelResStateText').innerText, 'Contraia', 'orientação visual deve começar mesmo em modo silencioso');
 intervals.at(-1)();
-assert.equal(getElement('kegelResStateText').innerText, 'RELAXE', 'transição visual deve continuar sem áudio');
+assert.equal(getElement('kegelResStateText').innerText, 'Relaxe', 'transição visual deve continuar sem áudio');
 assert.equal(getElement('kegelResTimer').innerText, '10', 'contador visual deve continuar no modo silencioso');
 
 context.AppState.activeTab = 'pausas';

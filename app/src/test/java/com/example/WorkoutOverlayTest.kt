@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.test.core.app.ApplicationProvider
 import androidx.core.graphics.ColorUtils
@@ -91,6 +92,13 @@ class WorkoutOverlayTest {
     }
   }
 
+  private fun setOverlayField(name: String, value: Any?) {
+    WorkoutOverlayController::class.java.getDeclaredField(name).apply {
+      isAccessible = true
+      set(WorkoutOverlayController, value)
+    }
+  }
+
   private fun stretchGuideCue(cardId: Int, duration: Int, timeLeft: Int): Pair<Int, String> {
     val cue = WorkoutOverlayController::class.java.getDeclaredMethod(
       "resolveStretchGuideCue",
@@ -143,6 +151,50 @@ class WorkoutOverlayTest {
     assertEquals(WorkoutOverlayController.VisualState.EXPANDED, method.invoke(WorkoutOverlayController, expanded))
     assertEquals(WorkoutOverlayController.VisualState.MINI, method.invoke(WorkoutOverlayController, mini))
     assertEquals(WorkoutOverlayController.VisualState.COMPACT, method.invoke(WorkoutOverlayController, compact))
+  }
+
+  @Test
+  fun `overlay state change is immediate when reduced motion is enabled`() {
+    val context = ApplicationProvider.getApplicationContext<Context>()
+    val names = listOf(
+      "miniContainer", "compactContainer", "expandedContainer", "cancelConfirmationContainer",
+      "currentState", "isCancelConfirmationVisible", "appReducedMotion", "rootView", "windowManager", "layoutParams"
+    )
+    val original = names.associateWith { name ->
+      WorkoutOverlayController::class.java.getDeclaredField(name).apply { isAccessible = true }
+        .get(WorkoutOverlayController)
+    }
+    val mini = LinearLayout(context)
+    val compact = LinearLayout(context)
+    val expanded = LinearLayout(context)
+    val confirmation = LinearLayout(context)
+    try {
+      listOf(mini, compact, expanded, confirmation).forEach { it.visibility = View.GONE }
+      setOverlayField("miniContainer", mini)
+      setOverlayField("compactContainer", compact)
+      setOverlayField("expandedContainer", expanded)
+      setOverlayField("cancelConfirmationContainer", confirmation)
+      setOverlayField("currentState", WorkoutOverlayController.VisualState.EXPANDED)
+      setOverlayField("isCancelConfirmationVisible", false)
+      setOverlayField("appReducedMotion", true)
+      setOverlayField("rootView", null)
+      setOverlayField("windowManager", null)
+      setOverlayField("layoutParams", null)
+
+      WorkoutOverlayController::class.java.getDeclaredMethod("updateViewVisibility").apply {
+        isAccessible = true
+        invoke(WorkoutOverlayController)
+      }
+
+      assertEquals(View.VISIBLE, expanded.visibility)
+      assertEquals(1f, expanded.alpha, 0.001f)
+      assertEquals(1f, expanded.scaleX, 0.001f)
+      assertEquals(1f, expanded.scaleY, 0.001f)
+      assertEquals(View.GONE, mini.visibility)
+      assertEquals(View.GONE, compact.visibility)
+    } finally {
+      original.forEach { (name, value) -> setOverlayField(name, value) }
+    }
   }
 
   @Test
@@ -209,7 +261,7 @@ class WorkoutOverlayTest {
   }
 
   @Test
-  fun `compact timer keeps accessible text contrast for Kegel accent`() {
+  fun `compact timer keeps accessible text contrast on the graphite panel`() {
     val context = ApplicationProvider.getApplicationContext<Context>()
     val root = buildOverlayPart(context, "buildCompactView")
     val state = stateWithImage(null).put(
@@ -220,11 +272,11 @@ class WorkoutOverlayTest {
     val timer = overlayViews(root).filterIsInstance<TextView>().firstOrNull { it.text == "01:00" }
 
     assertNotNull("Timer compacto precisa estar visível", timer)
-    assertEquals(Color.parseColor("#BDE6C9"), WorkoutOverlayController.resolveThemeColor("Kegel: Assoalho Pélvico", "stretch"))
-    assertEquals("Texto deve usar a cor clara de alto contraste", Color.parseColor("#BDE6C9"), timer!!.currentTextColor)
+    assertEquals(Color.parseColor("#8BB5E5"), WorkoutOverlayController.resolveThemeColor("stretch"))
+    assertEquals("Timer usa a tinta azul clara do painel grafite", Color.parseColor("#A8C9EF"), timer!!.currentTextColor)
     assertTrue(
       "Texto do timer precisa manter contraste mínimo 4.5:1 sobre o fundo neutro",
-      ColorUtils.calculateContrast(timer.currentTextColor, Color.parseColor("#101B14")) >= 4.5
+      ColorUtils.calculateContrast(timer.currentTextColor, Color.parseColor("#171C20")) >= 4.5
     )
   }
 
@@ -664,7 +716,7 @@ class WorkoutOverlayTest {
     bindOverlayState(context, state)
     val breathView = overlayViews(root).filterIsInstance<BreathVisualView>().single()
     val description = breathView.contentDescription.toString()
-    assertTrue("TalkBack deve anunciar a fase", description.contains("INSPIRE"))
+    assertTrue("TalkBack deve anunciar a fase", description.contains("Inspire"))
     assertFalse("o texto acessível não deve mudar a cada segundo", description.contains("00:04"))
   }
 
@@ -700,7 +752,7 @@ class WorkoutOverlayTest {
   }
 
   @Test
-  fun `expanded controls use plain labels, equal 4dp gaps and the same pause green as compact`() {
+  fun `expanded controls use plain labels, equal 4dp gaps and the same action blue as compact`() {
     val context = ApplicationProvider.getApplicationContext<Context>()
     val density = context.resources.displayMetrics.density
     val root = createExpandedOverlay(context)
@@ -717,8 +769,8 @@ class WorkoutOverlayTest {
     assertEquals("Pausar encosta no início da barra", 0, lp[0].leftMargin + lp[0].rightMargin)
     assertEquals("espaço Pausar→Pular", gap, lp[0].rightMargin + lp[1].leftMargin)
     assertEquals("espaço Pular→Cancelar", gap, lp[1].rightMargin + lp[2].leftMargin)
-    val expandedGreen = (pause.background as android.graphics.drawable.GradientDrawable).color!!.defaultColor
-    assertEquals(Color.parseColor("#8BD3A8"), expandedGreen)
+    val expandedBlue = (pause.background as android.graphics.drawable.GradientDrawable).color!!.defaultColor
+    assertEquals(Color.parseColor("#8BB5E5"), expandedBlue)
     assertTrue(
       "Próximo passo sem caractere-ícone",
       controls.none { it.text.toString().startsWith("➔") }
@@ -750,7 +802,7 @@ class WorkoutOverlayTest {
   fun `compact action text may wrap to two lines instead of truncating at one`() {
     val context = ApplicationProvider.getApplicationContext<Context>()
     val root = buildOverlayPart(context, "buildCompactView")
-    val action = overlayViews(root).filterIsInstance<TextView>().first { it.text == "TREINO" }
+    val action = overlayViews(root).filterIsInstance<TextView>().first { it.text == "Treino" }
     assertEquals(2, action.maxLines)
   }
 
@@ -958,22 +1010,21 @@ class WorkoutOverlayTest {
   }
 
   @Test
-  fun `program theme color resolves accurately per exercise type`() {
-    // A família de cores do treino mantém acentos calmos e distinguíveis.
-    val colorVacuo = WorkoutOverlayController.resolveThemeColor("Vácuo Abdominal", "vacuo", false)
-    assertEquals(Color.parseColor("#8BD3A8"), colorVacuo)
+  fun `active phases share the blue action accent and rests use neutral ink`() {
+    val colorVacuo = WorkoutOverlayController.resolveThemeColor("vacuo", false)
+    assertEquals(Color.parseColor("#8BB5E5"), colorVacuo)
 
-    val colorDescanso = WorkoutOverlayController.resolveThemeColor("Vácuo Abdominal", "descanso", true)
-    assertEquals(Color.parseColor("#A6B9A9"), colorDescanso)
+    val colorDescanso = WorkoutOverlayController.resolveThemeColor("descanso", true)
+    assertEquals(Color.parseColor("#BBC3C9"), colorDescanso)
 
-    val colorKegel = WorkoutOverlayController.resolveThemeColor("Kegel: Assoalho Pélvico", "contracao", false)
-    assertEquals(Color.parseColor("#BDE6C9"), colorKegel)
+    val colorKegel = WorkoutOverlayController.resolveThemeColor("contracao", false)
+    assertEquals(Color.parseColor("#8BB5E5"), colorKegel)
 
-    val colorBracing = WorkoutOverlayController.resolveThemeColor("Bracing Avançado", "isometria", false)
-    assertEquals(Color.parseColor("#D9BC82"), colorBracing)
+    val colorBracing = WorkoutOverlayController.resolveThemeColor("isometria", false)
+    assertEquals(Color.parseColor("#8BB5E5"), colorBracing)
 
-    val colorBreathing = WorkoutOverlayController.resolveThemeColor("Respiração", "inspire", false)
-    assertEquals(Color.parseColor("#A8C9AF"), colorBreathing)
+    val colorBreathing = WorkoutOverlayController.resolveThemeColor("inspire", false)
+    assertEquals(Color.parseColor("#8BB5E5"), colorBreathing)
   }
 
   @Test

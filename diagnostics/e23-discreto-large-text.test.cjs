@@ -10,7 +10,7 @@ for (const file of [path.join(root, 'index.html'), path.join(root, 'app', 'src',
     const html = fs.readFileSync(file, 'utf8');
     const name = path.relative(root, file);
 
-    assert.match(html, /<div class="flex flex-wrap gap-1 bg-slate-800 p-1 rounded-2xl border border-slate-700">/, `${name}: seletor de modos deve quebrar linha`);
+    assert.ok(/<div class="cf-discreet-subnav [^"]+">/.test(html) && /#tab-discreto \.cf-discreet-subnav\s*\{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/s.test(html), `${name}: seletor de modalidades deve manter três opções responsivas`);
     assert.equal((html.match(/desk-sub-btn flex-1 basis-\[11ch\] min-w-0 py-2/g) || []).length, 5, `${name}: 3 botões no HTML e 2 classes no JS precisam da base em ch`);
 
     assert.match(html, /<div class="relative w-\[26ch\] max-w-full aspect-square mx-auto my-3 flex items-center justify-center">\s*<svg class="w-full h-full transform -rotate-90" viewBox="0 0 200 200">/, `${name}: anel do Kegel Resistência deve crescer com o texto`);

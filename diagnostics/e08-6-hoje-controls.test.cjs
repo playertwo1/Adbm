@@ -30,8 +30,9 @@ function extractFunction(name) {
 }
 
 // 2026-10-29: atalho de Perfil saiu do cabeçalho (estourava a largura); a aba Perfil da navegação é o caminho real.
-assert.match(source, /onclick="switchTab\('perfil'\)" id="nav-btn-perfil"/, 'navegação deve abrir Perfil real');
-assert.match(source, /onclick="openTodayReminderConfig\(\)"[^>]*aria-label="Configurar lembretes"/, 'sino deve abrir configuração de lembretes');
+assert.match(source, /onclick="selectMainNavigation\('perfil'\)" id="nav-btn-perfil"/, 'menu principal deve abrir Perfil real');
+assert.match(source, /id="profileReminderPrograms"/, 'Perfil deve manter o resumo dos lembretes');
+assert.match(source, /onclick="openReminderConfigModal\('\$\{prog\.id\}'\)" aria-label="Configurar lembretes do programa"/, 'cada programa deve manter sua configuração de lembretes');
 for (const shortcut of ['vacuo', 'pausa', 'kegel', 'meditar', 'discreto']) {
     assert.match(source, new RegExp(`openTodayShortcut\\('${shortcut}'\\)`), `atalho ${shortcut} deve existir em Hoje`);
 }

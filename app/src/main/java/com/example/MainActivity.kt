@@ -64,6 +64,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.ui.theme.CoreFlowCanvas
+import com.example.ui.theme.CoreFlowAmoledCanvas
 import com.example.ui.theme.MyApplicationTheme
 import java.util.Locale
 import org.json.JSONObject
@@ -74,6 +75,22 @@ class MainActivity : ComponentActivity() {
 
     private var tts: TextToSpeech? = null
     private var webView: WebView? = null
+
+    private fun setSystemBarStyle(amoled: Boolean) {
+        enableEdgeToEdge(
+            statusBarStyle = if (amoled) {
+                SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+            } else {
+                SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+            },
+            navigationBarStyle = if (amoled) {
+                SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+            } else {
+                SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+            },
+        )
+    }
+
     fun selectProgressBackup() {
         runOnUiThread {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -141,11 +158,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // UI is dark-only: light icons on the dark bars, regardless of the system theme.
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
-        )
+        setSystemBarStyle(amoled = true)
         captureReminderIntent(intent)
 
         val workoutFilter = IntentFilter(WorkoutForegroundService.ACTION_STATE_CHANGED)
@@ -190,6 +203,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val showConfetti = remember { mutableStateOf(false) }
+            val isAmoledTheme = remember { mutableStateOf(true) }
 
             // Native Android Back Button Navigation
             BackHandler(enabled = true) {
@@ -207,12 +221,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            MyApplicationTheme {
+            val appCanvas = if (isAmoledTheme.value) CoreFlowAmoledCanvas else CoreFlowCanvas
+            MyApplicationTheme(amoled = isAmoledTheme.value) {
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(CoreFlowCanvas),
-                    color = CoreFlowCanvas
+                        .background(appCanvas),
+                    color = appCanvas
                 ) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         CoreFlowWebView(
@@ -229,6 +244,11 @@ class MainActivity : ComponentActivity() {
                                         null
                                     )
                                 }
+                            },
+                            isAmoledTheme = isAmoledTheme.value,
+                            onThemeChanged = { amoled ->
+                                isAmoledTheme.value = amoled
+                                setSystemBarStyle(amoled)
                             },
                             tts = tts,
                             onPlayConfetti = {
@@ -367,6 +387,8 @@ class MainActivity : ComponentActivity() {
 fun CoreFlowWebView(
     onWebViewCreated: (WebView) -> Unit,
     onPageReady: () -> Unit,
+    isAmoledTheme: Boolean,
+    onThemeChanged: (Boolean) -> Unit,
     tts: TextToSpeech?,
     onPlayConfetti: () -> Unit
 ) {
@@ -379,7 +401,7 @@ fun CoreFlowWebView(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
-                setBackgroundColor(CoreFlowCanvas.toArgb())
+                setBackgroundColor((if (isAmoledTheme) CoreFlowAmoledCanvas else CoreFlowCanvas).toArgb())
 
                 settings.apply {
                     javaScriptEnabled = true
@@ -418,13 +440,16 @@ fun CoreFlowWebView(
 
                 // Inject Native JavaScript Bridge
                 addJavascriptInterface(
-                    AndroidBridge(ctx, this, tts, onPlayConfetti),
+                    AndroidBridge(ctx, this, tts, onPlayConfetti, onThemeChanged),
                     "AndroidBridge"
                 )
 
                 loadUrl("file:///android_asset/index.html")
                 onWebViewCreated(this)
             }
+        },
+        update = { view ->
+            view.setBackgroundColor((if (isAmoledTheme) CoreFlowAmoledCanvas else CoreFlowCanvas).toArgb())
         },
         modifier = Modifier
             .fillMaxSize()
@@ -436,8 +461,14 @@ class AndroidBridge(
     private val context: Context,
     private val webView: WebView,
     private val tts: TextToSpeech?,
-    private val onPlayConfetti: () -> Unit
+    private val onPlayConfetti: () -> Unit,
+    private val onThemeChanged: (Boolean) -> Unit
 ) {
+
+    @JavascriptInterface
+    fun setAmoledTheme(enabled: Boolean) {
+        webView.post { onThemeChanged(enabled) }
+    }
 
     @JavascriptInterface
     fun importProgressSnapshot() {

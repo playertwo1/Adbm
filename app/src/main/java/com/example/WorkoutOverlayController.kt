@@ -29,6 +29,7 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.WindowManager
 import android.view.animation.LinearInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -38,26 +39,24 @@ import java.io.InputStream
 import kotlin.math.hypot
 
 private object FluxoOverlayPalette {
-    val surface = Color.parseColor("#101B14")
-    val surfaceRaised = Color.parseColor("#14251A")
-    val surfaceInteractive = Color.parseColor("#1A3020")
-    val line = Color.parseColor("#2B4433")
-    val lineStrong = Color.parseColor("#536258")
-    val textPrimary = Color.parseColor("#EFF5EF")
-    val textSecondary = Color.parseColor("#A6B9A9")
-    val textMuted = Color.parseColor("#829486")
-    val textSubtle = Color.parseColor("#D0D8D0")
-    val accent = Color.parseColor("#8BD3A8")
-    val accentBright = Color.parseColor("#BDE6C9")
-    val kegelAccent = Color.parseColor("#BDE6C9")
-    val breathAccent = Color.parseColor("#A8C9AF")
-    val accentInk = Color.parseColor("#0B1910")
-    val warning = Color.parseColor("#D9BC82")
-    val warningSurface = Color.parseColor("#2D291D")
-    val danger = Color.parseColor("#E78D90")
-    val dangerBright = Color.parseColor("#EAA4A5")
-    val dangerSurface = Color.parseColor("#211416")
-    val dangerButton = Color.parseColor("#762D35")
+    val surface = Color.parseColor("#171C20")
+    val surfaceRaised = Color.parseColor("#20262B")
+    val surfaceInteractive = Color.parseColor("#252D34")
+    val line = Color.parseColor("#353F46")
+    val lineStrong = Color.parseColor("#59656E")
+    val textPrimary = Color.parseColor("#F2F4F5")
+    val textSecondary = Color.parseColor("#BBC3C9")
+    val textMuted = Color.parseColor("#BBC3C9")
+    val textSubtle = Color.parseColor("#E2E7EA")
+    val accent = Color.parseColor("#8BB5E5")
+    val accentBright = Color.parseColor("#A8C9EF")
+    val accentInk = Color.parseColor("#14202B")
+    val warning = Color.parseColor("#E4C482")
+    val warningSurface = Color.parseColor("#332C1D")
+    val danger = Color.parseColor("#F08C96")
+    val dangerBright = Color.parseColor("#F3A3AA")
+    val dangerSurface = Color.parseColor("#351C20")
+    val dangerButton = Color.parseColor("#9E3842")
 }
 
 /**
@@ -140,13 +139,11 @@ object WorkoutOverlayController {
     private var expandedContainer: LinearLayout? = null
 
     // Referências aos elementos dinâmicos do Mini
-    private var miniIconBadge: TextView? = null
     private var miniTimerText: TextView? = null
     private var miniActionText: TextView? = null
     private var miniOpenText: TextView? = null
 
     // Referências aos elementos dinâmicos do Compacto
-    private var compactIconBadge: TextView? = null
     private var compactActionText: TextView? = null
     private var compactProgramText: TextView? = null
     private var compactTimerText: TextView? = null
@@ -552,16 +549,49 @@ object WorkoutOverlayController {
     }
 
     private fun updateViewVisibility() {
-        if (isCancelConfirmationVisible) {
-            miniContainer?.visibility = View.GONE
-            compactContainer?.visibility = View.GONE
-            expandedContainer?.visibility = View.GONE
-            cancelConfirmationContainer?.visibility = View.VISIBLE
+        val visibleView = if (isCancelConfirmationVisible) {
+            cancelConfirmationContainer
         } else {
-            miniContainer?.visibility = if (currentState == VisualState.MINI) View.VISIBLE else View.GONE
-            compactContainer?.visibility = if (currentState == VisualState.COMPACT) View.VISIBLE else View.GONE
-            expandedContainer?.visibility = if (currentState == VisualState.EXPANDED) View.VISIBLE else View.GONE
-            cancelConfirmationContainer?.visibility = View.GONE
+            when (currentState) {
+                VisualState.MINI -> miniContainer
+                VisualState.COMPACT -> compactContainer
+                VisualState.EXPANDED -> expandedContainer
+            }
+        }
+        val shouldAnimate = !appReducedMotion &&
+            (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || ValueAnimator.areAnimatorsEnabled())
+        listOf(miniContainer, compactContainer, expandedContainer, cancelConfirmationContainer).forEach { view ->
+            if (view == null) return@forEach
+            if (view === visibleView) {
+                if (view.visibility != View.VISIBLE) {
+                    view.animate().cancel()
+                    if (shouldAnimate) {
+                        view.alpha = 0f
+                        view.scaleX = .98f
+                        view.scaleY = .98f
+                    } else {
+                        view.alpha = 1f
+                        view.scaleX = 1f
+                        view.scaleY = 1f
+                    }
+                    view.visibility = View.VISIBLE
+                    if (shouldAnimate) {
+                        view.animate()
+                            .alpha(1f)
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(180)
+                            .setInterpolator(DecelerateInterpolator(1.5f))
+                            .start()
+                    }
+                }
+            } else {
+                view.animate().cancel()
+                view.alpha = 1f
+                view.scaleX = 1f
+                view.scaleY = 1f
+                view.visibility = View.GONE
+            }
         }
         rootView?.let { root ->
             layoutParams?.let { lp ->
@@ -592,7 +622,7 @@ object WorkoutOverlayController {
         else -> VisualState.COMPACT
     }
 
-    private fun updatePauseButton(button: TextView?, isPaused: Boolean) {
+    private fun updatePauseButton(context: Context, button: TextView?, isPaused: Boolean) {
         button ?: return
         if (isPaused) {
             button.text = "Continuar"
@@ -601,7 +631,7 @@ object WorkoutOverlayController {
             button.text = "Pausar"
             button.contentDescription = "Pausar treino"
         }
-        button.background = createPillDrawable(FluxoOverlayPalette.accent, FluxoOverlayPalette.accent, 0)
+        button.background = createControlDrawable(context, FluxoOverlayPalette.accent, FluxoOverlayPalette.accent, 0)
     }
 
     private fun toggleWorkoutPause(context: Context) {
@@ -655,17 +685,10 @@ object WorkoutOverlayController {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(dpToPx(context, 6), dpToPx(context, 4), dpToPx(context, 10), dpToPx(context, 4))
-            background = createPillDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.accent, 1)
+            background = createCardDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.line, dpToPx(context, 14).toFloat())
             contentDescription = "Treino ativo flutuante, modo mini. Toque em Abrir para ver os controles."
         }
 
-        miniIconBadge = TextView(context).apply {
-            text = "◉"
-            textSize = 12f
-            typeface = Typeface.DEFAULT_BOLD
-            setTextColor(FluxoOverlayPalette.accent)
-            setPadding(0, 0, dpToPx(context, 6), 0)
-        }
         miniTimerText = TextView(context).apply {
             text = "00:00"
             textSize = 13f
@@ -674,8 +697,8 @@ object WorkoutOverlayController {
         }
 
         miniActionText = TextView(context).apply {
-            text = "TREINO"
-            textSize = 9f
+            text = "Treino"
+            textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(FluxoOverlayPalette.textPrimary)
             maxLines = 1
@@ -684,7 +707,7 @@ object WorkoutOverlayController {
         }
         miniOpenText = TextView(context).apply {
             text = "Abrir"
-            textSize = 10f
+            textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(FluxoOverlayPalette.accentBright)
             contentDescription = "Abrir controles do treino"
@@ -697,7 +720,6 @@ object WorkoutOverlayController {
             }
         }
 
-        miniContainer?.addView(miniIconBadge)
         miniContainer?.addView(miniActionText)
         miniContainer?.addView(miniTimerText)
         miniContainer?.addView(miniOpenText)
@@ -712,16 +734,8 @@ object WorkoutOverlayController {
                 .coerceAtLeast(dpToPx(context, 280))
             layoutParams = FrameLayout.LayoutParams(minOf(dpToPx(context, 360), availableWidth), FrameLayout.LayoutParams.WRAP_CONTENT)
             setPadding(dpToPx(context, 8), dpToPx(context, 6), dpToPx(context, 8), dpToPx(context, 6))
-            background = createPillDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.line, 1)
+            background = createCardDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.line, dpToPx(context, 14).toFloat())
             contentDescription = "Treino ativo flutuante, modo compacto. Toque para alternar tamanho."
-        }
-
-        compactIconBadge = TextView(context).apply {
-            text = "◉"
-            textSize = 14f
-            typeface = Typeface.DEFAULT_BOLD
-            setTextColor(FluxoOverlayPalette.accent)
-            setPadding(dpToPx(context, 2), 0, dpToPx(context, 6), 0)
         }
 
         val textCol = LinearLayout(context).apply {
@@ -731,8 +745,8 @@ object WorkoutOverlayController {
         }
 
         compactActionText = TextView(context).apply {
-            text = "TREINO"
-            textSize = 11f
+            text = "Treino"
+            textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(FluxoOverlayPalette.textPrimary)
             maxLines = 2
@@ -740,7 +754,7 @@ object WorkoutOverlayController {
         }
         compactProgramText = TextView(context).apply {
             text = "CoreFlow"
-            textSize = 9f
+            textSize = 11f
             setTextColor(FluxoOverlayPalette.textSecondary)
         }
         textCol.addView(compactActionText)
@@ -765,7 +779,7 @@ object WorkoutOverlayController {
             setTextColor(FluxoOverlayPalette.accentInk)
             gravity = Gravity.CENTER
             setPadding(dpToPx(context, 8), 0, dpToPx(context, 8), 0)
-            background = createPillDrawable(FluxoOverlayPalette.accent, FluxoOverlayPalette.accent, 0)
+            background = createControlDrawable(context, FluxoOverlayPalette.accent, FluxoOverlayPalette.accent, 0)
             contentDescription = "Pausar treino"
             layoutParams = LinearLayout.LayoutParams(dpToPx(context, 80), dpToPx(context, 48)).apply {
                 marginEnd = dpToPx(context, 8)
@@ -780,13 +794,12 @@ object WorkoutOverlayController {
             setTextColor(FluxoOverlayPalette.dangerBright)
             gravity = Gravity.CENTER
             setPadding(dpToPx(context, 8), 0, dpToPx(context, 8), 0)
-            background = createPillDrawable(FluxoOverlayPalette.dangerSurface, FluxoOverlayPalette.danger, 1)
+            background = createControlDrawable(context, FluxoOverlayPalette.dangerSurface, FluxoOverlayPalette.danger, 1)
             contentDescription = "Cancelar treino"
             layoutParams = LinearLayout.LayoutParams(dpToPx(context, 80), dpToPx(context, 48))
             setOnClickListener { openCancelConfirmation(context) }
         }
 
-        compactContainer?.addView(compactIconBadge)
         compactContainer?.addView(textCol)
         compactContainer?.addView(compactTimerText)
         compactContainer?.addView(compactPauseResumeBtn)
@@ -800,7 +813,7 @@ object WorkoutOverlayController {
             orientation = LinearLayout.VERTICAL
             layoutParams = FrameLayout.LayoutParams(widthPx, FrameLayout.LayoutParams.WRAP_CONTENT)
             setPadding(dpToPx(context, 14), dpToPx(context, 12), dpToPx(context, 14), dpToPx(context, 12))
-            background = createCardDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.line, dpToPx(context, 12).toFloat())
+            background = createCardDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.line, dpToPx(context, 18).toFloat())
         }
 
         // Header: Ícone + Título do Programa + Botão recolher
@@ -813,14 +826,14 @@ object WorkoutOverlayController {
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
         expandedProgramTitle = TextView(context).apply {
-            text = "VÁCUO ABDOMINAL"
-            textSize = 12f
+            text = "Vácuo abdominal"
+            textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(FluxoOverlayPalette.textPrimary)
         }
         expandedPhaseSubtitle = TextView(context).apply {
             text = "Semana 1 · Série 1/3"
-            textSize = 10f
+            textSize = 12f
             setTextColor(FluxoOverlayPalette.textSecondary)
         }
         headerTexts.addView(expandedProgramTitle)
@@ -828,7 +841,7 @@ object WorkoutOverlayController {
 
         val collapseBtn = TextView(context).apply {
             text = "Recolher"
-            textSize = 10f
+            textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(FluxoOverlayPalette.textSecondary)
             contentDescription = "Recolher modo expandido"
@@ -890,7 +903,7 @@ object WorkoutOverlayController {
 
         expandedTotalTimeText = TextView(context).apply {
             text = "de 30s"
-            textSize = 10f
+            textSize = 12f
             setTextColor(FluxoOverlayPalette.textMuted)
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, dpToPx(context, 6))
@@ -905,7 +918,7 @@ object WorkoutOverlayController {
             ).apply {
                 topMargin = dpToPx(context, 2)
             }
-            background = createCardDrawable(FluxoOverlayPalette.accentInk, FluxoOverlayPalette.line, dpToPx(context, 12).toFloat())
+            background = createCardDrawable(FluxoOverlayPalette.accentInk, FluxoOverlayPalette.line, dpToPx(context, 18).toFloat())
             clipToOutline = true
             visibility = View.GONE
         }
@@ -938,7 +951,7 @@ object WorkoutOverlayController {
 
         expandedExercisePhase = TextView(context).apply {
             text = "Preparar · Direita"
-            textSize = 10f
+            textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
             setTextColor(FluxoOverlayPalette.accentBright)
@@ -979,14 +992,14 @@ object WorkoutOverlayController {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(dpToPx(context, 10), dpToPx(context, 6), dpToPx(context, 10), dpToPx(context, 6))
-            background = createCardDrawable(FluxoOverlayPalette.surfaceRaised, FluxoOverlayPalette.line, dpToPx(context, 6).toFloat())
+            background = createCardDrawable(FluxoOverlayPalette.surfaceRaised, FluxoOverlayPalette.line, dpToPx(context, 10).toFloat())
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 bottomMargin = dpToPx(context, 10)
             }
         }
         expandedNextStepLabel = TextView(context).apply {
             text = "Próximo: Recuperação · 60s"
-            textSize = 10f
+            textSize = 12f
             setTextColor(FluxoOverlayPalette.textSecondary)
         }
         expandedNextStepCard?.addView(expandedNextStepLabel)
@@ -1006,7 +1019,7 @@ object WorkoutOverlayController {
             contentDescription = "Pausar ou continuar treino"
             minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER
-            background = createPillDrawable(FluxoOverlayPalette.accent, FluxoOverlayPalette.accent, 0)
+            background = createControlDrawable(context, FluxoOverlayPalette.accent, FluxoOverlayPalette.accent, 0)
             setPadding(dpToPx(context, 12), dpToPx(context, 8), dpToPx(context, 12), dpToPx(context, 8))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             setOnClickListener {
@@ -1025,7 +1038,7 @@ object WorkoutOverlayController {
             contentDescription = "Pular para o próximo passo"
             minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER
-            background = createPillDrawable(FluxoOverlayPalette.surfaceInteractive, FluxoOverlayPalette.lineStrong, 1)
+            background = createControlDrawable(context, FluxoOverlayPalette.surfaceInteractive, FluxoOverlayPalette.lineStrong, 1)
             setPadding(dpToPx(context, 12), dpToPx(context, 8), dpToPx(context, 12), dpToPx(context, 8))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
                 leftMargin = dpToPx(context, 4)
@@ -1044,7 +1057,7 @@ object WorkoutOverlayController {
             contentDescription = "Cancelar treino"
             minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER
-            background = createPillDrawable(FluxoOverlayPalette.dangerSurface, FluxoOverlayPalette.danger, 1)
+            background = createControlDrawable(context, FluxoOverlayPalette.dangerSurface, FluxoOverlayPalette.danger, 1)
             setPadding(dpToPx(context, 12), dpToPx(context, 8), dpToPx(context, 12), dpToPx(context, 8))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
                 leftMargin = dpToPx(context, 4)
@@ -1060,13 +1073,13 @@ object WorkoutOverlayController {
         // Botão especial: Saída Segura da Retenção (quando em retenção de Vácuo)
         expandedSafeExitBtn = TextView(context).apply {
             text = "Encerrar Retenção com Segurança"
-            textSize = 11f
+            textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(FluxoOverlayPalette.warning)
             contentDescription = "Encerrar retenção de vácuo com segurança e iniciar recuperação"
             minHeight = dpToPx(context, 48)
             gravity = Gravity.CENTER
-            background = createCardDrawable(FluxoOverlayPalette.warningSurface, FluxoOverlayPalette.warning, dpToPx(context, 4).toFloat())
+            background = createCardDrawable(FluxoOverlayPalette.warningSurface, FluxoOverlayPalette.warning, dpToPx(context, 10).toFloat())
             setPadding(dpToPx(context, 8), dpToPx(context, 6), dpToPx(context, 8), dpToPx(context, 6))
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 topMargin = dpToPx(context, 8)
@@ -1096,7 +1109,7 @@ object WorkoutOverlayController {
             orientation = LinearLayout.VERTICAL
             layoutParams = FrameLayout.LayoutParams(dpToPx(context, 320), FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER)
             setPadding(dpToPx(context, 16), dpToPx(context, 16), dpToPx(context, 16), dpToPx(context, 14))
-            background = createCardDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.danger, dpToPx(context, 12).toFloat())
+            background = createCardDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.danger, dpToPx(context, 18).toFloat())
             contentDescription = "Confirmação de cancelamento"
             visibility = View.GONE
         }
@@ -1124,7 +1137,7 @@ object WorkoutOverlayController {
             setTextColor(FluxoOverlayPalette.textPrimary)
             gravity = Gravity.CENTER
             minHeight = dpToPx(context, 48)
-            background = createPillDrawable(FluxoOverlayPalette.surfaceInteractive, FluxoOverlayPalette.lineStrong, 1)
+            background = createControlDrawable(context, FluxoOverlayPalette.surfaceInteractive, FluxoOverlayPalette.lineStrong, 1)
             contentDescription = "Continuar treino"
             setPadding(dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
@@ -1136,10 +1149,10 @@ object WorkoutOverlayController {
             text = "Cancelar sessão"
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
-            setTextColor(FluxoOverlayPalette.textPrimary)
+            setTextColor(Color.WHITE)
             gravity = Gravity.CENTER
             minHeight = dpToPx(context, 48)
-            background = createPillDrawable(FluxoOverlayPalette.dangerButton, FluxoOverlayPalette.danger, 1)
+            background = createControlDrawable(context, FluxoOverlayPalette.dangerButton, FluxoOverlayPalette.danger, 1)
             contentDescription = "Confirmar cancelamento da sessão"
             setPadding(dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
@@ -1193,25 +1206,22 @@ object WorkoutOverlayController {
         val totalTimeStr = if (duration > 0) "de ${duration}s" else ""
 
         // Identificação de paleta de cores
-        val accentColor = resolveThemeColor(programTitle, phase, isRest)
+        val accentColor = resolveThemeColor(phase, isRest)
 
         val actionLabel = when {
-            badge.isNotBlank() -> badge
-            isRest -> "DESCANSO"
+            badge.isNotBlank() -> badge.lowercase().replaceFirstChar { it.uppercase() }
+            isRest -> "Descanso"
             else -> title
         }
 
         // 1. Atualizar MINI
         miniTimerText?.text = timeStr
-        miniIconBadge?.setTextColor(accentColor)
-        miniContainer?.background = createPillDrawable(FluxoOverlayPalette.surface, accentColor, 1)
         miniActionText?.text = actionLabel
         miniContainer?.contentDescription = "$programTitle, $actionLabel, restante $timeStr. Toque em Abrir para ver os controles."
 
         // 2. Atualizar COMPACTO
         compactTimerText?.text = timeStr
         compactTimerText?.setTextColor(FluxoOverlayPalette.accentBright)
-        compactIconBadge?.setTextColor(accentColor)
         compactActionText?.text = actionLabel
         val seriesText = if (series > 0) " · Série $series" else ""
         compactProgramText?.text = "$programTitle$seriesText"
@@ -1324,8 +1334,8 @@ object WorkoutOverlayController {
         expandedContainer?.contentDescription = "Card expandido do treino. $programTitle, $actionLabel, restante $timeStr."
 
         // Os três tamanhos recebem o mesmo estado vindo do motor nativo.
-        updatePauseButton(compactPauseResumeBtn, isPaused)
-        updatePauseButton(expandedPauseResumeBtn, isPaused)
+        updatePauseButton(context, compactPauseResumeBtn, isPaused)
+        updatePauseButton(context, expandedPauseResumeBtn, isPaused)
 
         // Próximo passo
         if (prefs.showNextStep && nextStep != null) {
@@ -1368,13 +1378,9 @@ object WorkoutOverlayController {
         return "%02d:%02d".format(m, s)
     }
 
-    fun resolveThemeColor(programTitle: String, phase: String, isRest: Boolean = false): Int {
+    fun resolveThemeColor(phase: String, isRest: Boolean = false): Int {
         return when {
-            phase == "vacuo" -> FluxoOverlayPalette.accent // Sálvia
-            isRest || phase == "recuperacao" -> FluxoOverlayPalette.textSecondary // Repouso
-            programTitle.contains("Kegel", ignoreCase = true) -> FluxoOverlayPalette.kegelAccent
-            programTitle.contains("Bracing", ignoreCase = true) -> FluxoOverlayPalette.warning
-            programTitle.contains("Respiração", ignoreCase = true) -> FluxoOverlayPalette.breathAccent
+            isRest || phase == "recuperacao" -> FluxoOverlayPalette.textSecondary
             else -> FluxoOverlayPalette.accent
         }
     }
@@ -1387,10 +1393,10 @@ object WorkoutOverlayController {
         ).toInt()
     }
 
-    private fun createPillDrawable(bgColor: Int, strokeColor: Int, strokeWidthDp: Int): GradientDrawable {
+    private fun createControlDrawable(context: Context, bgColor: Int, strokeColor: Int, strokeWidthDp: Int): GradientDrawable {
         return GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
-            cornerRadius = 100f
+            cornerRadius = dpToPx(context, 12).toFloat()
             setColor(bgColor)
             if (strokeWidthDp > 0) {
                 setStroke(strokeWidthDp, strokeColor)

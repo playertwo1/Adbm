@@ -9,15 +9,12 @@ for (const file of [path.join(root, 'index.html'), path.join(root, 'app', 'src',
     const html = fs.readFileSync(file, 'utf8');
     const name = path.relative(root, file);
 
-    const navLabel = html.match(/\.cf-nav-label \{[^}]*\}/)[0];
-    assert.match(navLabel, /text-overflow: ellipsis/, `${name}: rótulo da navegação deve truncar em vez de sobrepor`);
-    assert.match(html, /\.cf-bottom-nav \.nav-item \{[^}]*min-width: 0/, `${name}: botões da navegação precisam poder encolher`);
+    assert.match(html, /\.cf-nav-destination \{[^}]*min-width: 0/, `${name}: destinos da gaveta devem caber com texto ampliado`);
 
-    const header = html.slice(html.indexOf('<header class="sticky top-0'), html.indexOf('<button id="headerMoreBtn"'));
-    assert.match(header, /<div class="flex min-w-0 items-center gap-3">/, `${name}: bloco da marca deve poder encolher`);
-    assert.match(header, /<span class="truncate">Saúde, Vácuo & Postura<\/span>/, `${name}: subtítulo deve truncar`);
-    assert.match(header, /<header class="[^"]*flex-wrap[^"]*"/, `${name}: cabeçalho deve quebrar linha com texto ampliado`);
-    assert.match(header, /<div class="ml-auto flex flex-shrink-0 items-center gap-2">/, `${name}: grupo de ações do cabeçalho não pode encolher`);
+    const header = html.match(/<header class="cf-app-shell-header[^>]*">([\s\S]*?)<\/header>/)?.[1] || '';
+    assert.match(header, /<h1>CoreFlow<\/h1>/, `${name}: a marca deve continuar legível no cabeçalho compacto`);
+    assert.match(header, /<button id="core-persistence-status"[^>]*aria-label="Status de persistência local"/, `${name}: o status de salvamento deve permanecer acessível`);
+    assert.doesNotMatch(header.replace(/<button id="core-persistence-status"[\s\S]*?<\/button>/, ''), /button|headerMore|cf-streak-trigger/, `${name}: o cabeçalho não deve mostrar menu ou ações adicionais`);
 
     assert.match(html, /whitespace-nowrap">\$\{currentTotal\} min<\/span>/, `${name}: "N min" não pode quebrar`);
     assert.doesNotMatch(html.match(/<p id="profileNameValue"[^>]*>/)[0], /truncate/, `${name}: nome do perfil não pode ser cortado`);

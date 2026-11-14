@@ -11,17 +11,17 @@ const launcherBackground = fs.readFileSync(path.join(root, 'app', 'src', 'main',
 const composeColors = fs.readFileSync(path.join(root, 'app', 'src', 'main', 'java', 'com', 'example', 'ui', 'theme', 'Color.kt'), 'utf8');
 
 assert.equal(embedded, source, 'HTML raiz e asset embarcado precisam permanecer idênticos');
-assert.match(source, /--cf-color-canvas:\s*#0C1710/i);
-assert.match(source, /--cf-color-surface:\s*#14251A/i);
-assert.match(source, /--cf-color-surface-raised:\s*#14251A/i);
-assert.match(source, /--cf-color-text-primary:\s*#EFF5EF/i);
-assert.match(source, /--cf-color-menta:\s*#8BD3A8/i);
-assert.match(source, /--cf-color-cyan:\s*#A6B9A9/i);
+assert.match(source, /--cf-color-canvas:\s*#F5F1E7/i);
+assert.match(source, /--cf-color-surface:\s*#FFFEFA/i);
+assert.match(source, /--cf-color-surface-raised:\s*#FFFEFA/i);
+assert.match(source, /--cf-color-text-primary:\s*#212821/i);
+assert.match(source, /--cf-color-action:\s*#2F5B45/i);
+assert.match(source, /--cf-color-action-pressed:\s*#254736/i);
 assert.match(source, /--cf-color-alert:/i);
-for (const [name, value] of [['coreflow_canvas', '#FF0B110F'], ['coreflow_sage', '#FFB6D987'], ['coreflow_sea_glass', '#FF9CC4B3'], ['coreflow_on_surface', '#FFF3F5F0']]) {
+for (const [name, value] of [['coreflow_canvas', '#FFF5F1E7'], ['coreflow_sage', '#FF2F5B45'], ['coreflow_sea_glass', '#FF8FAE94'], ['coreflow_on_surface', '#FF212821']]) {
     assert.match(nativeColors, new RegExp(`<color name="${name}">${value}</color>`, 'i'), `cor ausente ou divergente: ${name}`);
 }
-for (const [name, value] of [['CoreFlowCanvas', 'FF0B110F'], ['CoreFlowPrimary', 'FFB6D987'], ['CoreFlowSecondary', 'FF9CC4B3'], ['CoreFlowOnSurface', 'FFF3F5F0']]) {
+for (const [name, value] of [['CoreFlowCanvas', 'FFF5F1E7'], ['CoreFlowPrimary', 'FF2F5B45'], ['CoreFlowSecondary', 'FF56615A'], ['CoreFlowOnSurface', 'FF212821'], ['CoreFlowAmoledCanvas', 'FF000000'], ['CoreFlowAmoledSurface', 'FF0B100D'], ['CoreFlowAmoledPrimary', 'FF9FC7A6']]) {
     assert.match(composeColors, new RegExp(`${name} = Color\\(0x${value}\\)`, 'i'), `token Compose ausente ou divergente: ${name}`);
 }
 assert.match(launcherIcon, /android:strokeColor="@color\/coreflow_sea_glass"/i);
@@ -65,6 +65,7 @@ assert.match(source, /viewport-fit=cover/);
 assert.match(source, /overflow-x-auto/);
 assert.match(source, /role="status"/);
 assert.match(source, /role="switch"/);
+assert.match(source, /theme:\s*'amoled'/, 'AMOLED deve ser o padrão inicial do CoreFlow');
 
 assert.equal((source.match(/id="nav-btn-[^"]+"/g) || []).length, 5, 'navegação principal precisa ter exatamente cinco destinos');
 assert.equal(fs.existsSync(path.join(root, 'docs', 'roadmap', 'inventario-controles-e05.md')), true, 'inventário E05 ausente');

@@ -1506,3 +1506,77 @@ Próximo passo:
   - [wear-release.apk](https://github.com/playertwo1/Adbm/releases/download/v1.1.52/wear-release.apk) — SHA-256 `99ecdd3f9d57e6c16f6c095a22d1f5ad0d7dcc4001f71160efa30bd0911ae0ff`.
 - Actions estava desativado no repositório e mantinha execuções antigas sem jobs. Foi habilitado temporariamente com allowlist apenas para as cinco actions usadas pelo workflow; após a publicação, o repositório voltou a `enabled=false` e o workflow a `disabled_manually`.
 - O primeiro disparo desta rodada (`43316777309`), feito enquanto Actions estava desativado, permaneceu como entrada órfã em fila e a API recusou seu cancelamento como concluído. O segundo disparo, após habilitar Actions, executou e publicou a release; o workflow e Actions estão novamente desativados.
+
+## 2026-11-13 — Refinamento de movimento e controles
+
+- Diagnóstico do erro de validação JSON do Design Mode: `Unexpected non-whitespace character after JSON` vinha de uma chave `}` extra após o objeto completo; não era falha do app nem de arquivo do projeto.
+- Na WebView, as telas agora usam uma transição de conteúdo de 180 ms apenas quando a aba muda. A preferência de movimento reduzido do app e do Android remove a animação e torna a rolagem imediata; re-selecionar a aba ativa não reinicia o efeito.
+- Refinados os botões Fluxo, a ação principal e os atalhos de prática para reduzir a aparência desproporcional, manter alvos de toque adequados e dar feedback curto ao pressionar.
+- Na overlay Android, mudanças entre os estados mini, compacto, expandido e confirmação de cancelamento usam fade/escala de 180 ms com desaceleração. Movimento reduzido no app ou animações desativadas no sistema exibem o estado final imediatamente. O serviço, os dados, os temporizadores, os controles e o protocolo de treino não mudaram.
+- Regressões atualizadas em `diagnostics/fluxo-home-navigation.test.cjs`, `diagnostics/floating-workout-overlay.test.cjs`, `diagnostics/e14-critique-p1.test.cjs` e `WorkoutOverlayTest.kt`, incluindo troca real de aba, movimento reduzido e transição imediata do overlay.
+- Verificação: 80 testes em `diagnostics/*.test.cjs` passaram; `:app:testDebugUnitTest`, `:app:assembleDebug` e `:wear:assembleDebug` passaram; os HTMLs têm SHA-256 idêntico (`6A1AA72C95D68BA5352D1FD1110A3C47F236E4DDD4C6F07ADD40C9035AB84733`) e `git diff --check` passou. O comando `bash scripts/check.sh` não pôde iniciar no shell disponível, então seus diagnósticos e tarefas Gradle foram chamados diretamente.
+- QA por ADB no emulador Android Studio `Pixel_10a` (API 37, 1080×2424): APK debug instalado; onboarding local concluído com foco Mindfulness, meta diária de 30 minutos e frequência semanal em branco; Hoje, Programas e Evolução renderizaram; alternância rápida entre abas terminou em Hoje sem travar. Nenhum treino foi iniciado. Uma captura inicialmente preta foi causada por redirecionamento binário do PowerShell; `adb shell screencap` seguido de `adb pull` produziu capturas corretas.
+- NOT_RUN: inspeção visual da overlay em sessão ativa, aparelho físico, TalkBack e Wear OS. Nenhuma versão foi alterada e nenhuma release foi publicada.
+
+## 2026-11-13 — Documentação de identidade e correção do onboarding
+
+- `PRODUCT.md` consolida o produto e os limites verificados; `DESIGN.md` registra a identidade CoreFlow e seus critérios visuais. O contexto Impeccable reconheceu os dois documentos. A inicialização Impeccable está configurada e reconhece os documentos; o launcher para Windows está em `C:\Users\notefael\.agents\skills\impeccable\scripts\impeccable.cmd`; a configuração Live aponta para `index.html` e `app/src/main/assets/index.html` antes de `</body>` e registra a checagem de CSP.
+- Corrigido o contraste dos textos das opções de onboarding, o realce da opção selecionada e as cores de progresso e marca do cabeçalho. Os seletores agora vencem a regra global que tornava invisível o texto branco sobre superfícies brancas. Os dois HTMLs permanecem idênticos.
+- Verificação: `:app:assembleDebug` passou após a correção; `git diff --check` passou; SHA-256 dos HTMLs: `DB95DAA36547F6D0ECADE25E09CA100A473A9DD999FB398D95C41B740789A0CC` em ambos.
+- QA visual por ADB no AVD `CoreFlow_API36_Clean` (API 36): opções e estado selecionado do onboarding, avanço pelas etapas até Hoje; Programas também abriu e a navegação retornou a Hoje. Captura de Hoje: `docs/roadmap/evidence/coreflow-identidade-home-api36-2026-11-13.png`. O APK debug instalado informa `versionName 1.1.52`/`versionCode 52`; não houve alteração de versão ou publicação.
+- O `Pixel_10a` API 37 não recebeu o APK nesta rodada: o Package Manager manteve a sessão pendente `1196442191`; os logs registraram ausência do serviço `persistent_data_block`, timeout do verificador e falha de renomeação de `install_sessions.xml`. Os dados do AVD original foram preservados; a validação foi feita no AVD API 36.
+- NOT_RUN: `bash scripts/check.sh`, suítes de testes, aparelho físico, TalkBack, Wear OS e overlay durante uma sessão ativa. Nenhum treino foi iniciado.
+
+## 2026-11-13 — Redireção da especificação visual CoreFlow
+
+- Refeito `DESIGN.md` para descrever uma interface de prática corporal, não um painel genérico: orientação, fase, duração e próxima ação guiam a hierarquia; a régua de quatro fases e as imagens locais de alongamento ancoram a identidade no produto existente.
+- Mantido o azul do símbolo existente; definida uma base mineral mais quente, com cores de ação e estados separadas, menos superfícies encaixotadas, cantos menores, Roboto do sistema e botões retangulares.
+- A pesquisa local de estilos devolveu padrões de marketing e fontes externas que não se ajustam ao app Android/WebView; a direção foi definida a partir das telas e recursos reais do CoreFlow, sem importar esses padrões.
+- Este foi um ajuste documental: nenhum HTML, componente nativo, dado, comportamento ou versão foi alterado. `git diff --check` passou e a conferência de contraste dos tokens de texto ficou acima de 4,5:1. Build e suítes não foram executados.
+
+## 2026-11-13 — Direção visual CoreFlow baseada na Apple HIG
+
+- Consultadas páginas oficiais Apple Human Interface Guidelines: Design principles, Designing for iOS, Color, Layout, Materials, Typography, Tab bars, Sheets, Motion, Feedback, Accessibility e Writing.
+- Refeito `DESIGN.md` para aplicar os princípios ao produto Android sem copiar recursos proprietários do iOS. A HIG atual trata Liquid Glass como camada funcional de controles/navegação Apple, recomenda parcimônia e desaconselha seu uso no conteúdo; a especificação explicita essa fronteira. Tipografia do sistema Android e comportamento Android permanecem.
+- Criado `docs/design/questionario-direcao-visual-coreflow-2026-11-13.md` com 18 escolhas para personalidade, cores, superfícies, tipografia, hierarquia, prática, navegação, overlay, movimento, feedback e voz. Paleta/tokens do projeto ficam provisórios até as respostas.
+- Nenhuma interface, dado, comportamento, versão ou release foi alterada nesta etapa. Build e testes não foram executados; `git diff --check` e revisão do texto foram feitos após registrar a etapa.
+
+## 2026-11-13 — Direção visual definida com o usuário
+
+- Consolidada em `DESIGN.md` a direção escolhida no questionário interativo: caderno de prática; aproximação visual ao iOS com superfícies flutuantes e controles suaves, adaptados ao Android; verde profundo, fundo marfim e sálvia em seleções; cartões suaves na maioria das áreas; cantos moderados; botões compactos com alvos acessíveis; Roboto; início de prática como foco de Hoje; instrução e timer como foco da sessão; ilustrações próprias de linha; aba ativa verde sem cápsula; overlay carvão retangular; respiração animada de modo sincronizado com navegação discreta; status de salvamento passivo; AMOLED padrão; cópia direta.
+- Registradas no questionário as respostas `1A, 2B, 3B, 4B, 5A, 6C, 7A, 8A, 9A, 10A, 11A, 12C (estilo A), 13A, 14A, 15B, 16A, 17C, 18A`.
+- Os valores hexadecimais concretos traduzem as preferências de cor em tokens com contraste de texto superior a 4,5:1, incluindo rótulos de botão nos temas claro e AMOLED.
+- Nenhum HTML, código nativo, dado ou comportamento foi alterado. A direção visual está documentada; aplicação e validação visual no AVD continuam pendentes.
+
+## 2026-11-13 — Três composições para a tela Hoje
+
+- Criados três mockups estáticos que mantêm AMOLED, cores, navegação e atalhos atuais, variando a composição: ação em foco, lista em estilo caderno e diagrama de respiração.
+- Conteúdo e nomes foram conferidos em index.html. O resumo 0 / 30 min representa apenas o estado inicial e deve continuar ligado aos dados locais reais na implementação.
+- Fonte vetorial, prancha comparativa e três imagens individuais estão em docs/design/mockups-coreflow-opcoes-2026-11-13/.
+- Nenhum arquivo da interface de produção, comportamento ou dados foi alterado. As imagens foram abertas e conferidas; não houve build nem captura no AVD nesta etapa de mockup estático.
+
+## 2026-11-13 — Navegação sem barra inferior nos mockups
+
+- Removida a navegação fixa inferior das três composições a pedido do usuário. Cada tela agora mostra o botão Menu no topo; a prévia separada demonstra os cinco destinos em uma gaveta lateral.
+- A gaveta usa alvos amplos, rótulos e ícones, com o destino atual em verde e sem cápsula. A etapa para mudar de área passa a abrir o menu e selecionar um destino.
+- Nenhuma tela de produção foi alterada. Mockups estáticos regenerados e conferidos; não houve build nem validação no AVD.
+
+## 2026-11-13 — Programas em destaque e navegação vertical
+
+- Aplicada à tela Hoje a primeira composição aprovada, sem barra inferior. O programa recomendado ou a seleção dos programas locais aparece logo após o título; nome, fase, sessão e ação são derivados do estado real. Saudação e atalhos rápidos ficam abaixo, e “Ver programas” oferece a mesma navegação por toque.
+- Os cinco destinos atuais ficam numa gaveta lateral acessível pelo botão Menu. Escape/Voltar e toque fora fecham a gaveta; fechar devolve o foco ao botão. A aba ativa usa ícone e rótulo verdes, sem cápsula.
+- Deslizar para cima no fim da rolagem de Hoje abre Programas; deslizar para baixo no topo de Programas volta a Hoje. A rolagem continua livre no restante da tela, controles/modais ignoram o gesto, e a troca usa deslocamento vertical de 220 ms, respeitando movimento reduzido.
+- Mantidos nomes, seleção de programas, ações, dados, persistência, treinos e protocolo. Nenhuma sessão foi iniciada e nenhuma seleção de programa foi gravada durante a validação.
+- Regressões ajustadas para o menu, ordem do destaque, retorno por gesto, fonte ampliada e expectativas de texto que estavam em caixa diferente da saída nativa. Todos os `diagnostics/*.test.cjs` passaram; `:app:testDebugUnitTest`, `:app:assembleDebug` e `:wear:assembleDebug` passaram. `index.html` e `app/src/main/assets/index.html` têm o mesmo SHA-256; `git diff --check` passou.
+- QA por ADB no AVD Android Studio `sdk_gphone64_x86_64` (API 36, 1080×2400): instalação com `adb install -r` preservou dados; conferidos a tela Hoje, a gaveta e seus destinos, Voltar para fechar, Programas e os dois gestos verticais. Capturas em `docs/roadmap/evidence/coreflow-program-home-avd-2026-11-13.png`, `coreflow-program-menu-avd-2026-11-13.png`, `coreflow-programs-avd-2026-11-13.png`, `coreflow-swipe-back-today-avd-2026-11-13.png` e `coreflow-swipe-up-programs-avd-2026-11-13.png`.
+- `bash scripts/check.sh` não herdou `JAVA_HOME` neste shell; o mesmo ciclo foi executado diretamente no PowerShell: todos os diagnósticos Node e as tarefas Gradle acima passaram. Sem validação em aparelho físico, TalkBack ou relógio Wear OS.
+
+## 2026-11-13 — Redesign das telas CoreFlow e menu por gesto
+
+- O menu principal fica oculto na interface e abre com deslize horizontal iniciado pela lateral interna; não há botão fixo no topo nem barra inferior. O teste começou a 100 px físicos da borda no AVD para não acionar o gesto Voltar do Android.
+- Refeitas Hoje e Programas com os programas em destaque, ações proporcionais e hierarquia de prática; adicionada a troca vertical suave Hoje ↔ Programas nos limites da rolagem. Pausas, Evolução, Perfil, Vácuo e Modo discreto foram alinhados à identidade marfim/verde e ao tratamento de superfícies decidido com o usuário.
+- O Vácuo recebeu desenhos vetoriais de linha para as três posturas. Os indicadores de série do Vácuo e do Modo discreto deixaram de usar cápsulas; instruções usam caixa de frase. No Kegel, a trilha segue o tema AMOLED e o anel começa vazio, sem ponto residual; sua escala foi normalizada e o preenchimento acompanha a fração do timer.
+- Preservados IDs, programas, preferências e protocolos de treino. `index.html` e `app/src/main/assets/index.html` continuam idênticos.
+- Verificação final: 81 diagnósticos em `diagnostics/*.test.cjs`, incluindo a nova regressão `e26-fluxo-practice-screens.test.cjs` e cálculos do anel/Modo silencioso em `e10-discreto-silent-mode.test.cjs`; `:app:testDebugUnitTest`, `:app:assembleDebug` e `:wear:assembleDebug` passaram. `git diff --check` passou; a única saída foram avisos de conversão LF/CRLF do Git. `bash scripts/check.sh` não foi repetido; os mesmos diagnósticos e tarefas Gradle foram executados diretamente.
+- QA por ADB no AVD Android Studio `sdk_gphone64_x86_64` (API 36, 1080×2400): instalado com `adb install -r`, sem limpar dados; conferidos Hoje, Programas, menu oculto por swipe, gesto vertical de retorno, Pausas, Evolução, Perfil, Vácuo e Modo discreto, incluindo o anel parado. Nenhum treino foi iniciado. Capturas finais em `docs/roadmap/evidence/coreflow-full-redesign-avd-2026-11-13/09-hoje-apk-final.png`, `10-menu-swipe-final.png`, `11-programas-apk-final.png`, `12-swipe-programas-hoje-final.png`, `13-today-praticas-apk-final.png`, `14-vacuo-apk-final.png`, `16-modo-discreto-anel-vazio.png`, `17-pausas-apk-final.png`, `18-evolucao-apk-final.png` e `19-perfil-apk-final.png`.
+- NOT_RUN: aparelho físico, TalkBack e Wear OS. Um swipe iniciado exatamente na borda extrema é tratado pelo Android como Voltar; a gaveta abre ao iniciar alguns pixels para dentro, conforme verificado no AVD.

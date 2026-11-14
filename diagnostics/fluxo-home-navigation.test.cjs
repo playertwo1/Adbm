@@ -12,6 +12,22 @@ assert.equal(html, packagedHtml, 'a interface de produção deve ser idêntica �
 
 const today = html.match(/<section id="tab-hoje"[^>]*>([\s\S]*?)<\/section>/)?.[1];
 assert.ok(today, 'a tela Hoje deve continuar disponível');
+assert.doesNotMatch(today, /cf-status-dot/, 'Hoje não deve mostrar um indicador decorativo sem estado real');
+assert.ok(today.indexOf('id="todayRecommendationContainer"') < today.indexOf('id="todayGreetingBlock"'), 'o programa deve aparecer antes da saudação e dos atalhos');
+const pauses = html.match(/<section id="tab-pausas"[^>]*>([\s\S]*?)<\/section>/)?.[1];
+assert.ok(pauses, 'a tela Pausas deve continuar disponível');
+assert.doesNotMatch(pauses, /🌟|🪑|🧘|💪|💆/, 'os filtros de prática não devem usar emojis como ícones');
+assert.match(html, /#tab-pausas \.cf-work-pause-settings legend[^{}]*\{[^}]*text-transform:\s*none/, 'os controles de pausa devem usar rótulos em caixa de frase');
+assert.ok(/#tab-pausas \.cf-work-pause-settings > label\.cf-work-pause-enable[^{}]*\{/.test(html), 'somente a opção de ativar lembretes deve receber estilo de cartão');
+assert.ok(/<label class="[^"]*cf-work-pause-interval-label[^"]*">Intervalo entre lembretes/.test(html), 'o intervalo deve permanecer um rótulo simples acima do seletor');
+assert.match(html, /#tab-pausas \.cf-work-pause-icon[^{}]*\{[^}]*background:\s*transparent/, 'o ícone de pausa deve ficar sem bloco colorido');
+assert.match(html, /#tab-pausas \.cf-pause-category[^{}]*\{[^}]*border-radius:\s*16px[^}]*background:/, 'as categorias Corpo e Mente devem usar cartões do novo sistema');
+assert.match(html, /#tab-dashboard \.cf-evolution-comparison[^{}]*\{[^}]*border-radius:\s*0/, 'a comparação de evolução deve ser texto de apoio, não selo em cápsula');
+assert.match(html, /#tab-dashboard \.cf-evolution-icon[^{}]*\{[^}]*background:\s*transparent/, 'o resumo de evolução deve dispensar ícone em círculo colorido');
+assert.match(html, /#tab-dashboard \.cf-evolution-total[^{}]*\{[^}]*font-size:/, 'o valor de evolução deve usar escala própria');
+assert.match(html, /#tab-perfil \.cf-profile-eyebrow[^{}]*\{[^}]*text-transform:\s*none/, 'o resumo do perfil deve evitar caixa alta decorativa');
+assert.match(html, /#tab-perfil #profileReminderPrograms \.cf-profile-reminder[^{}]*\{[^}]*background:/, 'os lembretes do perfil devem usar a superfície da identidade');
+assert.match(html, /#tab-perfil #profileReminderPrograms \.cf-profile-reminder-action[^{}]*\{[^}]*background:/, 'configurar horários deve seguir a cor de ação CoreFlow');
 const shortcutButtons = [...today.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/g)];
 const shortcuts = [
     ['vacuo', 'Wind', 'Vácuo abdominal', "openTodayShortcut('vacuo')"],
@@ -30,22 +46,30 @@ for (const [shortcut, icon, label, handler] of shortcuts) {
     assert.match(body, /<svg\b[^>]*aria-hidden="true"/, `${label} deve usar SVG local decorativo`);
     assert.ok(body.includes(label), `${label} deve manter seu nome visível`);
 }
-const practiceStyle = html.match(/\.cf-fluxo-practice-row\s*\{([^}]+)\}/)?.[1] || '';
-assert.match(practiceStyle, /width:\s*100%/, 'os atalhos devem ocupar a largura disponível');
-assert.match(practiceStyle, /grid-template-columns/, 'os atalhos devem separar ícone, texto e indicação de abertura');
+const practiceStyles = [...html.matchAll(/\.cf-fluxo-practice-row\s*\{([^}]+)\}/g)].map(([, style]) => style);
+assert.ok(practiceStyles.some(style => /width:\s*100%/.test(style)), 'os atalhos devem ocupar a largura disponível');
+assert.ok(practiceStyles.some(style => /grid-template-columns/.test(style)), 'os atalhos devem separar ícone, texto e indicação de abertura');
 
-const nav = html.match(/<nav id="coreflow-bottom-nav"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
-assert.ok(nav, 'a navegação inferior deve continuar disponível');
+assert.doesNotMatch(html, /id="coreflow-bottom-nav"/, 'a interface não deve fixar a navegação na parte inferior');
+const header = html.match(/<header\b[^>]*>([\s\S]*?)<\/header>/)?.[1] || '';
+assert.match(header, /id="core-persistence-status"/, 'o salvamento deve aparecer como status discreto no cabeçalho');
+assert.doesNotMatch(header, /id="mainNavigationButton"|>\s*Menu\s*</, 'a navegação não deve aparecer como botão no cabeçalho');
+assert.doesNotMatch(header, /headerMoreBtn|headerMoreMenu|cf-streak-trigger/, 'o cabeçalho não deve manter menu de ações ou navegação');
+const nav = html.match(/<nav[^>]*aria-label="Destinos principais"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
+assert.ok(nav, 'o menu lateral deve manter a navegação principal acessível');
+assert.match(html, /id="mainNavigationButton"[^>]*class="[^"]*cf-nav-accessibility-trigger[^"]*"[^>]*aria-expanded="false"/, 'a navegação deve continuar disponível por teclado e leitor de tela');
+assert.match(html, /aria-controls="mainNavigationDrawer"/, 'o botão Menu deve apontar para a gaveta');
+assert.match(html, /\.cf-nav-accessibility-trigger:focus-visible/, 'a alternativa acessível deve aparecer quando recebe foco');
 const navButtons = [...nav.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/g)];
 const navigation = [
-    ['House', 'Hoje', "switchTab('hoje')"],
-    ['ListChecks', 'Programas', "switchTab('programas')"],
-    ['PersonStanding', 'Pausas', "switchTab('pausas')"],
-    ['ChartLine', 'Evolução', "switchTab('dashboard')"],
-    ['UserRound', 'Perfil', "switchTab('perfil')"]
+    ['House', 'Hoje', "selectMainNavigation('hoje')"],
+    ['ListChecks', 'Programas', "selectMainNavigation('programas')"],
+    ['PersonStanding', 'Pausas', "selectMainNavigation('pausas')"],
+    ['ChartLine', 'Evolução', "selectMainNavigation('dashboard')"],
+    ['UserRound', 'Perfil', "selectMainNavigation('perfil')"]
 ];
 
-assert.equal(navButtons.length, navigation.length, 'a navegação deve manter cinco destinos');
+assert.equal(navButtons.length, navigation.length, 'a navegação lateral deve manter cinco destinos');
 navigation.forEach(([icon, label, handler], index) => {
     const [, attrs, body] = navButtons[index];
     assert.match(attrs, new RegExp(`data-pulso-icon="${icon}"`), `${label} deve usar o ícone aprovado`);
@@ -55,6 +79,43 @@ navigation.forEach(([icon, label, handler], index) => {
 });
 assert.doesNotMatch(nav, /fa-solid|nav-bounce/, 'os ícones da navegação devem permanecer estáticos e locais');
 assert.doesNotMatch(html, /navBounce|nav-bounce|classList\.add\('nav-bounce'\)/, 'a troca de aba não deve animar os ícones');
+assert.match(html, /function openMainNavigation\(/, 'o menu lateral deve ter uma ação para abrir');
+assert.match(html, /function closeMainNavigation\(/, 'o menu lateral deve ter uma ação para fechar e devolver o foco');
+
+const switchTabStart = html.indexOf('function switchTab(tabName, direction = null) {');
+const switchTabEnd = html.indexOf('function closeTopmostOverlay()', switchTabStart);
+const switchTabFunction = switchTabStart >= 0 && switchTabEnd > switchTabStart
+    ? html.slice(switchTabStart, switchTabEnd)
+    : '';
+assert.match(switchTabFunction, /target\.animate\(/, 'a troca de tela deve animar o conteúdo, não os ícones');
+assert.match(switchTabFunction, /cf-reduced-motion/, 'a animação deve respeitar a preferência de movimento reduzido do app');
+assert.match(switchTabFunction, /prefers-reduced-motion:\s*reduce/, 'a animação deve respeitar a preferência de movimento reduzido do sistema');
+assert.match(switchTabFunction, /isScreenChange/, 'reselecionar a aba ativa não deve repetir a animação');
+assert.match(switchTabFunction, /behavior:\s*isScreenChange\s*\|\|\s*prefersReducedMotion\s*\?\s*'auto'\s*:\s*'smooth'/, 'a troca de tela deve iniciar no topo sem animar uma rolagem longa');
+assert.match(switchTabFunction, /direction/, 'a troca por gesto deve animar na direção percorrida');
+const swipeStart = html.indexOf('function initializeVerticalScreenNavigation() {');
+const swipeEnd = html.indexOf('function closeTopmostOverlay()', swipeStart);
+const swipeFunction = swipeStart >= 0 && swipeEnd > swipeStart ? html.slice(swipeStart, swipeEnd) : '';
+assert.match(swipeFunction, /touchstart[\s\S]*touchend/, 'a navegação vertical deve reconhecer um gesto completo');
+assert.match(swipeFunction, /touch\.clientX\s*>=\s*24\s*&&\s*touch\.clientX\s*<=\s*72/, 'a gaveta deve abrir apenas com deslize iniciado na lateral, fora da zona do Voltar do Android');
+assert.match(swipeFunction, /deltaX\s*>=\s*64[\s\S]*openMainNavigation\('gesture'\)/, 'deslizar para dentro a partir da lateral deve abrir a navegação oculta');
+assert.match(swipeFunction, /scrollY/, 'o gesto deve respeitar a posição da rolagem');
+assert.match(swipeFunction, /programas[\s\S]*hoje/, 'o gesto deve alternar entre Hoje e Programas');
+assert.match(swipeFunction, /80/, 'o gesto deve exigir deslocamento suficiente para evitar trocas acidentais');
+assert.match(swipeFunction, /button|input|textarea|select/, 'o gesto deve ignorar controles interativos');
+assert.match(html, /cf-fluxo-program-highlight/, 'o programa recomendado deve receber destaque visual próprio');
+assert.match(html, /Ver programas/, 'Hoje deve oferecer uma alternativa por toque para abrir Programas');
+assert.match(html, /--cf-color-canvas:\s*#F5F1E7/i, 'as telas claras devem usar o fundo marfim aprovado');
+assert.match(html, /--cf-color-action:\s*#2F5B45/i, 'as ações devem usar o verde profundo aprovado');
+assert.match(html, /cf-persistence-ready/, 'salvamento confirmado deve ter estilo discreto');
+assert.match(html, /#core-persistence-status\.cf-persistence-ready/, 'salvamento confirmado deve ter estilo discreto');
+assert.match(html, /#core-persistence-status\.cf-persistence-alert[^{}]*\{[^}]*min-height:\s*44px[^}]*cursor:\s*pointer/, 'falhas de salvamento devem continuar legíveis e acionáveis');
+assert.match(html, /#tab-programas\s+\.cf-fluxo-page-heading|#tab-programas\s+#todayWorkoutHeroBanner/, 'Programas deve receber composição visual própria');
+assert.match(html, /\.cf-fluxo-screen button\.cf-btn,\s*\.cf-fluxo-primary-action\s*\{[^}]*border-radius:\s*12px/, 'botões das telas Fluxo devem usar cantos suaves');
+assert.ok(practiceStyles.some(style => /border-radius:\s*16px/.test(style)), 'atalhos de prática devem manter cantos suaves');
+assert.match(html, /theme:\s*'amoled'/, 'AMOLED deve ser o tema inicial sem sobrescrever uma preferência salva');
+assert.match(html, /cf-program-mindfulness/, 'o programa de mindfulness deve receber composição própria');
+assert.match(html, /cf-program-schedule/, 'as trilhas devem separar visualmente a agenda do restante do programa');
 
 for (const tab of ['hoje', 'vacuo', 'discreto', 'pausas', 'programas', 'dashboard', 'perfil']) {
     assert.match(html, new RegExp(`<section id="tab-${tab}"[^>]*class="[^"]*cf-fluxo-screen`), `${tab} deve usar o sistema Fluxo`);

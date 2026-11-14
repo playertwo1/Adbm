@@ -217,7 +217,7 @@ function setup() {
     vm.runInContext(`AppState.programs.find(p => p.id === '3').dailyTarget = 1`, env.context);
     vm.runInContext(`openProgramDetail('3')`, env.context); // programDetailState now points at Vacuum (dailyTarget 1)
     vm.runInContext('renderProgramsList()', env.context);
-    assert.equal(env.getElementById('heroSessionsTodayBadge').innerText, '0/1 Sessões Hoje', 'hero deve refletir a meta real do programa selecionado, não fixar 2');
+    assert.equal(env.getElementById('heroSessionsTodayBadge').innerText, '0 de 1 sessões hoje', 'hero deve refletir a meta real do programa selecionado, não fixar 2');
     assert.equal(env.getElementById('heroWorkoutProgramTitle').innerText, 'Stomach Vacuum: 8 Semanas no Escritório');
 }
 

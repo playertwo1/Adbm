@@ -2,16 +2,17 @@ package com.example.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
-private val DarkColorScheme =
-  darkColorScheme(
+private val LightColorScheme =
+  lightColorScheme(
     primary = CoreFlowPrimary,
-    onPrimary = CoreFlowCanvas,
+    onPrimary = CoreFlowSurface,
     secondary = CoreFlowSecondary,
-    onSecondary = CoreFlowCanvas,
+    onSecondary = CoreFlowSurface,
     tertiary = CoreFlowAlert,
-    onTertiary = CoreFlowCanvas,
+    onTertiary = CoreFlowSurface,
     background = CoreFlowCanvas,
     onBackground = CoreFlowOnSurface,
     surface = CoreFlowSurface,
@@ -19,10 +20,28 @@ private val DarkColorScheme =
     surfaceVariant = CoreFlowSurfaceRaised,
     onSurfaceVariant = CoreFlowOnSurfaceVariant,
     error = CoreFlowDanger,
-    onError = CoreFlowCanvas,
+    onError = CoreFlowSurface,
+  )
+
+private val AmoledColorScheme =
+  darkColorScheme(
+    primary = CoreFlowAmoledPrimary,
+    onPrimary = CoreFlowAmoledCanvas,
+    secondary = CoreFlowAmoledSecondary,
+    onSecondary = CoreFlowAmoledCanvas,
+    tertiary = CoreFlowAmoledAlert,
+    onTertiary = CoreFlowAmoledCanvas,
+    background = CoreFlowAmoledCanvas,
+    onBackground = CoreFlowAmoledOnSurface,
+    surface = CoreFlowAmoledSurface,
+    onSurface = CoreFlowAmoledOnSurface,
+    surfaceVariant = CoreFlowAmoledSurfaceRaised,
+    onSurfaceVariant = CoreFlowAmoledOnSurfaceVariant,
+    error = CoreFlowAmoledDanger,
+    onError = CoreFlowAmoledCanvas,
   )
 
 @Composable
-fun MyApplicationTheme(content: @Composable () -> Unit) {
-  MaterialTheme(colorScheme = DarkColorScheme, typography = Typography, content = content)
+fun MyApplicationTheme(amoled: Boolean = true, content: @Composable () -> Unit) {
+  MaterialTheme(colorScheme = if (amoled) AmoledColorScheme else LightColorScheme, typography = Typography, content = content)
 }

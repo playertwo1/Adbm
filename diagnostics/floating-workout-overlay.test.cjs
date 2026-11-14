@@ -24,6 +24,9 @@ console.log('✓ CP1: Permissão SYSTEM_ALERT_WINDOW declarada no AndroidManifes
 // 2. Verificar existência do WorkoutOverlayController.kt
 assert(fs.existsSync(overlayControllerPath), 'WorkoutOverlayController.kt não encontrado');
 const overlayCode = fs.readFileSync(overlayControllerPath, 'utf8');
+assert.match(overlayCode, /!appReducedMotion[\s\S]{0,180}ValueAnimator\.areAnimatorsEnabled\(\)/, 'a transição do overlay deve respeitar a preferência de movimento reduzido');
+assert.match(overlayCode, /setDuration\(180\)/, 'a transição do overlay deve ser breve');
+assert.match(overlayCode, /setInterpolator\(DecelerateInterpolator\(/, 'a transição do overlay deve desacelerar suavemente');
 
 // Proibições estritas: não criar outro cronômetro, não criar outro ForegroundService, não criar vibração própria, não duplicar voz
 assert(!/:\s*CountDownTimer|new\s+CountDownTimer|object\s*:\s*CountDownTimer/.test(overlayCode), 'WorkoutOverlayController NÃO pode instanciar CountDownTimer próprio');
