@@ -1,0 +1,16 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 15000
+- tapOn:
+    text: "Cancelar treino"
+    waitToSettleTimeoutMs: 0
+- tapOn:
+    text: "Confirmar cancelamento da sessão"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000

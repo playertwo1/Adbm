@@ -1,0 +1,47 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp
+- waitForAnimationToEnd
+- tapOn:
+    point: "42%, 94%"
+- waitForAnimationToEnd
+- tapOn:
+    point: "75%, 64%"
+- waitForAnimationToEnd
+- assertVisible: "Abrir"
+- takeScreenshot: "cp2-paused-cancel-mini"
+- tapOn: "Abrir"
+- waitForAnimationToEnd
+- assertVisible: "Recolher"
+- takeScreenshot: "cp2-paused-cancel-expanded"
+- tapOn:
+    point: "15%, 28%"
+- waitForAnimationToEnd:
+    timeout: 1000
+- takeScreenshot: "cp2-paused-cancel-paused"
+- tapOn:
+    point: "58%, 28%"
+- waitForAnimationToEnd:
+    timeout: 1000
+- assertVisible: "Cancelar treino?"
+- assertVisible: "Manter treino pausado"
+- takeScreenshot: "cp2-paused-cancel-confirmation"
+- tapOn: "Manter treino pausado"
+- waitForAnimationToEnd:
+    timeout: 1000
+- assertVisible: ".*Continuar"
+- takeScreenshot: "cp2-paused-cancel-dismissed"
+- assertVisible: "Abrir"
+- tapOn: "Abrir"
+- waitForAnimationToEnd:
+    timeout: 1000
+- assertVisible: "Recolher"
+- tapOn:
+    point: "58%, 28%"
+- waitForAnimationToEnd:
+    timeout: 1000
+- assertVisible: "Manter treino pausado"
+- tapOn: "Cancelar sessão"
+- waitForAnimationToEnd:
+    timeout: 1500
+- takeScreenshot: "cp2-paused-cancel-confirmed"

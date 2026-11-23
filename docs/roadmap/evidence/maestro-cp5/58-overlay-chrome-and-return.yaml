@@ -1,0 +1,50 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- tapOn:
+    id: "nav-btn-pausas"
+- scrollUntilVisible:
+    element:
+      id: "breath-btn-caixa"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: "breath-btn-caixa"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 15000
+- tapOn:
+    text: "Abrir"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 10000
+- pressKey: HOME
+- assertVisible: "Pausar treino"
+- assertVisible: "Cancelar treino"
+- launchApp:
+    appId: com.android.chrome
+- waitForAnimationToEnd:
+    timeout: 1500
+- assertVisible: "Pausar treino"
+- assertVisible: "Cancelar treino"
+- takeScreenshot: "cp5-overlay-on-chrome"
+- launchApp:
+    appId: com.aistudio.coreflow.vdfpkw
+    stopApp: false
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 15000
+- assertVisible: "Pausar treino"
+- tapOn:
+    text: "Cancelar treino"
+    waitToSettleTimeoutMs: 0
+- tapOn:
+    text: "Confirmar cancelamento da sessão"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000

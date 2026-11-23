@@ -1,0 +1,22 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Hoje"
+    timeout: 30000
+- tapOn:
+    id: "nav-btn-perfil"
+- scrollUntilVisible:
+    element:
+      id: "profileAccessibilityButton"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- takeScreenshot: "cp4-profile-accessibility-before"
+- tapOn:
+    id: "profileAccessibilityButton"
+- extendedWaitUntil:
+    visible: "Concluir"
+    timeout: 10000
+- takeScreenshot: "cp4-reduced-motion-current-state"

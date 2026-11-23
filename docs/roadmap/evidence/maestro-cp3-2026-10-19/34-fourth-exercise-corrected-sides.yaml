@@ -1,0 +1,54 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp
+- waitForAnimationToEnd:
+    timeout: 1000
+- tapOn:
+    id: nav-btn-pausas
+- assertVisible: "Corpo"
+- scrollUntilVisible:
+    element:
+      id: chip-stretch-dur-infinite
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: chip-stretch-dur-infinite
+- takeScreenshot: cp3-duration-free-selected
+- scrollUntilVisible:
+    element:
+      id: stretch-btn-4
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: stretch-btn-4
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 15000
+- takeScreenshot: cp3-ex4-right-mini-web
+- tapOn: "Abrir controles do treino"
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 30000
+- assertVisible: "Direita"
+- takeScreenshot: cp3-ex4-right-expanded
+- extendedWaitUntil:
+    visible: "Esquerda"
+    timeout: 180000
+- extendedWaitUntil:
+    visible: "01 : 0[0-9]"
+    timeout: 75000
+- takeScreenshot: cp3-ex4-left-expanded
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar sessão"
+- tapOn: "Cancelar sessão"
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: chip-stretch-dur-60
+    direction: UP
+    timeout: 20000
+- tapOn:
+    id: chip-stretch-dur-60
+- takeScreenshot: cp3-ex4-duration-restored-60

@@ -1,0 +1,11 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Hoje"
+    timeout: 20000
+- tapOn:
+    point: "55%, 40%"
+- waitForAnimationToEnd
+- takeScreenshot: cp5-bracing-after-quick-action

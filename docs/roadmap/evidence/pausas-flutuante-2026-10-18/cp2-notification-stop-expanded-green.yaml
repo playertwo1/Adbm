@@ -1,0 +1,36 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- pressKey: HOME
+- waitForAnimationToEnd
+- launchApp:
+    stopApp: true
+- waitForAnimationToEnd
+- assertVisible: "Pausas"
+- tapOn:
+    point: "42%, 94%"
+- waitForAnimationToEnd
+- tapOn:
+    point: "75%, 64%"
+- waitForAnimationToEnd
+- assertVisible: "Recolher"
+- takeScreenshot: "cp2-notification-overlay-started"
+- swipe:
+    start: "50%, 1%"
+    end: "50%, 75%"
+- waitForAnimationToEnd
+- assertVisible: "Torção de Coluna na Cadeira"
+- takeScreenshot: "cp2-notification-collapsed"
+- tapOn:
+    point: "89%, 57%"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-notification-expanded"
+- assertVisible: "Parar"
+- tapOn: "Parar"
+- waitForAnimationToEnd:
+    timeout: 1500
+- takeScreenshot: "cp2-notification-stop-action-result"
+- swipe:
+    start: "50%, 75%"
+    end: "50%, 1%"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-notification-stop-player-result"

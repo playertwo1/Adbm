@@ -1,0 +1,50 @@
+06:54:41.466 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandStart: Define variables RUNNING
+06:54:41.469 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandFinished: Define variables COMPLETED
+06:54:41.471 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandStart: Apply configuration RUNNING
+06:54:41.471 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandFinished: Apply configuration COMPLETED
+06:54:41.471 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandStart: Assert that "Pausas" is visible RUNNING
+06:54:41.938 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandFinished: Assert that "Pausas" is visible COMPLETED
+06:54:41.940 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandStart: Tap on id: chip-stretch-dur-60 RUNNING
+06:54:42.209 [ INFO] maestro.Maestro.tap-HgV9Ck0: Tapping on element:  UiElement(treeNode=TreeNode(attributes={text=60s (4m), accessibilityText=, hintText=, ignoreBoundsFiltering=false, resource-id=chip-stretch-dur-60, clickable=true, bounds=[769,142][958,142], enabled=true, focused=false, checked=false, scrollable=false, selected=false, class=android.widget.Button, important-for-accessibility=false, error=}, children=[], clickable=true, enabled=true, focused=false, checked=false, selected=false), bounds=Bounds(x=769, y=142, width=189, height=0))
+06:54:43.458 [ERROR] maestro.cli.session.MaestroSessionManager.newSession$lambda$0: Failed to record heartbeat
+java.io.IOException: O processo não pode acessar o arquivo porque outro processo bloqueou parte do arquivo
+	at java.base/sun.nio.ch.FileDispatcherImpl.write0(Native Method)
+	at java.base/sun.nio.ch.FileDispatcherImpl.write(Unknown Source)
+	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(Unknown Source)
+	at java.base/sun.nio.ch.IOUtil.write(Unknown Source)
+	at java.base/sun.nio.ch.IOUtil.write(Unknown Source)
+	at java.base/sun.nio.ch.FileChannelImpl.implWrite(Unknown Source)
+	at java.base/sun.nio.ch.FileChannelImpl.write(Unknown Source)
+	at java.base/java.io.FileOutputStream.implWriteBytes(Unknown Source)
+	at java.base/java.io.FileOutputStream.write(Unknown Source)
+	at kotlin.io.FilesKt__FileReadWriteKt.writeTextImpl(FileReadWrite.kt:160)
+	at kotlin.io.FilesKt__FileReadWriteKt.writeText(FileReadWrite.kt:145)
+	at kotlin.io.FilesKt__FileReadWriteKt.writeText$default(FileReadWrite.kt:144)
+	at maestro.cli.db.KeyValueStore.commit(KeyValueStore.kt:50)
+	at maestro.cli.db.KeyValueStore.set$lambda$3$lambda$2(KeyValueStore.kt:23)
+	at maestro.cli.db.KeyValueStore.withFileLock(KeyValueStore.kt:62)
+	at maestro.cli.db.KeyValueStore.set(KeyValueStore.kt:20)
+	at maestro.cli.session.SessionStore.heartbeat(SessionStore.kt:12)
+	at maestro.cli.session.MaestroSessionManager.newSession$lambda$0(MaestroSessionManager.kt:96)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(Unknown Source)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+06:54:43.617 [ INFO] maestro.Maestro.tap-HgV9Ck0: Tap aimed via settled hierarchy
+06:54:43.622 [ INFO] maestro.Maestro.hierarchyBasedTap-ogj28Uc: Tapping at (863, 142) using hierarchy based logic for wait
+06:54:44.244 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandFinished: Tap on id: chip-stretch-dur-60 COMPLETED
+06:54:44.245 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandStart: Wait for animation to end within 1000 ms RUNNING
+06:54:44.247 [ INFO] maestro.Maestro.waitForAnimationToEnd$lambda$53: Waiting for animation to end with timeout 1000
+06:54:44.248 [TRACE] maestro.utils.ScreenshotUtils.takeScreenshot: Taking screenshot to byte array
+06:54:44.248 [TRACE] maestro.utils.ScreenshotUtils.takeScreenshot: Taking screenshot to output sink
+06:54:44.623 [TRACE] maestro.utils.ScreenshotUtils.takeScreenshot: Taking screenshot to byte array
+06:54:44.623 [TRACE] maestro.utils.ScreenshotUtils.takeScreenshot: Taking screenshot to output sink
+06:54:45.070 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandFinished: Wait for animation to end within 1000 ms COMPLETED
+06:54:45.071 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandStart: Assert that "60s (4m)" is visible RUNNING
+06:54:45.346 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandFinished: Assert that "60s (4m)" is visible COMPLETED
+06:54:45.347 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandStart: Take screenshot cp3-duration-restored-60 RUNNING
+06:54:45.352 [ INFO] maestro.Maestro.takeScreenshot: Taking screenshot
+06:54:45.354 [TRACE] maestro.utils.ScreenshotUtils.takeScreenshot: Taking screenshot to output sink
+06:54:45.529 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandFinished: Take screenshot cp3-duration-restored-60 COMPLETED

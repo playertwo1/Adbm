@@ -1,0 +1,31 @@
+{
+  "schema": "android-premium-craft/critique@1",
+  "app": "Sloppy sample app",
+  "date": "2026-10-29",
+  "method": "design review + deterministic scan (code only, no device)",
+  "screens": [
+    {
+      "name": "Home",
+      "importance": "primary",
+      "evidence": ["evals/fixtures/sloppy-app/app/src/main/java/com/example/sloppy/HomeScreen.kt"],
+      "scores": {
+        "hierarchy": {"score": 1, "basis": "code", "evidence": "HomeScreen.kt:20-24 greeting + gradient hero before balance", "key_issue": "Greeting banner owns the first viewport"},
+        "layout": {"score": 1, "basis": "code", "evidence": "HomeScreen.kt:24-25 nested Card, 13dp padding (D002, D006)", "key_issue": "Cards in cards, off-grid spacing"},
+        "typography": {"score": 1, "basis": "code", "evidence": "HomeScreen.kt:23 10.sp uppercase label (T001, T004)", "key_issue": "10sp all-caps label"},
+        "color": {"score": 1, "basis": "code", "evidence": "HomeScreen.kt:22-23 #6750A4 gradient, alpha text (D010, C004)", "key_issue": "Template purple, alpha-faded text"},
+        "consistency": {"score": 2, "basis": "code", "evidence": "HomeScreen.kt:5 Material 2 import mixed with M3 (M001)", "key_issue": "M2 and M3 mixed"},
+        "states": {"score": 1, "basis": "code", "evidence": "HomeScreen.kt: no loading/empty/error branches for state.items", "key_issue": "Only the happy path exists"},
+        "touch": {"score": 1, "basis": "code", "evidence": "HomeScreen.kt:32 24dp clickable Box (A003)", "key_issue": "24dp target"},
+        "accessibility": {"score": 1, "basis": "code", "evidence": "HomeScreen.kt:30 IconButton contentDescription = null (A001)", "key_issue": "Unlabeled search button"},
+        "platform": {"score": 1, "basis": "code", "evidence": "HomeScreen.kt:11,21 onBackPressed + ignored innerPadding; manifest portrait lock", "key_issue": "Ignores SDK 36 rules"},
+        "motion": {"score": 2, "basis": "code", "evidence": "HomeScreen.kt:34-37 800ms tween, blur, keyless list (P005, P004, P001)", "key_issue": "Slow tween, keyless list"}
+      }
+    }
+  ],
+  "findings": [
+    {"severity": "P1", "screen": "Home", "title": "Search IconButton has no TalkBack name", "evidence": "HomeScreen.kt:30", "fix": "contentDescription = stringResource(R.string.search)", "mode": "accessibility"},
+    {"severity": "P1", "screen": "Home", "title": "Content draws under system bars (innerPadding ignored)", "evidence": "HomeScreen.kt:21", "fix": "Pass innerPadding as contentPadding", "mode": "space"},
+    {"severity": "P1", "screen": "Home", "title": "Back handling never runs at targetSdk 36", "evidence": "HomeScreen.kt:11", "fix": "OnBackPressedCallback or navigation back", "mode": "harden"},
+    {"severity": "P2", "screen": "Home", "title": "Greeting and gradient hide the balance", "evidence": "HomeScreen.kt:20-22", "fix": "One hero fact + one primary action", "mode": "redesign"}
+  ]
+}

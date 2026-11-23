@@ -1,0 +1,8 @@
+# ADAPTE seletores/nomes antes do uso; não é um teste universal.
+# Execução: maestro test -e APP_ID=com.example.app -e TARGET_TEXT=Agenda maestro/navigation-example.yaml
+appId: ${APP_ID}
+---
+- launchApp:
+    stopApp: false
+- tapOn: ${TARGET_TEXT}
+- takeScreenshot: selected-screen

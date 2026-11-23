@@ -1,0 +1,32 @@
+
+shell command failed (exit 20): cmd: Can't find service: package
+
+
+The stack trace was:
+maestro.android.AndroidOperationFailedException: shell command failed (exit 20): cmd: Can't find service: package
+
+	at maestro.android.AndroidDeviceConnectionModelKt.orThrow(AndroidDeviceConnectionModel.kt:158)
+	at maestro.drivers.AndroidDriver.shell(AndroidDriver.kt:1352)
+	at maestro.drivers.AndroidDriver.isPackageInstalled(AndroidDriver.kt:1335)
+	at maestro.drivers.AndroidDriver.installMaestroDriverApp$lambda$87(AndroidDriver.kt:1247)
+	at maestro.utils.Metrics.measured(Metrics.kt:48)
+	at maestro.drivers.AndroidDriver.installMaestroDriverApp(AndroidDriver.kt:1244)
+	at maestro.drivers.AndroidDriver.installMaestroApks(AndroidDriver.kt:1290)
+	at maestro.drivers.AndroidDriver.open(AndroidDriver.kt:113)
+	at maestro.Maestro$Companion.android(Maestro.kt:809)
+	at maestro.cli.session.MaestroSessionManager.createAndroid(MaestroSessionManager.kt:348)
+	at maestro.cli.session.MaestroSessionManager.createMaestro(MaestroSessionManager.kt:211)
+	at maestro.cli.session.MaestroSessionManager.newSession(MaestroSessionManager.kt:106)
+	at maestro.cli.session.MaestroSessionManager.newSession$default(MaestroSessionManager.kt:64)
+	at maestro.cli.command.TestCommand.runShardSuite(TestCommand.kt:477)
+	at maestro.cli.command.TestCommand.access$runShardSuite(TestCommand.kt:81)
+	at maestro.cli.command.TestCommand$handleSessions$1$results$1$1.invokeSuspend(TestCommand.kt:438)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:124)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+

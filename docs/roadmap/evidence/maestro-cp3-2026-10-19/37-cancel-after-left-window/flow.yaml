@@ -1,0 +1,9 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- assertVisible: "Recolher"
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar sessão"
+- tapOn: "Cancelar sessão"
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 15000

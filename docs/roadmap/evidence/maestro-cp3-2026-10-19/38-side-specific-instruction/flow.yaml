@@ -1,0 +1,35 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp
+- tapOn:
+    id: nav-btn-pausas
+- assertVisible: "Corpo"
+- scrollUntilVisible:
+    element:
+      id: stretch-btn-1
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: stretch-btn-1
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 30000
+- tapOn: "Abrir controles do treino"
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 60000
+- assertVisible: "Cruze o tornozelo direito sobre o joelho oposto. Mantenha a coluna ereta e incline suavemente o tronco à frente a partir do quadril."
+- takeScreenshot: cp3-right-instruction-synced
+- extendedWaitUntil:
+    visible: "Esquerda"
+    timeout: 180000
+- extendedWaitUntil:
+    visible: "Cruze o tornozelo esquerdo sobre o joelho oposto. Mantenha a coluna ereta e incline suavemente o tronco à frente a partir do quadril."
+    timeout: 45000
+- takeScreenshot: cp3-left-instruction-synced
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar sessão"
+- tapOn: "Cancelar sessão"
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 15000

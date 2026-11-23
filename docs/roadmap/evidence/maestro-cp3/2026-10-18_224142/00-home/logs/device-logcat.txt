@@ -1,0 +1,1618 @@
+--------- beginning of main
+10-19 01:41:43.628 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm list packages -f --user 0 | grep com.aistudio.coreflow.vdfpkw | head -1'
+--------- beginning of system
+10-19 01:41:43.644 I/PackageManager(  712): getInstalledPackages: callingUid=2000 flags=0 updatedFlags=786432 userId=0
+10-19 01:41:43.652 I/adbd    (  590): adbd service requested 'sync:'
+10-19 01:41:43.690 E/WifiDataStall(  712): Ignore this poll. newStats: null txLinkSpeedMbps: 2 rxLinkSpeedMbps: 2 rssi: -50 connectionCapabilities: com.android.server.wifi.WifiNative$ConnectionCapabilities@1f66213
+10-19 01:41:43.694 I/MlConnectedScorer(  712): 1. stats.getStatusDataStall()=0
+10-19 01:41:43.694 I/MlConnectedScorer(  712): 2. stats.getStatusDataStall()=0
+10-19 01:41:43.695 I/MlConnectedScorer(  712): handleL2DataStallInMlScorer is true, shouldBlockBssid=false mBlockCurrentBssid=false
+10-19 01:41:44.331 W/libbinder.ServiceManagerCppClient(14883): Waited one second for android.hardware.nfc.INfc/default (is service started? Number of threads started in the threadpool: 16. Are binder threads started and available?)
+10-19 01:41:44.343 W/libc    (  336): Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-19 01:41:44.344 I/android.hardware.uwb(14914): uwb_default_hal: UWB HAL starting up
+10-19 01:41:44.347 E/android.hardware.uwb(14914): uwb_default_hal: panicked at hardware/interfaces/uwb/aidl/default/src/uwb_chip.rs:56:14:
+10-19 01:41:44.347 E/android.hardware.uwb(14914): failed to open the serial device: Os { code: 6, kind: Uncategorized, message: "No such device or address" }
+--------- beginning of crash
+10-19 01:41:44.347 F/libc    (14914): Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 14914 (android.hardwar), pid 14914 (android.hardwar)
+10-19 01:41:44.359 I/crash_dump64(14923): obtaining output fd from tombstoned, type: kDebuggerdTombstoneProto
+10-19 01:41:44.361 I/tombstoned(  406): received crash request for pid 14914
+10-19 01:41:44.361 I/crash_dump64(14923): performing dump of process 14914 (target tid = 14914)
+10-19 01:41:44.366 F/DEBUG   (14923): *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+10-19 01:41:44.367 F/DEBUG   (14923): Build fingerprint: 'google/sdk_gphone16k_x86_64/emu64xa16k:17/CP41.260828.004.A7/16296984:user/dev-keys'
+10-19 01:41:44.367 F/DEBUG   (14923): Kernel Release: '6.12.81-android16-6-g4f69fc7b210c-ab16167562'
+10-19 01:41:44.367 F/DEBUG   (14923): Revision: '0'
+10-19 01:41:44.367 F/DEBUG   (14923): ABI: 'x86_64'
+10-19 01:41:44.367 F/DEBUG   (14923): Timestamp: 2026-10-19 01:41:44.362157288+0000
+10-19 01:41:44.367 F/DEBUG   (14923): Process uptime: 1s
+10-19 01:41:44.367 F/DEBUG   (14923): Page size: 16384 bytes
+10-19 01:41:44.367 F/DEBUG   (14923): Executable: /vendor/bin/hw/android.hardware.uwb-service
+10-19 01:41:44.367 F/DEBUG   (14923): Cmdline: /vendor/bin/hw/android.hardware.uwb-service /dev/uwb0
+10-19 01:41:44.367 F/DEBUG   (14923): pid: 14914, ppid: 1, tid: 14914, name: android.hardwar  >>> /vendor/bin/hw/android.hardware.uwb-service <<<
+10-19 01:41:44.367 F/DEBUG   (14923): uid: 1083
+10-19 01:41:44.367 F/DEBUG   (14923): signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+10-19 01:41:44.367 F/DEBUG   (14923): Abort message: 'failed to open the serial device: Os { code: 6, kind: Uncategorized, message: "No such device or address" }'
+10-19 01:41:44.367 F/DEBUG   (14923): 
+10-19 01:41:44.367 F/DEBUG   (14923):     rax 0000000000000000  rbx 0000000000003a42  rcx 00007a553b8af06d  rdx 0000000000000006
+10-19 01:41:44.367 F/DEBUG   (14923):     r8  00007ff83f0d9d00  r9  00007ff83f0d9d00  r10 00007ff83f0d9ac0  r11 0000000000000207
+10-19 01:41:44.367 F/DEBUG   (14923):     r12 0000000000000000  r13 00007ff83f0d9c60  r14 0000000000003a42  r15 00007ff83f0d9ac0
+10-19 01:41:44.367 F/DEBUG   (14923):     rdi 0000000000003a42  rsi 0000000000003a42
+10-19 01:41:44.367 F/DEBUG   (14923):     rbp 00007ff83f0d9b70  rsp 00007ff83f0d9ac0  rip 00007a553b8af06d  err 0000000000000000
+10-19 01:41:44.367 F/DEBUG   (14923): 
+10-19 01:41:44.367 F/DEBUG   (14923): 18 total frames
+10-19 01:41:44.367 F/DEBUG   (14923): backtrace:
+10-19 01:41:44.367 F/DEBUG   (14923):       #00 pc 000000000005b06d  /apex/com.android.runtime/lib64/bionic/libc.so (abort+189) (BuildId: 6a12fb8c62f84cd3689f4044ef042df1)
+10-19 01:41:44.367 F/DEBUG   (14923):       #01 pc 000000000003ed09  /vendor/bin/hw/android.hardware.uwb-service (std::sys::pal::unix::abort_internal+9) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #02 pc 000000000003c488  /vendor/bin/hw/android.hardware.uwb-service (std::process::abort+8) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #03 pc 0000000000038e89  /vendor/bin/hw/android.hardware.uwb-service (__rustc::__rust_abort+9) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #04 pc 000000000002d262  /vendor/bin/hw/android.hardware.uwb-service (__rustc::__rust_start_panic+18) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #05 pc 0000000000038e79  /vendor/bin/hw/android.hardware.uwb-service (__rustc::rust_panic+9) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #06 pc 000000000003c72f  /vendor/bin/hw/android.hardware.uwb-service (std::panicking::panic_with_hook+260) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #07 pc 0000000000038516  /vendor/bin/hw/android.hardware.uwb-service (std::panicking::panic_handler::{closure#0}+70) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #08 pc 0000000000038eab  /vendor/bin/hw/android.hardware.uwb-service (__rustc::rust_begin_unwind+27) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #09 pc 00000000000253db  /vendor/bin/hw/android.hardware.uwb-service (core::panicking::panic_fmt+43) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #10 pc 0000000000025261  /vendor/bin/hw/android.hardware.uwb-service (core::result::unwrap_failed+81) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #11 pc 00000000000641af  /vendor/bin/hw/android.hardware.uwb-service (<uwb_default_hal::uwb_chip::UwbChip>::new::{closure#0}+7999) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #12 pc 000000000006865a  /vendor/bin/hw/android.hardware.uwb-service (<core::iter::adapters::map::Map<core::iter::adapters::map::Map<core::iter::adapters::enumerate::Enumerate<core::iter::adapters::skip::Skip<std::env::Args>>, uwb_default_hal::main::{closure#1}>, <uwb_default_hal::uwb::Uwb>::from_chips<core::iter::adapters::map::Map<core::iter::adapters::enumerate::Enumerate<core::iter::adapters::skip::Skip<std::env::Args>>, uwb_default_hal::main::{closure#1}>>::{closure#0}> as core::iter::traits::iterator::Iterator>::next+3434) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #13 pc 0000000000065c77  /vendor/bin/hw/android.hardware.uwb-service (uwb_default_hal::main+791) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #14 pc 00000000000619fb  /vendor/bin/hw/android.hardware.uwb-service (std::rt::lang_start::<core::result::Result<(), anyhow::Error>>::{closure#0}+27) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #15 pc 000000000003bce6  /vendor/bin/hw/android.hardware.uwb-service (std::rt::lang_start_internal+534) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #16 pc 000000000006b193  /vendor/bin/hw/android.hardware.uwb-service (main+51) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:41:44.367 F/DEBUG   (14923):       #17 pc 00000000000c3c10  /apex/com.android.runtime/lib64/bionic/libc.so (__libc_init+112) (BuildId: 6a12fb8c62f84cd3689f4044ef042df1)
+10-19 01:41:44.367 F/DEBUG   (14923): 
+10-19 01:41:44.367 F/DEBUG   (14923): Note: To display stack pointer information, use the pbtombstone tool:
+10-19 01:41:44.367 F/DEBUG   (14923):         pbtombstone --display-sp tombstone_XX.pb
+10-19 01:41:44.368 W/NativeCrashListener(  712): Couldn't find ProcessRecord for pid 14914
+10-19 01:41:44.370 E/NativeTombstoneManager(  712): Tombstone's UID (1083) not an app, ignoring
+10-19 01:41:44.371 E/tombstoned(  406): Tombstone written to: tombstone_20
+10-19 01:41:44.418 W/libbinder.ServiceManagerCppClient(  712): Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-19 01:41:44.465 I/flags_health_check(14927): ServerConfigurableFlagsReset reset_mode value: 1
+10-19 01:41:44.465 I/flags_health_check(14927): ServerConfigurableFlagsReset updatable crashing detected, resetting flags.
+10-19 01:41:44.510 W/libc    (  336): Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-19 01:41:45.119 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.INTERNET'
+10-19 01:41:45.140 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.VIBRATE'
+10-19 01:41:45.158 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.POST_NOTIFICATIONS'
+10-19 01:41:45.175 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.ACCESS_NOTIFICATION_POLICY'
+10-19 01:41:45.192 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.RECEIVE_BOOT_COMPLETED'
+10-19 01:41:45.209 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.WAKE_LOCK'
+10-19 01:41:45.225 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.FOREGROUND_SERVICE'
+10-19 01:41:45.243 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.FOREGROUND_SERVICE_SPECIAL_USE'
+10-19 01:41:45.260 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK'
+10-19 01:41:45.277 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.BLUETOOTH'
+10-19 01:41:45.295 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.BLUETOOTH_ADMIN'
+10-19 01:41:45.312 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.BLUETOOTH_CONNECT'
+10-19 01:41:45.330 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.SYSTEM_ALERT_WINDOW'
+10-19 01:41:45.336 W/libbinder.ServiceManagerCppClient(14883): Waited one second for android.hardware.nfc.INfc/default (is service started? Number of threads started in the threadpool: 16. Are binder threads started and available?)
+10-19 01:41:45.340 W/libc    (  336): Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-19 01:41:45.348 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw android.permission.ACCESS_NETWORK_STATE'
+10-19 01:41:45.365 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw com.google.android.providers.gsf.permission.READ_GSERVICES'
+10-19 01:41:45.382 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm grant com.aistudio.coreflow.vdfpkw com.aistudio.coreflow.vdfpkw.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+10-19 01:41:45.402 I/adbd    (  590): adbd service requested 'shell,v2,raw:am force-stop com.aistudio.coreflow.vdfpkw'
+10-19 01:41:45.415 I/ActivityManager(  712): Force stopping com.aistudio.coreflow.vdfpkw appid=10232 user=0: from pid 15011
+10-19 01:41:45.415 I/WindowManager(  712):   Force removing ActivityRecord{249103296 u0 com.aistudio.coreflow.vdfpkw/com.example.MainActivity t2900}
+10-19 01:41:45.415 W/UsageStatsService(  712): Unexpected activity event reported! (com.aistudio.coreflow.vdfpkw/com.example.MainActivity event : 23 instanceId : 36346860)
+10-19 01:41:45.416 D/RecentsView( 1255): onTaskRemoved: 2900, not handling task stack changes
+10-19 01:41:45.416 D/TopTaskTracker( 1255): onTaskRemoved: 2900
+10-19 01:41:45.416 D/RecentsView( 1255): onTaskRemoved: 2900, not handling task stack changes
+10-19 01:41:45.416 I/ActivityManager(  712): Killing 14556:com.aistudio.coreflow.vdfpkw/u0a232 (adj 905): stop com.aistudio.coreflow.vdfpkw due to from pid 15011
+10-19 01:41:45.418 I/AppsFilter(  712): interaction: PackageSetting{2f1146e io.github.playertwo1.orbitpj.sessionspike/10278} -> PackageSetting{4756426 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.418 I/AppsFilter(  712): interaction: PackageSetting{8a3a39c io.github.playertwo1.orbitpj.dev/10279} -> PackageSetting{4756426 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.418 I/AppsFilter(  712): interaction: PackageSetting{2e61a5 com.aistudio.minhafloresta.bradesco.beta/10236} -> PackageSetting{4756426 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.418 I/AppsFilter(  712): interaction: PackageSetting{1e097a com.playertwo.pockethero/10248} -> PackageSetting{4756426 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.418 I/AppsFilter(  712): interaction: PackageSetting{209652b com.playertwo.pockethero.arena0/10238} -> PackageSetting{4756426 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.418 I/AppsFilter(  712): interaction: PackageSetting{5155d88 com.playertwo.pockethero.stage1qa/10233} -> PackageSetting{4756426 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.418 I/AppsFilter(  712): interaction: PackageSetting{bc87321 com.playertwo.pockethero.balanceprobe/10234} -> PackageSetting{4756426 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.418 I/AppsFilter(  712): interaction: PackageSetting{b372907 br.com.guimaraesdona.companion/10239} -> PackageSetting{4756426 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.418 I/AppsFilter(  712): interaction: PackageSetting{766ca34 com.playertwo.pockethero.voxelpilot/10410} -> PackageSetting{4756426 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.418 I/AppsFilter(  712): interaction: PackageSetting{98205d com.playertwo.voxellightinglab/10443} -> PackageSetting{4756426 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.418 I/AppsFilter(  712): interaction: PackageSetting{f904dd2 com.playertwo.pockethero.voxelqa/10230} -> PackageSetting{4756426 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.421 D/CarrierSvcBindHelper( 1221): onHandleForceStop: [com.aistudio.coreflow.vdfpkw]
+10-19 01:41:45.422 D/CarrierSvcBindHelper( 1221): No carrier app for: 0
+10-19 01:41:45.424 W/libbinder.ServiceManagerCppClient(  712): Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-19 01:41:45.428 I/adbd    (  590): adbd service requested 'shell,v2,raw:pm list packages --user 0 com.aistudio.coreflow.vdfpkw'
+10-19 01:41:45.428 V/ActivityManager(  712): Got obituary of 14556:com.aistudio.coreflow.vdfpkw
+10-19 01:41:45.429 I/Zygote  (  499): Process 14556 exited due to signal 9 (Killed)
+10-19 01:41:45.430 I/adbd    (  590): Remote process closed the socket (on MSG_PEEK)
+10-19 01:41:45.430 I/libprocessgroup(  712): Removed cgroup /sys/fs/cgroup/apps/uid_10232/pid_14556
+10-19 01:41:45.431 V/ShellTaskOrganizer( 1066): Task vanished taskId=2900
+10-19 01:41:45.431 V/ShellTaskOrganizer( 1066): Fullscreen Task Vanished: #2900
+10-19 01:41:45.431 V/ShellDesktopMode( 1066): Task Vanished: #2900 closed=true
+10-19 01:41:45.431 D/ShellPackageUpdate( 1066): PackageUpdateController: Removing handlePackageUpdate for task: 2900
+10-19 01:41:45.431 E/WindowOrganizerController(  712): Attempting to externally change a non-organized container: Task{f1d39ce #2900 type=standard A=10232:com.aistudio.coreflow.vdfpkw}={handlePackageUpdate:false,} playercount=2 taskorg=android.window.ITaskOrganizer$Stub$Proxy@d72d14d
+10-19 01:41:45.431 V/RecentTasksController( 1066): Notify recent tasks changed: 1
+10-19 01:41:45.431 D/ShellDesktopMode( 1066): Task 2900 is vanishing. Removing task data from repository
+10-19 01:41:45.432 D/RecentTasksList( 1255): invalidateLoadedTasks - previous requestLoadId: -1
+10-19 01:41:45.432 W/libc    (  336): Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-19 01:41:45.432 V/AppCompat( 1066): []
+10-19 01:41:45.432 V/AppCompat( 1066): []
+10-19 01:41:45.432 V/AppCompat( 1066): []
+10-19 01:41:45.432 V/AppCompat( 1066): {}
+10-19 01:41:45.442 I/PackageManager(  712): getInstalledPackages: callingUid=2000 flags=0 updatedFlags=786432 userId=0
+10-19 01:41:45.443 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.443 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.443 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.443 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.443 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.448 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.459 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.460 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.460 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.460 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.460 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.468 V/GrammaticalInflectionUtils(  712): AttributionSource: android.content.AttributionSource@43ef3405 does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+10-19 01:41:45.470 D/RecentsView( 1255): onTaskDisplayChanged: 2905, new displayId = 0
+10-19 01:41:45.472 I/libbinder.BpBinder(  559): onLastStrongRef automatically unlinking death recipients for binder (0x7ded84a24b70) with descriptor: '(not cached)'
+10-19 01:41:45.472 D/TopTaskTracker( 1255): handleTaskMovedToFront: TaskInfo{userId=0 taskId=2905 effectiveUid=10232 seqId=0 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 pkg=com.aistudio.coreflow.vdfpkw cmp=com.aistudio.coreflow.vdfpkw/com.example.MainActivity } baseActivity=ComponentInfo{com.aistudio.coreflow.vdfpkw/com.example.MainActivity} topActivity=ComponentInfo{com.aistudio.coreflow.vdfpkw/com.example.MainActivity} origActivity=null realActivity=ComponentInfo{com.aistudio.coreflow.vdfpkw/com.example.MainActivity} realActivityIsAppLockEnabled=false numActivities=1 lastActiveTime=3450896 supportsMultiWindow=true supportsMultiWindowWithoutConstraints=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.os.BinderProxy@d2c27ca} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 142 - 0, 0) topActivityInfo=ActivityInfo{28ad3b com.example.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isInteractive=false isVisible=false isVisibleRequested=false isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false isActivityStackTransparent=false lastNonFullscreenBounds=null leafTaskBoundsFromOptions= false capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=503 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false isLeafTask= true eligibleForLetterboxEducation= false isLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 1080, 2424) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null topNonResizableActivityAspectRatio=-1.0 idealTaskOrientation=-1} topActivityMainWindowFrame=null}
+10-19 01:41:45.473 D/CorePackageUpdate(  712): onRecentTaskRemoved Removing task: 2900
+10-19 01:41:45.473 D/CorePackageUpdate(  712): Couldn't find a persistent state for task= 2900
+10-19 01:41:45.473 D/CompatChangeReporter(  712): Compat change id reported: 377864165; UID 10232; state: ENABLED
+10-19 01:41:45.473 V/ActivityTaskManager(  712): TaskLaunchParamsModifier: phase=2 task=Task{a78469d #2905 type=standard A=10232:com.aistudio.coreflow.vdfpkw} activity=ActivityRecord{70426996 u0 com.aistudio.coreflow.vdfpkw/com.example.MainActivity t-1} display-from-task=0 display-id=0 task-display-area-windowing-mode=1 suggested-display-area=DefaultTaskDisplayArea@559810 inherit-from-task=fullscreen non-freeform-task-display-area display-area=DefaultTaskDisplayArea@559810 skip-bounds-fullscreen
+10-19 01:41:45.473 I/ActivityTaskManager(  712): START u0 {act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 pkg=com.aistudio.coreflow.vdfpkw cmp=com.aistudio.coreflow.vdfpkw/com.example.MainActivity} with LAUNCH_SINGLE_TOP from uid 10441 (dev.mobile.maestro) (BAL_ALLOW_INSTRUMENTATION) result code=0
+10-19 01:41:45.473 V/WindowManagerShell( 1066): Transition requested (#61): android.os.BinderProxy@ff63628 TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=2905 effectiveUid=10232 seqId=0 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 pkg=com.aistudio.coreflow.vdfpkw cmp=com.aistudio.coreflow.vdfpkw/com.example.MainActivity } baseActivity=ComponentInfo{com.aistudio.coreflow.vdfpkw/com.example.MainActivity} topActivity=ComponentInfo{com.aistudio.coreflow.vdfpkw/com.example.MainActivity} origActivity=null realActivity=ComponentInfo{com.aistudio.coreflow.vdfpkw/com.example.MainActivity} realActivityIsAppLockEnabled=false numActivities=1 lastActiveTime=3450900 supportsMultiWindow=true supportsMultiWindowWithoutConstraints=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.os.BinderProxy@b456f41} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 142 - 0, 0) topActivityInfo=ActivityInfo{1bc5ce6 com.example.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isInteractive=false isVisible=false isVisibleRequested=false isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false isActivityStackTransparent=false lastNonFullscreenBounds=null leafTaskBoundsFromOptions= false capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=503 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false isLeafTask= true eligibleForLetterboxEducation= false isLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 1080, 2424) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null topNonResizableActivityAspectRatio=-1.0 idealTaskOrientation=-1} topActivityMainWindowFrame=null}, pipChange = null, remoteTransitionInfo = null, displayChanges = null, requestedLocation = null, userChange = null, windowingLayerChange = null, fullscreenRequestChange = null, flags = 0, debugId = 61 }
+10-19 01:41:45.473 V/ShellDesktopMode( 1066): skipping handleRequest reason=triggerTask's display doesn't support desktop mode
+10-19 01:41:45.474 V/GrammaticalInflectionUtils(  712): AttributionSource: android.content.AttributionSource@43ef3405 does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+10-19 01:41:45.474 D/ShellSplitScreen( 1066): logExit: no-op, mLoggerSessionId is null
+10-19 01:41:45.476 V/RecentTasksController( 1066): Notify recent tasks changed: 1
+10-19 01:41:45.476 V/RecentTasksController( 1066): onRecentTaskRemovedForAddTask; removing task=2900
+10-19 01:41:45.476 D/ShellDesktopMode( 1066): (0): Removes freeform task: taskId=2900
+10-19 01:41:45.476 W/ShellDesktopMode( 1066): (0): No display id found for task: taskId=2900
+10-19 01:41:45.476 V/RecentTasksController( 1066): Notify recent tasks changed: 1
+10-19 01:41:45.476 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.476 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.476 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.476 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.476 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.477 W/InputChannel-JNI(  712): Channel already disposed.
+10-19 01:41:45.478 I/AppsFilter(  712): interaction: PackageSetting{2f1146e io.github.playertwo1.orbitpj.sessionspike/10278} -> PackageSetting{4aaac55 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.478 I/AppsFilter(  712): interaction: PackageSetting{8a3a39c io.github.playertwo1.orbitpj.dev/10279} -> PackageSetting{4aaac55 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.478 I/AppsFilter(  712): interaction: PackageSetting{2e61a5 com.aistudio.minhafloresta.bradesco.beta/10236} -> PackageSetting{4aaac55 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.478 I/AppsFilter(  712): interaction: PackageSetting{1e097a com.playertwo.pockethero/10248} -> PackageSetting{4aaac55 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.478 I/AppsFilter(  712): interaction: PackageSetting{209652b com.playertwo.pockethero.arena0/10238} -> PackageSetting{4aaac55 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.478 I/AppsFilter(  712): interaction: PackageSetting{5155d88 com.playertwo.pockethero.stage1qa/10233} -> PackageSetting{4aaac55 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.478 I/AppsFilter(  712): interaction: PackageSetting{bc87321 com.playertwo.pockethero.balanceprobe/10234} -> PackageSetting{4aaac55 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.478 I/AppsFilter(  712): interaction: PackageSetting{b372907 br.com.guimaraesdona.companion/10239} -> PackageSetting{4aaac55 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.478 I/AppsFilter(  712): interaction: PackageSetting{766ca34 com.playertwo.pockethero.voxelpilot/10410} -> PackageSetting{4aaac55 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.478 I/AppsFilter(  712): interaction: PackageSetting{98205d com.playertwo.voxellightinglab/10443} -> PackageSetting{4aaac55 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.478 I/AppsFilter(  712): interaction: PackageSetting{f904dd2 com.playertwo.pockethero.voxelqa/10230} -> PackageSetting{4aaac55 com.aistudio.coreflow.vdfpkw/10232} BLOCKED
+10-19 01:41:45.478 D/DifferentDisplayCheck(  712): Focus lost for Task Task{a7e1a9d #2902 type=standard A=10176:com.google.android.apps.inputmethod.latin.preference.SettingsActivity} on display 0
+10-19 01:41:45.479 D/DifferentDisplayCheck(  712): Focus gained for Task Task{a78469d #2905 type=standard A=10232:com.aistudio.coreflow.vdfpkw} on display 0
+10-19 01:41:45.481 D/Zygote  (  499): Forked child process 15020
+10-19 01:41:45.481 D/RecentTasksList( 1255): invalidateLoadedTasks - previous requestLoadId: -1
+10-19 01:41:45.481 D/RecentTasksList( 1255): invalidateLoadedTasks - previous requestLoadId: -1
+10-19 01:41:45.484 D/InetDiagMessage(  712): Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+10-19 01:41:45.484 D/InetDiagMessage(  712): Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+10-19 01:41:45.484 D/InetDiagMessage(  712): Destroyed live tcp sockets for uids={10232} in 1ms
+10-19 01:41:45.485 D/InetDiagMessage(  712): Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+10-19 01:41:45.485 I/ActivityManager(  712): Start proc 15020:com.aistudio.coreflow.vdfpkw/u0a232 for next-top-activity {com.aistudio.coreflow.vdfpkw/com.example.MainActivity}
+10-19 01:41:45.487 D/InetDiagMessage(  712): Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+10-19 01:41:45.488 D/InetDiagMessage(  712): Destroyed live tcp sockets for uids={20232} in 3ms
+10-19 01:41:45.488 D/WindowManager(  712): setClientSurface Surface(name=VRI-Splash Screen com.aistudio.coreflow.vdfpkw#738)/@0xc975d4b for 707263f Splash Screen com.aistudio.coreflow.vdfpkw
+10-19 01:41:45.491 I/libprocessgroup(15020): Created cgroup /sys/fs/cgroup/apps/uid_10232/pid_15020
+10-19 01:41:45.492 I/Surface ( 1066): Creating surface for consumer unnamed-1066-68 with slotExpansion=1 for 64 slots
+10-19 01:41:45.492 I/Surface ( 1066): Creating surface for consumer VRI[vdfpkw]#57(BLAST Consumer)57 with slotExpansion=1 for 64 slots
+10-19 01:41:45.493 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.493 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.493 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.493 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.493 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.495 I/Zygote  (15020): Process 15020 created for com.aistudio.coreflow.vdfpkw
+10-19 01:41:45.495 I/coreflow.vdfpkw(15020): Late-enabling -Xcheck:jni
+10-19 01:41:45.509 D/WindowManager(  712): captureDisplay
+10-19 01:41:45.510 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.510 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.510 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.510 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.510 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.512 I/coreflow.vdfpkw(15020): Using generational CollectorTypeCMC GC.
+10-19 01:41:45.513 W/coreflow.vdfpkw(15020): Unexpected CPU variant for x86: x86_64.
+10-19 01:41:45.513 W/coreflow.vdfpkw(15020): Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, pantherlake, default
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.514 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.515 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.515 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.515 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.515 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.515 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.517 I/adbd    (  590): jdwp connection from 15020
+10-19 01:41:45.517 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.517 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.517 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.519 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.519 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.519 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.519 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.519 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.519 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.520 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.520 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.520 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.520 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.520 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.520 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.520 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.520 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.520 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.520 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.520 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.520 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.523 V/WindowManagerShell( 1066): onTransitionReady(transaction=3058016723183)
+10-19 01:41:45.523 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.524 V/WindowManagerShell( 1066): onTransitionReady (#61) android.os.BinderProxy@ff63628: {id=61 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[
+10-19 01:41:45.524 V/WindowManagerShell( 1066):         {m=OPEN f=MOVE_TO_TOP|FLAG_CHANGED_INTERACTIVE leash=Surface(name=Task=2905#735)/@0x356d304 sb=Rect(0, 0 - 1080, 2424) eb=Rect(0, 0 - 1080, 2424) epz=Point(1080, 2424) d=0 taskParent=-1 winMode=1 userId=0},
+10-19 01:41:45.524 V/WindowManagerShell( 1066):         {m=TO_BACK f=FLAG_CHANGED_INTERACTIVE leash=Surface(name=Task=2902#657)/@0x95b40ed sb=Rect(0, 0 - 1080, 2424) eb=Rect(0, 0 - 1080, 2424) epz=Point(1080, 2424) d=0 taskParent=-1 winMode=1 userId=0}
+10-19 01:41:45.524 V/WindowManagerShell( 1066):     ]}
+10-19 01:41:45.524 V/WindowManagerShell( 1066): FocusTransitionObserver: Updating focus state for transition #61
+10-19 01:41:45.524 D/WindowManagerShell( 1066): FocusTransitionObserver: Focus updated on displayId=0 to taskId=2905
+10-19 01:41:45.524 V/WindowManagerShell( 1066): FocusTransitionObserver: Notifying local listeners of task focus change: taskId=2902, isFocusedOnDisplay=false, isFocusedGlobally=false
+10-19 01:41:45.524 V/WindowManagerShell( 1066): FocusTransitionObserver: Notifying local listeners of task focus change: taskId=2905, isFocusedOnDisplay=true, isFocusedGlobally=true
+10-19 01:41:45.524 V/RecentTasksController( 1066): Notify recent tasks changed: 2
+10-19 01:41:45.525 D/RecentTasksList( 1255): invalidateLoadedTasks - previous requestLoadId: -1
+10-19 01:41:45.525 V/WindowManagerShell( 1066): Playing animation for (#61) android.os.BinderProxy@ff63628@0
+10-19 01:41:45.525 D/TopTaskTracker( 1255): handleTaskMovedToFront: TaskInfo{userId=0 taskId=2905 effectiveUid=10232 seqId=0 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 pkg=com.aistudio.coreflow.vdfpkw cmp=com.aistudio.coreflow.vdfpkw/com.example.MainActivity } baseActivity=ComponentInfo{com.aistudio.coreflow.vdfpkw/com.example.MainActivity} topActivity=ComponentInfo{com.aistudio.coreflow.vdfpkw/com.example.MainActivity} origActivity=null realActivity=ComponentInfo{com.aistudio.coreflow.vdfpkw/com.example.MainActivity} realActivityIsAppLockEnabled=false numActivities=1 lastActiveTime=3450900 supportsMultiWindow=true supportsMultiWindowWithoutConstraints=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.os.BinderProxy@d2c27ca} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 0 - 0, 0) topActivityInfo=ActivityInfo{cbbec58 com.example.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=true isInteractive=true isVisible=true isVisibleRequested=true isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false isActivityStackTransparent=false lastNonFullscreenBounds=null leafTaskBoundsFromOptions= false capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=503 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false isLeafTask= true eligibleForLetterboxEducation= false isLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 1080, 2424) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null topNonResizableActivityAspectRatio=-1.0 idealTaskOrientation=-1} topActivityMainWindowFrame=null}
+10-19 01:41:45.525 D/ShellSplitScreen( 1066): startAnimation: transition=61 isSplitActive=false
+10-19 01:41:45.525 V/ShellRecents( 1066): RecentsTransitionHandler.startAnimation: no controller found
+10-19 01:41:45.525 V/ShellDesktopMode( 1066): No pending desktop transition
+10-19 01:41:45.525 V/ShellDesktopMode( 1066): DesktopHomeScreenPeekTransitionHandler: startAnimation
+10-19 01:41:45.525 V/WindowManagerShell( 1066): Transition doesn't have explicit remote, search filters for match for {id=61 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{m=OPEN f=MOVE_TO_TOP|FLAG_CHANGED_INTERACTIVE leash=Surface(name=Task=2905#735)/@0x356d304 sb=Rect(0, 0 - 1080, 2424) eb=Rect(0, 0 - 1080, 2424) epz=Point(1080, 2424) d=0 taskParent=-1 winMode=1 userId=0},{m=TO_BACK f=FLAG_CHANGED_INTERACTIVE leash=Surface(name=Task=2902#657)/@0x95b40ed sb=Rect(0, 0 - 1080, 2424) eb=Rect(0, 0 - 1080, 2424) epz=Point(1080, 2424) d=0 taskParent=-1 winMode=1 userId=0}]}
+10-19 01:41:45.525 V/WindowManagerShell( 1066):  Checking filter Pair{{types=[] flags=0x0 notFlags=0x0 checks=[{atype=undefined independent=true modes=[CLOSE,TO_BACK] flags=IN_TASK_WITH_EMBEDDED_ACTIVITY mustBeTask=false order=ANY topActivity=null launchCookie=null taskFragmentToken=android.os.BinderProxy@5b9c4a9 windowingMode=undefined isCrossDisplayMove=false}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@dba6a2e, appThread = android.app.IApplicationThread$Stub$Proxy@24d69cf, debugName = overlayBackTransition, filter = {types=[] flags=0x0 notFlags=0x0 checks=[{atype=undefined independent=true modes=[CLOSE,TO_BACK] flags=IN_TASK_WITH_EMBEDDED_ACTIVITY mustBeTask=false order=ANY topActivity=null launchCookie=null taskFragmentToken=android.os.BinderProxy@5b9c4a9 windowingMode=undefined isCrossDisplayMove=false}]} }}
+10-19 01:41:45.525 V/WindowManagerShell( 1066):  Checking filter Pair{{types=[] flags=0x0 notFlags=0x0 checks=[{atype=dream independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined isCrossDisplayMove=false},{atype=home independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined isCrossDisplayMove=false}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@64d4f5c, appThread = android.app.IApplicationThread$Stub$Proxy@a410265, debugName = LauncherToDream, filter = {types=[] flags=0x0 notFlags=0x0 checks=[{atype=dream independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined isCrossDisplayMove=false},{atype=home independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined isCrossDisplayMove=false}]} }}
+10-19 01:41:45.525 V/WindowManagerShell( 1066):  Checking filter Pair{{types=[] flags=0x0 notFlags=0x0 checks=[{atype=standard independent=false modes=[CHANGE] flags=NONE mustBeTask=true order=ANY topActivity=null launchCookie=null windowingMode=undefined isCrossDisplayMove=true}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@b86fb3a, appThread = android.app.IApplicationThread$Stub$Proxy@1e0d3eb, debugName = QuickstepDisplayMove, filter = {types=[] flags=0x0 notFlags=0x0 checks=[{atype=standard independent=false modes=[CHANGE] flags=NONE mustBeTask=true order=ANY topActivity=null launchCookie=null windowingMode=undefined isCrossDisplayMove=true}]} }}
+10-19 01:41:45.526 V/WindowManagerShell( 1066):  Checking filter Pair{{types=[] flags=0x0 notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=ANY topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity} launchCookie=null windowingMode=undefined isCrossDisplayMove=false},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined isCrossDisplayMove=false},{NOT atype=undefined independent=true modes=[] flags=NONE mustBeTask=true order=ANY topActivity=null launchCookie=null customAnim=true windowingMode=undefined isCrossDisplayMove=false}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@e0548, appThread = android.app.IApplicationThread$Stub$Proxy@9445fe1, debugName = QuickstepLaunchHome, filter = {types=[] flags=0x0 notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=ANY topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity} launchCookie=null windowingMode=undefined isCrossDisplayMove=false},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined isCrossDisplayMove=false},{NOT atype=undefined independent=true modes=[] flags=NONE mustBeTask=true order=ANY topActivity=null launchCookie=null customAnim=true windowingMode=undefined isCrossDisplayMove=false}]} }}
+10-19 01:41:45.526 V/WindowManagerShell( 1066):  Checking filter Pair{{types=[OPEN,TO_FRONT] flags=0x0 notFlags=0x0 checks=[{atype=standard independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=true order=ANY topActivity=null launchCookie=null windowingMode=freeform isCrossDisplayMove=false}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@599106, appThread = null, debugName = DesktopWindowLimitUnminimize, filter = {types=[OPEN,TO_FRONT] flags=0x0 notFlags=0x0 checks=[{atype=standard independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=true order=ANY topActivity=null launchCookie=null windowingMode=freeform isCrossDisplayMove=false}]} }}
+10-19 01:41:45.526 V/WindowManagerShell( 1066):  Delegate animation for (#61) to null
+10-19 01:41:45.526 V/WindowManagerShell( 1066): start default transition animation, info = {id=61 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{m=OPEN f=MOVE_TO_TOP|FLAG_CHANGED_INTERACTIVE leash=Surface(name=Task=2905#735)/@0x356d304 sb=Rect(0, 0 - 1080, 2424) eb=Rect(0, 0 - 1080, 2424) epz=Point(1080, 2424) d=0 taskParent=-1 winMode=1 userId=0},{m=TO_BACK f=FLAG_CHANGED_INTERACTIVE leash=Surface(name=Task=2902#657)/@0x95b40ed sb=Rect(0, 0 - 1080, 2424) eb=Rect(0, 0 - 1080, 2424) epz=Point(1080, 2424) d=0 taskParent=-1 winMode=1 userId=0}]}
+10-19 01:41:45.526 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.526 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.526 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.526 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.526 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.526 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.526 V/WindowManager(  712): Sent Transition (#61) createdAt=10-19 01:41:45.468 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=2905 effectiveUid=10232 seqId=0 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 pkg=com.aistudio.coreflow.vdfpkw cmp=com.aistudio.coreflow.vdfpkw/com.example.MainActivity } baseActivity=ComponentInfo{com.aistudio.coreflow.vdfpkw/com.example.MainActivity} topActivity=ComponentInfo{com.aistudio.coreflow.vdfpkw/com.example.MainActivity} origActivity=null realActivity=ComponentInfo{com.aistudio.coreflow.vdfpkw/com.example.MainActivity} realActivityIsAppLockEnabled=false numActivities=1 lastActiveTime=3450900 supportsMultiWindow=true supportsMultiWindowWithoutConstraints=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{4b497be Task{a78469d #2905 type=standard A=10232:com.aistudio.coreflow.vdfpkw}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 142 - 0, 0) topActivityInfo=ActivityInfo{214b01f com.example.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isInteractive=false isVisible=false isVisibleRequested=false isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false isActivityStackTransparent=false lastNonFullscreenBounds=null leafTaskBoundsFromOptions= false capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=503 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false isLeafTask= true eligibleForLetterboxEducation= false isLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 1080, 2424) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null topNonResizableActivityAspectRatio=-1.0 idealTaskOrientation=-1} topActivityMainWindowFrame=null}, pipChange = null, remoteTransitionInfo = null, displayChanges = null, requestedLocation = null, userChange = null, windowingLayerChange = null, fullscreenRequestChange = null, flags = 0, debugId = 61 }
+10-19 01:41:45.526 V/WindowManager(  712):     startWCT=WindowContainerTransaction { changes= {} hops= [] flags= 0 errorCallbackToken=null taskFragmentOrganizer=null }
+10-19 01:41:45.526 V/WindowManager(  712):     info={id=61 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[
+10-19 01:41:45.526 V/WindowManager(  712):         {WCT{RemoteToken{4b497be Task{a78469d #2905 type=standard A=10232:com.aistudio.coreflow.vdfpkw}}} m=OPEN f=MOVE_TO_TOP|FLAG_CHANGED_INTERACTIVE leash=Surface(name=Task=2905#735)/@0x5a42ac3 sb=Rect(0, 0 - 1080, 2424) eb=Rect(0, 0 - 1080, 2424) epz=Point(1080, 2424) d=0 taskParent=-1 winMode=1 userId=0},
+10-19 01:41:45.526 V/WindowManager(  712):         {WCT{RemoteToken{6ca2728 Task{a7e1a9d #2902 type=standard A=10176:com.google.android.apps.inputmethod.latin.preference.SettingsActivity}}} m=TO_BACK f=FLAG_CHANGED_INTERACTIVE leash=Surface(name=Task=2902#657)/@0x799a8c5 sb=Rect(0, 0 - 1080, 2424) eb=Rect(0, 0 - 1080, 2424) epz=Point(1080, 2424) d=0 taskParent=-1 winMode=1 userId=0}
+10-19 01:41:45.526 V/WindowManager(  712):     ]}
+10-19 01:41:45.526 V/WindowManagerShell( 1066): loadAnimation: anim=android.view.animation.AnimationSet@19dce0f animAttr=0x9 type=OPEN isEntrance=false
+10-19 01:41:45.531 D/nativeloader(15020): Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+10-19 01:41:45.533 V/WindowManagerShell( 1066): loadAnimation: anim=android.view.animation.AnimationSet@f170534 animAttr=0x8 type=OPEN isEntrance=true
+10-19 01:41:45.534 V/WindowManagerShell( 1066):  animated by com.android.wm.shell.transition.DefaultTransitionHandler@8d31c59
+10-19 01:41:45.534 V/ShellTaskOrganizer( 1066): Task appeared taskId=2905 listener=FullscreenTaskListener
+10-19 01:41:45.534 V/ShellTaskOrganizer( 1066): Fullscreen Task Appeared: #2905
+10-19 01:41:45.534 D/ShellPackageUpdate( 1066): PackageUpdateController: Setting handlePackageUpdate for task: 2905
+10-19 01:41:45.534 E/TransitionChain(  712): Can't collect into a chain with no transition
+10-19 01:41:45.535 V/RecentTasksController( 1066): Notify recent tasks changed: 1
+10-19 01:41:45.536 D/RecentTasksList( 1255): invalidateLoadedTasks - previous requestLoadId: -1
+10-19 01:41:45.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.543 I/RanchuHwc(  527): logCompositionFallbackIfChanged: layer 150 CompositionType fallback from 3 to 1
+10-19 01:41:45.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.550 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.556 W/libc    (14863): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:45.559 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.559 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.559 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.559 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.559 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.559 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.560 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.560 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.560 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.560 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.560 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.560 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.560 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.563 W/libbinder.IPCThreadState(  712): Sending oneway calls to frozen process.
+10-19 01:41:45.563 W/libbinder.IPCThreadState(  712): Sending oneway calls to frozen process.
+10-19 01:41:45.565 I/DisplayManager(14863): Choreographer implicitly registered for the refresh rate.
+10-19 01:41:45.569 D/ActivityManager(  712): sync unfroze 6241 com.android.vending for 6
+10-19 01:41:45.571 D/ActivityManager(  712): sync unfroze 6608 com.android.vending:background for 6
+10-19 01:41:45.575 I/Finsky  ( 6241): [2] SCH: job service start with id 9512.
+10-19 01:41:45.576 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.576 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.576 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.576 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.576 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.576 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.576 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.576 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.577 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.577 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.577 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.577 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.577 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.580 V/RecentTasksController( 1066): Notify recent tasks changed: 1
+10-19 01:41:45.582 I/Finsky  ( 6241): [253] SCH: Satisfied jobs for 9512 are: 12-1
+10-19 01:41:45.585 I/Finsky  ( 6241): [260] SCH: Job 12-1 starting
+10-19 01:41:45.585 I/Finsky  ( 6241): [2] WM::SCH: Logging work start for 12-1
+10-19 01:41:45.585 I/Finsky  ( 6241): [2] [ContentSync] job started
+10-19 01:41:45.586 D/RecentTasksList( 1255): invalidateLoadedTasks - previous requestLoadId: -1
+10-19 01:41:45.586 V/RecentTasksController( 1066): generateList(getRecentTasks)
+10-19 01:41:45.586 V/RecentTasksController( 1066): initializeDesksMap - allDeskIds: []
+10-19 01:41:45.586 V/RecentTasksController( 1066): Task 2905 is not an active desktop task
+10-19 01:41:45.586 V/RecentTasksController( 1066): Added fullscreen task: 2905
+10-19 01:41:45.586 V/RecentTasksController( 1066): Task 2812 is not an active desktop task
+10-19 01:41:45.586 V/RecentTasksController( 1066): Added fullscreen task: 2812
+10-19 01:41:45.586 V/RecentTasksController( 1066): Task 2849 is not an active desktop task
+10-19 01:41:45.586 V/RecentTasksController( 1066): Added fullscreen task: 2849
+10-19 01:41:45.586 V/RecentTasksController( 1066): generateList - complete
+10-19 01:41:45.588 D/PreloadThumbnailUseCase( 1255): Preloading thumbnails for task ids: [[id=2849 windowingMode=0 user=0 lastActiveTime=81436 lastFocusedTime=0] null, [id=2812 windowingMode=0 user=0 lastActiveTime=81437 lastFocusedTime=0] null, [id=2905 windowingMode=1 user=0 lastActiveTime=3450900 lastFocusedTime=3450951] null]
+10-19 01:41:45.592 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.592 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.592 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.592 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.592 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.592 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.592 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.592 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.593 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.593 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.593 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.593 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.593 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.595 I/GFXSTREAM(14863): [eglDisplay.cpp(297)] Opening libGLESv1_CM_emulation.so
+10-19 01:41:45.596 I/GFXSTREAM(14863): [eglDisplay.cpp(297)] Opening libGLESv2_emulation.so
+10-19 01:41:45.596 W/libc    (14863): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:45.598 I/GFXSTREAM(  712): [eglDisplay.cpp(297)] Opening libGLESv1_CM_emulation.so
+10-19 01:41:45.599 I/PackageManager(  712): getInstalledPackages: callingUid=10160 flags=134217728 updatedFlags=135004160 userId=0
+10-19 01:41:45.605 I/GFXSTREAM(  712): [eglDisplay.cpp(297)] Opening libGLESv2_emulation.so
+10-19 01:41:45.604 W/GrallocUploadTh(  712): type=1400 audit(0.0:97): avc:  denied  { read } for  name="u:object_r:vendor_default_prop:s0" dev="tmpfs" ino=413 scontext=u:r:system_server:s0 tcontext=u:object_r:vendor_default_prop:s0 tclass=file permissive=0
+10-19 01:41:45.609 W/HWUI    (14863): Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+10-19 01:41:45.609 W/HWUI    (14863): Failed to initialize 101010-2 format, error = EGL_SUCCESS
+10-19 01:41:45.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.610 W/libc    (  712): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:45.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.611 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.611 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.625 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.625 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.625 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.625 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.625 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.625 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.626 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.626 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.627 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.627 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.627 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.627 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.627 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.628 W/HWUI    (  712): Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+10-19 01:41:45.631 W/HWUI    (  712): Failed to initialize 101010-2 format, error = EGL_SUCCESS
+10-19 01:41:45.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.651 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.655 D/LauncherAmbientCueVM( 1255): recalculateStates: isRootAttached=false (isTestMode=false, hasActions=false, isAmbientCueEnabled=true, isNotDeactivated=true, isTaskFocused=false [focusedId=2905, targetId=-1])
+10-19 01:41:45.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.660 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.660 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.660 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.660 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.660 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.660 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.671 W/libc    (  712): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:45.668 W/binder:712_13(  712): type=1400 audit(0.0:98): avc:  denied  { read } for  name="u:object_r:vendor_default_prop:s0" dev="tmpfs" ino=413 scontext=u:r:system_server:s0 tcontext=u:object_r:vendor_default_prop:s0 tclass=file permissive=0
+10-19 01:41:45.677 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.677 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.677 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.677 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.677 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.677 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.677 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.678 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.678 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.678 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.678 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.678 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.678 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.694 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.694 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.694 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.694 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.694 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.694 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.695 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.695 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.695 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.695 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.695 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.695 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.709 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.709 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.709 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.709 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.709 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.709 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.709 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.710 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.710 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.710 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.710 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.710 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.710 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.719 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.hardware.threadnetwork' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.725 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.725 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.726 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.726 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.726 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.726 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.726 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.726 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.726 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.726 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.726 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.726 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.726 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.729 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.uprobestats' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.740 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.hardware.vibrator' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.743 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.743 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.743 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.743 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.743 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.743 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.743 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.743 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.743 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.743 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.743 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.743 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.743 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.751 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.uwb' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.752 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.753 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.bt' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.756 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.widevine.nonupdatable' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.759 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.tzdata6' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.759 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.759 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.759 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.759 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.759 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.759 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.760 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.760 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.760 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.760 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.760 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.760 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.771 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.permission' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.777 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.777 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.777 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.777 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.777 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.777 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.787 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.gmssystem' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.806 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.wifi' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.813 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.hardware.contexthub' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.814 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.hardware.authsecret' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.819 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.apex.cts.shim' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.825 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.825 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.825 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.825 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.825 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.825 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.825 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.826 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.826 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.826 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.826 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.826 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.827 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.hardware.thermal' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.832 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.telephonycore' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.842 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.842 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.842 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.842 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.842 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.842 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.842 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.843 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.843 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.843 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.843 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.843 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.844 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.appsearch' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.844 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.media.swcodec' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.846 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.art' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.852 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.858 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.profiling' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.859 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.859 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.859 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.859 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.859 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.859 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.859 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.860 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.861 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.861 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.861 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.861 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.869 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.mediaprovider' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.877 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.877 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.877 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.877 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.877 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.882 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.hardware.uwb' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.886 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.virt' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.889 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.crashrecovery' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.889 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.adbd' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.895 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.resolv' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.903 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.i18n' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.908 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.hardware.dumpstate' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.908 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.configinfrastructure' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.909 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.media' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.909 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.conscrypt' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.911 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.911 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.911 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.911 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.911 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.911 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.911 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.911 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.911 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.911 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.911 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.919 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.hardware.cas' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.926 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.926 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.926 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.926 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.926 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.926 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.927 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.927 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.927 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.927 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.927 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.930 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.neuralnetworks' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.932 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.webapp' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.935 D/WindowManager(  712): captureDisplay
+10-19 01:41:45.935 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.935 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.937 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.runtime' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.939 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.939 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.939 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.940 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.hardware.nfc' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.940 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.ipsec' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.941 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.devicelock' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.942 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.942 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.942 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.942 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.942 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.942 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.943 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.943 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.943 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.943 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.943 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.948 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.hardware.power' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.949 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.ondevicepersonalization' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.955 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.sdkext' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.955 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.healthfitness' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.961 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.965 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.hardware.biometrics.fingerprint.virtual' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.966 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.adservices' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.967 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.tethering' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.971 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.extservices' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.975 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.nfcservices' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.976 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.976 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.976 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.976 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.976 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.976 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.976 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.976 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.976 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.976 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.976 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.983 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.os.statsd' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.984 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.hardware.rebootescrow' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.985 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.cellbroadcast' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.991 D/nativeloader(15020): Configuring clns-9 for other apk /data/app/~~f8qTKIv40sdVQA1w7Wc14w==/com.aistudio.coreflow.vdfpkw-tpmIZds1jh_hvFtt31fQeA==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~f8qTKIv40sdVQA1w7Wc14w==/com.aistudio.coreflow.vdfpkw-tpmIZds1jh_hvFtt31fQeA==/lib/x86_64:/data/app/~~f8qTKIv40sdVQA1w7Wc14w==/com.aistudio.coreflow.vdfpkw-tpmIZds1jh_hvFtt31fQeA==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/com.aistudio.coreflow.vdfpkw
+10-19 01:41:45.991 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.npumanager' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.992 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.992 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.992 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.992 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.992 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.992 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.992 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.992 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.992 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.992 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.992 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:45.994 W/AccessibilityManagerService(  712):  wait for adding window timeout: 489
+10-19 01:41:45.995 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.rkpd' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:45.998 D/ActivityThread(15020): Set OS env TMPDIR to /data/user/0/com.aistudio.coreflow.vdfpkw/cache
+10-19 01:41:45.999 V/GraphicsEnvironment(15020): Currently set values for:
+10-19 01:41:45.999 V/GraphicsEnvironment(15020):   angle_gl_driver_selection_pkgs=[]
+10-19 01:41:45.999 V/GraphicsEnvironment(15020):   angle_gl_driver_selection_values=[]
+10-19 01:41:45.999 V/GraphicsEnvironment(15020): com.aistudio.coreflow.vdfpkw is not listed in per-application setting
+10-19 01:41:45.999 V/GraphicsEnvironment(15020): No special selections for ANGLE, returning default driver choice
+10-19 01:41:46.000 V/GraphicsEnvironment(15020): Neither updatable production driver nor prerelease driver is supported.
+10-19 01:41:46.003 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.google.android.scheduling' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:46.004 W/FirebaseApp(15020): Default FirebaseApp failed to initialize because no default options were found. This usually means that com.google.gms:google-services was not applied to your gradle project.
+10-19 01:41:46.004 I/FirebaseInitProvider(15020): FirebaseApp initialization unsuccessful
+10-19 01:41:46.007 W/Finsky  ( 6241): [2] STU: Failed to get storage stats for package 'com.android.hardware.gatekeeper' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+10-19 01:41:46.009 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.009 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.009 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.009 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.014 I/Finsky  ( 6241): [2] App states replicator found 16 unowned apps
+10-19 01:41:46.014 W/AccessibilityWindowsPopulator(  712): Windows change within in 2 frames continuously over 500 ms and notify windows changed immediately
+10-19 01:41:46.015 D/CorePackageUpdate(  712): Couldn't find a persistent state for task= 2905
+10-19 01:41:46.015 I/AppsFilter(  712): interaction: PackageSetting{4aaac55 com.aistudio.coreflow.vdfpkw/10232} -> PackageSetting{f0e6f93 dev.mobile.maestro/10441} BLOCKED
+10-19 01:41:46.018 I/Finsky  ( 6241): [53] Completed 0 account content syncs with 0 successful.
+10-19 01:41:46.018 I/Finsky  ( 6241): [2] [ContentSync] Installation state replication succeeded.
+10-19 01:41:46.018 I/Finsky  ( 6241): [2] SCH: jobFinished: 12-1. TimeElapsed: 433ms.
+10-19 01:41:46.018 I/Finsky  ( 6241): [2] WM::SCH: Logging work end for 12-1
+10-19 01:41:46.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.035 I/Finsky  ( 6241): [53] SCH: Scheduling phonesky job Id: 1-1337, CT: 1792371588616, Constraints: [{ L: 43155824, D: 86355824, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+10-19 01:41:46.035 I/Finsky  ( 6241): [53] SCH: Scheduling phonesky job Id: 34-14, CT: 1792371591900, Constraints: [{ L: 604800000, D: 2470146959, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+10-19 01:41:46.035 I/Finsky  ( 6241): [53] SCH: Scheduling phonesky job Id: 34-21, CT: 1792371591900, Constraints: [{ L: 604800000, D: 2549422723, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+10-19 01:41:46.035 I/Finsky  ( 6241): [53] SCH: Scheduling phonesky job Id: 34-24, CT: 1792371591900, Constraints: [{ L: 36621615, D: 1332621615, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+10-19 01:41:46.039 I/BroadcastQueue(  712): BOOT_COMPLETED_BROADCAST_COMPLETION_LATENCY_REPORTED action:android.intent.action.BOOT_COMPLETED dispatchLatency:4 completeLatency:498 dispatchRealLatency:4 completeRealLatency:498 receiversSize:1 userId:0 userType:android.os.usertype.full.SYSTEM
+10-19 01:41:46.042 I/DisplayManager(15020): Choreographer implicitly registered for the refresh rate.
+10-19 01:41:46.042 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.042 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.042 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.042 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.042 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.042 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.043 D/coreflow.vdfpkw(15020): Initializing ProtoLog
+10-19 01:41:46.043 D/ProtoLog(15020): Initializing ProtoLog DataSource
+10-19 01:41:46.043 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.043 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.043 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.043 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.043 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.044 I/Finsky  ( 6241): [57] SCH: Scheduling 1 system job(s)
+10-19 01:41:46.044 I/Finsky  ( 6241): [57] SCH: Scheduling system job Id: 9518, L: 34107471, D: 83838396, C: false, I: false, N: 1
+10-19 01:41:46.049 I/Finsky  ( 6241): [260] SCH: job service finished with id 9512.
+10-19 01:41:46.056 I/Finsky  ( 6241): [2] Memory trim requested to level 40
+10-19 01:41:46.056 I/Finsky  ( 6241): [2] Flushing in-memory image cache
+10-19 01:41:46.056 I/Finsky:background( 6608): [2] Memory trim requested to level 40
+10-19 01:41:46.060 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.060 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.060 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.060 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.060 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.061 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.061 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.061 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.061 V/WindowManagerShell( 1066): Transition animation finished (aborted=false), notifying core (#61) android.os.BinderProxy@ff63628@0
+10-19 01:41:46.061 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.061 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.061 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.063 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.063 V/WindowManager(  712): Finish Transition (#61): created at 10-19 01:41:45.468 collect-started=0.014ms request-sent=4.476ms started=5.938ms ready=44.113ms sent=49.234ms commit=25.48ms finished=594.435ms
+10-19 01:41:46.065 D/VRI[SettingsActivity]( 5220): visibilityChanged oldVisibility=true newVisibility=false
+10-19 01:41:46.065 V/WindowManagerShell( 1066): Track 0 became idle
+10-19 01:41:46.066 V/WindowManagerShell( 1066): All active transition animations finished
+10-19 01:41:46.070 I/Surface (  712): Creating surface for consumer unnamed-712-34 with slotExpansion=1 for 64 slots
+10-19 01:41:46.070 I/Surface (  712): Creating surface for consumer ImageReader-864x1939f1m1-712-34 with slotExpansion=1 for 64 slots
+10-19 01:41:46.070 W/ImageReader_JNI(  712): Unable to acquire a buffer item, very likely client tried to acquire more than maxImages buffers
+10-19 01:41:46.077 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.077 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.077 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.077 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.077 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.078 E/ConsumerBase(  712): [ImageReader-864x1939f1m1-712-34] abandonLocked: ConsumerBase is abandoned!
+10-19 01:41:46.080 D/CompatChangeReporter(15020): Compat change id reported: 377864165; UID 10232; state: ENABLED
+10-19 01:41:46.092 I/GFXSTREAM(15020): [eglDisplay.cpp(297)] Opening libGLESv1_CM_emulation.so
+10-19 01:41:46.092 W/AiAiVC  ( 1690): Unexpected capture event type: 11
+10-19 01:41:46.092 I/GFXSTREAM(15020): [eglDisplay.cpp(297)] Opening libGLESv2_emulation.so
+10-19 01:41:46.093 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.094 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.094 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.094 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.094 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.094 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.107 W/HWUI    (15020): Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+10-19 01:41:46.107 D/TextToSpeechManagerPerUserService(  712): Trying to start connection to TTS engine: com.google.android.tts
+10-19 01:41:46.107 W/HWUI    (15020): Failed to initialize 101010-2 format, error = EGL_SUCCESS
+10-19 01:41:46.109 I/TextToSpeech(15020): Sucessfully bound to com.google.android.tts
+10-19 01:41:46.111 D/AudioFlinger(  555): onStateChanged: pid:4632  uid:10178  state:unfrozen - no freeze activity
+10-19 01:41:46.123 D/ActivityManager(  712): sync unfroze 4632 com.google.android.tts for 6
+10-19 01:41:46.134 I/ffpq    ( 1718): (REDACTED) HDM. appOpsListener %s %s
+10-19 01:41:46.135 I/ffpq    ( 1718): (REDACTED) HDM. Ignoring irrelevant audio permission changes for package %s
+10-19 01:41:46.164 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.178 W/HWUI    (15020): Unknown dataspace 0
+10-19 01:41:46.185 W/InputChannel-JNI(  712): Channel already disposed.
+10-19 01:41:46.193 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.193 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.193 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.193 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.193 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.194 D/WindowOnBackDispatcher(15020): setTopOnBackInvokedCallback (unwrapped): android.app.Activity$$ExternalSyntheticLambda0@7511c97
+10-19 01:41:46.199 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.199 D/WindowOnBackDispatcher(15020): setOnBackInvokedCallbackInfo: android.app.Activity$$ExternalSyntheticLambda0@7511c97
+10-19 01:41:46.200 D/CoreBackPreview(  712): Window{7429743 u0 com.aistudio.coreflow.vdfpkw/com.example.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@6d649f, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}
+10-19 01:41:46.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.218 I/GoogleTtsServicePeer( 4632): Creating Google TTS service, version googletts.google-speech-apk_20260817.01_p2.979487077
+10-19 01:41:46.222 I/VoiceDataManager( 4632): checkData: Refreshing list of all available voices...
+10-19 01:41:46.237 D/TextToSpeechManagerPerUserService(  712): Connected successfully to TTS engine: com.google.android.tts
+10-19 01:41:46.239 I/TextToSpeech(15020): Connected to TTS engine
+10-19 01:41:46.240 I/VoiceDataDownloader( 4632): getAvailableVoicesInfo en-us
+10-19 01:41:46.241 I/VoiceDataDownloader( 4632): getAvailableVoicesInfo pt-br
+10-19 01:41:46.242 I/VoiceGenerator( 4632): Cache cleared
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.243 I/VoiceDataManager( 4632): Calling onVoicesDataChange: updated voices
+10-19 01:41:46.266 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.328 I/WebViewFactory(15020): Loading com.google.android.webview version 155.0.8059.43 (code 805904308)
+10-19 01:41:46.330 E/libnfc_nci(14883): Timeout waiting for NFC AIDL service (future).
+10-19 01:41:46.330 V/ResourcesManager(15020): The following library key has been added: ResourcesKey{ mHash=ff306856 mResDir=null mSplitDirs=[] mOverlayDirs=[] mLibDirs=[/data/app/~~ntvJvcjyiYPjfU_QJh3tkA==/com.google.android.webview-1e8V9HTHQGFia-WLdKfFmQ==/base.apk,/system/framework/android.test.base.jar,/system_ext/framework/androidx.window.extensions.jar] mDisplayId=0 mOverrideConfig=v37 mCompatInfo={420dpi always-compat} mLoaders=[]}
+10-19 01:41:46.330 I/libnfc_nci(14883): NfcAdaptation::InitializeHalDeviceContext: Failed to retrieve the NFC AIDL!
+10-19 01:41:46.330 E/libnfc_nci(14883): Exit current process to recover.
+10-19 01:41:46.330 D/ApplicationLoaders(15020): Returning zygote-cached class loader: /system/framework/android.test.base.jar
+10-19 01:41:46.330 D/ApplicationLoaders(15020): Returning zygote-cached class loader: /system_ext/framework/androidx.window.extensions.jar
+10-19 01:41:46.332 W/coreflow.vdfpkw(15020): Loading /data/app/~~ntvJvcjyiYPjfU_QJh3tkA==/com.google.android.webview-1e8V9HTHQGFia-WLdKfFmQ==/oat/x86_64/base.odex non-executable as it requires an image which we failed to load
+10-19 01:41:46.334 I/ActivityManager(  712): Process com.google.android.nfc (pid 14883) has died: pers PER 
+10-19 01:41:46.335 W/ActivityManager(  712): Re-adding persistent process ProcessRecord{e66cc5a 14883:com.google.android.nfc/1027}
+10-19 01:41:46.335 D/nativeloader(15020): Configuring clns-10 for other apk /data/app/~~ntvJvcjyiYPjfU_QJh3tkA==/com.google.android.webview-1e8V9HTHQGFia-WLdKfFmQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~ntvJvcjyiYPjfU_QJh3tkA==/com.google.android.webview-1e8V9HTHQGFia-WLdKfFmQ==/lib/x86_64:/data/app/~~ntvJvcjyiYPjfU_QJh3tkA==/com.google.android.webview-1e8V9HTHQGFia-WLdKfFmQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand
+10-19 01:41:46.336 V/GrammaticalInflectionUtils(  712): AttributionSource: android.content.AttributionSource@e83e26da does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+10-19 01:41:46.336 I/libprocessgroup(  712): Removed cgroup /sys/fs/cgroup/system/uid_1027/pid_14883
+10-19 01:41:46.337 I/Zygote  (  499): Process 14883 exited cleanly (0)
+10-19 01:41:46.342 D/Zygote  (  499): Forked child process 15055
+10-19 01:41:46.344 I/libprocessgroup(15055): Created cgroup /sys/fs/cgroup/system/uid_1027/pid_15055
+10-19 01:41:46.347 I/ActivityManager(  712): Start proc 15055:com.google.android.nfc/1027 for restart com.google.android.nfc
+10-19 01:41:46.360 I/cr_WVCFactoryProvider(15020): version=155.0.8059.43 (805904308) minSdkVersion=29 multiprocess=true packageId=2 splits=<none>
+10-19 01:41:46.363 I/Zygote  (15055): Process 15055 created for com.google.android.nfc
+10-19 01:41:46.363 I/gle.android.nfc(15055): Using generational CollectorTypeCMC GC.
+10-19 01:41:46.364 W/gle.android.nfc(15055): Unexpected CPU variant for x86: x86_64.
+10-19 01:41:46.364 W/gle.android.nfc(15055): Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, pantherlake, default
+10-19 01:41:46.372 D/nativeloader(15055): Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+10-19 01:41:46.385 D/CompatChangeReporter(15055): Compat change id reported: 333566037; UID 1027; state: ENABLED
+10-19 01:41:46.386 D/nativeloader(15055): Configuring clns-shared-9 for other apk /apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7/NfcNciApexGoogle.apk. target_sdk_version=37, uses_libraries=, library_path=/apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7/lib/x86_64:/system/lib64:/system_ext/lib64, permitted_path=/data:/mnt/expand:/data/user_de/0/com.google.android.nfc:/apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7:/system/lib64:/system_ext/lib64
+10-19 01:41:46.387 D/nativeloader(15055): InitApexLibraries:
+10-19 01:41:46.387 D/nativeloader(15055):   com_android_adservices: libhpke_jni.so:libtflite_support_classifiers_native.so
+10-19 01:41:46.387 D/nativeloader(15055):   com_android_appsearch: libappsearchservice.so:libicing_anywhere.so
+10-19 01:41:46.387 D/nativeloader(15055):   com_android_art: libartservice.so
+10-19 01:41:46.387 D/nativeloader(15055):   com_android_bt: libbluetooth_jni.so
+10-19 01:41:46.387 D/nativeloader(15055):   com_android_conscrypt: libjavacrypto.so
+10-19 01:41:46.387 D/nativeloader(15055):   com_android_extservices: libtflite_support_classifiers_native.so
+10-19 01:41:46.387 D/nativeloader(15055):   com_android_mediaprovider: libpdfclient.so
+10-19 01:41:46.387 D/nativeloader(15055):   com_android_nfcservices: libnfc_nci_jni.so:libnfc_rust_jni.so
+10-19 01:41:46.387 D/nativeloader(15055):   com_android_npumanager: libnpumanager_service_jni.so
+10-19 01:41:46.387 D/nativeloader(15055):   com_android_ondevicepersonalization: libfcp_cpp_dep_jni.so:libfcp_hpke_jni.so
+10-19 01:41:46.387 D/nativeloader(15055):   com_android_os_statsd: libstats_jni.so
+10-19 01:41:46.387 D/nativeloader(15055):   com_android_profiling: libanomaly_detector_service_jni.so
+10-19 01:41:46.387 D/nativeloader(15055):   com_android_tethering: libandroid_net_connectivity_com_android_net_module_util_jni.so:libandroid_net_connectivity_com_android_net_module_util_jni_CommonConnectivityJni.so:libcrypto_httpengine.so:libframework-connectivity-jni.so:libframework-connectivity-tiramisu-jni.so:libhttpengine.so:libservice-connectivity.so:libservice
+10-19 01:41:46.389 D/ActivityThread(15055): Set OS env TMPDIR to /data/user_de/0/com.google.android.nfc/cache
+10-19 01:41:46.390 V/GraphicsEnvironment(15055): Currently set values for:
+10-19 01:41:46.390 V/GraphicsEnvironment(15055):   angle_gl_driver_selection_pkgs=[]
+10-19 01:41:46.390 V/GraphicsEnvironment(15055):   angle_gl_driver_selection_values=[]
+10-19 01:41:46.390 V/GraphicsEnvironment(15055): com.google.android.nfc is not listed in per-application setting
+10-19 01:41:46.390 V/GraphicsEnvironment(15055): No special selections for ANGLE, returning default driver choice
+10-19 01:41:46.390 V/GraphicsEnvironment(15055): Neither updatable production driver nor prerelease driver is supported.
+10-19 01:41:46.391 W/gle.android.tts( 4632): Reducing the number of considered missed Gc histogram windows from 125 to 100
+10-19 01:41:46.391 D/CompatChangeReporter(15055): Compat change id reported: 407952621; UID 1027; state: ENABLED
+10-19 01:41:46.391 D/CompatChangeReporter(15055): Compat change id reported: 419020719; UID 1027; state: ENABLED
+10-19 01:41:46.406 I/RegisteredComponentCache(15055): generateComponentsList: New Components => 
+10-19 01:41:46.406 I/RegisteredComponentCache(15055): ComponentInfo: ResolveInfo{fb699da com.google.android.tag/com.android.apps.tag.TagViewer m=0x108000 userHandle=UserHandle{0}}, techs: android.nfc.tech.Ndef, 
+10-19 01:41:46.406 I/RegisteredComponentCache(15055): generateComponentsList: Removed Components => 
+10-19 01:41:46.406 D/CompatChangeReporter(15055): Compat change id reported: 458413887; UID 1027; state: ENABLED
+10-19 01:41:46.409 I/NfcEventLog(15055): readListFromLogFile: No NFC events found in log file
+10-19 01:41:46.411 I/NfcService(15055): Starting NFC service
+10-19 01:41:46.411 I/NativeNfcManager(15055): Loading C NFC Support
+10-19 01:41:46.413 D/nativeloader(15020): Load /data/app/~~ntvJvcjyiYPjfU_QJh3tkA==/com.google.android.webview-1e8V9HTHQGFia-WLdKfFmQ==/base.apk!/lib/x86_64/libwebviewchromium.so using class loader ns clns-10 (caller=/data/app/~~ntvJvcjyiYPjfU_QJh3tkA==/com.google.android.webview-1e8V9HTHQGFia-WLdKfFmQ==/base.apk): ok
+10-19 01:41:46.414 D/nativeloader(15055): Load libnfc_nci_jni.so using class loader ns clns-shared-9 (caller=/apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7/NfcNciApexGoogle.apk): ok
+10-19 01:41:46.414 I/libnfc_nci(15055): JNI_OnLoad: NFC Service: loading nci JNI
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - Parsing file '/etc/libnfc-nci.conf'
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [NFC_DEBUG_ENABLED] = 0
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [NFA_STORAGE] = "/data/nfc"
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [PRESERVE_STORAGE] = 0x01
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [POLLING_TECH_MASK] = 0x0F
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [UICC_LISTEN_TECH_MASK] = 0x07
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [NFA_MAX_EE_SUPPORTED] = 0x02
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [AID_FOR_EMPTY_SELECT] = {08:A0:00:00:01:51:00:00:00}
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [AID_MATCHING_MODE] = 0x01
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [NCI_RESET_TYPE] = 0x00
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [PRESENCE_CHECK_RETRY_COUNT] = 0
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [EUICC_MEP_MODE] = 0x03
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [NFCEE_EVENT_RF_DISCOVERY_OPTION] = 0x00
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [OPTIMIZE_ROUTING_TABLE_UPDATE] = 0x00
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [NFA_EE_ROUTE_DEBOUNCE_TIMER] = 0x01
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [KOVIO_PRESENCE_CHECK_TYPE] = 0x00
+10-19 01:41:46.414 I/libnfc_nci(15055): ConfigFile - [RECOVERY_OPTION] = 1
+10-19 01:41:46.414 I/libnfc_nci(15055): NfcAdaptation:440
+10-19 01:41:46.414 I/libnfc_nci(15055): NfcAdaptation::InitializeHalDeviceContext: INfc::getService()
+10-19 01:41:46.416 I/hwservicemanager(  341): getTransport: Cannot find entry android.hardware.nfc@1.2::INfc/default in either framework or device VINTF manifest.
+10-19 01:41:46.416 I/hwservicemanager(  341): getTransport: Cannot find entry android.hardware.nfc@1.1::INfc/default in either framework or device VINTF manifest.
+10-19 01:41:46.417 I/hwservicemanager(  341): getTransport: Cannot find entry android.hardware.nfc@1.0::INfc/default in either framework or device VINTF manifest.
+10-19 01:41:46.417 D/nativeloader(15020): Load /system/lib64/libwebviewchromium_plat_support.so using class loader ns clns-10 (caller=/data/app/~~ntvJvcjyiYPjfU_QJh3tkA==/com.google.android.webview-1e8V9HTHQGFia-WLdKfFmQ==/base.apk): ok
+10-19 01:41:46.422 E/chromium(15020): [1019/014146.421531:ERROR:android_webview/browser/variations/variations_seed_loader.cc:36] Seed missing signature.
+10-19 01:41:46.427 W/libc    (  336): Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-19 01:41:46.430 W/libbinder.ServiceManagerCppClient(  712): Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-19 01:41:46.436 I/cr_LibraryLoader(15020): Successfully loaded native library
+10-19 01:41:46.436 I/cr_CachingUmaRecorder(15020): Flushed 46 samples from 21 histograms, 0 samples were dropped.
+10-19 01:41:46.438 I/cr_ChildProcLH(15020): ScopedServiceBindingBatch.tryActivate: false
+10-19 01:41:46.439 I/cr_CombinedPProvider(15020): #registerProvider() provider:WV.fj@f8076d3 isPolicyCacheEnabled:false policyProvidersSize:0
+10-19 01:41:46.439 I/cr_PolicyProvider(15020): #setManagerAndSource() 0
+10-19 01:41:46.440 W/libc    (  336): Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-19 01:41:46.442 I/cr_DisplayManager(15020): Is Display Topology available: false
+10-19 01:41:46.446 I/cr_policy(15020): registerReceiver succeeded after 5ms
+10-19 01:41:46.447 V/GrammaticalInflectionUtils(  712): AttributionSource: android.content.AttributionSource@1c2e5650 does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+10-19 01:41:46.453 D/Zygote  ( 1134): Forked child process 15076
+10-19 01:41:46.453 I/libprocessgroup(  712): Created cgroup /sys/fs/cgroup/apps/uid_10232/pid_15076
+10-19 01:41:46.456 I/Zygote  (15076): Process 15076 created for com.aistudio.coreflow.vdfpkw:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0
+10-19 01:41:46.457 I/ocessService0:0(15076): Using generational CollectorTypeCMC GC.
+10-19 01:41:46.457 W/ocessService0:0(15076): Unexpected CPU variant for x86: x86_64.
+10-19 01:41:46.457 W/ocessService0:0(15076): Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, pantherlake, default
+10-19 01:41:46.459 I/ActivityManager(  712): Start proc 15076:com.aistudio.coreflow.vdfpkw:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0i21 for bound-service {com.aistudio.coreflow.vdfpkw/org.chromium.content.app.SandboxedProcessService0:0}
+10-19 01:41:46.464 D/nativeloader(15076): Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+10-19 01:41:46.472 D/CompatChangeReporter(15076): Compat change id reported: 333566037; UID 99021; state: ENABLED
+10-19 01:41:46.475 D/ApplicationLoaders(15076): Returning zygote-cached class loader: /system/framework/android.test.base.jar
+10-19 01:41:46.476 D/ApplicationLoaders(15076): Returning zygote-cached class loader: /system_ext/framework/androidx.window.extensions.jar
+10-19 01:41:46.478 I/cr_CombinedPProvider(15020): #linkNativeInternal() 1
+10-19 01:41:46.478 I/cr_AppResProvider(15020): #getApplicationRestrictionsFromUserManager() Bundle[EMPTY_PARCEL]
+10-19 01:41:46.479 I/cr_PolicyProvider(15020): #notifySettingsAvailable() 0
+10-19 01:41:46.479 I/cr_CombinedPProvider(15020): #onSettingsAvailable() 0
+10-19 01:41:46.479 I/cr_CombinedPProvider(15020): #flushPolicies()
+10-19 01:41:46.481 D/CompatChangeReporter(15076): Compat change id reported: 407952621; UID 99021; state: ENABLED
+10-19 01:41:46.482 D/CompatChangeReporter(15076): Compat change id reported: 419020719; UID 99021; state: ENABLED
+10-19 01:41:46.483 I/cr_WebViewApkApp(15076): version=155.0.8059.43 (805904308) minSdkVersion=29 processName=com.aistudio.coreflow.vdfpkw:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0 splits=<none>
+10-19 01:41:46.492 I/cr_ChildProcessService(15076): Creating new ChildProcessService pid=15076
+10-19 01:41:46.533 D/BoundBrokerSvc( 1415): onBind: Intent { act=com.google.android.gms.safetynet.service.START xflg=0x4 pkg=com.google.android.gms }
+10-19 01:41:46.533 D/BoundBrokerSvc( 1415): Loading bound service for intent: Intent { act=com.google.android.gms.safetynet.service.START xflg=0x4 pkg=com.google.android.gms }
+10-19 01:41:46.534 D/ConnectivityService(  712): requestNetwork for uid/pid:10232/15020 activeRequest: null callbackRequest: 594 [NetworkRequest [ REQUEST id=595, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10232 RequestorUid: 10232 RequestorPkg: com.aistudio.coreflow.vdfpkw UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST|NC|LP
+10-19 01:41:46.535 D/ConnectivityService(  712): NetReassign [595 : null → 100] [c 0] [a 0] [i 1]
+10-19 01:41:46.535 D/WifiNetworkFactory(  712): got request NetworkRequest [ REQUEST id=595, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10232 RequestorUid: 10232 RequestorPkg: com.aistudio.coreflow.vdfpkw UnderlyingNetworks: Null] ]
+10-19 01:41:46.535 D/UntrustedWifiNetworkFactory(  712): got request NetworkRequest [ REQUEST id=595, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10232 RequestorUid: 10232 RequestorPkg: com.aistudio.coreflow.vdfpkw UnderlyingNetworks: Null] ]
+10-19 01:41:46.535 D/OemPaidWifiNetworkFactory(  712): got request NetworkRequest [ REQUEST id=595, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10232 RequestorUid: 10232 RequestorPkg: com.aistudio.coreflow.vdfpkw UnderlyingNetworks: Null] ]
+10-19 01:41:46.535 D/MultiInternetWifiNetworkFactory(  712): got request NetworkRequest [ REQUEST id=595, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10232 RequestorUid: 10232 RequestorPkg: com.aistudio.coreflow.vdfpkw UnderlyingNetworks: Null] ]
+10-19 01:41:46.538 D/ConnectivityService(  712): NetReassign [no changes] [c 0] [a 0] [i 1]
+10-19 01:41:46.544 D/BoundBrokerSvc( 1415): onBind: Intent { act=com.google.android.gms.safebrowsing.SafeBrowsingService.START dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.GmsBoundBrokerService }
+10-19 01:41:46.544 D/BoundBrokerSvc( 1415): Loading bound service for intent: Intent { act=com.google.android.gms.safebrowsing.SafeBrowsingService.START dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.GmsBoundBrokerService }
+10-19 01:41:46.561 I/cr_LibraryLoader(15076): Successfully loaded native library
+10-19 01:41:46.561 I/cr_CachingUmaRecorder(15076): Flushed 2 samples from 2 histograms, 0 samples were dropped.
+10-19 01:41:46.571 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.571 I/chromium(15076): [INFO:third_party/skia/src/ports/SkFontMgr_android_parser.cpp:724] [SkFontMgr Android Parser] '/product/etc/fonts_customization.xml' could not be opened
+10-19 01:41:46.571 I/chromium(15076): 
+10-19 01:41:46.571 W/libc    (15020): Access denied finding property "vendor.mesa.log"
+10-19 01:41:46.571 W/libc    (15020): Access denied finding property "vendor.mesa.log.level"
+10-19 01:41:46.571 W/libc    (15020): Access denied finding property "vendor.mesa.log.prefix"
+10-19 01:41:46.571 W/libc    (15020): Access denied finding property "vendor.mesa.gallium.print.options"
+10-19 01:41:46.571 W/libc    (15020): Access denied finding property "vendor.mesa.log.file.auto"
+10-19 01:41:46.571 W/libc    (15020): Access denied finding property "vendor.mesa.log.file"
+10-19 01:41:46.571 E/MESA    (15020): Failed to open rendernode: No such file or directory
+10-19 01:41:46.571 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.571 E/MESA    (15020): Failed to open rendernode: No such file or directory
+10-19 01:41:46.571 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.574 W/chromium(15076): [WARNING:content/child/runtime_features.cc:476] Fenced frames cannot be enabled in this configuration. Use --enable-features=FencedFrames instead.
+10-19 01:41:46.580 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.580 E/MESA    (15020): Failed to open rendernode: No such file or directory
+10-19 01:41:46.585 D/AudioSystem(15020): onNewService: media.audio_policy service obtained 0x749a62aa9610
+10-19 01:41:46.586 D/AudioSystem(15020): getService: IAudioPolicyService retrieved: 0x749a62aa9610  cached: 0x749a62aa9610
+10-19 01:41:46.586 I/LocalSynthesizer( 4632): Attempting to load synthesizer for voice: en-us-x-iog-seanet-embedded
+10-19 01:41:46.586 I/AudioPortEventHandler(15020): init: AudioPortEventHandler successfully initialized
+10-19 01:41:46.587 D/vulkan  (15020): searching for layers in '/data/app/~~f8qTKIv40sdVQA1w7Wc14w==/com.aistudio.coreflow.vdfpkw-tpmIZds1jh_hvFtt31fQeA==/lib/x86_64'
+10-19 01:41:46.592 D/vulkan  (15020): searching for layers in '/data/app/~~f8qTKIv40sdVQA1w7Wc14w==/com.aistudio.coreflow.vdfpkw-tpmIZds1jh_hvFtt31fQeA==/base.apk!/lib/x86_64'
+10-19 01:41:46.595 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.595 E/MESA    (15020): Failed to open rendernode: No such file or directory
+10-19 01:41:46.595 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.595 E/MESA    (15020): Failed to open rendernode: No such file or directory
+10-19 01:41:46.595 I/ExoPlayerImpl( 4632): Init 3cde8c9 [AndroidXMedia3/1.11.0] [emu64xa16k, sdk_gphone16k_x86_64, Google, 37]
+10-19 01:41:46.596 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.596 E/MESA    (15020): Failed to open rendernode: No such file or directory
+10-19 01:41:46.596 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.596 E/MESA    (15020): Failed to open rendernode: No such file or directory
+10-19 01:41:46.596 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.596 E/MESA    (15020): Failed to open rendernode: No such file or directory
+10-19 01:41:46.596 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.596 E/MESA    (15020): Failed to open rendernode: No such file or directory
+10-19 01:41:46.597 W/libc    (15020): Access denied finding property "vendor.mesa.vk.trace"
+10-19 01:41:46.597 W/libc    (15020): Access denied finding property "vendor.mesa.vk.trace.per.submit"
+10-19 01:41:46.597 W/libc    (15020): Access denied finding property "vendor.mesa.vk.trace.frame"
+10-19 01:41:46.597 W/libc    (15020): Access denied finding property "vendor.mesa.vk.trace.trigger"
+10-19 01:41:46.598 D/WindowOnBackDispatcher(15020): setTopOnBackInvokedCallback (unwrapped): androidx.activity.OnBackPressedDispatcher$Api34Impl$createOnBackAnimationCallback$1@b7cc79f
+10-19 01:41:46.599 D/WindowManager(  712): captureDisplay
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 D/WindowOnBackDispatcher(15020): setOnBackInvokedCallbackInfo: androidx.activity.OnBackPressedDispatcher$Api34Impl$createOnBackAnimationCallback$1@b7cc79f
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.599 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.600 D/CoreBackPreview(  712): Window{7429743 u0 com.aistudio.coreflow.vdfpkw/com.example.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@a67ca79, mPriority=0, mIsAnimationCallback=true, mOverrideBehavior=0}
+10-19 01:41:46.603 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.603 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.603 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.607 D/VRI[MainActivity](15020): WindowInsets changed: 1080x2424 statusBars:[0,142,0,0] navigationBars:[0,0,0,63] mandatorySystemGestures:[0,174,0,84] 
+10-19 01:41:46.610 I/AudioManager(15020): broadcastDeviceListChange_sync: device update event from native but no device diff found
+10-19 01:41:46.616 W/libc    (15020): Access denied finding property "vendor.mesa.vk.wsi.debug"
+10-19 01:41:46.616 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.616 E/MESA    (15020): Failed to open rendernode: No such file or directory
+10-19 01:41:46.617 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.617 E/MESA    (15020): Failed to open rendernode: No such file or directory
+10-19 01:41:46.618 W/libc    (15020): Access denied finding property "vendor.mesa.vk.wsi.present.mode"
+10-19 01:41:46.618 W/libc    (15020): Access denied finding property "vendor.mesa.vk.wsi.headless.swapchain"
+10-19 01:41:46.618 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.618 E/MESA    (15020): Failed to open rendernode: No such file or directory
+10-19 01:41:46.618 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.618 E/MESA    (15020): Failed to open rendernode: No such file or directory
+10-19 01:41:46.619 W/libc    (15020): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:41:46.620 I/ExoPlayerImpl( 4632): Init f8bce [AndroidXMedia3/1.11.0] [emu64xa16k, sdk_gphone16k_x86_64, Google, 37]
+10-19 01:41:46.624 D/WindowManager(  712): setClientSurface Surface(name=VRI-com.aistudio.coreflow.vdfpkw/com.example.MainActivity#745)/@0x7843be for 7429743 com.aistudio.coreflow.vdfpkw/com.example.MainActivity
+10-19 01:41:46.625 I/Surface (15020): Creating surface for consumer unnamed-15020-0 with slotExpansion=1 for 64 slots
+10-19 01:41:46.626 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.626 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.626 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.626 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.626 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.631 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.632 I/Surface (15020): Creating surface for consumer VRI[MainActivity]#0(BLAST Consumer)0 with slotExpansion=1 for 64 slots
+10-19 01:41:46.642 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.642 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.642 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.642 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.642 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.644 I/LocalSynthesizer( 4632): Voice en-us-x-iog-seanet-embedded is not supported by any existing synthesizers.
+10-19 01:41:46.644 I/ComposerWrapperImpl( 4632): Initializing new monolithic pipeline. New voice: en-us-x-iog-seanet-embedded
+10-19 01:41:46.644 I/PipelineReaderImpl( 4632): Initializing monolithic pipeline from disk: /data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/pipeline.pb
+10-19 01:41:46.659 I/FontLog ( 1415): (REDACTED) Received query %s, URI %s
+10-19 01:41:46.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.664 I/FontLog ( 1415): (REDACTED) Query [%s] resolved to %s
+10-19 01:41:46.665 I/FontLog ( 1415): (REDACTED) Font PFD returned from cache for %s
+10-19 01:41:46.665 I/FontLog ( 1415): (REDACTED) Fetch %s end status %s
+10-19 01:41:46.668 I/FontLog ( 1415): (REDACTED) Pulling font file for id = %d, cache size = %d
+10-19 01:41:46.671 I/FontLog ( 1415): (REDACTED) Received query %s, URI %s
+10-19 01:41:46.671 I/FontLog ( 1415): (REDACTED) Query [%s] resolved to %s
+10-19 01:41:46.672 I/FontLog ( 1415): (REDACTED) Fetch %s end status %s
+10-19 01:41:46.676 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.677 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.677 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.677 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.677 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.682 I/FontLog ( 1415): (REDACTED) Pulling font file for id = %d, cache size = %d
+10-19 01:41:46.685 I/FontLog ( 1415): (REDACTED) Received query %s, URI %s
+10-19 01:41:46.685 I/FontLog ( 1415): (REDACTED) Query [%s] resolved to %s
+10-19 01:41:46.686 I/FontLog ( 1415): (REDACTED) Font PFD returned from cache for %s
+10-19 01:41:46.686 I/FontLog ( 1415): (REDACTED) Fetch %s end status %s
+10-19 01:41:46.696 I/FontLog ( 1415): (REDACTED) Pulling font file for id = %d, cache size = %d
+10-19 01:41:46.698 E/WifiDataStall(  712): Ignore this poll. newStats: null txLinkSpeedMbps: 2 rxLinkSpeedMbps: 2 rssi: -50 connectionCapabilities: com.android.server.wifi.WifiNative$ConnectionCapabilities@1f66213
+10-19 01:41:46.699 I/MlConnectedScorer(  712): 1. stats.getStatusDataStall()=0
+10-19 01:41:46.699 I/MlConnectedScorer(  712): 2. stats.getStatusDataStall()=0
+10-19 01:41:46.699 I/MlConnectedScorer(  712): handleL2DataStallInMlScorer is true, shouldBlockBssid=false mBlockCurrentBssid=false
+10-19 01:41:46.705 I/FontLog ( 1415): (REDACTED) Received query %s, URI %s
+10-19 01:41:46.705 I/FontLog ( 1415): (REDACTED) Query [%s] resolved to %s
+10-19 01:41:46.706 I/FontLog ( 1415): (REDACTED) Font PFD returned from cache for %s
+10-19 01:41:46.706 I/FontLog ( 1415): (REDACTED) Fetch %s end status %s
+10-19 01:41:46.707 I/FontLog ( 1415): (REDACTED) Pulling font file for id = %d, cache size = %d
+10-19 01:41:46.708 I/FontLog ( 1415): (REDACTED) Received query %s, URI %s
+10-19 01:41:46.708 I/FontLog ( 1415): (REDACTED) Query [%s] resolved to %s
+10-19 01:41:46.708 I/FontLog ( 1415): (REDACTED) Font PFD returned from cache for %s
+10-19 01:41:46.708 I/FontLog ( 1415): (REDACTED) Fetch %s end status %s
+10-19 01:41:46.709 I/FontLog ( 1415): (REDACTED) Pulling font file for id = %d, cache size = %d
+10-19 01:41:46.711 I/FontLog ( 1415): (REDACTED) Received query %s, URI %s
+10-19 01:41:46.711 I/FontLog ( 1415): (REDACTED) Query [%s] resolved to %s
+10-19 01:41:46.711 I/FontLog ( 1415): (REDACTED) Font PFD returned from cache for %s
+10-19 01:41:46.711 I/FontLog ( 1415): (REDACTED) Fetch %s end status %s
+10-19 01:41:46.712 I/FontLog ( 1415): (REDACTED) Pulling font file for id = %d, cache size = %d
+10-19 01:41:46.716 I/ActivityTaskManager(  712): Displayed com.aistudio.coreflow.vdfpkw/com.example.MainActivity for user 0: +1s248ms
+10-19 01:41:46.717 I/FontLog ( 1415): (REDACTED) Received query %s, URI %s
+10-19 01:41:46.717 I/FontLog ( 1415): (REDACTED) Query [%s] resolved to %s
+10-19 01:41:46.718 I/FontLog ( 1415): (REDACTED) Font PFD returned from cache for %s
+10-19 01:41:46.718 I/FontLog ( 1415): (REDACTED) Fetch %s end status %s
+10-19 01:41:46.718 I/FontLog ( 1415): (REDACTED) Pulling font file for id = %d, cache size = %d
+10-19 01:41:46.726 I/FontLog ( 1415): (REDACTED) Received query %s, URI %s
+10-19 01:41:46.726 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.726 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.727 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.727 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.727 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.727 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.728 I/CameraManagerGlobal(15020): Connecting to camera service
+10-19 01:41:46.732 I/FontLog ( 1415): (REDACTED) Query [%s] resolved to %s
+10-19 01:41:46.733 I/FontLog ( 1415): (REDACTED) Font PFD returned from cache for %s
+10-19 01:41:46.733 I/FontLog ( 1415): (REDACTED) Fetch %s end status %s
+10-19 01:41:46.733 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.735 I/FontLog ( 1415): (REDACTED) Pulling font file for id = %d, cache size = %d
+10-19 01:41:46.742 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.742 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.742 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.742 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.742 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.742 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.742 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.759 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.759 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.759 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.760 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.760 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.760 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.760 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.771 I/cr_AppResProvider(15020): #getApplicationRestrictionsFromUserManager() Bundle[EMPTY_PARCEL]
+10-19 01:41:46.771 I/cr_PolicyProvider(15020): #notifySettingsAvailable() 0
+10-19 01:41:46.771 I/cr_CombinedPProvider(15020): #onSettingsAvailable() 0
+10-19 01:41:46.771 I/cr_CombinedPProvider(15020): #flushPolicies()
+10-19 01:41:46.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.779 I/Choreographer(15020): Skipped 32 frames!  The application may be doing too much work on its main thread.
+10-19 01:41:46.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.793 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.793 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.793 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.793 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.793 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.799 I/FontLog ( 1415): (REDACTED) Received query %s, URI %s
+10-19 01:41:46.799 I/FontLog ( 1415): (REDACTED) Query [%s] resolved to %s
+10-19 01:41:46.800 I/ImeTracker(  712): system_server:b8096eb3: onRequestHide at ORIGIN_SERVER reason IME_REQUESTED_CHANGED_LISTENER fromUser false displayId 0
+10-19 01:41:46.801 D/WindowManager(  712): captureDisplay
+10-19 01:41:46.802 I/FontLog ( 1415): (REDACTED) Fetch %s end status %s
+10-19 01:41:46.802 I/ImeTracker(  712): com.aistudio.coreflow.vdfpkw:869d36be: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false userId 0 displayId 0
+10-19 01:41:46.804 I/FontLog ( 1415): (REDACTED) Pulling font file for id = %d, cache size = %d
+10-19 01:41:46.804 D/InsetsController(15020): hide(ime())
+10-19 01:41:46.804 I/ImeTracker(15020): com.aistudio.coreflow.vdfpkw:869d36be: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+10-19 01:41:46.804 I/ImeTracker(  712): system_server:b8096eb3: onCancelled at PHASE_SERVER_SHOULD_HIDE
+10-19 01:41:46.805 I/HWUI    (15020): Using FreeType backend (prop=Auto)
+10-19 01:41:46.806 I/SubtypeOperator( 5220): SubtypeOperator$1.onUnbindInput():44 
+10-19 01:41:46.807 I/FontLog ( 1415): (REDACTED) Pulling font file for id = %d, cache size = %d
+10-19 01:41:46.807 I/SubtypeOperator( 5220): SubtypeOperator$1.onBindInput():33 
+10-19 01:41:46.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/InputChannel-JNI(  712): Channel already disposed.
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.816 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.818 I/native  ( 4632): I0000 00:00:1792374106.762903    4771 android_resource_loader.cc:109] Loading resources for en_us_x_embedded_havoc/16261105894798346350
+10-19 01:41:46.819 I/GoogleInputMethodService( 5220): GoogleInputMethodService.onFinishInput():2404 
+10-19 01:41:46.820 I/Module  ( 5220): DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatusInternal():119 repeatCheckTimes = 0, locked = false
+10-19 01:41:46.820 I/GoogleInputMethodService( 5220): GoogleInputMethodService.onStartInput():1552 onStartInput(EditorInfo{EditorInfo{packageName=com.aistudio.coreflow.vdfpkw, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+10-19 01:41:46.820 I/LatinInputMethodServiceBase( 5220): LatinInputMethodServiceBase.updateInputViewCoverNavigation():360 Update input view padding, isNavbarOverInputWindow=true, bottom inset=126
+10-19 01:41:46.821 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.821 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.821 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.821 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.825 I/Module  ( 5220): DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatusInternal():119 repeatCheckTimes = 1, locked = false
+10-19 01:41:46.825 E/android.system.suspend-service(  359): BPF wakeup sources failed during ring_buffer__new: Invalid argument
+10-19 01:41:46.825 W/android.system.suspend-service(  359): BPF wakelock stats failed, falling back to sysfs: Invalid argument
+10-19 01:41:46.826 W/PackageConfigPersister(  712): App-specific configuration not found for packageName: com.aistudio.coreflow.vdfpkw and userId: 0
+10-19 01:41:46.826 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.826 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.826 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.826 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.826 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.826 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.826 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.834 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.834 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.843 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.843 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.843 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.843 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.843 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.843 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.843 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.860 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.860 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.860 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.860 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.860 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.860 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.860 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.892 W/cr_VAUtil(15020): Unknown profile: 8 for codec video/hevc
+10-19 01:41:46.892 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.893 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.909 W/putmethod.latin( 5220): Reducing the number of considered missed Gc histogram windows from 107 to 100
+10-19 01:41:46.909 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.909 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.909 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.909 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.909 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.910 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.910 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.923 I/native  ( 4632): I0000 00:00:1792374106.907366    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/burdock_frame_config.pb" (as: FILE) ...
+10-19 01:41:46.923 I/native  ( 4632): I0000 00:00:1792374106.923565    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/burdock_frame_config.pb" of size 68
+10-19 01:41:46.925 I/chromium(15020): [INFO:CONSOLE:64] "cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation", source: file:///android_asset/vendor/tailwindcss.js (64)
+10-19 01:41:46.927 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.927 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.927 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.927 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.927 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.927 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.927 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.936 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.942 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.942 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.942 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.942 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.942 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.942 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.942 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.959 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.975 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.975 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.975 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.975 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.975 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.975 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.975 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.993 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.993 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.993 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.993 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.993 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.993 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:46.993 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.010 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.026 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.043 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.043 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.043 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.043 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.043 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.043 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.048 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.048 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.059 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.059 I/native  ( 4632): I0000 00:00:1792374107.059307    4771 android_resource_loader.cc:100] Built resource acoustic_frame_config
+10-19 01:41:47.059 I/native  ( 4632): I0000 00:00:1792374107.059389    4771 android_resource_loader.cc:116] Loaded resource:acoustic_frame_config
+10-19 01:41:47.059 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.059 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.059 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.059 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.059 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.059 I/native  ( 4632): I0000 00:00:1792374107.059467    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/affixes_en_us_android.far" (as: FILE) ...
+10-19 01:41:47.059 I/native  ( 4632): I0000 00:00:1792374107.059564    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/affixes_en_us_android.far" of size 36782
+10-19 01:41:47.076 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.077 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.077 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.077 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.077 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.077 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.093 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.093 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.093 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.093 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.093 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.093 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.110 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.110 I/native  ( 4632): I0000 00:00:1792374107.110166    4771 android_resource_loader.cc:100] Built resource affix_word_splitter_grm
+10-19 01:41:47.110 I/native  ( 4632): I0000 00:00:1792374107.110199    4771 android_resource_loader.cc:116] Loaded resource:affix_word_splitter_grm
+10-19 01:41:47.110 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.110 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.110 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.110 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.110 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.111 I/native  ( 4632): I0000 00:00:1792374107.111489    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/affixes_params_en_us.pb" (as: FILE) ...
+10-19 01:41:47.111 I/native  ( 4632): I0000 00:00:1792374107.111670    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/affixes_params_en_us.pb" of size 420
+10-19 01:41:47.112 I/native  ( 4632): I0000 00:00:1792374107.112730    4771 affix_word_splitter_data.cc:33] Ambiguous affix entries for spelling ['s] -- their grammars should disambiguate them.
+10-19 01:41:47.112 I/native  ( 4632): I0000 00:00:1792374107.112788    4771 affix_word_splitter_data.cc:33] Ambiguous affix entries for spelling ['s] -- their grammars should disambiguate them.
+10-19 01:41:47.112 I/native  ( 4632): I0000 00:00:1792374107.112792    4771 affix_word_splitter_data.cc:33] Ambiguous affix entries for spelling ['s] -- their grammars should disambiguate them.
+10-19 01:41:47.112 I/native  ( 4632): I0000 00:00:1792374107.112798    4771 affix_word_splitter_data.cc:33] Ambiguous affix entries for spelling [s] -- their grammars should disambiguate them.
+10-19 01:41:47.112 I/native  ( 4632): I0000 00:00:1792374107.112801    4771 affix_word_splitter_data.cc:33] Ambiguous affix entries for spelling [s] -- their grammars should disambiguate them.
+10-19 01:41:47.112 I/native  ( 4632): I0000 00:00:1792374107.112803    4771 affix_word_splitter_data.cc:33] Ambiguous affix entries for spelling [s] -- their grammars should disambiguate them.
+10-19 01:41:47.112 I/native  ( 4632): I0000 00:00:1792374107.112808    4771 affix_word_splitter_data.cc:33] Ambiguous affix entries for spelling [ed] -- their grammars should disambiguate them.
+10-19 01:41:47.112 I/native  ( 4632): I0000 00:00:1792374107.112812    4771 affix_word_splitter_data.cc:33] Ambiguous affix entries for spelling [ed] -- their grammars should disambiguate them.
+10-19 01:41:47.112 I/native  ( 4632): I0000 00:00:1792374107.112814    4771 affix_word_splitter_data.cc:33] Ambiguous affix entries for spelling [ed] -- their grammars should disambiguate them.
+10-19 01:41:47.112 I/native  ( 4632): I0000 00:00:1792374107.112879    4771 affix_word_splitter_data.cc:89] Loaded affixes in [/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/affixes_params_en_us.pb].
+10-19 01:41:47.117 I/native  ( 4632): I0000 00:00:1792374107.117347    4771 android_resource_loader.cc:100] Built resource affix_word_splitter
+10-19 01:41:47.117 I/native  ( 4632): I0000 00:00:1792374107.117409    4771 android_resource_loader.cc:116] Loaded resource:affix_word_splitter
+10-19 01:41:47.117 I/native  ( 4632): I0000 00:00:1792374107.117426    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/roman_numeral_android.far" (as: FILE) ...
+10-19 01:41:47.117 I/native  ( 4632): I0000 00:00:1792374107.117451    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/roman_numeral_android.far" of size 5112
+10-19 01:41:47.119 I/native  ( 4632): I0000 00:00:1792374107.119566    4771 android_resource_loader.cc:100] Built resource classify_roman_numerals_grm_fst
+10-19 01:41:47.119 I/native  ( 4632): I0000 00:00:1792374107.119626    4771 android_resource_loader.cc:116] Loaded resource:classify_roman_numerals_grm_fst
+10-19 01:41:47.119 I/native  ( 4632): I0000 00:00:1792374107.119639    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/en_us_pronounce.far" (as: FILE) ...
+10-19 01:41:47.119 I/native  ( 4632): I0000 00:00:1792374107.119657    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/en_us_pronounce.far" of size 5040
+10-19 01:41:47.120 I/native  ( 4632): I0000 00:00:1792374107.120638    4771 android_resource_loader.cc:100] Built resource compound_pronounce_grm_fst
+10-19 01:41:47.120 I/native  ( 4632): I0000 00:00:1792374107.120691    4771 android_resource_loader.cc:116] Loaded resource:compound_pronounce_grm_fst
+10-19 01:41:47.123 I/native  ( 4632): I0000 00:00:1792374107.123120    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/disambiguation_rules_en_us.pb" (as: FILE) ...
+10-19 01:41:47.123 I/native  ( 4632): I0000 00:00:1792374107.123240    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/disambiguation_rules_en_us.pb" of size 317147
+10-19 01:41:47.126 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.126 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.126 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.126 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.126 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.126 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.126 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.143 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.143 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.143 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.143 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.143 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.143 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.144 W/System  ( 1066): A resource failed to call release. 
+10-19 01:41:47.144 W/System  ( 1066): A resource failed to call release. 
+10-19 01:41:47.145 W/System  ( 1066): A resource failed to call release. 
+10-19 01:41:47.148 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.148 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.156 I/coreflow.vdfpkw(15020): Compiler allocated 4522KB to compile void android.view.ViewRootImpl.performTraversals(long)
+10-19 01:41:47.159 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.159 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.159 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.159 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.159 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.159 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.168 D/WindowManager(  712): captureDisplay
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.169 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.174 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.174 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.174 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.175 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.175 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.175 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.175 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.175 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.175 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.175 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.193 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.193 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.193 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.193 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.193 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.193 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.197 I/native  ( 4632): I0000 00:00:1792374107.197266    4771 android_resource_loader.cc:100] Built resource disambiguation_rules
+10-19 01:41:47.199 I/native  ( 4632): I0000 00:00:1792374107.199633    4771 android_resource_loader.cc:116] Loaded resource:disambiguation_rules
+10-19 01:41:47.200 I/native  ( 4632): I0000 00:00:1792374107.200972    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/engine_config_en_us_x_embedded_havoc.pb" (as: FILE) ...
+10-19 01:41:47.201 I/native  ( 4632): I0000 00:00:1792374107.201054    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/engine_config_en_us_x_embedded_havoc.pb" of size 54
+10-19 01:41:47.202 I/native  ( 4632): I0000 00:00:1792374107.202542    4771 android_resource_loader.cc:100] Built resource engine_config
+10-19 01:41:47.202 I/native  ( 4632): I0000 00:00:1792374107.202585    4771 android_resource_loader.cc:116] Loaded resource:engine_config
+10-19 01:41:47.206 I/native  ( 4632): I0000 00:00:1792374107.206165    4771 android_resource_loader.cc:100] Built resource guided_synthesis
+10-19 01:41:47.206 I/native  ( 4632): I0000 00:00:1792374107.206262    4771 android_resource_loader.cc:116] Loaded resource:guided_synthesis
+10-19 01:41:47.206 I/native  ( 4632): I0000 00:00:1792374107.206286    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/mapping_grammar_en.far" (as: FILE) ...
+10-19 01:41:47.206 I/native  ( 4632): I0000 00:00:1792374107.206320    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/mapping_grammar_en.far" of size 863
+10-19 01:41:47.207 I/native  ( 4632): I0000 00:00:1792374107.207193    4771 android_resource_loader.cc:100] Built resource homograph_mapping_grammar
+10-19 01:41:47.207 I/native  ( 4632): I0000 00:00:1792374107.207267    4771 android_resource_loader.cc:116] Loaded resource:homograph_mapping_grammar
+10-19 01:41:47.208 I/native  ( 4632): I0000 00:00:1792374107.208910    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/lettuce_model.fb" (as: MEMORY) ...
+10-19 01:41:47.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.212 I/native  ( 4632): I0000 00:00:1792374107.210932    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/lettuce_model.fb" of size 2100680
+10-19 01:41:47.219 I/native  ( 4632): I0000 00:00:1792374107.219352    4771 android_resource_loader.cc:100] Built resource lettuce_model_resource
+10-19 01:41:47.219 I/native  ( 4632): I0000 00:00:1792374107.219420    4771 android_resource_loader.cc:116] Loaded resource:lettuce_model_resource
+10-19 01:41:47.219 I/native  ( 4632): I0000 00:00:1792374107.219960    4771 android_resource_loader.cc:100] Built resource lettuce_model_scorer
+10-19 01:41:47.220 I/native  ( 4632): I0000 00:00:1792374107.220004    4771 android_resource_loader.cc:116] Loaded resource:lettuce_model_scorer
+10-19 01:41:47.220 I/native  ( 4632): I0000 00:00:1792374107.220017    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/lettuce_classify_embedded_us_generated_android.far" (as: FILE) ...
+10-19 01:41:47.220 I/native  ( 4632): I0000 00:00:1792374107.220043    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/lettuce_classify_embedded_us_generated_android.far" of size 4439801
+10-19 01:41:47.226 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.226 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.226 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.226 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.226 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.226 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.243 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.251 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.259 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.259 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.273 I/native  ( 4632): I0000 00:00:1792374107.273576    4771 android_resource_loader.cc:100] Built resource lettuce_node_generator_grm
+10-19 01:41:47.273 I/native  ( 4632): I0000 00:00:1792374107.273695    4771 android_resource_loader.cc:116] Loaded resource:lettuce_node_generator_grm
+10-19 01:41:47.273 I/native  ( 4632): I0000 00:00:1792374107.273720    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/lucid_collection_android.far" (as: FILE) ...
+10-19 01:41:47.273 I/native  ( 4632): I0000 00:00:1792374107.273743    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/lucid_collection_android.far" of size 306120
+10-19 01:41:47.276 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.283 I/native  ( 4632): I0000 00:00:1792374107.283758    4771 android_resource_loader.cc:100] Built resource lucid_parser_grm_fst
+10-19 01:41:47.283 I/native  ( 4632): I0000 00:00:1792374107.283838    4771 android_resource_loader.cc:116] Loaded resource:lucid_parser_grm_fst
+10-19 01:41:47.284 I/native  ( 4632): I0000 00:00:1792374107.284686    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/markup_triggers.pb" (as: FILE) ...
+10-19 01:41:47.284 I/native  ( 4632): I0000 00:00:1792374107.284757    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/markup_triggers.pb" of size 930
+10-19 01:41:47.285 I/native  ( 4632): I0000 00:00:1792374107.285280    4771 android_resource_loader.cc:100] Built resource markup_triggers
+10-19 01:41:47.285 I/native  ( 4632): I0000 00:00:1792374107.285350    4771 android_resource_loader.cc:116] Loaded resource:markup_triggers
+10-19 01:41:47.285 I/native  ( 4632): I0000 00:00:1792374107.285392    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/morphosyntactic_mapping.pb" (as: FILE) ...
+10-19 01:41:47.285 I/native  ( 4632): I0000 00:00:1792374107.285477    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/morphosyntactic_mapping.pb" of size 6
+10-19 01:41:47.286 I/native  ( 4632): I0000 00:00:1792374107.286226    4771 android_resource_loader.cc:100] Built resource morph_analyzer_attribute_map
+10-19 01:41:47.286 I/native  ( 4632): I0000 00:00:1792374107.286273    4771 android_resource_loader.cc:116] Loaded resource:morph_analyzer_attribute_map
+10-19 01:41:47.289 I/native  ( 4632): I0000 00:00:1792374107.289036    4771 android_resource_loader.cc:100] Built resource multilingual_capabilities
+10-19 01:41:47.289 I/native  ( 4632): I0000 00:00:1792374107.289137    4771 android_resource_loader.cc:116] Loaded resource:multilingual_capabilities
+10-19 01:41:47.290 I/native  ( 4632): I0000 00:00:1792374107.290830    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/en_us_phonology.pb" (as: FILE) ...
+10-19 01:41:47.290 I/native  ( 4632): I0000 00:00:1792374107.290906    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/en_us_phonology.pb" of size 2196
+10-19 01:41:47.292 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.300 W/native  ( 4632): W0000 00:00:1792374107.300301    4771 phonology.cc:80] Phonemes l, r\ have non-distinctive features. See b/111971558.
+10-19 01:41:47.300 W/native  ( 4632): W0000 00:00:1792374107.300392    4771 phonology.cc:80] Phonemes @, @` have non-distinctive features. See b/111971558.
+10-19 01:41:47.302 I/native  ( 4632): I0000 00:00:1792374107.302838    4771 android_resource_loader.cc:100] Built resource phonology
+10-19 01:41:47.302 I/native  ( 4632): I0000 00:00:1792374107.302897    4771 android_resource_loader.cc:116] Loaded resource:phonology
+10-19 01:41:47.302 I/native  ( 4632): I0000 00:00:1792374107.302929    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/en_morphology" (as: FILE) ...
+10-19 01:41:47.302 I/native  ( 4632): I0000 00:00:1792374107.302952    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/en_morphology" of size 2753822
+10-19 01:41:47.309 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.326 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.342 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.351 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.356 I/native  ( 4632): I0000 00:00:1792374107.355900    4771 model-api.cc:46] Registered model under key morphology
+10-19 01:41:47.360 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.372 I/native  ( 4632): I0000 00:00:1792374107.372707    4771 android_resource_loader.cc:100] Built resource analyze_morphology_saft_portable_algo
+10-19 01:41:47.372 I/native  ( 4632): I0000 00:00:1792374107.372782    4771 android_resource_loader.cc:116] Loaded resource:analyze_morphology_saft_portable_algo
+10-19 01:41:47.378 I/native  ( 4632): I0000 00:00:1792374107.378750    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/ipa_to_tts_to-en_us.far" (as: FILE) ...
+10-19 01:41:47.378 I/native  ( 4632): I0000 00:00:1792374107.378807    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/ipa_to_tts_to-en_us.far" of size 465858
+10-19 01:41:47.383 I/native  ( 4632): I0000 00:00:1792374107.383594    4771 android_resource_loader.cc:100] Built resource ipa_to_tts_phoneme_mapper
+10-19 01:41:47.383 I/native  ( 4632): I0000 00:00:1792374107.383843    4771 android_resource_loader.cc:116] Loaded resource:ipa_to_tts_phoneme_mapper
+10-19 01:41:47.384 I/native  ( 4632): I0000 00:00:1792374107.383993    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/en_us.hlex.bin" (as: MEMORY) ...
+10-19 01:41:47.384 I/native  ( 4632): I0000 00:00:1792374107.384178    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/en_us.hlex.bin" of size 5117760
+10-19 01:41:47.410 I/native  ( 4632): I0000 00:00:1792374107.410026    4771 android_resource_loader.cc:100] Built resource lexicon
+10-19 01:41:47.410 I/native  ( 4632): I0000 00:00:1792374107.410061    4771 android_resource_loader.cc:116] Loaded resource:lexicon
+10-19 01:41:47.410 I/native  ( 4632): I0000 00:00:1792374107.410712    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/homographs_model_en_us_embedded.bin" (as: MEMORY) ...
+10-19 01:41:47.410 I/native  ( 4632): I0000 00:00:1792374107.410849    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/../en-us-x-multi-r83/homographs_model_en_us_embedded.bin" of size 399120
+10-19 01:41:47.427 W/libbinder.ServiceManagerCppClient(15055): Waited one second for android.hardware.nfc.INfc/default (is service started? Number of threads started in the threadpool: 16. Are binder threads started and available?)
+10-19 01:41:47.438 W/libbinder.ServiceManagerCppClient(  712): Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-19 01:41:47.440 W/libc    (  336): Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-19 01:41:47.452 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:41:47.455 W/libc    (  336): Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-19 01:41:47.457 I/native  ( 4632): I0000 00:00:1792374107.457771    4771 android_resource_loader.cc:100] Built resource homograph_classifier_model_resource
+10-19 01:41:47.458 I/native  ( 4632): I0000 00:00:1792374107.458843    4771 android_resource_loader.cc:116] Loaded resource:homograph_classifier_model_resource
+10-19 01:41:47.458 I/native  ( 4632): I0000 00:00:1792374107.458893    4771 data_source.cc:95] Opening data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/lettuce_node_generator_params_embedded_us_runtime.pb" (as: FILE) ...
+10-19 01:41:47.458 I/native  ( 4632): I0000 00:00:1792374107.458932    4771 data_source.cc:99] ... Opened data source "/data/user_de/0/com.google.android.tts/files/superpacks/en-us/en-us-x-multi-seanet-r83/lettuce_node_generator_params_embedded_us_runtime.pb" of size 2599
+10-19 01:41:47.693 I/adbd    (  590): adbd service requested 'shell,v2,raw:logcat -v time -d'

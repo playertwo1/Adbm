@@ -1,0 +1,46 @@
+12:55:08.027 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandStart: Define variables RUNNING
+12:55:08.033 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandFinished: Define variables COMPLETED
+12:55:08.041 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandStart: Apply configuration RUNNING
+12:55:08.042 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandFinished: Apply configuration COMPLETED
+12:55:08.043 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandStart: Tap on point (63%, 66%) RUNNING
+12:55:08.059 [ INFO] maestro.Maestro.hierarchyBasedTap-ogj28Uc: Tapping at (680, 1599) using hierarchy based logic for wait
+12:55:10.916 [ERROR] maestro.cli.session.MaestroSessionManager.newSession$lambda$0: Failed to record heartbeat
+java.io.IOException: O processo não pode acessar o arquivo porque outro processo bloqueou parte do arquivo
+	at java.base/sun.nio.ch.FileDispatcherImpl.write0(Native Method)
+	at java.base/sun.nio.ch.FileDispatcherImpl.write(Unknown Source)
+	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(Unknown Source)
+	at java.base/sun.nio.ch.IOUtil.write(Unknown Source)
+	at java.base/sun.nio.ch.IOUtil.write(Unknown Source)
+	at java.base/sun.nio.ch.FileChannelImpl.implWrite(Unknown Source)
+	at java.base/sun.nio.ch.FileChannelImpl.write(Unknown Source)
+	at java.base/java.io.FileOutputStream.implWriteBytes(Unknown Source)
+	at java.base/java.io.FileOutputStream.write(Unknown Source)
+	at kotlin.io.FilesKt__FileReadWriteKt.writeTextImpl(FileReadWrite.kt:160)
+	at kotlin.io.FilesKt__FileReadWriteKt.writeText(FileReadWrite.kt:145)
+	at kotlin.io.FilesKt__FileReadWriteKt.writeText$default(FileReadWrite.kt:144)
+	at maestro.cli.db.KeyValueStore.commit(KeyValueStore.kt:50)
+	at maestro.cli.db.KeyValueStore.set$lambda$3$lambda$2(KeyValueStore.kt:23)
+	at maestro.cli.db.KeyValueStore.withFileLock(KeyValueStore.kt:62)
+	at maestro.cli.db.KeyValueStore.set(KeyValueStore.kt:20)
+	at maestro.cli.session.SessionStore.heartbeat(SessionStore.kt:12)
+	at maestro.cli.session.MaestroSessionManager.newSession$lambda$0(MaestroSessionManager.kt:96)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(Unknown Source)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+12:55:18.392 [ INFO] maestro.Maestro.hierarchyBasedTap-ogj28Uc: Something has changed in the UI judging by view hierarchy. Proceed.
+12:55:18.393 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandFinished: Tap on point (63%, 66%) COMPLETED
+12:55:18.394 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandStart: Take screenshot cp5-kegel-resistance-active RUNNING
+12:55:18.404 [ INFO] maestro.Maestro.takeScreenshot: Taking screenshot
+12:55:18.405 [TRACE] maestro.utils.ScreenshotUtils.takeScreenshot: Taking screenshot to output sink
+12:55:18.761 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandFinished: Take screenshot cp5-kegel-resistance-active COMPLETED
+12:55:18.761 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandStart: Tap on point (63%, 66%) RUNNING
+12:55:18.788 [ INFO] maestro.Maestro.hierarchyBasedTap-ogj28Uc: Tapping at (680, 1599) using hierarchy based logic for wait
+12:55:19.744 [ INFO] maestro.Maestro.hierarchyBasedTap-ogj28Uc: Something has changed in the UI judging by view hierarchy. Proceed.
+12:55:19.744 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandFinished: Tap on point (63%, 66%) COMPLETED
+12:55:19.745 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandStart: Take screenshot cp5-kegel-resistance-paused RUNNING
+12:55:19.751 [ INFO] maestro.Maestro.takeScreenshot: Taking screenshot
+12:55:19.755 [TRACE] maestro.utils.ScreenshotUtils.takeScreenshot: Taking screenshot to output sink
+12:55:19.899 [ INFO] maestro.cli.runner.CliConsoleListener.onCommandFinished: Take screenshot cp5-kegel-resistance-paused COMPLETED

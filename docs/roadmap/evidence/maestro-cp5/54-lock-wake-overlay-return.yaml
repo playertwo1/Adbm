@@ -1,0 +1,21 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 15000
+- assertVisible: "Pausar treino"
+- assertVisible: "Pular para o próximo passo"
+- assertVisible: "Cancelar treino"
+- takeScreenshot: "cp5-after-lock-wake-overlay"
+- tapOn:
+    text: "Cancelar treino"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Cancelar treino?"
+- tapOn:
+    text: "Confirmar cancelamento da sessão"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000

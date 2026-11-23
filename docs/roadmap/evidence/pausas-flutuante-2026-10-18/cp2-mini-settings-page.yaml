@@ -1,0 +1,15 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "nav-btn-perfil"
+- waitForAnimationToEnd
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- takeScreenshot: "cp2-mini-settings-page"

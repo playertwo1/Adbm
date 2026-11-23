@@ -1,0 +1,19 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- assertVisible: "Recolher"
+- assertVisible: "Cancelar treino"
+- tapOn:
+    text: "Cancelar treino"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Cancelar treino?"
+    timeout: 5000
+- takeScreenshot: "cp4-native-cancel-confirmation"
+- assertVisible: "Confirmar cancelamento da sessão"
+- tapOn:
+    text: "Confirmar cancelamento da sessão"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000
+- takeScreenshot: "cp4-native-session-cancelled"

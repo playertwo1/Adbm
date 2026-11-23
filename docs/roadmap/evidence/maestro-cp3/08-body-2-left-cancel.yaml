@@ -1,0 +1,23 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- tapOn:
+    id: "stretch-btn-2"
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Preparar · Esquerda"
+    timeout: 45000
+- takeScreenshot: cp3-body-2-left-prepare
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar treino?"
+- takeScreenshot: cp3-body-2-cancel-confirmation
+- tapOn: "Cancelar sessão"
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000
+- assertVisible: "Torção de Coluna na Cadeira"
+- assertVisible:
+    id: "stretch-btn-2"
+    text: ".*1:00"
+- takeScreenshot: cp3-body-2-cancelled-without-completion

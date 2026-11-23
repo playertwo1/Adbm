@@ -1,0 +1,22 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- assertVisible: "Recolher"
+- assertVisible: "Esquerda"
+- extendedWaitUntil:
+    visible: "01:50"
+    timeout: 60000
+- takeScreenshot: cp3-ex4-left-enter-expanded
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar sessão"
+- tapOn: "Cancelar sessão"
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: chip-stretch-dur-60
+    direction: UP
+    timeout: 20000
+- tapOn:
+    id: chip-stretch-dur-60
+- takeScreenshot: cp3-ex4-duration-restored-60

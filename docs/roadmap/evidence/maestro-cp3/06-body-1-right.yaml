@@ -1,0 +1,21 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Hoje"
+    timeout: 30000
+- tapOn:
+    id: "nav-btn-pausas"
+- scrollUntilVisible:
+    element:
+      id: "stretch-btn-1"
+    direction: DOWN
+    timeout: 30000
+- assertVisible: "Posição do 4 na Cadeira"
+- tapOn:
+    id: "stretch-btn-1"
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 15000
+- takeScreenshot: cp3-body-1-right-expanded

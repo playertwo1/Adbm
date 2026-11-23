@@ -1,0 +1,17 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Hoje"
+    timeout: 30000
+- tapOn:
+    id: "nav-btn-pausas"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- assertVisible: "Posição do 4 na Cadeira"
+- takeScreenshot: cp3-exercise-cards

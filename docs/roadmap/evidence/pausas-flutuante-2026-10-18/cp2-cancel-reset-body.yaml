@@ -1,0 +1,24 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp
+- waitForAnimationToEnd
+- tapOn:
+    point: "42%, 94%"
+- waitForAnimationToEnd
+- tapOn:
+    point: "75%, 64%"
+- waitForAnimationToEnd
+- assertVisible: "Abrir"
+- tapOn: "Abrir"
+- waitForAnimationToEnd
+- assertVisible: "Recolher"
+- takeScreenshot: "cp2-cancel-reset-before-confirm"
+- tapOn:
+    point: "58%, 28%"
+- waitForAnimationToEnd:
+    timeout: 1000
+- assertVisible: "Cancelar treino?"
+- tapOn: "Cancelar sessão"
+- waitForAnimationToEnd:
+    timeout: 1500
+- takeScreenshot: "cp2-cancel-reset-after-confirm"

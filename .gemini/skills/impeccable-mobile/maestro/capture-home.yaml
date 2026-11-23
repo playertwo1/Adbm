@@ -1,0 +1,7 @@
+# Exemplo local e seguro: não limpa dados do aplicativo.
+# Executar com: maestro test -e APP_ID=com.example.app maestro/capture-home.yaml
+appId: ${APP_ID}
+---
+- launchApp:
+    stopApp: false
+- takeScreenshot: home

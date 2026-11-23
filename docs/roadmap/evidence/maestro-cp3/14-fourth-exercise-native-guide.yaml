@@ -1,0 +1,21 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- tapOn:
+    id: "stretch-btn-4"
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 15000
+- takeScreenshot: cp3-exercise-4-mini-web-guide
+- tapOn: "Abrir"
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 10000
+- assertVisible: "Direita"
+- takeScreenshot: cp3-exercise-4-native-guide
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar treino?"
+- tapOn: "Cancelar sessão"
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000
+- takeScreenshot: cp3-exercise-4-cancelled

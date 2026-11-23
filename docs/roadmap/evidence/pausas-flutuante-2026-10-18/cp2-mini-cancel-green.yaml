@@ -1,0 +1,23 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- tapOn:
+    point: "24%, 45%"
+- tapOn:
+    point: "50%, 78%"
+- tapOn:
+    point: "42%, 94%"
+- tapOn:
+    point: "75%, 64%"
+- assertVisible: "Abrir"
+- takeScreenshot: "cp2-mini-cancel-affordance"
+- tapOn: "Abrir"
+- assertVisible: "Recolher"
+- takeScreenshot: "cp2-mini-expanded-controls"
+- tapOn:
+    point: "58%, 28%"
+- assertVisible: "Cancelar treino?"
+- assertVisible: "Cancelar sessão"
+- takeScreenshot: "cp2-mini-cancel-confirmation"
+- tapOn: "Cancelar sessão"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-mini-cancelled"

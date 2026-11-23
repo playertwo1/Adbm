@@ -1,0 +1,19 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- tapOn: "Pular"
+- tapOn: "Pular"
+- assertVisible: "Encerrar Retenção com Segurança"
+- takeScreenshot: "cp2-vacuum-retention-native-active"
+- tapOn: "Cancelar"
+- assertVisible: "Cancelar treino?"
+- assertVisible: "Continuar treino"
+- assertVisible: "Cancelar sessão"
+- takeScreenshot: "cp2-vacuum-retention-cancel-confirmation"
+- tapOn: "Continuar treino"
+- assertVisible: "Encerrar Retenção com Segurança"
+- takeScreenshot: "cp2-vacuum-retention-cancel-dismissed"
+- tapOn: "Cancelar"
+- assertVisible: "Cancelar sessão"
+- tapOn: "Cancelar sessão"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-vacuum-retention-cancelled"

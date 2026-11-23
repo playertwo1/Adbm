@@ -1,0 +1,17 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- pressKey: HOME
+- waitForAnimationToEnd
+- launchApp:
+    stopApp: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "nav-btn-hoje"
+- waitForAnimationToEnd
+- assertVisible: "Abrir Vácuo"
+- takeScreenshot: "cp2-vacuum-home-shortcut"
+- tapOn:
+    text: "Abrir Vácuo"
+- waitForAnimationToEnd
+- assertVisible: "Iniciar"
+- takeScreenshot: "cp2-vacuum-ready"

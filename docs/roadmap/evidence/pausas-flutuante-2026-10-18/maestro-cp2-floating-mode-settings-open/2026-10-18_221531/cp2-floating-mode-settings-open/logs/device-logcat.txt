@@ -1,0 +1,424 @@
+--------- beginning of main
+10-19 01:15:43.143 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.144 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:43.144 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:43.145 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:43.147 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.159 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.176 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.194 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.221 I/android.hardware.uwb(27803): uwb_default_hal: UWB HAL starting up
+10-19 01:15:43.224 E/android.hardware.uwb(27803): uwb_default_hal: panicked at hardware/interfaces/uwb/aidl/default/src/uwb_chip.rs:56:14:
+10-19 01:15:43.224 E/android.hardware.uwb(27803): failed to open the serial device: Os { code: 6, kind: Uncategorized, message: "No such device or address" }
+--------- beginning of crash
+10-19 01:15:43.224 F/libc    (27803): Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 27803 (android.hardwar), pid 27803 (android.hardwar)
+10-19 01:15:43.225 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.238 I/crash_dump64(27811): obtaining output fd from tombstoned, type: kDebuggerdTombstoneProto
+10-19 01:15:43.238 I/tombstoned(  406): received crash request for pid 27803
+10-19 01:15:43.238 I/crash_dump64(27811): performing dump of process 27803 (target tid = 27803)
+10-19 01:15:43.242 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.245 F/DEBUG   (27811): *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+10-19 01:15:43.245 F/DEBUG   (27811): Build fingerprint: 'google/sdk_gphone16k_x86_64/emu64xa16k:17/CP41.260828.004.A7/16296984:user/dev-keys'
+10-19 01:15:43.245 F/DEBUG   (27811): Kernel Release: '6.12.81-android16-6-g4f69fc7b210c-ab16167562'
+10-19 01:15:43.245 F/DEBUG   (27811): Revision: '0'
+10-19 01:15:43.245 F/DEBUG   (27811): ABI: 'x86_64'
+10-19 01:15:43.245 F/DEBUG   (27811): Timestamp: 2026-10-19 01:15:43.239375958+0000
+10-19 01:15:43.245 F/DEBUG   (27811): Process uptime: 1s
+10-19 01:15:43.245 F/DEBUG   (27811): Page size: 16384 bytes
+10-19 01:15:43.245 F/DEBUG   (27811): Executable: /vendor/bin/hw/android.hardware.uwb-service
+10-19 01:15:43.245 F/DEBUG   (27811): Cmdline: /vendor/bin/hw/android.hardware.uwb-service /dev/uwb0
+10-19 01:15:43.245 F/DEBUG   (27811): pid: 27803, ppid: 1, tid: 27803, name: android.hardwar  >>> /vendor/bin/hw/android.hardware.uwb-service <<<
+10-19 01:15:43.245 F/DEBUG   (27811): uid: 1083
+10-19 01:15:43.245 F/DEBUG   (27811): signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+10-19 01:15:43.245 F/DEBUG   (27811): Abort message: 'failed to open the serial device: Os { code: 6, kind: Uncategorized, message: "No such device or address" }'
+10-19 01:15:43.245 F/DEBUG   (27811): 
+10-19 01:15:43.245 F/DEBUG   (27811):     rax 0000000000000000  rbx 0000000000006c9b  rcx 00007dbffccef06d  rdx 0000000000000006
+10-19 01:15:43.245 F/DEBUG   (27811):     r8  00007ff9ac944df0  r9  00007ff9ac944df0  r10 00007ff9ac944bb0  r11 0000000000000207
+10-19 01:15:43.245 F/DEBUG   (27811):     r12 0000000000000000  r13 00007ff9ac944d50  r14 0000000000006c9b  r15 00007ff9ac944bb0
+10-19 01:15:43.245 F/DEBUG   (27811):     rdi 0000000000006c9b  rsi 0000000000006c9b
+10-19 01:15:43.245 F/DEBUG   (27811):     rbp 00007ff9ac944c60  rsp 00007ff9ac944bb0  rip 00007dbffccef06d  err 0000000000000000
+10-19 01:15:43.245 F/DEBUG   (27811): 
+10-19 01:15:43.245 F/DEBUG   (27811): 18 total frames
+10-19 01:15:43.245 F/DEBUG   (27811): backtrace:
+10-19 01:15:43.245 F/DEBUG   (27811):       #00 pc 000000000005b06d  /apex/com.android.runtime/lib64/bionic/libc.so (abort+189) (BuildId: 6a12fb8c62f84cd3689f4044ef042df1)
+10-19 01:15:43.245 F/DEBUG   (27811):       #01 pc 000000000003ed09  /vendor/bin/hw/android.hardware.uwb-service (std::sys::pal::unix::abort_internal+9) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #02 pc 000000000003c488  /vendor/bin/hw/android.hardware.uwb-service (std::process::abort+8) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #03 pc 0000000000038e89  /vendor/bin/hw/android.hardware.uwb-service (__rustc::__rust_abort+9) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #04 pc 000000000002d262  /vendor/bin/hw/android.hardware.uwb-service (__rustc::__rust_start_panic+18) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #05 pc 0000000000038e79  /vendor/bin/hw/android.hardware.uwb-service (__rustc::rust_panic+9) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #06 pc 000000000003c72f  /vendor/bin/hw/android.hardware.uwb-service (std::panicking::panic_with_hook+260) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #07 pc 0000000000038516  /vendor/bin/hw/android.hardware.uwb-service (std::panicking::panic_handler::{closure#0}+70) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #08 pc 0000000000038eab  /vendor/bin/hw/android.hardware.uwb-service (__rustc::rust_begin_unwind+27) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #09 pc 00000000000253db  /vendor/bin/hw/android.hardware.uwb-service (core::panicking::panic_fmt+43) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #10 pc 0000000000025261  /vendor/bin/hw/android.hardware.uwb-service (core::result::unwrap_failed+81) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #11 pc 00000000000641af  /vendor/bin/hw/android.hardware.uwb-service (<uwb_default_hal::uwb_chip::UwbChip>::new::{closure#0}+7999) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #12 pc 000000000006865a  /vendor/bin/hw/android.hardware.uwb-service (<core::iter::adapters::map::Map<core::iter::adapters::map::Map<core::iter::adapters::enumerate::Enumerate<core::iter::adapters::skip::Skip<std::env::Args>>, uwb_default_hal::main::{closure#1}>, <uwb_default_hal::uwb::Uwb>::from_chips<core::iter::adapters::map::Map<core::iter::adapters::enumerate::Enumerate<core::iter::adapters::skip::Skip<std::env::Args>>, uwb_default_hal::main::{closure#1}>>::{closure#0}> as core::iter::traits::iterator::Iterator>::next+3434) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #13 pc 0000000000065c77  /vendor/bin/hw/android.hardware.uwb-service (uwb_default_hal::main+791) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #14 pc 00000000000619fb  /vendor/bin/hw/android.hardware.uwb-service (std::rt::lang_start::<core::result::Result<(), anyhow::Error>>::{closure#0}+27) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #15 pc 000000000003bce6  /vendor/bin/hw/android.hardware.uwb-service (std::rt::lang_start_internal+534) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #16 pc 000000000006b193  /vendor/bin/hw/android.hardware.uwb-service (main+51) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-19 01:15:43.245 F/DEBUG   (27811):       #17 pc 00000000000c3c10  /apex/com.android.runtime/lib64/bionic/libc.so (__libc_init+112) (BuildId: 6a12fb8c62f84cd3689f4044ef042df1)
+10-19 01:15:43.245 F/DEBUG   (27811): 
+10-19 01:15:43.245 F/DEBUG   (27811): Note: To display stack pointer information, use the pbtombstone tool:
+10-19 01:15:43.245 F/DEBUG   (27811):         pbtombstone --display-sp tombstone_XX.pb
+10-19 01:15:43.247 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+--------- beginning of system
+10-19 01:15:43.249 W/NativeCrashListener(  712): Couldn't find ProcessRecord for pid 27803
+10-19 01:15:43.251 E/tombstoned(  406): Tombstone written to: tombstone_28
+10-19 01:15:43.252 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:43.253 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:43.254 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:43.254 E/NativeTombstoneManager(  712): Tombstone's UID (1083) not an app, ignoring
+10-19 01:15:43.259 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.277 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.290 I/flags_health_check(27814): ServerConfigurableFlagsReset reset_mode value: 1
+10-19 01:15:43.290 I/flags_health_check(27814): ServerConfigurableFlagsReset updatable crashing detected, resetting flags.
+10-19 01:15:43.293 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.304 D/Maestro (27767): Requesting view hierarchy
+10-19 01:15:43.308 W/QueryController(27767): Could not detect idle state.
+10-19 01:15:43.308 W/QueryController(27767): Could not detect idle state.
+10-19 01:15:43.310 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.327 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.342 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.347 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.359 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.364 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:43.365 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:43.365 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:43.376 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.392 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.401 I/Maestro (27767): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@728e8; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(807, 71 - 807, 71); boundsInWindow: Rect(807, 71 - 807, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-19 01:15:43.401 I/Maestro (27767): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@719e4; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(807, 71 - 807, 71); boundsInWindow: Rect(807, 71 - 807, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-19 01:15:43.402 D/Maestro (27767): View hierarchy received in 98 ms
+10-19 01:15:43.409 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.426 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.442 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.449 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.459 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.474 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:43.475 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:43.475 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:43.476 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.492 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.511 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.526 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.551 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.559 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.575 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.583 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:43.584 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:43.584 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:43.593 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.609 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.627 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.642 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.653 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.660 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.662 W/libbinder.ServiceManagerCppClient(  712): Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-19 01:15:43.672 W/libc    (  336): Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-19 01:15:43.692 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.694 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:43.694 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:43.694 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:43.709 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.709 E/libnfc_nci(27654): Timeout waiting for NFC AIDL service (future).
+10-19 01:15:43.710 I/libnfc_nci(27654): NfcAdaptation::InitializeHalDeviceContext: Failed to retrieve the NFC AIDL!
+10-19 01:15:43.710 E/libnfc_nci(27654): Exit current process to recover.
+10-19 01:15:43.718 I/ActivityManager(  712): Process com.google.android.nfc (pid 27654) has died: pers PER 
+10-19 01:15:43.719 I/Zygote  (  499): Process 27654 exited cleanly (0)
+10-19 01:15:43.719 I/libprocessgroup(  712): Removed cgroup /sys/fs/cgroup/system/uid_1027/pid_27654
+10-19 01:15:43.721 W/ActivityManager(  712): Re-adding persistent process ProcessRecord{e66cc5a 27654:com.google.android.nfc/1027}
+10-19 01:15:43.721 V/GrammaticalInflectionUtils(  712): AttributionSource: android.content.AttributionSource@e83e26da does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+10-19 01:15:43.725 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.730 D/Zygote  (  499): Forked child process 27816
+10-19 01:15:43.731 I/ActivityManager(  712): Start proc 27816:com.google.android.nfc/1027 for restart com.google.android.nfc
+10-19 01:15:43.732 I/libprocessgroup(27816): Created cgroup /sys/fs/cgroup/system/uid_1027/pid_27816
+10-19 01:15:43.754 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.763 I/Zygote  (27816): Process 27816 created for com.google.android.nfc
+10-19 01:15:43.764 I/gle.android.nfc(27816): Using generational CollectorTypeCMC GC.
+10-19 01:15:43.764 W/gle.android.nfc(27816): Unexpected CPU variant for x86: x86_64.
+10-19 01:15:43.764 W/gle.android.nfc(27816): Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, pantherlake, default
+10-19 01:15:43.770 D/nativeloader(27816): Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+10-19 01:15:43.781 D/CompatChangeReporter(27816): Compat change id reported: 333566037; UID 1027; state: ENABLED
+10-19 01:15:43.784 D/nativeloader(27816): Configuring clns-shared-9 for other apk /apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7/NfcNciApexGoogle.apk. target_sdk_version=37, uses_libraries=, library_path=/apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7/lib/x86_64:/system/lib64:/system_ext/lib64, permitted_path=/data:/mnt/expand:/data/user_de/0/com.google.android.nfc:/apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7:/system/lib64:/system_ext/lib64
+10-19 01:15:43.785 D/nativeloader(27816): InitApexLibraries:
+10-19 01:15:43.785 D/nativeloader(27816):   com_android_adservices: libhpke_jni.so:libtflite_support_classifiers_native.so
+10-19 01:15:43.785 D/nativeloader(27816):   com_android_appsearch: libappsearchservice.so:libicing_anywhere.so
+10-19 01:15:43.785 D/nativeloader(27816):   com_android_art: libartservice.so
+10-19 01:15:43.785 D/nativeloader(27816):   com_android_bt: libbluetooth_jni.so
+10-19 01:15:43.785 D/nativeloader(27816):   com_android_conscrypt: libjavacrypto.so
+10-19 01:15:43.785 D/nativeloader(27816):   com_android_extservices: libtflite_support_classifiers_native.so
+10-19 01:15:43.785 D/nativeloader(27816):   com_android_mediaprovider: libpdfclient.so
+10-19 01:15:43.785 D/nativeloader(27816):   com_android_nfcservices: libnfc_nci_jni.so:libnfc_rust_jni.so
+10-19 01:15:43.785 D/nativeloader(27816):   com_android_npumanager: libnpumanager_service_jni.so
+10-19 01:15:43.785 D/nativeloader(27816):   com_android_ondevicepersonalization: libfcp_cpp_dep_jni.so:libfcp_hpke_jni.so
+10-19 01:15:43.785 D/nativeloader(27816):   com_android_os_statsd: libstats_jni.so
+10-19 01:15:43.785 D/nativeloader(27816):   com_android_profiling: libanomaly_detector_service_jni.so
+10-19 01:15:43.785 D/nativeloader(27816):   com_android_tethering: libandroid_net_connectivity_com_android_net_module_util_jni.so:libandroid_net_connectivity_com_android_net_module_util_jni_CommonConnectivityJni.so:libcrypto_httpengine.so:libframework-connectivity-jni.so:libframework-connectivity-tiramisu-jni.so:libhttpengine.so:libservice-connectivity.so:libservice
+10-19 01:15:43.789 D/ActivityThread(27816): Set OS env TMPDIR to /data/user_de/0/com.google.android.nfc/cache
+10-19 01:15:43.790 V/GraphicsEnvironment(27816): Currently set values for:
+10-19 01:15:43.791 V/GraphicsEnvironment(27816):   angle_gl_driver_selection_pkgs=[]
+10-19 01:15:43.791 V/GraphicsEnvironment(27816):   angle_gl_driver_selection_values=[]
+10-19 01:15:43.791 V/GraphicsEnvironment(27816): com.google.android.nfc is not listed in per-application setting
+10-19 01:15:43.791 V/GraphicsEnvironment(27816): No special selections for ANGLE, returning default driver choice
+10-19 01:15:43.792 V/GraphicsEnvironment(27816): Neither updatable production driver nor prerelease driver is supported.
+10-19 01:15:43.793 D/CompatChangeReporter(27816): Compat change id reported: 407952621; UID 1027; state: ENABLED
+10-19 01:15:43.793 D/CompatChangeReporter(27816): Compat change id reported: 419020719; UID 1027; state: ENABLED
+10-19 01:15:43.803 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:43.803 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:43.804 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:43.812 I/RegisteredComponentCache(27816): generateComponentsList: New Components => 
+10-19 01:15:43.812 I/RegisteredComponentCache(27816): ComponentInfo: ResolveInfo{fb699da com.google.android.tag/com.android.apps.tag.TagViewer m=0x108000 userHandle=UserHandle{0}}, techs: android.nfc.tech.Ndef, 
+10-19 01:15:43.812 I/RegisteredComponentCache(27816): generateComponentsList: Removed Components => 
+10-19 01:15:43.813 D/CompatChangeReporter(27816): Compat change id reported: 458413887; UID 1027; state: ENABLED
+10-19 01:15:43.816 I/NfcEventLog(27816): readListFromLogFile: No NFC events found in log file
+10-19 01:15:43.819 I/NfcService(27816): Starting NFC service
+10-19 01:15:43.819 I/NativeNfcManager(27816): Loading C NFC Support
+10-19 01:15:43.824 D/nativeloader(27816): Load libnfc_nci_jni.so using class loader ns clns-shared-9 (caller=/apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7/NfcNciApexGoogle.apk): ok
+10-19 01:15:43.824 I/libnfc_nci(27816): JNI_OnLoad: NFC Service: loading nci JNI
+10-19 01:15:43.825 I/libnfc_nci(27816): ConfigFile - Parsing file '/etc/libnfc-nci.conf'
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [NFC_DEBUG_ENABLED] = 0
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [NFA_STORAGE] = "/data/nfc"
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [PRESERVE_STORAGE] = 0x01
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [POLLING_TECH_MASK] = 0x0F
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [UICC_LISTEN_TECH_MASK] = 0x07
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [NFA_MAX_EE_SUPPORTED] = 0x02
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [AID_FOR_EMPTY_SELECT] = {08:A0:00:00:01:51:00:00:00}
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [AID_MATCHING_MODE] = 0x01
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [NCI_RESET_TYPE] = 0x00
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [PRESENCE_CHECK_RETRY_COUNT] = 0
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [EUICC_MEP_MODE] = 0x03
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [NFCEE_EVENT_RF_DISCOVERY_OPTION] = 0x00
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [OPTIMIZE_ROUTING_TABLE_UPDATE] = 0x00
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [NFA_EE_ROUTE_DEBOUNCE_TIMER] = 0x01
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [KOVIO_PRESENCE_CHECK_TYPE] = 0x00
+10-19 01:15:43.826 I/libnfc_nci(27816): ConfigFile - [RECOVERY_OPTION] = 1
+10-19 01:15:43.826 I/libnfc_nci(27816): NfcAdaptation:440
+10-19 01:15:43.826 I/libnfc_nci(27816): NfcAdaptation::InitializeHalDeviceContext: INfc::getService()
+10-19 01:15:43.826 I/hwservicemanager(  341): getTransport: Cannot find entry android.hardware.nfc@1.2::INfc/default in either framework or device VINTF manifest.
+10-19 01:15:43.826 I/hwservicemanager(  341): getTransport: Cannot find entry android.hardware.nfc@1.1::INfc/default in either framework or device VINTF manifest.
+10-19 01:15:43.827 I/hwservicemanager(  341): getTransport: Cannot find entry android.hardware.nfc@1.0::INfc/default in either framework or device VINTF manifest.
+10-19 01:15:43.836 W/libc    (  336): Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-19 01:15:43.860 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.864 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.877 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.894 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.909 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.913 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:43.913 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:43.913 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:43.925 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:43.966 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.023 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:44.024 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:44.024 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:44.134 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:44.135 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:44.135 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:44.143 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.146 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.159 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.176 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.192 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.226 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.241 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:44.241 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:44.241 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:44.242 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.246 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.259 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.276 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.292 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.309 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.325 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.342 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.347 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.352 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:44.352 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:44.352 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:44.359 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.365 W/QueryController(27767): Could not detect idle state.
+10-19 01:15:44.365 D/Maestro (27767): Requesting view hierarchy
+10-19 01:15:44.366 W/QueryController(27767): Could not detect idle state.
+10-19 01:15:44.366 W/QueryController(27767): Could not detect idle state.
+10-19 01:15:44.376 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.392 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.409 I/Maestro (27767): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@728e8; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(807, 71 - 807, 71); boundsInWindow: Rect(807, 71 - 807, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-19 01:15:44.409 I/Maestro (27767): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@719e4; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(807, 71 - 807, 71); boundsInWindow: Rect(807, 71 - 807, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-19 01:15:44.410 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.412 D/Maestro (27767): View hierarchy received in 47 ms
+10-19 01:15:44.427 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.442 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.449 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.459 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.459 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:44.460 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:44.460 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:44.477 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.488 D/Maestro (27767): Requesting view hierarchy
+10-19 01:15:44.488 W/QueryController(27767): Could not detect idle state.
+10-19 01:15:44.489 W/QueryController(27767): Could not detect idle state.
+10-19 01:15:44.493 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.509 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.527 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.540 I/Maestro (27767): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@728e8; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(807, 71 - 807, 71); boundsInWindow: Rect(807, 71 - 807, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-19 01:15:44.540 I/Maestro (27767): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@719e4; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(807, 71 - 807, 71); boundsInWindow: Rect(807, 71 - 807, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-19 01:15:44.541 D/Maestro (27767): View hierarchy received in 53 ms
+10-19 01:15:44.542 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.550 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.559 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.569 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:44.570 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:44.570 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:44.575 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.594 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.625 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.643 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.649 D/WindowManager(  712): captureDisplay
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.650 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.651 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.654 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.654 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.654 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.661 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.670 W/libbinder.ServiceManagerCppClient(  712): Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-19 01:15:44.676 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.678 W/libc    (  336): Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-19 01:15:44.679 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:44.680 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:44.680 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:44.688 W/libc    (27767): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:15:44.693 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.694 I/DisplayManager(27767): Choreographer implicitly registered for the refresh rate.
+10-19 01:15:44.709 I/GFXSTREAM(27767): [eglDisplay.cpp(297)] Opening libGLESv1_CM_emulation.so
+10-19 01:15:44.709 I/GFXSTREAM(27767): [eglDisplay.cpp(297)] Opening libGLESv2_emulation.so
+10-19 01:15:44.709 W/libc    (27767): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-19 01:15:44.710 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.717 W/HWUI    (27767): Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+10-19 01:15:44.717 W/HWUI    (27767): Failed to initialize 101010-2 format, error = EGL_SUCCESS
+10-19 01:15:44.727 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.742 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.744 E/WifiDataStall(  712): Ignore this poll. newStats: null txLinkSpeedMbps: 1 rxLinkSpeedMbps: 2 rssi: -50 connectionCapabilities: com.android.server.wifi.WifiNative$ConnectionCapabilities@1f66213
+10-19 01:15:44.744 I/MlConnectedScorer(  712): 1. stats.getStatusDataStall()=0
+10-19 01:15:44.744 I/MlConnectedScorer(  712): 2. stats.getStatusDataStall()=0
+10-19 01:15:44.744 I/MlConnectedScorer(  712): handleL2DataStallInMlScorer is true, shouldBlockBssid=false mBlockCurrentBssid=false
+10-19 01:15:44.750 D/IpClient/wlan0( 1151): interfaceLinkStateChanged: ifindex 16 up
+10-19 01:15:44.751 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.757 D/IpClient/wlan0( 1151): interfaceLinkStateChanged: ifindex 16 up
+10-19 01:15:44.759 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.777 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.790 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:44.790 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:44.790 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:44.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.809 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.826 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.833 W/libbinder.ServiceManagerCppClient(27816): Waited one second for android.hardware.nfc.INfc/default (is service started? Number of threads started in the threadpool: 16. Are binder threads started and available?)
+10-19 01:15:44.843 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.850 W/libc    (  336): Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-19 01:15:44.851 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.859 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.876 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.892 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.896 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:44.898 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:44.898 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:44.909 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:44.952 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.006 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:45.007 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:45.007 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:45.117 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:45.118 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:45.118 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:45.143 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.147 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.160 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.177 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.193 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.209 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.225 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.227 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:45.228 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:45.228 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:45.243 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.248 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.260 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.276 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.293 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.309 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.325 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.342 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.347 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:45.348 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:45.348 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:45.349 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.360 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.375 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.392 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.410 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.426 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.443 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.451 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.459 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:45.459 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:45.459 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:45.460 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.476 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.494 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.509 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.526 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.543 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.553 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.559 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.567 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:45.568 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:45.569 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:45.575 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.592 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.610 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.626 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.644 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.655 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.659 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.674 W/libbinder.ServiceManagerCppClient(  712): Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-19 01:15:45.675 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:45.676 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:45.676 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:45.679 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.684 W/libc    (  336): Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-19 01:15:45.692 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.709 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.727 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.742 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.756 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.759 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.776 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159
+10-19 01:15:45.786 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[127.0.0.1]:58914 latencyMs=0 err=111
+10-19 01:15:45.786 E/adbd    (  590): failed to connect to socket 'tcp:58914': Connection refused
+10-19 01:15:45.786 D/TcpMetricsLogger(  712): connect: uid=2000 netId=100 dst=[::1]:58914 latencyMs=0 err=111
+10-19 01:15:45.790 I/adbd    (  590): adbd service requested 'shell,v2,raw:logcat -v time -d'
+10-19 01:15:45.792 W/skia    (  559): AGTM parsing failed flags.readFromStream(s) at 159

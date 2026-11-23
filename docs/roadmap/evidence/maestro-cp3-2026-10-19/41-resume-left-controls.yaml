@@ -1,0 +1,23 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- assertVisible: "Recolher"
+- assertVisible: "Esquerda"
+- assertVisible: "Cruze o tornozelo esquerdo sobre o joelho oposto. Mantenha a coluna ereta e incline suavemente o tronco à frente a partir do quadril."
+- tapOn: "Pausar treino"
+- extendedWaitUntil:
+    visible: "Continuar treino"
+    timeout: 15000
+- takeScreenshot: cp3-left-paused-before-resume
+- tapOn: "Continuar treino"
+- extendedWaitUntil:
+    visible: "Pausar treino"
+    timeout: 15000
+- assertVisible: "Esquerda"
+- assertVisible: "Cruze o tornozelo esquerdo sobre o joelho oposto. Mantenha a coluna ereta e incline suavemente o tronco à frente a partir do quadril."
+- takeScreenshot: cp3-left-after-resume
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar sessão"
+- tapOn: "Cancelar sessão"
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 15000

@@ -1,0 +1,44 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- tapOn:
+    id: "nav-btn-pausas"
+- scrollUntilVisible:
+    element:
+      id: "breath-btn-caixa"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: "breath-btn-caixa"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 15000
+- tapOn:
+    text: "Abrir"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 10000
+- takeScreenshot: "cp5-drag-before"
+- swipe:
+    start: "35%, 15%"
+    end: "90%, 15%"
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 10000
+- assertVisible: "Pausar treino"
+- assertVisible: "Pular para o próximo passo"
+- assertVisible: "Cancelar treino"
+- takeScreenshot: "cp5-drag-right-edge"
+- tapOn:
+    text: "Cancelar treino"
+    waitToSettleTimeoutMs: 0
+- tapOn:
+    text: "Confirmar cancelamento da sessão"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000

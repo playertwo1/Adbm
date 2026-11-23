@@ -1,0 +1,28 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp
+- waitForAnimationToEnd
+- tapOn:
+    point: "90%, 94%"
+- waitForAnimationToEnd
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 82%"
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 82%"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- tapOn:
+    point: "50%, 57%"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-expanded-preference-modal"
+- tapOn: "Expandido"
+- takeScreenshot: "cp2-expanded-preference-selected"
+- tapOn: "Concluir"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-expanded-preference-restored"

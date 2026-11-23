@@ -1,0 +1,48 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "nav-btn-hoje"
+- waitForAnimationToEnd
+- tapOn:
+    text: "Abrir Vácuo"
+- waitForAnimationToEnd
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- tapOn: "Reset"
+- assertVisible: "Iniciar"
+- takeScreenshot: "cp2-vacuum-clean-ready"
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 80%"
+- takeScreenshot: "cp2-vacuum-config-top"
+- tapOn: "30s"
+- takeScreenshot: "cp2-vacuum-config-30s-selected"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- tapOn:
+    point: "74%, 63%"
+- assertVisible: "Recolher"
+- takeScreenshot: "cp2-vacuum-native-overlay-started"
+- tapOn:
+    point: "26%, 70%"
+- tapOn:
+    point: "26%, 70%"
+- assertVisible: "Encerrar Retenção com Segurança"
+- takeScreenshot: "cp2-vacuum-retention-active"
+- tapOn: "Encerrar Retenção com Segurança"
+- assertVisible: "DESCANSO"
+- assertVisible: "Continuar treino"
+- takeScreenshot: "cp2-vacuum-safe-exit-paused-recovery"
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar treino?"
+- assertVisible: "Manter treino pausado"
+- assertVisible: "Cancelar sessão"
+- takeScreenshot: "cp2-vacuum-safe-exit-cancel-confirmation"
+- tapOn: "Cancelar sessão"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-vacuum-safe-exit-cancelled"

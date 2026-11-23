@@ -1,0 +1,25 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- tapOn:
+    id: nav-btn-pausas
+- tapOn:
+    id: chip-dur-60
+- takeScreenshot: cp5-doze-before-start
+- tapOn:
+    point: "50%, 71%"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 15000
+- tapOn:
+    text: "Abrir"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 10000
+- assertVisible: "Pausar treino"
+- assertVisible: "Cancelar treino"
+- takeScreenshot: cp5-doze-before-idle-expanded
+- pressKey: HOME

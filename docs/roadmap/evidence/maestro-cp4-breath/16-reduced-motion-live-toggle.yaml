@@ -1,0 +1,97 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Hoje"
+    timeout: 30000
+- tapOn:
+    id: "nav-btn-pausas"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- assertVisible: "Expiração Longa"
+- tapOn:
+    id: "breath-btn-longa"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 15000
+- tapOn:
+    text: "Abrir"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 10000
+- assertVisible: "Pausar treino"
+- takeScreenshot: "cp4-longa-normal-motion"
+- tapOn: "Recolher"
+- tapOn:
+    id: "nav-btn-perfil"
+- scrollUntilVisible:
+    element:
+      id: "profileAccessibilityButton"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: "profileAccessibilityButton"
+- tapOn:
+    text: "Alternar redução de movimento"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Movimento reduzido ativado."
+- takeScreenshot: "cp4-longa-reduced-motion-on-live"
+- tapOn: "Concluir"
+- assertVisible: "Abrir"
+- tapOn:
+    text: "Abrir"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Recolher"
+- takeScreenshot: "cp4-native-after-reduced-on"
+- tapOn: "Recolher"
+- tapOn:
+    id: "nav-btn-perfil"
+- scrollUntilVisible:
+    element:
+      id: "profileAccessibilityButton"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: "profileAccessibilityButton"
+- tapOn:
+    text: "Alternar redução de movimento"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Movimento padrão restaurado."
+- takeScreenshot: "cp4-longa-reduced-motion-off-live"
+- tapOn: "Concluir"
+- assertVisible: "Abrir"
+- tapOn:
+    text: "Abrir"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Recolher"
+- takeScreenshot: "cp4-native-after-reduced-off"
+- tapOn:
+    text: "^Cancelar$"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Cancelar treino?"
+- takeScreenshot: "cp4-longa-live-toggle-cancel-confirmation"
+- tapOn:
+    text: "Cancelar sessão"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000
+- takeScreenshot: "cp4-longa-live-toggle-cancelled"

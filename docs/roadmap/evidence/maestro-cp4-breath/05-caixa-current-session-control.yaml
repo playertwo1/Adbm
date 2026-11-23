@@ -1,0 +1,25 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- assertVisible: "Recolher"
+- assertVisible: "Em Caixa"
+- takeScreenshot: "cp4-caixa-expanded-running"
+- tapOn:
+    text: ".*Pausar.*"
+    waitToSettleTimeoutMs: 0
+- assertVisible: ".*Continuar.*"
+- takeScreenshot: "cp4-caixa-paused"
+- tapOn:
+    text: ".*Continuar.*"
+    waitToSettleTimeoutMs: 0
+- assertVisible: ".*Pausar.*"
+- takeScreenshot: "cp4-caixa-resumed"
+- tapOn:
+    text: "^Cancelar$"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Cancelar treino?"
+- takeScreenshot: "cp4-caixa-cancel-confirmation"
+- tapOn:
+    text: "Cancelar sessão"
+    waitToSettleTimeoutMs: 0
+- assertNotVisible: "Recolher"
+- takeScreenshot: "cp4-caixa-cancelled"

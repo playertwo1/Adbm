@@ -1,0 +1,20 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 15000
+- assertVisible: "Pausar treino"
+- takeScreenshot: "cp4-breath-returned-with-session"
+- tapOn:
+    text: "Cancelar treino"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Cancelar treino?"
+- tapOn:
+    text: "Cancelar sessão"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000
+- takeScreenshot: "cp4-breath-background-cancelled"

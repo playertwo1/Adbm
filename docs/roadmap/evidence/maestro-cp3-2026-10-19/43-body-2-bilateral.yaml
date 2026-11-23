@@ -1,0 +1,42 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp
+- tapOn:
+    id: nav-btn-pausas
+- assertVisible: "Corpo"
+- scrollUntilVisible:
+    element:
+      id: chip-stretch-dur-90
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: chip-stretch-dur-90
+- scrollUntilVisible:
+    element:
+      id: stretch-btn-2
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: stretch-btn-2
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 30000
+- tapOn: "Abrir controles do treino"
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 60000
+- assertVisible: "Direita"
+- takeScreenshot: cp3-body-2-right-expanded
+- extendedWaitUntil:
+    visible: "Esquerda"
+    timeout: 70000
+- takeScreenshot: cp3-body-2-left-expanded
+- tapOn: "Pausar treino"
+- assertVisible: "Continuar treino"
+- takeScreenshot: cp3-body-2-left-paused
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar treino?"
+- tapOn: "Cancelar sessão"
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 15000

@@ -1,0 +1,1107 @@
+--------- beginning of main
+10-18 22:44:16.935 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:16.953 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:16.969 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:16.984 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:16.990 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.001 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.018 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.034 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.052 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.064 I/android.hardware.uwb(19840): uwb_default_hal: UWB HAL starting up
+10-18 22:44:17.065 E/android.hardware.uwb(19840): uwb_default_hal: panicked at hardware/interfaces/uwb/aidl/default/src/uwb_chip.rs:56:14:
+10-18 22:44:17.065 E/android.hardware.uwb(19840): failed to open the serial device: Os { code: 6, kind: Uncategorized, message: "No such device or address" }
+--------- beginning of crash
+10-18 22:44:17.065 F/libc    (19840): Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 19840 (android.hardwar), pid 19840 (android.hardwar)
+10-18 22:44:17.066 W/libbinder.ServiceManagerCppClient(  720): Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-18 22:44:17.069 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.073 W/libc    (  315): Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-18 22:44:17.081 I/crash_dump64(19849): obtaining output fd from tombstoned, type: kDebuggerdTombstoneProto
+10-18 22:44:17.081 I/tombstoned(  383): received crash request for pid 19840
+10-18 22:44:17.081 I/crash_dump64(19849): performing dump of process 19840 (target tid = 19840)
+10-18 22:44:17.085 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.087 F/DEBUG   (19849): *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+10-18 22:44:17.087 F/DEBUG   (19849): Build fingerprint: 'google/sdk_gphone16k_x86_64/emu64xa16k:17/CP41.260828.004.A7/16296984:user/dev-keys'
+10-18 22:44:17.087 F/DEBUG   (19849): Kernel Release: '6.12.81-android16-6-g4f69fc7b210c-ab16167562'
+10-18 22:44:17.087 F/DEBUG   (19849): Revision: '0'
+10-18 22:44:17.087 F/DEBUG   (19849): ABI: 'x86_64'
+10-18 22:44:17.087 F/DEBUG   (19849): Timestamp: 2026-10-18 22:44:17.081974120+0000
+10-18 22:44:17.087 F/DEBUG   (19849): Process uptime: 1s
+10-18 22:44:17.087 F/DEBUG   (19849): Page size: 16384 bytes
+10-18 22:44:17.087 F/DEBUG   (19849): Executable: /vendor/bin/hw/android.hardware.uwb-service
+10-18 22:44:17.087 F/DEBUG   (19849): Cmdline: /vendor/bin/hw/android.hardware.uwb-service /dev/uwb0
+10-18 22:44:17.087 F/DEBUG   (19849): pid: 19840, ppid: 1, tid: 19840, name: android.hardwar  >>> /vendor/bin/hw/android.hardware.uwb-service <<<
+10-18 22:44:17.087 F/DEBUG   (19849): uid: 1083
+10-18 22:44:17.087 F/DEBUG   (19849): signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+10-18 22:44:17.087 F/DEBUG   (19849): Abort message: 'failed to open the serial device: Os { code: 6, kind: Uncategorized, message: "No such device or address" }'
+10-18 22:44:17.087 F/DEBUG   (19849): 
+10-18 22:44:17.087 F/DEBUG   (19849):     rax 0000000000000000  rbx 0000000000004d80  rcx 00007b5689ce306d  rdx 0000000000000006
+10-18 22:44:17.087 F/DEBUG   (19849):     r8  00007ff8dee13a10  r9  00007ff8dee13a10  r10 00007ff8dee137d0  r11 0000000000000207
+10-18 22:44:17.087 F/DEBUG   (19849):     r12 0000000000000000  r13 00007ff8dee13970  r14 0000000000004d80  r15 00007ff8dee137d0
+10-18 22:44:17.087 F/DEBUG   (19849):     rdi 0000000000004d80  rsi 0000000000004d80
+10-18 22:44:17.087 F/DEBUG   (19849):     rbp 00007ff8dee13880  rsp 00007ff8dee137d0  rip 00007b5689ce306d  err 0000000000000000
+10-18 22:44:17.087 F/DEBUG   (19849): 
+10-18 22:44:17.087 F/DEBUG   (19849): 18 total frames
+10-18 22:44:17.087 F/DEBUG   (19849): backtrace:
+10-18 22:44:17.087 F/DEBUG   (19849):       #00 pc 000000000005b06d  /apex/com.android.runtime/lib64/bionic/libc.so (abort+189) (BuildId: 6a12fb8c62f84cd3689f4044ef042df1)
+10-18 22:44:17.087 F/DEBUG   (19849):       #01 pc 000000000003ed09  /vendor/bin/hw/android.hardware.uwb-service (std::sys::pal::unix::abort_internal+9) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #02 pc 000000000003c488  /vendor/bin/hw/android.hardware.uwb-service (std::process::abort+8) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #03 pc 0000000000038e89  /vendor/bin/hw/android.hardware.uwb-service (__rustc::__rust_abort+9) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #04 pc 000000000002d262  /vendor/bin/hw/android.hardware.uwb-service (__rustc::__rust_start_panic+18) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #05 pc 0000000000038e79  /vendor/bin/hw/android.hardware.uwb-service (__rustc::rust_panic+9) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #06 pc 000000000003c72f  /vendor/bin/hw/android.hardware.uwb-service (std::panicking::panic_with_hook+260) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #07 pc 0000000000038516  /vendor/bin/hw/android.hardware.uwb-service (std::panicking::panic_handler::{closure#0}+70) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #08 pc 0000000000038eab  /vendor/bin/hw/android.hardware.uwb-service (__rustc::rust_begin_unwind+27) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #09 pc 00000000000253db  /vendor/bin/hw/android.hardware.uwb-service (core::panicking::panic_fmt+43) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #10 pc 0000000000025261  /vendor/bin/hw/android.hardware.uwb-service (core::result::unwrap_failed+81) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #11 pc 00000000000641af  /vendor/bin/hw/android.hardware.uwb-service (<uwb_default_hal::uwb_chip::UwbChip>::new::{closure#0}+7999) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #12 pc 000000000006865a  /vendor/bin/hw/android.hardware.uwb-service (<core::iter::adapters::map::Map<core::iter::adapters::map::Map<core::iter::adapters::enumerate::Enumerate<core::iter::adapters::skip::Skip<std::env::Args>>, uwb_default_hal::main::{closure#1}>, <uwb_default_hal::uwb::Uwb>::from_chips<core::iter::adapters::map::Map<core::iter::adapters::enumerate::Enumerate<core::iter::adapters::skip::Skip<std::env::Args>>, uwb_default_hal::main::{closure#1}>>::{closure#0}> as core::iter::traits::iterator::Iterator>::next+3434) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #13 pc 0000000000065c77  /vendor/bin/hw/android.hardware.uwb-service (uwb_default_hal::main+791) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #14 pc 00000000000619fb  /vendor/bin/hw/android.hardware.uwb-service (std::rt::lang_start::<core::result::Result<(), anyhow::Error>>::{closure#0}+27) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #15 pc 000000000003bce6  /vendor/bin/hw/android.hardware.uwb-service (std::rt::lang_start_internal+534) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #16 pc 000000000006b193  /vendor/bin/hw/android.hardware.uwb-service (main+51) (BuildId: b8f3093f355d6b415637c050fb6e8cf4)
+10-18 22:44:17.087 F/DEBUG   (19849):       #17 pc 00000000000c3c10  /apex/com.android.runtime/lib64/bionic/libc.so (__libc_init+112) (BuildId: 6a12fb8c62f84cd3689f4044ef042df1)
+10-18 22:44:17.087 F/DEBUG   (19849): 
+10-18 22:44:17.087 F/DEBUG   (19849): Note: To display stack pointer information, use the pbtombstone tool:
+10-18 22:44:17.087 F/DEBUG   (19849):         pbtombstone --display-sp tombstone_XX.pb
+--------- beginning of system
+10-18 22:44:17.088 W/NativeCrashListener(  720): Couldn't find ProcessRecord for pid 19840
+10-18 22:44:17.088 E/tombstoned(  383): Tombstone written to: tombstone_16
+10-18 22:44:17.089 E/NativeTombstoneManager(  720): Tombstone's UID (1083) not an app, ignoring
+10-18 22:44:17.094 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.104 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.118 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.128 I/flags_health_check(19852): ServerConfigurableFlagsReset reset_mode value: 1
+10-18 22:44:17.128 I/flags_health_check(19852): ServerConfigurableFlagsReset updatable crashing detected, resetting flags.
+10-18 22:44:17.135 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.151 D/Maestro (19808): Requesting view hierarchy
+10-18 22:44:17.152 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.154 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:17.156 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:17.168 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.184 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.195 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.203 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.218 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.235 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.252 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.269 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.285 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.296 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.301 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.318 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.330 W/libbinder.ServiceManagerCppClient(19763): Waited one second for android.hardware.nfc.INfc/default (is service started? Number of threads started in the threadpool: 16. Are binder threads started and available?)
+10-18 22:44:17.330 E/WifiDataStall(  720): Ignore this poll. newStats: null txLinkSpeedMbps: 1 rxLinkSpeedMbps: 2 rssi: -50 connectionCapabilities: com.android.server.wifi.WifiNative$ConnectionCapabilities@c6e207a
+10-18 22:44:17.331 I/MlConnectedScorer(  720): 1. stats.getStatusDataStall()=0
+10-18 22:44:17.331 I/MlConnectedScorer(  720): 2. stats.getStatusDataStall()=0
+10-18 22:44:17.331 I/MlConnectedScorer(  720): handleL2DataStallInMlScorer is true, shouldBlockBssid=false mBlockCurrentBssid=false
+10-18 22:44:17.335 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.335 W/libc    (  315): Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-18 22:44:17.345 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@729b2; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:17.345 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@71aae; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:17.347 D/Maestro (19808): View hierarchy received in 197 ms
+10-18 22:44:17.351 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.368 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.384 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.397 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.401 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.420 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.434 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.452 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.468 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.485 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.501 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.508 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.518 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.534 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.551 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.562 I/UsageStatsService(  720): User[0] Flushing usage stats to disk
+10-18 22:44:17.567 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.585 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.601 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.610 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.617 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.634 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.652 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.668 D/WearableService( 1485): Creating wearable service asynchronously.
+10-18 22:44:17.675 I/GoogleTTSServiceImpl(11888): Synthesis request for locale por-BRA and name pt-BR-language
+10-18 22:44:17.676 I/GoogleTTSServiceImpl(11888): TTS dispatch: pt-br-x-afs-seanet-embedded
+10-18 22:44:17.678 I/LocalSynthesizer(11888): Attempting to load synthesizer for voice: pt-br-x-afs-seanet-embedded
+10-18 22:44:17.678 I/LocalSynthesizer(11888): Voice pt-br-x-afs-seanet-embedded is already supported by loaded synthesizer pt-br-x-multi.
+10-18 22:44:17.678 I/ComposerWrapperImpl(11888): Skipping initialization, can already run voice pt-br-x-afs-seanet-embedded.
+10-18 22:44:17.678 I/Wear_Controller( 1485): Wearable module requires a companion app to be installed.
+10-18 22:44:17.678 I/WearableService( 1485): Wearable Services not starting. Wear is not available on this device: MISSING_COMPANION_APP
+10-18 22:44:17.683 I/ActivityManager(  720): Background started FGS: Allowed [callingPackage: com.aistudio.coreflow.vdfpkw; callingUid: 10232; uidState: TOP ; uidBFSL: [BFSL]; BFGS denied: false; intent: Intent { act=com.example.workout.START xflg=0x4 cmp=com.aistudio.coreflow.vdfpkw/com.example.WorkoutForegroundService (has extras) }; code:PROC_STATE_TOP; tempAllowListReason:<null>; allowWiu:12; targetSdkVersion:36; callerTargetSdkVersion:36; startForegroundCount:0; bindFromPackage:null; isBindService:false]
+10-18 22:44:17.709 D/Maestro (19808): Requesting view hierarchy
+10-18 22:44:17.709 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:17.710 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:17.713 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.723 W/WearableService( 1485): onGetService: Wear is not available on this device. Calling package: <hidden#1d0dc502>
+10-18 22:44:17.735 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.742 D/TextToSpeechManagerPerUserService(  720): Trying to start connection to TTS engine: com.google.android.tts
+10-18 22:44:17.743 I/TextToSpeech(16528): Sucessfully bound to com.google.android.tts
+10-18 22:44:17.743 W/AudioFlinger(  528): createTrack_l(): mismatch between requested flags (00000008) and output flags (00000002)
+10-18 22:44:17.743 D/TextToSpeechManagerPerUserService(  720): Connected successfully to TTS engine: com.google.android.tts
+10-18 22:44:17.743 D/AudioFlinger(  528): Client defaulted notificationFrames to 2048 for frameCount 4096
+10-18 22:44:17.743 I/AF::AfPlaybackCommon(  528): AfPlaybackCommon: creating track with enforcement level 0 reason TARGET_SDK shouldHarden 1
+10-18 22:44:17.745 I/TextToSpeech(16528): Connected to TTS engine
+10-18 22:44:17.748 W/ForegroundServiceTypeLoggerModule(  720): Foreground service start for UID: 10232 does not have any types
+10-18 22:44:17.748 I/bluetooth(12159): system/btif/avrcp/avrcp_service.cc:537 SendMediaUpdate: track_changed=false :  play_state=true :  queue=false
+10-18 22:44:17.748 E/AppOps  (  720): attributionTag  not declared in manifest of com.google.android.tts
+10-18 22:44:17.748 E/AppOps  (  720): attributionTag  not declared in manifest of com.google.android.tts
+10-18 22:44:17.748 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:17.749 E/MediaControlProfile(12159): onCurrentPlayerStateUpdated: base actions not supported, player actions= 0x0, adding missing base actions for fallback compatibility: 0x37
+10-18 22:44:17.749 I/MediaControlGattService(12159): Feature PLAYBACK_SPEED support: true
+10-18 22:44:17.749 I/MediaControlGattService(12159): Feature PLAYBACK_SPEED support: true
+10-18 22:44:17.749 I/MediaControlGattService(12159): Feature PLAYBACK_SPEED support: true
+10-18 22:44:17.749 I/MediaControlGattService(12159): Feature PLAYBACK_SPEED_NOTIFY support: true
+10-18 22:44:17.749 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:17.749 I/MediaControlGattService(12159): Feature TRACK_POSITION support: true
+10-18 22:44:17.749 I/MediaControlGattService(12159): Feature TRACK_POSITION_NOTIFY support: true
+10-18 22:44:17.749 I/MediaControlGattService(12159): Feature MEDIA_STATE support: true
+10-18 22:44:17.749 I/MediaControlGattService(12159): Feature MEDIA_STATE support: true
+10-18 22:44:17.750 I/MediaControlGattService(12159): Feature MEDIA_CONTROL_POINT_OPCODES_SUPPORTED support: true
+10-18 22:44:17.750 I/MediaControlGattService(12159): Feature MEDIA_STATE support: true
+10-18 22:44:17.750 I/MediaControlGattService(12159): Feature MEDIA_STATE support: true
+10-18 22:44:17.751 I/MediaControlGattService(12159): Feature MEDIA_STATE support: true
+10-18 22:44:17.751 I/MediaControlGattService(12159): Feature SEEKING_SPEED support: true
+10-18 22:44:17.751 I/MediaControlGattService(12159): Feature SEEKING_SPEED support: true
+10-18 22:44:17.751 I/MediaControlGattService(12159): Feature SEEKING_SPEED support: true
+10-18 22:44:17.751 W/MediaControlProfile(12159): MCS service state fields left unhandled: 
+10-18 22:44:17.751 W/MediaControlProfile(12159):    > PLAYER_NAME
+10-18 22:44:17.751 W/MediaControlProfile(12159):    > PLAYING_ORDER_SUPPORTED
+10-18 22:44:17.751 I/GoogleTTSServiceImpl(11888): currentLocale = en-US
+10-18 22:44:17.752 I/GoogleTTSServiceImpl(11888): For default lang en-us is name en-US-language (en-us-x-iog-server)
+10-18 22:44:17.752 I/TextToSpeech(16528): Setting up the connection to TTS engine...
+10-18 22:44:17.752 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.752 W/TextToSpeech(16528): stop failed: TTS engine connection not fully set up
+10-18 22:44:17.754 W/WearableService( 1485): onGetService: Wear is not available on this device. Calling package: <hidden#1d0dc502>
+10-18 22:44:17.754 W/TextToSpeech(16528): stop failed: TTS engine connection not fully set up
+10-18 22:44:17.758 W/WearableService( 1485): onGetService: Wear is not available on this device. Calling package: <hidden#1d0dc502>
+10-18 22:44:17.762 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:17.784 I/AAudio  (16528): AAudioStreamBuilder_openStream() called ----------------------------------------
+10-18 22:44:17.784 I/AudioStreamBuilder(16528): rate   =  48000, channels  = 2, channelMask = 0x3, format   = 0x5, sharing = SH, dir = OUTPUT
+10-18 22:44:17.784 I/AudioStreamBuilder(16528): devices = AUDIO_PORT_HANDLE_NONE, sessionId = -1, perfMode = 12, callback: ON with frames = 4360
+10-18 22:44:17.784 I/AudioStreamBuilder(16528): usage  =      1, contentType = 0, inputPreset = 0, allowedCapturePolicy = 0
+10-18 22:44:17.784 I/AudioStreamBuilder(16528): privacy sensitive = false, opPackageName = (null), attributionTag = (null)
+10-18 22:44:17.784 D/AudioStreamBuilder(16528): build, global mmap policy is 0
+10-18 22:44:17.811 D/AudioFlinger(  528): mixer(0x7e81871db790) throttle end: throttle time(22)
+10-18 22:44:17.811 D/AudioStreamBuilder(16528): build, system mmap policy is 1
+10-18 22:44:17.811 D/AudioStreamBuilder(16528): build, final mmap policy is 1
+10-18 22:44:17.811 D/AudioStreamBuilder(16528): build, system mmap exclusive policy is 1
+10-18 22:44:17.811 D/AudioStreamBuilder(16528): build, final mmap exclusive policy is 1
+10-18 22:44:17.811 D/coreflow.vdfpkw(16528): PlayerBase::PlayerBase()
+10-18 22:44:17.811 D/AudioStreamTrack(16528): open(), request notificationFrames = -8, frameCount = 0
+10-18 22:44:17.812 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:17.812 W/AudioFlinger(  528): createTrack_l(): mismatch between requested flags (00000104) and output flags (00000002)
+10-18 22:44:17.813 D/AudioFlinger(  528): Client defaulted notificationFrames to 960 for frameCount 4360
+10-18 22:44:17.813 I/AF::AfPlaybackCommon(  528): AfPlaybackCommon: creating track with enforcement level 0 reason TARGET_SDK shouldHarden 1
+10-18 22:44:17.815 D/AudioStreamTrack(16528): open() flags changed from 0x00000104 to 0x00000000
+10-18 22:44:17.815 D/AudioStreamTrack(16528): open() perfMode changed from 12 to 10
+10-18 22:44:17.815 D/AAudioStream(16528): setState(s#3) from 0 to 2
+10-18 22:44:17.815 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:17.815 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:17.815 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:17.815 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:17.815 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:17.815 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:17.815 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.818 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.818 I/AAudio  (16528): AAudioStreamBuilder_openStream() got Legacy, devIds = [2], perf = NO, burst = 960
+10-18 22:44:17.818 I/AAudio  (16528): AAudioStreamBuilder_openStream() returns 0 = AAUDIO_OK for s#3 ----------------
+10-18 22:44:17.819 D/AAudio  (16528): AAudioStream_requestStart(s#3) called --------------
+10-18 22:44:17.819 D/AAudioStream(16528): setState(s#3) from 2 to 3
+10-18 22:44:17.819 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:17.820 I/GoogleTTSServiceImpl(11888): currentLocale = pt-BR
+10-18 22:44:17.820 E/AppOps  (  720): attributionTag  not declared in manifest of com.aistudio.coreflow.vdfpkw
+10-18 22:44:17.821 I/GoogleTTSServiceImpl(11888): currentLocale = pt-BR
+10-18 22:44:17.821 E/AppOps  (  720): attributionTag  not declared in manifest of com.aistudio.coreflow.vdfpkw
+10-18 22:44:17.823 D/AAudio  (16528): AAudioStream_requestStart(s#3) returned 0 ---------
+10-18 22:44:17.824 D/AudioStreamLegacy(16528): onAudioDeviceUpdate() devices 2 => 2
+10-18 22:44:17.824 D/AudioStreamLegacy(16528): onAudioDeviceUpdate, ignore device update as it is the same as the old one
+10-18 22:44:17.824 I/GoogleTTSServiceImpl(11888): For default lang pt-br is name pt-BR-language (pt-br-x-afs-server)
+10-18 22:44:17.825 I/GoogleTTSServiceImpl(11888): currentLocale = pt-BR
+10-18 22:44:17.825 D/AAudioStream(16528): setState(s#3) from 3 to 4
+10-18 22:44:17.826 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:17.834 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.840 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:17.851 W/AppOps  (  720): Noting op not finished: uid 10232 pkg com.aistudio.coreflow.vdfpkw code 154 startTime of in progress event=1792363457821
+10-18 22:44:17.851 I/AudioSvc.FocusCtrl(  720): requestAudioFocus() from uid/pid 10232/16528 AA=USAGE_ASSISTANCE_ACCESSIBILITY/CONTENT_TYPE_SPEECH clientId=android.media.AudioManager@ac8d259com.example.WorkoutForegroundService$$ExternalSyntheticLambda1@16ede1e callingPack=com.aistudio.coreflow.vdfpkw req=3 flags=0x0 sdk=36
+10-18 22:44:17.852 I/AudioSvc.FadeOutMgr(  720): unfadeOutUid() uid:10232
+10-18 22:44:17.853 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:17.853 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:17.853 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:17.853 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:17.853 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:17.853 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:17.853 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:17.853 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:17.862 D/AudioFlinger(  528): mixer(0x7e81871db790) throttle end: throttle time(29)
+10-18 22:44:17.870 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.884 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.901 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.918 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.925 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.934 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.951 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.968 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:17.986 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.001 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.010 V/NotificationHistory(  720): Attempted to add notif for locked/gone/disabled user 0
+10-18 22:44:18.014 W/AiAiEcho( 1786): LyftNotificationParser Ridesharing ETA not enabled
+10-18 22:44:18.014 I/AiAiEcho( 1786): SmartspaceNotificationPredictor no parser can handle this notification or notification is invalid
+10-18 22:44:18.017 W/AiAiEcho( 1786): LyftNotificationParser Ridesharing ETA not enabled
+10-18 22:44:18.017 I/AiAiEcho( 1786): SmartspaceNotificationPredictor no parser can handle this notification or notification is invalid
+10-18 22:44:18.019 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.022 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:18.024 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.070 W/libbinder.ServiceManagerCppClient(  720): Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-18 22:44:18.074 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:18.076 W/libc    (  315): Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-18 22:44:18.079 I/Surface ( 1115): Creating surface for consumer unnamed-1115-55 with slotExpansion=1 for 64 slots
+10-18 22:44:18.084 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.087 E/ConsumerBase( 1115): [ImageReader-126x126f1u2816m2-1115-6] abandonLocked: ConsumerBase is abandoned!
+10-18 22:44:18.090 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:18.104 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.116 D/AudioFlinger(  528): mixer(0x7e81871db790) throttle end: throttle time(19)
+10-18 22:44:18.119 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.128 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.137 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.154 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.168 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@729b2; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:18.168 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@71aae; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:18.168 D/Maestro (19808): View hierarchy received in 459 ms
+10-18 22:44:18.170 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.173 W/android.hardware.audio@7.1-impl.ranchu(  485): consumeThread: timeout waiting for tinyalsa, error: ''
+10-18 22:44:18.180 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:18.187 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.202 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.218 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.230 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.235 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.251 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.269 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.287 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.303 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.320 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.324 E/libnfc_nci(19763): Timeout waiting for NFC AIDL service (future).
+10-18 22:44:18.324 I/libnfc_nci(19763): NfcAdaptation::InitializeHalDeviceContext: Failed to retrieve the NFC AIDL!
+10-18 22:44:18.324 E/libnfc_nci(19763): Exit current process to recover.
+10-18 22:44:18.330 I/ActivityManager(  720): Process com.google.android.nfc (pid 19763) has died: pers PER 
+10-18 22:44:18.330 I/Zygote  (  474): Process 19763 exited cleanly (0)
+10-18 22:44:18.330 W/ActivityManager(  720): Re-adding persistent process ProcessRecord{1bf0eff 19763:com.google.android.nfc/1027}
+10-18 22:44:18.330 V/GrammaticalInflectionUtils(  720): AttributionSource: android.content.AttributionSource@cf3f3173 does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+10-18 22:44:18.331 I/libprocessgroup(  720): Removed cgroup /sys/fs/cgroup/system/uid_1027/pid_19763
+10-18 22:44:18.334 D/Zygote  (  474): Forked child process 19868
+10-18 22:44:18.335 I/ActivityManager(  720): Start proc 19868:com.google.android.nfc/1027 for restart com.google.android.nfc
+10-18 22:44:18.336 I/libprocessgroup(19868): Created cgroup /sys/fs/cgroup/system/uid_1027/pid_19868
+10-18 22:44:18.337 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.342 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.354 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.363 I/Zygote  (19868): Process 19868 created for com.google.android.nfc
+10-18 22:44:18.364 I/gle.android.nfc(19868): Using generational CollectorTypeCMC GC.
+10-18 22:44:18.364 W/gle.android.nfc(19868): Unexpected CPU variant for x86: x86_64.
+10-18 22:44:18.364 W/gle.android.nfc(19868): Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, pantherlake, default
+10-18 22:44:18.368 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.371 D/nativeloader(19868): Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+10-18 22:44:18.379 D/CompatChangeReporter(19868): Compat change id reported: 333566037; UID 1027; state: ENABLED
+10-18 22:44:18.380 D/nativeloader(19868): Configuring clns-shared-9 for other apk /apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7/NfcNciApexGoogle.apk. target_sdk_version=37, uses_libraries=, library_path=/apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7/lib/x86_64:/system/lib64:/system_ext/lib64, permitted_path=/data:/mnt/expand:/data/user_de/0/com.google.android.nfc:/apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7:/system/lib64:/system_ext/lib64
+10-18 22:44:18.380 D/nativeloader(19868): InitApexLibraries:
+10-18 22:44:18.380 D/nativeloader(19868):   com_android_adservices: libhpke_jni.so:libtflite_support_classifiers_native.so
+10-18 22:44:18.380 D/nativeloader(19868):   com_android_appsearch: libappsearchservice.so:libicing_anywhere.so
+10-18 22:44:18.380 D/nativeloader(19868):   com_android_art: libartservice.so
+10-18 22:44:18.380 D/nativeloader(19868):   com_android_bt: libbluetooth_jni.so
+10-18 22:44:18.380 D/nativeloader(19868):   com_android_conscrypt: libjavacrypto.so
+10-18 22:44:18.380 D/nativeloader(19868):   com_android_extservices: libtflite_support_classifiers_native.so
+10-18 22:44:18.380 D/nativeloader(19868):   com_android_mediaprovider: libpdfclient.so
+10-18 22:44:18.380 D/nativeloader(19868):   com_android_nfcservices: libnfc_nci_jni.so:libnfc_rust_jni.so
+10-18 22:44:18.380 D/nativeloader(19868):   com_android_npumanager: libnpumanager_service_jni.so
+10-18 22:44:18.380 D/nativeloader(19868):   com_android_ondevicepersonalization: libfcp_cpp_dep_jni.so:libfcp_hpke_jni.so
+10-18 22:44:18.380 D/nativeloader(19868):   com_android_os_statsd: libstats_jni.so
+10-18 22:44:18.380 D/nativeloader(19868):   com_android_profiling: libanomaly_detector_service_jni.so
+10-18 22:44:18.380 D/nativeloader(19868):   com_android_tethering: libandroid_net_connectivity_com_android_net_module_util_jni.so:libandroid_net_connectivity_com_android_net_module_util_jni_CommonConnectivityJni.so:libcrypto_httpengine.so:libframework-connectivity-jni.so:libframework-connectivity-tiramisu-jni.so:libhttpengine.so:libservice-connectivity.so:libservice
+10-18 22:44:18.382 D/ActivityThread(19868): Set OS env TMPDIR to /data/user_de/0/com.google.android.nfc/cache
+10-18 22:44:18.383 V/GraphicsEnvironment(19868): Currently set values for:
+10-18 22:44:18.383 V/GraphicsEnvironment(19868):   angle_gl_driver_selection_pkgs=[]
+10-18 22:44:18.383 V/GraphicsEnvironment(19868):   angle_gl_driver_selection_values=[]
+10-18 22:44:18.383 V/GraphicsEnvironment(19868): com.google.android.nfc is not listed in per-application setting
+10-18 22:44:18.383 V/GraphicsEnvironment(19868): No special selections for ANGLE, returning default driver choice
+10-18 22:44:18.384 V/GraphicsEnvironment(19868): Neither updatable production driver nor prerelease driver is supported.
+10-18 22:44:18.384 D/CompatChangeReporter(19868): Compat change id reported: 407952621; UID 1027; state: ENABLED
+10-18 22:44:18.384 D/CompatChangeReporter(19868): Compat change id reported: 419020719; UID 1027; state: ENABLED
+10-18 22:44:18.385 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.396 I/RegisteredComponentCache(19868): generateComponentsList: New Components => 
+10-18 22:44:18.396 I/RegisteredComponentCache(19868): ComponentInfo: ResolveInfo{21383fa com.google.android.tag/com.android.apps.tag.TagViewer m=0x108000 userHandle=UserHandle{0}}, techs: android.nfc.tech.Ndef, 
+10-18 22:44:18.396 I/RegisteredComponentCache(19868): generateComponentsList: Removed Components => 
+10-18 22:44:18.396 D/CompatChangeReporter(19868): Compat change id reported: 458413887; UID 1027; state: ENABLED
+10-18 22:44:18.399 I/NfcEventLog(19868): readListFromLogFile: No NFC events found in log file
+10-18 22:44:18.401 I/NfcService(19868): Starting NFC service
+10-18 22:44:18.401 I/NativeNfcManager(19868): Loading C NFC Support
+10-18 22:44:18.402 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.403 D/nativeloader(19868): Load libnfc_nci_jni.so using class loader ns clns-shared-9 (caller=/apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7/NfcNciApexGoogle.apk): ok
+10-18 22:44:18.403 I/libnfc_nci(19868): JNI_OnLoad: NFC Service: loading nci JNI
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - Parsing file '/etc/libnfc-nci.conf'
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [NFC_DEBUG_ENABLED] = 0
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [NFA_STORAGE] = "/data/nfc"
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [PRESERVE_STORAGE] = 0x01
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [POLLING_TECH_MASK] = 0x0F
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [UICC_LISTEN_TECH_MASK] = 0x07
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [NFA_MAX_EE_SUPPORTED] = 0x02
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [AID_FOR_EMPTY_SELECT] = {08:A0:00:00:01:51:00:00:00}
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [AID_MATCHING_MODE] = 0x01
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [NCI_RESET_TYPE] = 0x00
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [PRESENCE_CHECK_RETRY_COUNT] = 0
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [EUICC_MEP_MODE] = 0x03
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [NFCEE_EVENT_RF_DISCOVERY_OPTION] = 0x00
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [OPTIMIZE_ROUTING_TABLE_UPDATE] = 0x00
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [NFA_EE_ROUTE_DEBOUNCE_TIMER] = 0x01
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [KOVIO_PRESENCE_CHECK_TYPE] = 0x00
+10-18 22:44:18.403 I/libnfc_nci(19868): ConfigFile - [RECOVERY_OPTION] = 1
+10-18 22:44:18.403 I/libnfc_nci(19868): NfcAdaptation:440
+10-18 22:44:18.403 I/libnfc_nci(19868): NfcAdaptation::InitializeHalDeviceContext: INfc::getService()
+10-18 22:44:18.403 I/hwservicemanager(  316): getTransport: Cannot find entry android.hardware.nfc@1.2::INfc/default in either framework or device VINTF manifest.
+10-18 22:44:18.403 I/hwservicemanager(  316): getTransport: Cannot find entry android.hardware.nfc@1.1::INfc/default in either framework or device VINTF manifest.
+10-18 22:44:18.403 I/hwservicemanager(  316): getTransport: Cannot find entry android.hardware.nfc@1.0::INfc/default in either framework or device VINTF manifest.
+10-18 22:44:18.409 W/libc    (  315): Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-18 22:44:18.417 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.436 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.445 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.451 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.468 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.485 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.503 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.512 D/Maestro (19808): Requesting view hierarchy
+10-18 22:44:18.512 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:18.512 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:18.518 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.534 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.551 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.556 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.568 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.586 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.602 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.619 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.638 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.654 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.657 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.662 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@729b2; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:18.662 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@71aae; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:18.664 D/Maestro (19808): View hierarchy received in 152 ms
+10-18 22:44:18.669 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.685 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.736 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:18.749 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:18.753 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.759 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.771 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.772 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:18.784 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.795 D/AudioFlinger(  528): mixer(0x7e81871db790) throttle end: throttle time(23)
+10-18 22:44:18.801 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.834 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.837 W/android.hardware.audio@7.1-impl.ranchu(  485): consumeThread: timeout waiting for tinyalsa, error: ''
+10-18 22:44:18.852 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.860 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.869 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.884 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.901 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.912 D/Maestro (19808): Requesting view hierarchy
+10-18 22:44:18.912 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:18.913 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:18.920 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.934 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.953 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.962 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.969 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:18.984 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.004 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.019 W/AiAiEcho( 1786): LyftNotificationParser Ridesharing ETA not enabled
+10-18 22:44:19.019 I/AiAiEcho( 1786): SmartspaceNotificationPredictor no parser can handle this notification or notification is invalid
+10-18 22:44:19.021 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.036 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.054 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.070 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.075 W/libbinder.ServiceManagerCppClient(  720): Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-18 22:44:19.080 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@729b2; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:19.080 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@71aae; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:19.080 D/Maestro (19808): View hierarchy received in 168 ms
+10-18 22:44:19.083 W/libc    (  315): Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-18 22:44:19.084 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.101 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.119 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.136 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.151 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.168 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.171 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.184 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.204 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.218 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.234 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.254 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.270 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.273 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.286 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.305 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.320 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.332 D/Maestro (19808): Requesting view hierarchy
+10-18 22:44:19.333 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:19.333 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:19.335 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.354 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.370 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.377 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.384 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.401 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.409 W/libbinder.ServiceManagerCppClient(19868): Waited one second for android.hardware.nfc.INfc/default (is service started? Number of threads started in the threadpool: 16. Are binder threads started and available?)
+10-18 22:44:19.415 W/libc    (  315): Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-18 22:44:19.418 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.434 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.453 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.468 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.476 I/coreflow.vdfpkw(16528): Background young concurrent mark compact GC freed 5264KB AllocSpace bytes, 2(128KB) LOS objects, 48% free, 5838KB/11MB, paused 13us,9.448ms total 13.075ms
+10-18 22:44:19.480 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.485 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.503 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.519 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.536 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.552 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.558 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@729b2; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:19.558 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@71aae; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:19.559 D/Maestro (19808): View hierarchy received in 227 ms
+10-18 22:44:19.569 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.584 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.588 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.602 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.619 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.637 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.654 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.669 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.686 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.689 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.701 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.720 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.736 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.752 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.768 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.784 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.790 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.802 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.818 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.819 D/Maestro (19808): Requesting view hierarchy
+10-18 22:44:19.820 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:19.820 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:19.835 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.851 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.868 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.885 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.893 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.903 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.919 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.935 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.951 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.968 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.985 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:19.993 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.001 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@729b2; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:20.001 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@71aae; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:20.001 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.002 D/Maestro (19808): View hierarchy received in 183 ms
+10-18 22:44:20.021 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.026 W/AiAiEcho( 1786): LyftNotificationParser Ridesharing ETA not enabled
+10-18 22:44:20.026 I/AiAiEcho( 1786): SmartspaceNotificationPredictor no parser can handle this notification or notification is invalid
+10-18 22:44:20.035 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.052 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.067 D/WindowManager(  720): captureDisplay
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.068 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.069 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.072 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.072 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.072 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.083 W/libbinder.ServiceManagerCppClient(  720): Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-18 22:44:20.087 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.091 W/libc    (  315): Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-18 22:44:20.096 W/libc    (19808): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-18 22:44:20.098 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.101 I/DisplayManager(19808): Choreographer implicitly registered for the refresh rate.
+10-18 22:44:20.101 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.118 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.125 I/GFXSTREAM(19808): [eglDisplay.cpp(297)] Opening libGLESv1_CM_emulation.so
+10-18 22:44:20.126 I/GFXSTREAM(19808): [eglDisplay.cpp(297)] Opening libGLESv2_emulation.so
+10-18 22:44:20.126 W/libc    (19808): Access denied finding property "vendor.mesa.virtgpu.kumquat"
+10-18 22:44:20.131 W/HWUI    (19808): Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+10-18 22:44:20.131 W/HWUI    (19808): Failed to initialize 101010-2 format, error = EGL_SUCCESS
+10-18 22:44:20.134 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.152 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.168 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.185 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.197 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.201 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.218 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.234 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.252 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.268 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.285 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.302 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.306 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.319 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.335 E/WifiDataStall(  720): Ignore this poll. newStats: null txLinkSpeedMbps: 1 rxLinkSpeedMbps: 2 rssi: -50 connectionCapabilities: com.android.server.wifi.WifiNative$ConnectionCapabilities@c6e207a
+10-18 22:44:20.336 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.336 I/MlConnectedScorer(  720): 1. stats.getStatusDataStall()=0
+10-18 22:44:20.336 I/MlConnectedScorer(  720): 2. stats.getStatusDataStall()=0
+10-18 22:44:20.336 I/MlConnectedScorer(  720): handleL2DataStallInMlScorer is true, shouldBlockBssid=false mBlockCurrentBssid=false
+10-18 22:44:20.352 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.369 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.376 D/Maestro (19808): Requesting view hierarchy
+10-18 22:44:20.376 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:20.377 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:20.387 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.404 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.410 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.414 W/libbinder.ServiceManagerCppClient(19868): Waited one second for android.hardware.nfc.INfc/default (is service started? Number of threads started in the threadpool: 16. Are binder threads started and available?)
+10-18 22:44:20.418 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.425 W/libc    (  315): Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-18 22:44:20.437 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.453 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.470 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.487 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.504 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.508 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.518 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.536 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.551 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.561 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@729b2; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:20.561 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@71aae; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:20.561 D/Maestro (19808): View hierarchy received in 185 ms
+10-18 22:44:20.569 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.587 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.603 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.608 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.618 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.637 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.652 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.669 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.687 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.703 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.711 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.719 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.736 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.752 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.766 I/AudioSvc.FocusCtrl(  720): abandonAudioFocus() from uid/pid 10232/16528 clientId=android.media.AudioManager@ac8d259com.example.WorkoutForegroundService$$ExternalSyntheticLambda1@16ede1e callingPack=com.aistudio.coreflow.vdfpkw
+10-18 22:44:20.766 D/AudioTrack(11888): stop(24): called with 78080 frames delivered
+10-18 22:44:20.766 I/ComposerEventProcessor(11888): Composer call to callback.audioAvailable failed: -1
+10-18 22:44:20.766 E/AppOps  (  720): attributionTag  not declared in manifest of com.google.android.tts
+10-18 22:44:20.766 E/LocalSynthesizer(11888): synthesizeWithoutLoadingVoice() failed
+10-18 22:44:20.766 E/AppOps  (  720): attributionTag  not declared in manifest of com.google.android.tts
+10-18 22:44:20.766 I/GoogleTTSServiceImpl(11888): Skipping Synthesiscallback.error() call for TextToSpeech.ERROR
+10-18 22:44:20.768 W/WearableService( 1485): onGetService: Wear is not available on this device. Calling package: <hidden#1d0dc502>
+10-18 22:44:20.768 I/GoogleTTSServiceImpl(11888): Synthesis request for locale por-BRA and name pt-BR-language
+10-18 22:44:20.769 I/GoogleTTSServiceImpl(11888): TTS dispatch: pt-br-x-afs-seanet-embedded
+10-18 22:44:20.771 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.771 W/ForegroundServiceTypeLoggerModule(  720): FGS stop call for: 10232 has no types!
+10-18 22:44:20.779 W/AudioFlinger(  528): createTrack_l(): mismatch between requested flags (00000008) and output flags (00000002)
+10-18 22:44:20.779 D/AudioFlinger(  528): Client defaulted notificationFrames to 2048 for frameCount 4096
+10-18 22:44:20.779 I/AF::AfPlaybackCommon(  528): AfPlaybackCommon: creating track with enforcement level 0 reason TARGET_SDK shouldHarden 1
+10-18 22:44:20.781 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:20.781 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:20.781 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:20.782 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:20.782 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:20.784 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.786 D/TextToSpeechManagerPerUserService(  720): Unbinding TTS engine: com.google.android.tts. Reason: client disconnection request
+10-18 22:44:20.787 W/TextToSpeechManagerPerUserService(  720): Disconnected from TTS engine
+10-18 22:44:20.787 W/TextToSpeechManagerPerUserService$TextToSpeechSessionConnection(  720): mayInterruptIfRunning not supported - ignoring
+10-18 22:44:20.788 I/TextToSpeech(16528): Disconnected from TTS engine
+10-18 22:44:20.793 E/AppOps  (  720): attributionTag  not declared in manifest of com.google.android.tts
+10-18 22:44:20.793 E/AppOps  (  720): attributionTag  not declared in manifest of com.google.android.tts
+10-18 22:44:20.793 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:20.799 D/Maestro (19808): Requesting view hierarchy
+10-18 22:44:20.800 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:20.802 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:20.803 W/WearableService( 1485): onGetService: Wear is not available on this device. Calling package: <hidden#1d0dc502>
+10-18 22:44:20.811 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:20.813 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.820 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.843 I/wpa_supplicant( 1077): wlan0: CTRL-EVENT-BEACON-LOSS 
+10-18 22:44:20.844 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:20.844 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): Relógio indisponível
+10-18 22:44:20.844 W/WearHapticsRelay(16528): com.google.android.gms.common.api.ApiException: 17: API: Wearable.API is not available on this device. Connection failed with: ConnectionResult{statusCode=API_UNAVAILABLE, resolution=null, message=null, clientMethodKey=null}
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.ApiExceptionUtil.fromStatus(com.google.android.gms:play-services-base@@18.9.0:3)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zas.onComplete(com.google.android.gms:play-services-base@@18.9.0:4)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.zab(com.google.android.gms:play-services-base@@18.9.0:8)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BasePendingResult.setResult(com.google.android.gms:play-services-base@@18.9.0:6)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.BaseImplementation$ApiMethodImpl.setFailedResult(com.google.android.gms:play-services-base@@18.9.0:5)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zae.zad(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaI(com.google.android.gms:play-services-base@@18.9.0:7)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zaJ(com.google.android.gms:play-services-base@@18.9.0:2)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.zac(com.google.android.gms:play-services-base@@18.9.0:26)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.api.internal.zabk.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zal.onConnectionFailed(com.google.android.gms:play-services-base@@18.9.0:1)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzf.zzb(com.google.android.gms:play-services-basement@@18.9.0:1)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zza.zzc(com.google.android.gms:play-services-basement@@18.9.0:7)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzc.zzd(com.google.android.gms:play-services-basement@@18.9.0:3)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at com.google.android.gms.common.internal.zzb.handleMessage(com.google.android.gms:play-services-basement@@18.9.0:31)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessageImpl(Handler.java:142)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at android.os.Handler.dispatchMessage(Handler.java:126)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at android.os.Looper.loopOnce(Looper.java:285)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at android.os.Looper.loop(Looper.java:390)
+10-18 22:44:20.844 W/WearHapticsRelay(16528): 	at android.os.HandlerThread.run(HandlerThread.java:143)
+10-18 22:44:20.853 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.870 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.884 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.902 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.920 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.923 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:20.937 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.011 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@729b2; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:21.011 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@71aae; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:21.012 D/Maestro (19808): View hierarchy received in 213 ms
+10-18 22:44:21.027 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.090 W/libbinder.ServiceManagerCppClient(  720): Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-18 22:44:21.098 W/libc    (  315): Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-18 22:44:21.128 V/MediaMetricsManagerService(  720): in system server's mediametrics plugin to get pkg name for uid=1041
+10-18 22:44:21.136 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.140 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.151 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.168 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.184 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.201 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.218 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.237 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.241 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.251 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.269 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.284 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.301 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.317 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.317 D/Maestro (19808): Requesting view hierarchy
+10-18 22:44:21.318 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:21.319 W/QueryController(19808): Could not detect idle state.
+10-18 22:44:21.334 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.345 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.355 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.367 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.387 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.404 E/libnfc_nci(19868): Timeout waiting for NFC AIDL service (future).
+10-18 22:44:21.404 I/libnfc_nci(19868): NfcAdaptation::InitializeHalDeviceContext: Failed to retrieve the NFC AIDL!
+10-18 22:44:21.404 E/libnfc_nci(19868): Exit current process to recover.
+10-18 22:44:21.404 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.410 I/ActivityManager(  720): Process com.google.android.nfc (pid 19868) has died: pers PER 
+10-18 22:44:21.410 I/Zygote  (  474): Process 19868 exited cleanly (0)
+10-18 22:44:21.412 W/ActivityManager(  720): Re-adding persistent process ProcessRecord{1bf0eff 19868:com.google.android.nfc/1027}
+10-18 22:44:21.412 V/GrammaticalInflectionUtils(  720): AttributionSource: android.content.AttributionSource@cf3f3173 does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+10-18 22:44:21.415 I/libprocessgroup(  720): Removed cgroup /sys/fs/cgroup/system/uid_1027/pid_19868
+10-18 22:44:21.417 D/Zygote  (  474): Forked child process 19893
+10-18 22:44:21.417 I/ActivityManager(  720): Start proc 19893:com.google.android.nfc/1027 for restart com.google.android.nfc
+10-18 22:44:21.418 I/libprocessgroup(19893): Created cgroup /sys/fs/cgroup/system/uid_1027/pid_19893
+10-18 22:44:21.420 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.436 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.446 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@729b2; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:21.447 I/Maestro (19808): Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@71aae; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(762, 71 - 762, 71); boundsInWindow: Rect(762, 71 - 762, 71); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; stateDescription: null; contentDescription: null; tooltipText: null; containerTitle: null; viewIdResName: null; uniqueId: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; granularScrollingSupported: false; importantForAccessibility: false; visible: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]; isTextSelectable: false
+10-18 22:44:21.449 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.449 D/Maestro (19808): View hierarchy received in 132 ms
+10-18 22:44:21.452 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.456 I/Zygote  (19893): Process 19893 created for com.google.android.nfc
+10-18 22:44:21.458 I/gle.android.nfc(19893): Using generational CollectorTypeCMC GC.
+10-18 22:44:21.458 W/gle.android.nfc(19893): Unexpected CPU variant for x86: x86_64.
+10-18 22:44:21.458 W/gle.android.nfc(19893): Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, pantherlake, default
+10-18 22:44:21.463 D/nativeloader(19893): Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+10-18 22:44:21.468 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.478 D/CompatChangeReporter(19893): Compat change id reported: 333566037; UID 1027; state: ENABLED
+10-18 22:44:21.480 D/nativeloader(19893): Configuring clns-shared-9 for other apk /apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7/NfcNciApexGoogle.apk. target_sdk_version=37, uses_libraries=, library_path=/apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7/lib/x86_64:/system/lib64:/system_ext/lib64, permitted_path=/data:/mnt/expand:/data/user_de/0/com.google.android.nfc:/apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7:/system/lib64:/system_ext/lib64
+10-18 22:44:21.480 D/nativeloader(19893): InitApexLibraries:
+10-18 22:44:21.480 D/nativeloader(19893):   com_android_adservices: libhpke_jni.so:libtflite_support_classifiers_native.so
+10-18 22:44:21.480 D/nativeloader(19893):   com_android_appsearch: libappsearchservice.so:libicing_anywhere.so
+10-18 22:44:21.480 D/nativeloader(19893):   com_android_art: libartservice.so
+10-18 22:44:21.480 D/nativeloader(19893):   com_android_bt: libbluetooth_jni.so
+10-18 22:44:21.480 D/nativeloader(19893):   com_android_conscrypt: libjavacrypto.so
+10-18 22:44:21.480 D/nativeloader(19893):   com_android_extservices: libtflite_support_classifiers_native.so
+10-18 22:44:21.480 D/nativeloader(19893):   com_android_mediaprovider: libpdfclient.so
+10-18 22:44:21.480 D/nativeloader(19893):   com_android_nfcservices: libnfc_nci_jni.so:libnfc_rust_jni.so
+10-18 22:44:21.480 D/nativeloader(19893):   com_android_npumanager: libnpumanager_service_jni.so
+10-18 22:44:21.480 D/nativeloader(19893):   com_android_ondevicepersonalization: libfcp_cpp_dep_jni.so:libfcp_hpke_jni.so
+10-18 22:44:21.480 D/nativeloader(19893):   com_android_os_statsd: libstats_jni.so
+10-18 22:44:21.480 D/nativeloader(19893):   com_android_profiling: libanomaly_detector_service_jni.so
+10-18 22:44:21.480 D/nativeloader(19893):   com_android_tethering: libandroid_net_connectivity_com_android_net_module_util_jni.so:libandroid_net_connectivity_com_android_net_module_util_jni_CommonConnectivityJni.so:libcrypto_httpengine.so:libframework-connectivity-jni.so:libframework-connectivity-tiramisu-jni.so:libhttpengine.so:libservice-connectivity.so:libservice
+10-18 22:44:21.484 D/ActivityThread(19893): Set OS env TMPDIR to /data/user_de/0/com.google.android.nfc/cache
+10-18 22:44:21.484 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.488 V/GraphicsEnvironment(19893): Currently set values for:
+10-18 22:44:21.488 V/GraphicsEnvironment(19893):   angle_gl_driver_selection_pkgs=[]
+10-18 22:44:21.488 V/GraphicsEnvironment(19893):   angle_gl_driver_selection_values=[]
+10-18 22:44:21.488 V/GraphicsEnvironment(19893): com.google.android.nfc is not listed in per-application setting
+10-18 22:44:21.488 V/GraphicsEnvironment(19893): No special selections for ANGLE, returning default driver choice
+10-18 22:44:21.489 V/GraphicsEnvironment(19893): Neither updatable production driver nor prerelease driver is supported.
+10-18 22:44:21.489 D/WindowManager(  720): captureDisplay
+10-18 22:44:21.491 D/CompatChangeReporter(19893): Compat change id reported: 407952621; UID 1027; state: ENABLED
+10-18 22:44:21.491 D/CompatChangeReporter(19893): Compat change id reported: 419020719; UID 1027; state: ENABLED
+10-18 22:44:21.491 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.492 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.495 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.495 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.495 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.503 I/RegisteredComponentCache(19893): generateComponentsList: New Components => 
+10-18 22:44:21.503 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.503 I/RegisteredComponentCache(19893): ComponentInfo: ResolveInfo{21383fa com.google.android.tag/com.android.apps.tag.TagViewer m=0x108000 userHandle=UserHandle{0}}, techs: android.nfc.tech.Ndef, 
+10-18 22:44:21.503 I/RegisteredComponentCache(19893): generateComponentsList: Removed Components => 
+10-18 22:44:21.506 D/CompatChangeReporter(19893): Compat change id reported: 458413887; UID 1027; state: ENABLED
+10-18 22:44:21.508 I/NfcEventLog(19893): readListFromLogFile: No NFC events found in log file
+10-18 22:44:21.510 I/NfcService(19893): Starting NFC service
+10-18 22:44:21.510 I/NativeNfcManager(19893): Loading C NFC Support
+10-18 22:44:21.515 D/nativeloader(19893): Load libnfc_nci_jni.so using class loader ns clns-shared-9 (caller=/apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7/NfcNciApexGoogle.apk): ok
+10-18 22:44:21.515 I/libnfc_nci(19893): JNI_OnLoad: NFC Service: loading nci JNI
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - Parsing file '/etc/libnfc-nci.conf'
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [NFC_DEBUG_ENABLED] = 0
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [NFA_STORAGE] = "/data/nfc"
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [PRESERVE_STORAGE] = 0x01
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [POLLING_TECH_MASK] = 0x0F
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [UICC_LISTEN_TECH_MASK] = 0x07
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [NFA_MAX_EE_SUPPORTED] = 0x02
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [AID_FOR_EMPTY_SELECT] = {08:A0:00:00:01:51:00:00:00}
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [AID_MATCHING_MODE] = 0x01
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [NCI_RESET_TYPE] = 0x00
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [PRESENCE_CHECK_RETRY_COUNT] = 0
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [EUICC_MEP_MODE] = 0x03
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [NFCEE_EVENT_RF_DISCOVERY_OPTION] = 0x00
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [OPTIMIZE_ROUTING_TABLE_UPDATE] = 0x00
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [NFA_EE_ROUTE_DEBOUNCE_TIMER] = 0x01
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [KOVIO_PRESENCE_CHECK_TYPE] = 0x00
+10-18 22:44:21.516 I/libnfc_nci(19893): ConfigFile - [RECOVERY_OPTION] = 1
+10-18 22:44:21.516 I/libnfc_nci(19893): NfcAdaptation:440
+10-18 22:44:21.516 I/libnfc_nci(19893): NfcAdaptation::InitializeHalDeviceContext: INfc::getService()
+10-18 22:44:21.518 I/hwservicemanager(  316): getTransport: Cannot find entry android.hardware.nfc@1.2::INfc/default in either framework or device VINTF manifest.
+10-18 22:44:21.518 I/hwservicemanager(  316): getTransport: Cannot find entry android.hardware.nfc@1.1::INfc/default in either framework or device VINTF manifest.
+10-18 22:44:21.518 I/hwservicemanager(  316): getTransport: Cannot find entry android.hardware.nfc@1.0::INfc/default in either framework or device VINTF manifest.
+10-18 22:44:21.519 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.528 W/libc    (  315): Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-18 22:44:21.536 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.550 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.554 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.570 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.585 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.602 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.618 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.636 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.652 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.656 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.669 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.684 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.703 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.718 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.736 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.754 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.757 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.767 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.784 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.802 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.818 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.835 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.854 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.858 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.869 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.884 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.902 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:21.960 W/skia    (  535): AGTM parsing failed flags.readFromStream(s) at 159
+10-18 22:44:22.004 I/adbd    (  558): adbd service requested 'shell,v2,raw:logcat -v time -d'

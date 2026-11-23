@@ -1,0 +1,9 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Hoje"
+    timeout: 30000
+- tapOn: "Pausas"
+- waitForAnimationToEnd
+- takeScreenshot: cp3-pausas-tab

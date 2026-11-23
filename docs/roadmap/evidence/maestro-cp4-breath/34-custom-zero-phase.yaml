@@ -1,0 +1,49 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Hoje"
+    timeout: 30000
+- tapOn:
+    id: "nav-btn-pausas"
+- scrollUntilVisible:
+    element:
+      id: "breath-btn-custom"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- assertVisible:
+    id: "custom-sec-hold2"
+    text: "0"
+- tapOn:
+    id: "breath-btn-custom"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 15000
+- tapOn:
+    text: "Abrir"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "Respiração: fase EXPIRE."
+    timeout: 20000
+- takeScreenshot: "cp4-custom-expire-before-zero-phase"
+- extendedWaitUntil:
+    visible: "Respiração: fase INSPIRE."
+    timeout: 20000
+- assertNotVisible: "Respiração: fase VAZIO."
+- takeScreenshot: "cp4-custom-next-cycle-skips-zero-phase"
+- tapOn:
+    text: "Cancelar treino"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Cancelar treino?"
+- tapOn:
+    text: "Confirmar cancelamento da sessão"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000

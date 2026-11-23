@@ -1,0 +1,32 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Hoje"
+    timeout: 30000
+- tapOn:
+    id: "nav-btn-perfil"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- tapOn:
+    point: "50%, 47%"
+- assertVisible: "Treino sobre outros apps"
+- tapOn: "Expandido"
+- tapOn:
+    point: "82%, 55%"
+- takeScreenshot: cp3-settings-for-test
+- tapOn: "Concluir"
+- tapOn:
+    id: "nav-btn-pausas"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- takeScreenshot: cp3-exercise-grid

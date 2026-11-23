@@ -1,0 +1,69 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- pressKey: HOME
+- waitForAnimationToEnd
+- launchApp:
+    stopApp: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "nav-btn-hoje"
+- waitForAnimationToEnd
+- tapOn:
+    text: "Abrir Vácuo"
+- waitForAnimationToEnd
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- takeScreenshot: "cp2-vacuum-ready-controls"
+- tapOn:
+    point: "74%, 63%"
+- waitForAnimationToEnd
+- assertVisible: "Recolher"
+- tapOn:
+    point: "26%, 70%"
+- waitForAnimationToEnd
+- tapOn:
+    point: "26%, 70%"
+- waitForAnimationToEnd
+- assertVisible: "Encerrar Retenção com Segurança"
+- takeScreenshot: "cp2-vacuum-retention-running"
+- tapOn:
+    point: "74%, 63%"
+- assertVisible: "Continuar"
+- tapOn:
+    point: "58%, 28%"
+- assertVisible: "Cancelar treino?"
+- assertVisible: "Manter treino pausado"
+- takeScreenshot: "cp2-vacuum-retention-cancel-confirmation"
+- tapOn: "Manter treino pausado"
+- assertVisible: "Continuar"
+- assertVisible: "Encerrar Retenção com Segurança"
+- takeScreenshot: "cp2-vacuum-retention-cancel-dismissed-paused"
+- tapOn:
+    point: "58%, 28%"
+- assertVisible: "Cancelar sessão"
+- tapOn: "Cancelar sessão"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-vacuum-retention-cancelled"
+- tapOn:
+    point: "74%, 63%"
+- waitForAnimationToEnd
+- assertVisible: "Recolher"
+- tapOn:
+    point: "26%, 70%"
+- waitForAnimationToEnd
+- tapOn:
+    point: "26%, 70%"
+- waitForAnimationToEnd
+- assertVisible: "Encerrar Retenção com Segurança"
+- takeScreenshot: "cp2-vacuum-retention-safe-exit-before"
+- tapOn: "Encerrar Retenção com Segurança"
+- assertVisible: "Descanse"
+- assertVisible: "Continuar"
+- takeScreenshot: "cp2-vacuum-safe-exit-paused-recovery"
+- tapOn:
+    point: "58%, 28%"
+- assertVisible: "Cancelar sessão"
+- tapOn: "Cancelar sessão"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-vacuum-safe-exit-cleanup"

@@ -1590,3 +1590,63 @@ Próximo passo:
 - Publicados `app-release.apk` e `wear-release.apk` em https://github.com/playertwo1/Adbm/releases/tag/v1.1.53. Os SHA-256 remotos conferem com os APKs locais; a tag aponta para o commit `90b78c451d124e75a5bdcb6cdcf687c56f948aa6`.
 - O workflow oficial estava desativado; ao ser habilitado para a tentativa de dispatch, permaneceu enfileirado sem criar jobs. Foi restaurado ao estado desativado e a publicação foi concluída manualmente após as verificações de versão e assinatura.
 - `bash scripts/check.sh`, TalkBack e relógio Wear OS físico não foram executados/verificados nesta release. Android Studio não foi usado como interface gráfica; os builds foram feitos pelo Gradle Wrapper local e a instalação/verificação pelo ADB.
+
+## 2026-11-18 — Redesign do player: estado Contração (kit Visual 2026-11-18)
+
+- Aplicado ao modal `#dailyExecutionModal` (programas Bracing/Kegel): fundo AMOLED, barra linear de progresso, trilha vertical de etapas (etapa atual + até 4 próximas, sem contagem inventada), cronômetro grande, onda de fase (SVG/CSS; amplitude e velocidade por fase, congelada em pausa, estática com movimento reduzido) e rodapé "A seguir" com duração. Sem círculo de progresso.
+- Tempo e fase continuam vindos do motor (`stepTimeLeft`/`currentStep`); a onda é só apresentação. IDs de programas, armazenamento, protocolo, `endDailyVacuumRetention` e Cancelar preservados. Pular passo e Cancelar mantidos (Cancelar no topo e, em pausa, também no rodapé).
+- Regressão nova: `diagnostics/e27-player-contracao.test.cjs`. Todos os diagnósticos passam, exceto `version-contract` (README x versão), que já falhava antes desta mudança.
+- Captura da tela renderizada no Chrome headless (412 px) com estado simulado; comparada à referência aprovada. NOT_RUN: AVD/aparelho, TalkBack, fonte 200%, `bash scripts/check.sh`, Gradle, overlay nativo, Vácuo/Kegel/respiração/Pausas (usam outros players). Pendente aprovação visual antes dos demais estados.
+
+## 2026-11-18 — Redesign CoreFlow aplicado ao app (kit Visual 2026-11-18)
+
+- Decisão do usuário: aprovar o player e estender o visual novo ao app; botão de retenção do Vácuo usa as cores do kit (aviso #E1BC78 sobre #2A2416). O tema AMOLED (já padrão, `AppState.theme='amoled'`) foi recolorido da paleta azul para a do kit (sálvia #9FC7A6, superfícies #111613/#171C19/#202622, linha #343B36, texto #F5F5F7); sem mudança de armazenamento.
+- WebView: chips selecionados de Pausas/Vácuo (texto escuro sobre tinta escura) corrigidos; botões primários que dependiam de gradiente receberam a ação sálvia; barras de progresso com gradiente e botões destrutivos redefinidos; `accent-color`, seleção, cursor e scrollbar tematizados; Lembrete sem halo âmbar nem sino pulsando. Player: estado Pausado ("PAUSADO", Continuar em largura total).
+- Overlay nativo: paleta do kit e nova `PhaseWaveView` (mini, compacto, expandido); amplitude por fase, congelada em pausa e estática com movimento reduzido. Nenhum timer novo: tempo e fase vêm do serviço.
+- Testes: diagnósticos Node passam (exceto `version-contract`, preexistente); `:app:testDebugUnitTest` passou com expectativas de cor atualizadas.
+- NOT_RUN/pendente: aparelho/AVD, TalkBack, fonte 200%, `check.sh`, Wear OS. Os círculos de progresso dos players de Vácuo, Kegel e respiração permanecem (aguardam decisão e regressões de sincronia próprias).
+
+## 2026-11-19 — Onda em movimento, trilha de ciclo e respiração calma
+
+- Onda do player: continua animada por CSS e agora parada só em pausa ou com "remover animações" do Android/movimento reduzido. O AVD estava com as escalas de animação em 0 (por isso a onda parecia estática); foram colocadas em 1.
+- Trilha lateral: mostra um ciclo por vez (ação + descansos + ponto final vazio). Começa só no ponto, a linha avança até o próximo ponto conforme o tempo da etapa (transição linear de 1 s) e volta ao início quando o ciclo termina.
+- Respiração (player principal) e Pausa de Resposta: círculos/orbe substituídos por onda calma que sobe no INSPIRE, sustenta no SEGURE e desce no EXPIRE/VAZIO, com número de segundos e trilha de fases rotulada (Inspire · Segure · Expire). Fase, segundos e duração continuam do motor; as metáforas antigas ficam ocultas só para o código existente continuar escrevendo nelas. O modo OLED da respiração mantém os visuais antigos.
+- Regressões ajustadas: `e27-player-contracao`, `breath-visual-sync`, `e10-responsive-pause`. Todos os diagnósticos passam, exceto `version-contract` (preexistente).
+- NOT_RUN: conferência visual no AVD das mudanças desta entrada (interrompida a pedido do usuário), TalkBack, fonte 200%, Wear OS.
+
+## 2026-11-19 — Varredura do app inteiro no visual novo
+
+- Varredura automática de contraste (todas as abas) no Chrome headless: texto escuro sobre escuro em Perfil (títulos dos alternadores), Evolução (dias) e Pausas corrigido; botões primários com cores de gradiente receberam texto de contraste.
+- Anéis de progresso de Vácuo, Kegel/Discreto, Bracing (Modo discreto), Pausas (alongamento) e Watch trocados por barra linear + onda (`cfLinearizeRings`; só lê o anel que o motor já atualiza). Regressão: `diagnostics/e28-ring-linear.test.cjs`.
+- Alternadores em pílula; caixa de seleção própria; caixa de marcar do cronograma com alvo de 48 px; botões destrutivos em tinta de perigo (sem vermelho sólido).
+- Todos os diagnósticos passam, exceto `version-contract` (preexistente). NOT_RUN: conferência no AVD desta rodada, modais que não abri na prévia (acessibilidade, treino flutuante, editor de perfil, programas Bracing/Kegel), TalkBack, fonte 200%, OLED da respiração.
+
+## 2026-11-19 — Alinhamento, tamanho de botões e respiração arrumada
+
+- Pedido do usuário: botões com tamanho/alinhamento irregulares e a respiração "bagunçada". Visto no AVD (emulator-5580): linhas Duração/Ritmo/Tempo-Ex com chips minúsculos quebrando à direita, três botões de ferramentas de larguras diferentes, cabeçalho da sessão ativa espremido (nome quebrando, selos, Pulso/OLED, Ciclo e tempo na mesma linha) e botão Cancelar duplicado.
+- Correção em CSS + 2 classes (`cf-opt`, `cf-tools`, `cf-breath-head`): rótulo acima, chips de 44 px com largura distribuída, ferramentas em fileira uniforme, cabeçalho da sessão em grade (nome/selos à esquerda, tempo grande e ciclo à direita, Pulso e OLED iguais), fontes monoespaçadas trocadas pela da interface (algarismos tabulares). Botão duplicado "Cancelar respiração" oculto (resta o Cancelar ao lado de Pausar). Sem mudança de IDs, armazenamento ou protocolo.
+- Defeito achado no AVD: a página abria clara e só escurecia quando o JS rodava; as classes `cf-theme-amoled` agora vêm no HTML (`<html>` e `<body>`).
+- Todos os diagnósticos passam, exceto `version-contract` (preexistente). NOT_RUN: sessão de respiração ativa no AVD após esta mudança (conferida só no Chrome headless a 412 px), ícone/splash do sistema ainda no visual antigo (marfim), emojis dos filtros, OLED da respiração, TalkBack, fonte 200%, Wear OS.
+
+## 2026-11-19 — Animações do app inteiro (impeccable animate)
+
+- Inventário: só 4 `@keyframes` próprios; modais apareciam de uma vez (`hidden` removido), abas subiam como um bloco só, `animate-pulse`/`animate-bounce`/`animate-ping` do Tailwind em 25 lugares (brilhos, contagens 3-2-1, setas), toast sumia de repente.
+- Sistema único (`--cf-ease` exponencial, só opacity/transform): modais com fundo em fade e painel que sobe (folhas) ou assenta (caixas); player e pausa de resposta com fade; abas com fade de 160 ms e os 5 primeiros blocos em cascata (teto 160 ms de atraso); resposta de toque de 120 ms (`scale(.97)`) em botões que não se posicionam por transform; checkbox com tick; contagem de retomada com pop; rótulo de fase da respiração reentra a cada troca; toast entra e sai; gaveta com fundo em fade.
+- Laços decorativos acalmados: pulso vira respiração lenta de opacidade (3,6 s), pulo vira uma entrada única, só o ícone de coração (BPM) bate. Movimento reduzido: regra global preservada e `html.cf-reduced-motion` agora cobre os novos.
+- Regressão: `diagnostics/e29-motion.test.cjs`. Todos os diagnósticos passam, exceto `version-contract` (preexistente).
+- NOT_RUN: captura de quadros (`motion-capture` recusou a região no viewport 1000×760 e não repeti), revisão pelo `impeccable-motion-reviewer`, conferência das entradas de modal no AVD, desempenho em aparelho real, saída animada de modais (continuam fechando instantaneamente), animações nativas do overlay e do Wear OS.
+
+## 2026-11-19 — Teste no celular físico (SM-S938B) e correção do padrão personalizado
+
+- Build `assembleRelease` assinado com a chave de release (backup do Drive, extraído só no scratchpad e apagado ao final), mesmo versionCode 53/1.1.53, instalado por `adb install -r` como atualização: dados locais preservados (programa ativo e nome do usuário continuam). Sem publicação, sem tag, sem commit.
+- Teste no aparelho: Hoje e Pausas renderizam no visual novo; sessão "Em Caixa" iniciada e cancelada (cabeçalho em grade, onda, trilha Inspire/Segure/Expire/Vazio, notificação de pulso) funcionou.
+- Defeito achado no aparelho: os botões −/+ do padrão Personalizado ficavam sobrepostos (regra de 44 px sobre grade de 4 colunas). Corrigido para 2 colunas com alvos de 44 px (`cf-stepper-grid`); conferido no aparelho.
+- NOT_RUN no aparelho: demais abas e modais, Vácuo, Kegel, Bracing, overlay flutuante, Wear OS, TalkBack, fonte 200%, desempenho das animações a olho (só capturas estáticas).
+
+## 2026-11-23 — Lembrete de Pausa Consciente abre direto na respiração em caixa
+
+- Pedido do usuário: ao tocar no aviso de Pausa Consciente, abrir já a respiração em caixa. O caminho nativo (`showMindSmartNotification` → `action_quick_breath`/`caixa`/120 s → `onNativeQuickBreath`) já existia; no AVD (Pixel_10a) a sessão "Em Caixa" iniciava, mas com o app em segundo plano a tela retomada ficava rolada fora do exercício ativo, então parecia que a respiração não abria.
+- Correção: `onNativeQuickBreath` reancora `#breath-active-display` em 150 ms e 600 ms (`index.html` e `app/src/main/assets/index.html` idênticos). Regressão: `diagnostics/quick-breath-scroll.test.cjs`. Nenhum ID de programa, armazenamento ou protocolo alterado.
+- Verificado no AVD por `am start` com os mesmos extras da notificação: partida a frio, app aberto e app em segundo plano (após a correção) mostram a sessão em andamento.
+- Tentativa anterior descartada: abrir a respiração pela notificação "Pausa breve" (intervalo 120 min) foi revertida por ser outro lembrete.
+- NOT_RUN: toque real na notificação (o receiver não é exportado, só simulei o intent), aparelho físico, Wear OS. `check.sh` para em `version-contract` (preexistente: README não descreve a versão atual).

@@ -1,0 +1,19 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- tapOn:
+    point: "24%, 45%"
+- tapOn:
+    point: "50%, 78%"
+- waitForAnimationToEnd
+- tapOn:
+    point: "42%, 94%"
+- waitForAnimationToEnd
+- tapOn:
+    point: "75%, 64%"
+- waitForAnimationToEnd
+- assertVisible: "Abrir"
+- takeScreenshot: "cp2-mini-open-affordance"
+- tapOn: "Abrir"
+- waitForAnimationToEnd:
+    timeout: 1000
+- takeScreenshot: "cp2-mini-opened-expanded-controls"

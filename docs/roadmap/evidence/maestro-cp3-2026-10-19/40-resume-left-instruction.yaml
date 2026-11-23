@@ -1,0 +1,51 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp
+- tapOn:
+    id: nav-btn-pausas
+- assertVisible: "Corpo"
+- scrollUntilVisible:
+    element:
+      id: chip-stretch-dur-infinite
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: chip-stretch-dur-infinite
+- scrollUntilVisible:
+    element:
+      id: stretch-btn-1
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: stretch-btn-1
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 30000
+- tapOn: "Abrir controles do treino"
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 60000
+- assertVisible: "Direita"
+- takeScreenshot: cp3-resume-right-expanded
+- extendedWaitUntil:
+    visible: "Esquerda"
+    timeout: 210000
+- assertVisible: "Cruze o tornozelo esquerdo sobre o joelho oposto. Mantenha a coluna ereta e incline suavemente o tronco à frente a partir do quadril."
+- tapOn: "Pausar"
+- extendedWaitUntil:
+    visible: "Continuar"
+    timeout: 15000
+- takeScreenshot: cp3-left-paused-before-resume
+- tapOn: "Continuar"
+- extendedWaitUntil:
+    visible: "Pausar"
+    timeout: 15000
+- assertVisible: "Esquerda"
+- assertVisible: "Cruze o tornozelo esquerdo sobre o joelho oposto. Mantenha a coluna ereta e incline suavemente o tronco à frente a partir do quadril."
+- takeScreenshot: cp3-left-after-resume
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar sessão"
+- tapOn: "Cancelar sessão"
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 15000

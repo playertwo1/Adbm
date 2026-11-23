@@ -1,0 +1,78 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Hoje"
+    timeout: 30000
+- tapOn:
+    id: "nav-btn-perfil"
+- scrollUntilVisible:
+    element:
+      id: "profileAccessibilityButton"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: "profileAccessibilityButton"
+- tapOn:
+    text: "Alternar redução de movimento"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Movimento reduzido ativado."
+- tapOn: "Concluir"
+- tapOn:
+    id: "nav-btn-pausas"
+- scrollUntilVisible:
+    element:
+      id: "breath-btn-caixa"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: "breath-btn-caixa"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 15000
+- tapOn:
+    text: "Abrir"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 10000
+- takeScreenshot: "cp4-caixa-reduced-expanded"
+- tapOn:
+    text: "Recolher"
+    waitToSettleTimeoutMs: 0
+- takeScreenshot: "cp4-caixa-reduced-web-before"
+- assertVisible: "Em Caixa"
+- takeScreenshot: "cp4-caixa-reduced-web-after"
+- tapOn:
+    text: "Abrir"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Recolher"
+- tapOn:
+    text: "Cancelar treino"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Cancelar treino?"
+- tapOn:
+    text: "Confirmar cancelamento da sessão"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000
+- tapOn:
+    id: "nav-btn-perfil"
+- scrollUntilVisible:
+    element:
+      id: "profileAccessibilityButton"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: "profileAccessibilityButton"
+- tapOn:
+    text: "Alternar redução de movimento"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Movimento padrão restaurado."
+- tapOn: "Concluir"

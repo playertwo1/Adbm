@@ -1,0 +1,15 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- tapOn:
+    id: "nav-btn-perfil"
+- scrollUntilVisible:
+    element:
+      id: "profileFloatingWorkoutButton"
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: "profileFloatingWorkoutButton"
+- extendedWaitUntil:
+    visible: "Treino sobre outros apps"
+    timeout: 10000
+- takeScreenshot: cp3-floating-settings-current

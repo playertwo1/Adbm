@@ -1,0 +1,14 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Hoje"
+    timeout: 30000
+- tapOn:
+    id: "nav-btn-pausas"
+- extendedWaitUntil:
+    visible: "SOS Coluna & Lombar"
+    timeout: 10000
+- assertNotVisible: "Boa tarde.*"
+- takeScreenshot: "cp5-landscape-pauses-unique-content"

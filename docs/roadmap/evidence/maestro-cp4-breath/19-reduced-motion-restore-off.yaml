@@ -1,0 +1,23 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Hoje"
+    timeout: 30000
+- tapOn:
+    id: "nav-btn-perfil"
+- scrollUntilVisible:
+    element:
+      id: "profileAccessibilityButton"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: "profileAccessibilityButton"
+- tapOn:
+    text: "Alternar redução de movimento"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Movimento padrão restaurado."
+- takeScreenshot: "cp4-reduced-motion-restored-off"
+- tapOn: "Concluir"

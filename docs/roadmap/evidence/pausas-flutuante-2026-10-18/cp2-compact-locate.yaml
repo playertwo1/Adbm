@@ -1,0 +1,16 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp
+- waitForAnimationToEnd
+- tapOn:
+    point: "42%, 94%"
+- waitForAnimationToEnd
+- tapOn:
+    point: "75%, 64%"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-before-compact"
+- tapOn:
+    point: "60%, 14%"
+- waitForAnimationToEnd:
+    timeout: 1000
+- takeScreenshot: "cp2-compact-with-controls"

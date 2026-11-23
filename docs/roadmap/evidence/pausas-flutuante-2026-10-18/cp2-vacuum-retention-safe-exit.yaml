@@ -1,0 +1,61 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- pressKey: HOME
+- waitForAnimationToEnd
+- launchApp:
+    stopApp: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "nav-btn-hoje"
+- waitForAnimationToEnd
+- tapOn:
+    text: "Abrir Vácuo"
+- waitForAnimationToEnd
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- assertVisible: "Iniciar"
+- tapOn: "Iniciar"
+- waitForAnimationToEnd
+- assertVisible: "Recolher"
+- tapOn: "Pular"
+- assertVisible: "Solte todo o ar"
+- tapOn: "Pular"
+- assertVisible: "Encerrar Retenção com Segurança"
+- takeScreenshot: "cp2-vacuum-retention-running"
+- tapOn:
+    point: "15%, 28%"
+- assertVisible: "Continuar"
+- tapOn:
+    point: "58%, 28%"
+- assertVisible: "Cancelar treino?"
+- assertVisible: "Manter treino pausado"
+- takeScreenshot: "cp2-vacuum-retention-cancel-confirmation"
+- tapOn: "Manter treino pausado"
+- assertVisible: "Continuar"
+- assertVisible: "Encerrar Retenção com Segurança"
+- takeScreenshot: "cp2-vacuum-retention-cancel-dismissed-paused"
+- tapOn:
+    point: "58%, 28%"
+- assertVisible: "Cancelar sessão"
+- tapOn: "Cancelar sessão"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-vacuum-retention-cancelled"
+- tapOn: "Iniciar"
+- waitForAnimationToEnd
+- assertVisible: "Recolher"
+- tapOn: "Pular"
+- assertVisible: "Solte todo o ar"
+- tapOn: "Pular"
+- assertVisible: "Encerrar Retenção com Segurança"
+- takeScreenshot: "cp2-vacuum-retention-safe-exit-before"
+- tapOn: "Encerrar Retenção com Segurança"
+- assertVisible: "Descanse"
+- assertVisible: "Continuar"
+- takeScreenshot: "cp2-vacuum-safe-exit-paused-recovery"
+- tapOn:
+    point: "58%, 28%"
+- assertVisible: "Cancelar sessão"
+- tapOn: "Cancelar sessão"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-vacuum-safe-exit-cleanup"

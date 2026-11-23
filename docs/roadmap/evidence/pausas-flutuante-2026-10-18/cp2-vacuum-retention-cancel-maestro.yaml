@@ -1,0 +1,35 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp
+- waitForAnimationToEnd
+- tapOn:
+    id: "nav-btn-hoje"
+- waitForAnimationToEnd
+- tapOn:
+    text: "Abrir Vácuo"
+- waitForAnimationToEnd
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- tapOn:
+    point: "74%, 63%"
+- waitForAnimationToEnd
+- tapOn:
+    point: "26%, 70%"
+- tapOn:
+    point: "26%, 70%"
+- assertVisible: "Encerrar Retenção com Segurança"
+- takeScreenshot: "cp2-vacuum-retention-cancel-before"
+- tapOn: "Cancelar"
+- assertVisible: "Cancelar treino?"
+- assertVisible: "Cancelar sessão"
+- assertVisible: "Continuar treino"
+- takeScreenshot: "cp2-vacuum-retention-cancel-confirmation"
+- tapOn: "Continuar treino"
+- assertVisible: "Encerrar Retenção com Segurança"
+- takeScreenshot: "cp2-vacuum-retention-cancel-dismissed"
+- tapOn: "Cancelar"
+- assertVisible: "Cancelar sessão"
+- tapOn: "Cancelar sessão"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-vacuum-retention-cancelled"

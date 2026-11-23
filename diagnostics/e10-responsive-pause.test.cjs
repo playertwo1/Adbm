@@ -79,6 +79,8 @@ function createHarness(historyEnabled) {
         extractFunction('getResponsiveElapsedMs'),
         extractFunction('formatResponsiveTime'),
         extractFunction('updateResponsiveBreathGuide'),
+        extractFunction('setCalmBreath'),
+        extractFunction('setCalmTrack'),
         extractFunction('updateResponsivePauseUI'),
         extractFunction('startResponsivePause'),
         extractFunction('endResponsivePause'),

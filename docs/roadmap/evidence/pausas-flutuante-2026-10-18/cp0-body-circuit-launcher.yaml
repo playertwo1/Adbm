@@ -1,0 +1,18 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp
+- waitForAnimationToEnd
+- tapOn:
+    point: "50%, 94%"
+- swipe:
+    start: "50%, 80%"
+    end: "50%, 30%"
+- takeScreenshot: "body-circuit-button-before-start"
+- tapOn:
+    point: "50%, 78%"
+- waitForAnimationToEnd:
+    timeout: 1200
+- pressKey: HOME
+- waitForAnimationToEnd:
+    timeout: 600
+- takeScreenshot: "body-circuit-overlay-on-launcher"

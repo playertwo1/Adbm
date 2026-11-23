@@ -1,0 +1,18 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- waitForAnimationToEnd
+- assertVisible: "Vácuo Abdominal, DESCANSO"
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar treino?"
+- assertVisible: "Cancelar sessão"
+- takeScreenshot: "cp2-vacuum-paused-cancel-confirmation"
+- tapOn: "Manter treino pausado"
+- assertVisible: "Continuar treino"
+- takeScreenshot: "cp2-vacuum-paused-cancel-dismissed"
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar sessão"
+- tapOn: "Cancelar sessão"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-vacuum-paused-cancelled"

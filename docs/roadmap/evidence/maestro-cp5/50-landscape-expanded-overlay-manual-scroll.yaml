@@ -1,0 +1,60 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- tapOn:
+    id: "nav-btn-pausas"
+- swipe:
+    start: "50%, 85%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 85%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 85%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 85%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 85%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 85%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 85%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 85%"
+    end: "50%, 30%"
+- swipe:
+    start: "50%, 85%"
+    end: "50%, 30%"
+- assertVisible:
+    id: "breath-btn-caixa"
+- tapOn:
+    id: "breath-btn-caixa"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 15000
+- tapOn:
+    text: "Abrir"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 10000
+- assertVisible: "Pausar treino"
+- assertVisible: "Pular para o próximo passo"
+- assertVisible: "Cancelar treino"
+- takeScreenshot: "cp5-landscape-expanded-overlay-manual-scroll"
+- tapOn:
+    text: "Cancelar treino"
+    waitToSettleTimeoutMs: 0
+- tapOn:
+    text: "Confirmar cancelamento da sessão"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000

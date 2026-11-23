@@ -1,0 +1,33 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- tapOn:
+    id: "nav-btn-pausas"
+- scrollUntilVisible:
+    element:
+      id: "stretch-btn-3"
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: "stretch-btn-3"
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 15000
+- takeScreenshot: cp3-mini-active
+- tapOn: "Abrir"
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 10000
+- assertVisible: "Contínuo"
+- takeScreenshot: cp3-mini-opened-guide
+- tapOn: "Pausar treino"
+- extendedWaitUntil:
+    visible: "Continuar treino"
+    timeout: 10000
+- takeScreenshot: cp3-guide-paused
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar treino?"
+- tapOn: "Cancelar sessão"
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000
+- takeScreenshot: cp3-mini-session-cancelled

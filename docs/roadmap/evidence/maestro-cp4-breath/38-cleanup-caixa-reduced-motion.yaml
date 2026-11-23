@@ -1,0 +1,27 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- assertVisible:
+    id: "btn-cancel-breath-active"
+- tapOn:
+    id: "btn-cancel-breath-active"
+    waitToSettleTimeoutMs: 0
+- extendedWaitUntil:
+    notVisible:
+      id: "btn-cancel-breath-active"
+    timeout: 10000
+- tapOn:
+    id: "nav-btn-perfil"
+- scrollUntilVisible:
+    element:
+      id: "profileAccessibilityButton"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: "profileAccessibilityButton"
+- tapOn:
+    text: "Alternar redução de movimento"
+    waitToSettleTimeoutMs: 0
+- assertVisible: "Movimento padrão restaurado."
+- takeScreenshot: "cp4-caixa-reduced-preference-restored"
+- tapOn: "Concluir"

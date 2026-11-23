@@ -1,0 +1,18 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp
+- waitForAnimationToEnd
+- assertVisible: "Pausas"
+- tapOn:
+    point: "42%, 94%"
+- waitForAnimationToEnd
+- tapOn:
+    point: "75%, 64%"
+- waitForAnimationToEnd
+- assertVisible: "Recolher"
+- takeScreenshot: "cp2-notification-live-overlay"
+- swipe:
+    start: "50%, 1%"
+    end: "50%, 75%"
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-notification-live-shade"

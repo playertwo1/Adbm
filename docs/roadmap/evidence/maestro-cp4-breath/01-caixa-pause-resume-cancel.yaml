@@ -1,0 +1,46 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Hoje"
+    timeout: 30000
+- tapOn:
+    id: "nav-btn-pausas"
+- scrollUntilVisible:
+    element:
+      id: "breath-btn-caixa"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- assertVisible: "Em Caixa"
+- takeScreenshot: "cp4-caixa-card"
+- tapOn:
+    id: "breath-btn-caixa"
+- extendedWaitUntil:
+    visible: "Abrir"
+    timeout: 15000
+- tapOn: "Abrir"
+- extendedWaitUntil:
+    visible: "Recolher"
+    timeout: 10000
+- assertVisible: "Pausar treino"
+- takeScreenshot: "cp4-caixa-running"
+- tapOn: "Pausar treino"
+- extendedWaitUntil:
+    visible: "Continuar treino"
+    timeout: 10000
+- takeScreenshot: "cp4-caixa-paused"
+- tapOn: "Continuar treino"
+- extendedWaitUntil:
+    visible: "Pausar treino"
+    timeout: 10000
+- takeScreenshot: "cp4-caixa-resumed"
+- tapOn: "Cancelar treino"
+- assertVisible: "Cancelar treino?"
+- takeScreenshot: "cp4-caixa-cancel-confirmation"
+- tapOn: "Cancelar sessão"
+- extendedWaitUntil:
+    notVisible: "Recolher"
+    timeout: 10000
+- takeScreenshot: "cp4-caixa-cancelled"

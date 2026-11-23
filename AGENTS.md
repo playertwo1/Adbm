@@ -22,3 +22,8 @@ CoreFlow é um app Android/WebView com módulo Wear OS. Preserve a arquitetura a
 ## Segurança
 
 A WebView deve carregar somente recursos locais e não pode conceder permissões web, conteúdo misto, navegação externa ou acesso local sem uma justificativa testada.
+
+## Design de interface
+
+- Para decisões de sistema visual e revisão UX da WebView, consulte a skill `ui-ux-pro-max` em `.agents/skills/ui-ux-pro-max` e adapte as recomendações ao produto atual.
+- Preserve a direção visual CoreFlow, os recursos exclusivamente locais e a paridade entre `index.html` e `app/src/main/assets/index.html`; use HTML/CSS/JS existente, sem introduzir Tailwind.

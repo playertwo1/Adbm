@@ -1,0 +1,10 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- swipe:
+    start: "50%, 75%"
+    end: "50%, 1%"
+- waitForAnimationToEnd
+- launchApp
+- waitForAnimationToEnd
+- takeScreenshot: "cp2-launch-after-shade"
+- assertVisible: "Pausas"
