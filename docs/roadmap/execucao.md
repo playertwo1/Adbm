@@ -1650,3 +1650,7 @@ Próximo passo:
 - Verificado no AVD por `am start` com os mesmos extras da notificação: partida a frio, app aberto e app em segundo plano (após a correção) mostram a sessão em andamento.
 - Tentativa anterior descartada: abrir a respiração pela notificação "Pausa breve" (intervalo 120 min) foi revertida por ser outro lembrete.
 - NOT_RUN: toque real na notificação (o receiver não é exportado, só simulei o intent), aparelho físico, Wear OS. `check.sh` para em `version-contract` (preexistente: README não descreve a versão atual).
+
+## 2026-11-23 — Release 1.1.54: lembrete de Pausa Consciente abre na respiração
+
+- `onNativeQuickBreath` reancora `#breath-active-display` após o layout (`index.html` e `assets/index.html` idênticos). Regressão: `diagnostics/quick-breath-scroll.test.cjs`. Versão 1.1.54 (`versionCode 54`); README alinhado, o que corrige o `version-contract`. Notas em `docs/releases/v1.1.54.md`.
