@@ -1590,3 +1590,7 @@ Próximo passo:
 - Publicados `app-release.apk` e `wear-release.apk` em https://github.com/playertwo1/Adbm/releases/tag/v1.1.53. Os SHA-256 remotos conferem com os APKs locais; a tag aponta para o commit `90b78c451d124e75a5bdcb6cdcf687c56f948aa6`.
 - O workflow oficial estava desativado; ao ser habilitado para a tentativa de dispatch, permaneceu enfileirado sem criar jobs. Foi restaurado ao estado desativado e a publicação foi concluída manualmente após as verificações de versão e assinatura.
 - `bash scripts/check.sh`, TalkBack e relógio Wear OS físico não foram executados/verificados nesta release. Android Studio não foi usado como interface gráfica; os builds foram feitos pelo Gradle Wrapper local e a instalação/verificação pelo ADB.
+
+## 2026-11-23 — Release 1.1.54: lembrete de Pausa Consciente abre na respiração
+
+- `onNativeQuickBreath` reancora `#breath-active-display` após o layout (`index.html` e `assets/index.html` idênticos). Regressão: `diagnostics/quick-breath-scroll.test.cjs`. Versão 1.1.54 (`versionCode 54`); README alinhado, o que corrige o `version-contract`. Notas em `docs/releases/v1.1.54.md`.

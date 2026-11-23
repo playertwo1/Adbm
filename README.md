@@ -22,6 +22,7 @@ Práticas guiadas para desenvolver força física, postura, respiração e aten�
 
 - [Recursos principais](#recursos-principais)
 - [Versão atual](#versão-atual)
+- [O que mudou na 1.1.54](#o-que-mudou-na-1154)
 - [O que mudou na 1.1.52](#o-que-mudou-na-1152)
 - [Instalar no Android](#instalar-no-android)
 - [Instalar no Samsung Galaxy Watch](#instalar-no-samsung-galaxy-watch)
@@ -47,13 +48,17 @@ Práticas guiadas para desenvolver força física, postura, respiração e aten�
 
 ## Versão Atual
 
-- **Versão atual:** `1.1.52` (`versionCode 52`)
-- **Release:** direção Fluxo aprovada aplicada às práticas, sessões, diálogos e overlay flutuante. Veja [o que mudou na 1.1.52](docs/releases/v1.1.52.md).
+- **Versão atual:** `1.1.54` (`versionCode 54`)
+- **Release:** a notificação de Pausa Consciente abre direto na respiração em caixa, com o exercício à vista. Veja [o que mudou na 1.1.54](docs/releases/v1.1.54.md).
 - **Validação:** `bash scripts/check.sh` passou; as telas principais, a configuração do Vácuo e o editor do Perfil foram conferidos no emulador Android API 36. Inspeção da pílula durante uma sessão ativa, aparelho físico, TalkBack, escala de fonte 200% e Wear físico: `NOT_RUN`.
 - **Downloads:** baixe os APKs assinados de celular e Wear OS na aba de [Releases](https://github.com/playertwo1/Adbm/releases/latest).
 - **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.
 
 ---
+
+## O que mudou na 1.1.54
+
+- Ao tocar no lembrete de Pausa Consciente, a respiração em caixa de 2 minutos abre com o exercício ativo à vista, mesmo com o app em segundo plano.
 
 ## O que mudou na 1.1.52
 
@@ -190,8 +195,8 @@ $env:KEYSTORE_PATH = "caminho/para/coreflow-upload.jks"
 $env:KEYSTORE_PASSWORD = "sua_senha_keystore"
 $env:KEY_ALIAS = "seu_alias"
 $env:KEY_PASSWORD = "sua_senha_chave"
-$env:BUILD_VERSION_CODE = "52"
-$env:BUILD_VERSION_NAME = "1.1.52"
+$env:BUILD_VERSION_CODE = "54"
+$env:BUILD_VERSION_NAME = "1.1.54"
 
 .\gradlew.bat :app:assembleRelease :wear:assembleRelease
 ```
