@@ -39,23 +39,23 @@ import java.io.InputStream
 import kotlin.math.hypot
 
 private object FluxoOverlayPalette {
-    val surface = Color.parseColor("#171C20")
-    val surfaceRaised = Color.parseColor("#20262B")
-    val surfaceInteractive = Color.parseColor("#252D34")
-    val line = Color.parseColor("#353F46")
-    val lineStrong = Color.parseColor("#59656E")
-    val textPrimary = Color.parseColor("#F2F4F5")
-    val textSecondary = Color.parseColor("#BBC3C9")
-    val textMuted = Color.parseColor("#BBC3C9")
-    val textSubtle = Color.parseColor("#E2E7EA")
-    val accent = Color.parseColor("#8BB5E5")
-    val accentBright = Color.parseColor("#A8C9EF")
-    val accentInk = Color.parseColor("#14202B")
-    val warning = Color.parseColor("#E4C482")
-    val warningSurface = Color.parseColor("#332C1D")
-    val danger = Color.parseColor("#F08C96")
-    val dangerBright = Color.parseColor("#F3A3AA")
-    val dangerSurface = Color.parseColor("#351C20")
+    val surface = Color.parseColor("#111613")
+    val surfaceRaised = Color.parseColor("#171C19")
+    val surfaceInteractive = Color.parseColor("#202622")
+    val line = Color.parseColor("#343B36")
+    val lineStrong = Color.parseColor("#4B554E")
+    val textPrimary = Color.parseColor("#F5F5F7")
+    val textSecondary = Color.parseColor("#B8C4BA")
+    val textMuted = Color.parseColor("#B8C4BA")
+    val textSubtle = Color.parseColor("#D8E0DA")
+    val accent = Color.parseColor("#9FC7A6")
+    val accentBright = Color.parseColor("#A8E7B1")
+    val accentInk = Color.parseColor("#122018")
+    val warning = Color.parseColor("#E1BC78")
+    val warningSurface = Color.parseColor("#2A2416")
+    val danger = Color.parseColor("#EA969B")
+    val dangerBright = Color.parseColor("#F0B0B4")
+    val dangerSurface = Color.parseColor("#2B1517")
     val dangerButton = Color.parseColor("#9E3842")
 }
 
@@ -176,6 +176,9 @@ object WorkoutOverlayController {
 
     private var currentState: VisualState = VisualState.COMPACT
     private var appReducedMotion = false
+    private var miniWave: PhaseWaveView? = null
+    private var compactWave: PhaseWaveView? = null
+    private var expandedWave: PhaseWaveView? = null
     private var lastRawState: JSONObject? = null
     private val mainHandler = Handler(Looper.getMainLooper())
     private var autoCollapseRunnable: Runnable? = null
@@ -404,6 +407,9 @@ object WorkoutOverlayController {
             }
             rootView = null
             windowManager = null
+            miniWave = null
+            compactWave = null
+            expandedWave = null
             miniContainer = null
             compactContainer = null
             expandedContainer = null
@@ -720,6 +726,8 @@ object WorkoutOverlayController {
             }
         }
 
+        miniWave = PhaseWaveView(context).apply { layoutParams = LinearLayout.LayoutParams(dpToPx(context, 28), dpToPx(context, 16)).apply { marginEnd = dpToPx(context, 6) }; importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
+        miniContainer?.addView(miniWave)
         miniContainer?.addView(miniActionText)
         miniContainer?.addView(miniTimerText)
         miniContainer?.addView(miniOpenText)
@@ -801,6 +809,8 @@ object WorkoutOverlayController {
         }
 
         compactContainer?.addView(textCol)
+        compactWave = PhaseWaveView(context).apply { layoutParams = LinearLayout.LayoutParams(dpToPx(context, 36), dpToPx(context, 20)); importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
+        compactContainer?.addView(compactWave)
         compactContainer?.addView(compactTimerText)
         compactContainer?.addView(compactPauseResumeBtn)
         compactContainer?.addView(compactCancelBtn)
@@ -900,6 +910,8 @@ object WorkoutOverlayController {
             gravity = Gravity.CENTER
         }
         expandedContainer?.addView(expandedTimerText)
+        expandedWave = PhaseWaveView(context).apply { layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(context, 28)).apply { topMargin = dpToPx(context, 4); bottomMargin = dpToPx(context, 4) }; importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
+        expandedContainer?.addView(expandedWave)
 
         expandedTotalTimeText = TextView(context).apply {
             text = "de 30s"
@@ -1213,6 +1225,16 @@ object WorkoutOverlayController {
             isRest -> "Descanso"
             else -> title
         }
+
+        // Onda de fase: apenas apresentação, amplitude por fase; congela em pausa.
+        val waveAmp = when {
+            isRest && badge.contains("PREPARA", ignoreCase = true) -> 0.15f
+            isRest -> 0.1f
+            badge.contains("TOPO", true) || badge.contains("PICO", true) || badge.contains("TIRO", true) -> 0.75f
+            else -> 0.6f
+        }
+        val waveColor = if (isPaused) FluxoOverlayPalette.textMuted else accentColor
+        listOf(miniWave, compactWave, expandedWave).forEach { it?.setPhase(waveAmp, waveColor, status == "running", appReducedMotion) }
 
         // 1. Atualizar MINI
         miniTimerText?.text = timeStr

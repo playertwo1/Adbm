@@ -52,6 +52,8 @@ vm.runInContext([
     extractFunction('cancelBreathVisuals'),
     extractFunction('renderBreathTickUI'),
     extractFunction('applyBreathPhaseUI'),
+    extractFunction('setCalmBreath'),
+    extractFunction('setCalmTrack'),
     extractFunction('enterOledMode'),
     extractFunction('applyOledPhaseUI')
 ].join('\n'), context);

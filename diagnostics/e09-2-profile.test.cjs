@@ -274,7 +274,7 @@ for (const htmlSource of sources) {
     vm.runInContext("AppState.theme = 'standard'; applyProfilePreferences({ theme: 'amoled' });", env.context);
     assert.equal(env.html.classList.contains('cf-theme-amoled'), true);
     vm.runInContext("AppState.theme = 'standard'; applyProfilePreferences({ theme: true });", env.context);
-    assert.equal(vm.runInContext('AppState.theme', env.context), 'standard', 'tema booleano inválido não fabrica preferência');
+    assert.equal(vm.runInContext('AppState.theme', env.context), 'amoled', 'visual novo é o único: o tema claro foi aposentado em 2026-11-18');
 
     vm.runInContext('toggleAmoledTheme();', env.context);
     assert.equal(vm.runInContext('AppState.theme', env.context), 'amoled');
@@ -302,11 +302,11 @@ for (const htmlSource of sources) {
 
     // Ausência/corrupção restaura defaults neutros; nunca herda uma preferência anterior.
     vm.runInContext("AppState.theme = 'amoled'; AppState.accessibility = { textScale: 'large', highContrast: true, reducedMotion: true }; applyProgressData({ theme: true, accessibility: { textScale: 'giant', highContrast: 'yes', reducedMotion: 1 } }); applyProfilePreferences();", env.context);
-    assert.equal(vm.runInContext('AppState.theme', env.context), 'standard');
+    assert.equal(vm.runInContext('AppState.theme', env.context), 'amoled');
     assert.equal(vm.runInContext('AppState.accessibility.textScale', env.context), 'normal');
     assert.equal(vm.runInContext('AppState.accessibility.highContrast', env.context), false);
     assert.equal(vm.runInContext('AppState.accessibility.reducedMotion', env.context), false);
-    assert.equal(env.html.classList.contains('cf-theme-amoled'), false);
+    assert.equal(env.html.classList.contains('cf-theme-amoled'), true);
     assert.equal(env.html.classList.contains('cf-text-large'), false);
     assert.equal(env.body.classList.contains('cf-high-contrast'), false);
     assert.equal(env.html.classList.contains('cf-reduced-motion'), false);
