@@ -1654,3 +1654,7 @@ Próximo passo:
 ## 2026-11-23 — Release 1.1.54: lembrete de Pausa Consciente abre na respiração
 
 - `onNativeQuickBreath` reancora `#breath-active-display` após o layout (`index.html` e `assets/index.html` idênticos). Regressão: `diagnostics/quick-breath-scroll.test.cjs`. Versão 1.1.54 (`versionCode 54`); README alinhado, o que corrige o `version-contract`. Notas em `docs/releases/v1.1.54.md`.
+
+## 2026-11-24 — Release 1.1.55: redesign de volta
+
+- A 1.1.54 foi construída de um worktree limpo do último commit e saiu sem o redesign (estava só na árvore local). A 1.1.55 reúne redesign (`index.html`, `PhaseWaveView`, overlay, diagnósticos e27–e29) e a correção da respiração. Versão 55; notas em `docs/releases/v1.1.55.md`.
