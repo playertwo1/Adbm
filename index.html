@@ -557,15 +557,15 @@
         #core-persistence-status.cf-persistence-ready { border-color: transparent !important; background: transparent !important; color: var(--cf-color-text-secondary) !important; cursor: default; }
         #core-persistence-status.cf-persistence-alert { flex: 1 0 100%; width: 100% !important; max-width: none; min-height: 44px; margin: 4px 0 !important; padding: 10px 12px !important; border: 1px solid var(--cf-color-alert) !important; border-radius: 12px; background: var(--cf-color-surface) !important; color: var(--cf-color-alert) !important; font-size: .8125rem; line-height: 1.4; text-align: left; white-space: normal; cursor: pointer; }
         #tab-pausas .uppercase, #tab-dashboard .uppercase, #tab-perfil .uppercase { text-transform: none !important; letter-spacing: 0 !important; }
-        #tab-pausas .cf-work-pause-settings { border-color: var(--cf-color-line) !important; border-radius: 16px !important; background: var(--cf-color-surface-raised) !important; box-shadow: none !important; }
-        #tab-pausas .cf-work-pause-icon { width: 28px !important; height: 28px !important; flex: 0 0 28px; border: 0 !important; border-radius: 0 !important; background: transparent !important; color: var(--cf-color-action) !important; font-size: 1.125rem; }
-        #tab-pausas .cf-work-pause-settings legend { color: var(--cf-color-text-secondary) !important; font-size: .8125rem; font-weight: 600; text-transform: none !important; letter-spacing: 0 !important; }
-        #tab-pausas .cf-work-pause-settings fieldset > div > label { min-height: 42px; border-color: var(--cf-color-line) !important; border-radius: 10px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-text-primary) !important; font-size: .8125rem; }
-        #tab-pausas .cf-work-pause-settings > label.cf-work-pause-enable { min-height: 48px; border-color: var(--cf-color-line) !important; border-radius: 12px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-text-primary) !important; }
-        #tab-pausas .cf-work-pause-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-        #tab-pausas .cf-work-pause-settings input[type="checkbox"] { width: 18px; height: 18px; }
-        #tab-pausas .cf-work-pause-save { min-height: 48px; border: 1px solid var(--cf-color-action) !important; border-radius: 12px !important; background: var(--cf-color-action) !important; color: #fff !important; font-size: .875rem; font-weight: 600 !important; }
-        html.cf-theme-amoled #tab-pausas .cf-work-pause-save { color: #16271B !important; }
+        #tab-perfil .cf-work-pause-settings { border-color: var(--cf-color-line) !important; border-radius: 16px !important; background: var(--cf-color-surface-raised) !important; box-shadow: none !important; }
+        #tab-perfil .cf-work-pause-icon { width: 28px !important; height: 28px !important; flex: 0 0 28px; border: 0 !important; border-radius: 0 !important; background: transparent !important; color: var(--cf-color-action) !important; font-size: 1.125rem; }
+        #tab-perfil .cf-work-pause-settings legend { color: var(--cf-color-text-secondary) !important; font-size: .8125rem; font-weight: 600; text-transform: none !important; letter-spacing: 0 !important; }
+        #tab-perfil .cf-work-pause-settings fieldset > div > label { min-height: 42px; border-color: var(--cf-color-line) !important; border-radius: 10px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-text-primary) !important; font-size: .8125rem; }
+        #tab-perfil .cf-work-pause-settings > label.cf-work-pause-enable { min-height: 48px; border-color: var(--cf-color-line) !important; border-radius: 12px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-text-primary) !important; }
+        #tab-perfil .cf-work-pause-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+        #tab-perfil .cf-work-pause-settings input[type="checkbox"] { width: 18px; height: 18px; }
+        #tab-perfil .cf-work-pause-save { min-height: 48px; border: 1px solid var(--cf-color-action) !important; border-radius: 12px !important; background: var(--cf-color-action) !important; color: #fff !important; font-size: .875rem; font-weight: 600 !important; }
+        html.cf-theme-amoled #tab-perfil .cf-work-pause-save { color: #16271B !important; }
         #tab-pausas #btn-sos-stretch { min-height: 44px; border: 1px solid var(--cf-color-action) !important; border-radius: 12px !important; background: var(--cf-color-action) !important; color: #fff !important; font-size: .8125rem; font-weight: 600 !important; }
         html.cf-theme-amoled #tab-pausas #btn-sos-stretch { color: #16271B !important; }
         #tab-pausas #btn-start-smart-stretch-recom { min-height: 44px; border: 1px solid var(--cf-color-line) !important; border-radius: 10px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-action) !important; font-size: .8125rem; font-weight: 600 !important; }
@@ -1422,74 +1422,9 @@
         <section id="tab-pausas" class="tab-content space-y-4 cf-fluxo-screen" aria-labelledby="pauses-heading">
             <div class="cf-fluxo-page-heading">
                 <p class="cf-fluxo-kicker">Pausas · prática breve</p>
-                <h2 id="pauses-heading">O que você precisa agora?</h2>
+                <h2 id="pauses-heading" tabindex="-1">O que você precisa agora?</h2>
                 <p>Escolha um tempo confortável.</p>
             </div>
-            <div id="work-pause-reminder-prompt" class="hidden rounded-2xl border border-cyan-400/30 bg-cyan-950/30 p-4 shadow-lg" aria-labelledby="work-pause-reminder-title">
-                <div class="flex items-start justify-between gap-3">
-                    <div>
-                        <p class="text-[10px] font-black uppercase tracking-widest text-cyan-300">Pausa de trabalho</p>
-                        <h2 id="work-pause-reminder-title" tabindex="-1" class="mt-1 text-lg font-extrabold text-white">Um intervalo breve, do seu jeito</h2>
-                    </div>
-                    <button type="button" onclick="closeWorkPauseReminderPrompt()" class="min-h-12 min-w-12 rounded-xl text-slate-300" aria-label="Fechar sugestão de pausa">✕</button>
-                </div>
-                <ul class="mt-3 space-y-2 text-sm text-slate-200">
-                    <li>• A cada 20 minutos, descanse os olhos por 20 segundos olhando para longe.</li>
-                    <li>• Levante ou mude de posição; mova ombros, mãos e punhos sem forçar.</li>
-                    <li>• Tome alguns goles de água se quiser e respire no seu ritmo confortável.</li>
-                </ul>
-                <p class="mt-3 text-xs text-slate-400">Escolha só o que for confortável e pare se sentir dor ou mal-estar.</p>
-                <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    <button type="button" onclick="openResponsivePauseGuide()" class="min-h-12 rounded-xl border border-violet-400/40 bg-violet-500/10 px-3 text-xs font-bold text-violet-200">Abrir guia de pausa</button>
-                    <button type="button" onclick="startWorkPauseMobility()" class="min-h-12 rounded-xl bg-emerald-400 px-3 text-xs font-black text-slate-950">Começar mobilidade de 1 min</button>
-                </div>
-            </div>
-
-            <section class="cf-work-pause-settings rounded-2xl border border-cyan-400/20 bg-slate-900/80 p-4" aria-labelledby="work-pause-config-title">
-                <div class="flex items-start gap-3">
-                    <div class="cf-work-pause-icon flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-400/30 bg-cyan-400/10 text-cyan-300" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="13" r="8"/><path d="M9 2h6M12 5V3m0 10 3-2m-3-2v4"/></svg></div>
-                    <div class="min-w-0 flex-1">
-                        <h2 id="work-pause-config-title" class="text-sm font-extrabold text-white">Pausas no trabalho</h2>
-                        <p class="mt-1 text-xs text-slate-400">Lembretes opcionais para descansar a visão, mudar de posição e fazer uma pausa breve.</p>
-                    </div>
-                </div>
-                <label class="cf-work-pause-enable mt-4 flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border border-slate-700 bg-slate-950/60 px-3">
-                    <input id="work-pause-enabled" type="checkbox" class="h-5 w-5 accent-cyan-400">
-                    <span class="text-sm font-bold text-slate-100">Ativar lembretes de trabalho</span>
-                </label>
-                <fieldset class="mt-4">
-                    <legend class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Dias</legend>
-                    <div class="mt-2 flex flex-wrap gap-1">
-                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="0"><span>Seg</span></label>
-                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="1"><span>Ter</span></label>
-                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="2"><span>Qua</span></label>
-                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="3"><span>Qui</span></label>
-                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="4"><span>Sex</span></label>
-                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="5"><span>Sáb</span></label>
-                        <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="6"><span>Dom</span></label>
-                    </div>
-                </fieldset>
-                <div class="mt-4 grid grid-cols-2 gap-3">
-                    <label class="text-[11px] font-bold text-slate-400">Início
-                        <input id="work-pause-start" type="time" class="mt-1 min-h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 text-sm text-white">
-                    </label>
-                    <label class="text-[11px] font-bold text-slate-400">Fim
-                        <input id="work-pause-end" type="time" class="mt-1 min-h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 text-sm text-white">
-                    </label>
-                </div>
-                <label class="cf-work-pause-interval-label mt-3 block text-[11px] font-bold text-slate-400">Intervalo entre lembretes
-                    <select id="work-pause-interval" class="mt-1 min-h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 text-sm text-white">
-                        <option value="30">30 minutos</option>
-                        <option value="45">45 minutos</option>
-                        <option value="60">60 minutos</option>
-                        <option value="90">90 minutos</option>
-                        <option value="120">2 horas</option>
-                    </select>
-                </label>
-                <button type="button" onclick="saveWorkPauseReminderSettings()" class="cf-work-pause-save mt-4 min-h-12 w-full rounded-xl bg-cyan-400 px-4 text-sm font-black text-slate-950">Salvar rotina de pausas</button>
-                <p id="work-pause-reminder-status" class="mt-2 min-h-5 text-xs text-slate-400" role="status" aria-live="polite"></p>
-            </section>
-
             <!-- BLOCO COLAPSÁVEL: CORPO -->
             <div class="cf-pause-category border-b border-slate-700/60 overflow-hidden transition-all duration-300">
                 <!-- Cabeçalho Colapsável -->
@@ -2279,7 +2214,7 @@
                         </div>
 
                         <!-- Guia Visual e Cronômetro de Respiração (Ativo durante a prática) -->
-                        <div id="breath-active-display" class="hidden relative border-t border-slate-700/50 pt-3 space-y-3">
+                        <div id="breath-active-display" tabindex="-1" class="hidden relative border-t border-slate-700/50 pt-3 space-y-3">
                             <button id="btn-cancel-breath-active" onclick="cancelBreathSession()" class="min-h-12 px-3 rounded-lg border border-rose-500/30 text-rose-300 text-xs font-bold">Cancelar respiração</button>
                             <div class="cf-breath-head">
                                 <div class="flex items-center gap-1.5">
@@ -3664,6 +3599,50 @@
             </div>
             <button type="button" id="profileEditButton" class="cf-btn cf-profile-primary-action w-full border border-cyan-400/40 bg-cyan-400/10 px-3 py-3 text-sm text-cyan-100" onclick="openProfileEditor()"><i class="fa-solid fa-pen" aria-hidden="true"></i>Editar nome e meta</button>
         </div>
+        <div class="cf-work-pause-settings rounded-2xl border border-cyan-400/20 bg-slate-900/80 p-4" role="group" aria-labelledby="work-pause-config-title">
+            <div class="flex items-start gap-3">
+                <div class="cf-work-pause-icon flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-400/30 bg-cyan-400/10 text-cyan-300" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="13" r="8"/><path d="M9 2h6M12 5V3m0 10 3-2m-3-2v4"/></svg></div>
+                <div class="min-w-0 flex-1">
+                    <h2 id="work-pause-config-title" class="text-sm font-extrabold text-white">Pausa Consciente</h2>
+                    <p class="mt-1 text-xs text-slate-400">Lembretes opcionais durante o trabalho para respirar, descansar a visão e mudar de posição.</p>
+                </div>
+            </div>
+            <label class="cf-work-pause-enable mt-4 flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border border-slate-700 bg-slate-950/60 px-3">
+                <input id="work-pause-enabled" type="checkbox" class="h-5 w-5 accent-cyan-400">
+                <span class="text-sm font-bold text-slate-100">Ativar lembretes no trabalho</span>
+            </label>
+            <fieldset class="mt-4">
+                <legend class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Dias</legend>
+                <div class="mt-2 flex flex-wrap gap-1">
+                    <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="0"><span>Seg</span></label>
+                    <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="1"><span>Ter</span></label>
+                    <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="2"><span>Qua</span></label>
+                    <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="3"><span>Qui</span></label>
+                    <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="4"><span>Sex</span></label>
+                    <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="5"><span>Sáb</span></label>
+                    <label class="flex grow basis-[2.4rem] min-h-12 items-center justify-center gap-1 rounded-lg border border-slate-700 bg-slate-950/60 text-xs text-slate-200"><input class="h-3 w-3 accent-cyan-400" type="checkbox" data-workday="6"><span>Dom</span></label>
+                </div>
+            </fieldset>
+            <div class="mt-4 grid grid-cols-2 gap-3">
+                <label class="text-[11px] font-bold text-slate-400">Início
+                    <input id="work-pause-start" type="time" class="mt-1 min-h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 text-sm text-white">
+                </label>
+                <label class="text-[11px] font-bold text-slate-400">Fim
+                    <input id="work-pause-end" type="time" class="mt-1 min-h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 text-sm text-white">
+                </label>
+            </div>
+            <label class="cf-work-pause-interval-label mt-3 block text-[11px] font-bold text-slate-400">Intervalo entre lembretes
+                <select id="work-pause-interval" class="mt-1 min-h-12 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 text-sm text-white">
+                    <option value="30">30 minutos</option>
+                    <option value="45">45 minutos</option>
+                    <option value="60">60 minutos</option>
+                    <option value="90">90 minutos</option>
+                    <option value="120">2 horas</option>
+                </select>
+            </label>
+            <button type="button" onclick="saveWorkPauseReminderSettings()" class="cf-work-pause-save mt-4 min-h-12 w-full rounded-xl bg-cyan-400 px-4 text-sm font-black text-slate-950">Salvar rotina de pausas</button>
+            <p id="work-pause-reminder-status" class="mt-2 min-h-5 text-xs text-slate-400" role="status" aria-live="polite"></p>
+        </div>
         <div class="cf-card cf-profile-reminder-section p-4 space-y-3">
             <div><h3 class="text-sm font-bold text-white">Lembretes dos programas</h3><p class="mt-1 text-xs text-slate-400">Horários por sessão e estado atual das notificações deste aparelho.</p></div>
             <div id="profileReminderPrograms" class="space-y-3" aria-live="polite"></div>
@@ -3782,6 +3761,30 @@
             </div>
         </div>
     </section>
+
+    <div id="work-pause-reminder-prompt" class="cf-modal fixed inset-0 z-[140] hidden items-center justify-center overflow-y-auto bg-black/75 p-4 backdrop-blur-sm no-print" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="work-pause-reminder-title" onclick="if (event.target === this) closeWorkPauseReminderPrompt()" onkeydown="handleWorkPauseReminderKeydown(event)">
+        <div class="w-full max-w-sm max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-slate-900 p-5 shadow-2xl">
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <p class="text-xs font-semibold text-emerald-300">Pausa Consciente</p>
+                    <h2 id="work-pause-reminder-title" tabindex="-1" class="mt-1 text-lg font-bold text-white">Sugestão para a manhã</h2>
+                </div>
+                <button type="button" onclick="closeWorkPauseReminderPrompt()" class="min-h-12 min-w-12 rounded-xl text-slate-300" aria-label="Fechar sugestão de pausa">✕</button>
+            </div>
+            <p class="mt-4 text-sm text-slate-200">Respiração consciente 5-0-5</p>
+            <div class="mt-3 grid grid-cols-3 divide-x divide-white/10 rounded-xl border border-white/10 bg-black/20 py-3 text-center">
+                <span class="text-xs text-slate-300"><strong class="block text-lg text-white">5 s</strong>Inspirar</span>
+                <span class="text-xs text-slate-300"><strong class="block text-lg text-white">0 s</strong>Sem segurar</span>
+                <span class="text-xs text-slate-300"><strong class="block text-lg text-white">5 s</strong>Expirar</span>
+            </div>
+            <p class="mt-3 text-xs text-slate-400">Inspire por 5 segundos e expire por 5, no ritmo confortável. Pare se sentir desconforto.</p>
+            <div class="mt-5 grid gap-2">
+                <button type="button" onclick="startWorkPauseBreathing()" class="min-h-12 rounded-xl bg-emerald-400 px-3 text-sm font-bold text-slate-950">Começar respiração 5-0-5</button>
+                <button type="button" onclick="closeWorkPauseReminderPrompt(); openResponsivePauseGuide()" class="min-h-12 rounded-xl border border-white/15 px-3 text-sm font-medium text-slate-200">Abrir guia de pausa</button>
+                <button type="button" onclick="startWorkPauseMobility()" class="min-h-12 rounded-xl px-3 text-sm font-medium text-slate-300">Começar mobilidade de 1 min</button>
+            </div>
+        </div>
+    </div>
 
     <!-- ============================================================ -->
     <!-- JAVASCRIPT APPLICATION CORE -->
@@ -5393,12 +5396,12 @@
         initializeVerticalScreenNavigation();
 
         function closeTopmostOverlay() {
-            const overlays = ['mainNavigationDrawer', 'vacuumSummaryModal', 'vacuumTutorialModal', 'cancelDailyConfirmModal', 'programExerciseDetailModal', 'dailyExecutionModal', 'mindfulnessAudioModal', 'responsivePauseModal', 'bracingProgramModal', 'kegelProgramModal', 'editProgramModal', 'editGoalModal', 'profileEditorModal', 'accessibilitySettingsModal', 'floatingWorkoutSettingsModal', 'reminderConfigModal', 'interactiveReminderModal', 'scheduleModal', 'noteModal', 'bpmMeasurementModal', 'smartwatchCompanionModal', 'progressProtectionModal'];
+            const overlays = ['mainNavigationDrawer', 'vacuumSummaryModal', 'vacuumTutorialModal', 'cancelDailyConfirmModal', 'programExerciseDetailModal', 'dailyExecutionModal', 'mindfulnessAudioModal', 'responsivePauseModal', 'bracingProgramModal', 'kegelProgramModal', 'editProgramModal', 'editGoalModal', 'profileEditorModal', 'accessibilitySettingsModal', 'floatingWorkoutSettingsModal', 'reminderConfigModal', 'interactiveReminderModal', 'scheduleModal', 'noteModal', 'bpmMeasurementModal', 'smartwatchCompanionModal', 'work-pause-reminder-prompt', 'progressProtectionModal'];
             for (const id of overlays) {
                 const overlay = document.getElementById(id);
                 const isOpen = overlay?.tagName === 'DIALOG' ? overlay.open : overlay && !overlay.classList.contains('hidden');
                 if (isOpen) {
-                    const close = id === 'mainNavigationDrawer' ? closeMainNavigation : window[`close${id.charAt(0).toUpperCase()}${id.slice(1)}`];
+                    const close = id === 'mainNavigationDrawer' ? closeMainNavigation : id === 'work-pause-reminder-prompt' ? closeWorkPauseReminderPrompt : window[`close${id.charAt(0).toUpperCase()}${id.slice(1)}`];
                     if (typeof close === 'function') close();
                     else overlay.classList.add('hidden');
                     return true;
@@ -13697,25 +13700,69 @@
         function onNativeWorkPauseReminderOpened() {
             switchTab('pausas');
             const prompt = document.getElementById('work-pause-reminder-prompt');
-            prompt?.classList.remove('hidden');
+            if (!prompt) return;
+            prompt.classList.remove('hidden');
+            prompt.classList.add('flex');
+            prompt.setAttribute('aria-hidden', 'false');
             setTimeout(() => {
-                const reduceMotion = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-                prompt?.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
                 document.getElementById('work-pause-reminder-title')?.focus();
             }, 50);
         }
 
         function closeWorkPauseReminderPrompt() {
-            document.getElementById('work-pause-reminder-prompt')?.classList.add('hidden');
+            const prompt = document.getElementById('work-pause-reminder-prompt');
+            if (!prompt || prompt.classList.contains('hidden')) return;
+            prompt.classList.add('hidden');
+            prompt.classList.remove('flex');
+            prompt.setAttribute('aria-hidden', 'true');
+            document.getElementById('pauses-heading')?.focus();
         }
 
-        function startWorkPauseMobility() {
-            if (AppState.mente?.isRunning || AppState.pausas?.isRunning || AppState.pausas?.circuitActive
-                || AppState.pausas?.activeTimerId || AppState.pausas?.pausedTimerId || AppState.dailyExecution?.isRunning
-                || (typeof responsivePause !== 'undefined' && ['running', 'paused'].includes(responsivePause.status))) {
+        function handleWorkPauseReminderKeydown(event) {
+            const prompt = document.getElementById('work-pause-reminder-prompt');
+            if (!prompt || prompt.classList.contains('hidden')) return;
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                closeWorkPauseReminderPrompt();
+                return;
+            }
+            if (event.key !== 'Tab') return;
+            const focusable = Array.from(prompt.querySelectorAll('button:not(:disabled)'));
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && (document.activeElement === first || document.activeElement?.id === 'work-pause-reminder-title')) {
+                event.preventDefault();
+                last?.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first?.focus();
+            }
+        }
+
+        function hasActiveWorkPauseActivity() {
+            return AppState.mente?.isRunning || AppState.mente?.isPaused || AppState.pausas?.isRunning
+                || AppState.pausas?.circuitActive || AppState.pausas?.activeTimerId || AppState.pausas?.pausedTimerId
+                || AppState.dailyExecution?.isRunning
+                || (typeof responsivePause !== 'undefined' && ['running', 'paused'].includes(responsivePause.status));
+        }
+
+        function startWorkPauseBreathing() {
+            if (hasActiveWorkPauseActivity()) {
                 showInlineToast('Encerre ou retome a sessão atual antes de iniciar outra pausa guiada.');
                 return;
             }
+            closeWorkPauseReminderPrompt();
+            setBreathLevel('padrao');
+            startSpecificBreath('igual');
+            document.getElementById('breath-active-display')?.focus();
+        }
+
+        function startWorkPauseMobility() {
+            if (hasActiveWorkPauseActivity()) {
+                showInlineToast('Encerre ou retome a sessão atual antes de iniciar outra pausa guiada.');
+                return;
+            }
+            closeWorkPauseReminderPrompt();
             startSosStretch();
         }
 

@@ -1658,3 +1658,17 @@ Próximo passo:
 ## 2026-11-24 — Release 1.1.55: redesign de volta
 
 - A 1.1.54 foi construída de um worktree limpo do último commit e saiu sem o redesign (estava só na árvore local). A 1.1.55 reúne redesign (`index.html`, `PhaseWaveView`, overlay, diagnósticos e27–e29) e a correção da respiração. Versão 55; notas em `docs/releases/v1.1.55.md`.
+
+## 2026-11-25 — Pausa Consciente abre sugestão de respiração 5-0-5
+
+- O aviso de trabalho agora abre um diálogo com a sugestão da manhã 5-0-5. Tocar na notificação só abre a sugestão; a prática começa pelo botão explícito, que seleciona `Igual` no nível `Padrão` e mantém a proteção contra sessões simultâneas. Os atalhos existentes para o guia de pausa e mobilidade continuam disponíveis.
+- A rotina foi movida para Perfil, onde aparece como “Pausa Consciente”. IDs, armazenamento local e sincronização nativa do lembrete foram preservados para manter a configuração existente.
+- Verificado com `bash scripts/check.sh` (diagnósticos, paridade HTML, testes unitários e builds Android/Wear). No AVD Pixel 10a, simulei via ADB o mesmo extra `action_work_pause` do ContentIntent em partida fria e com o app aberto; conferi o diálogo, início em 5-0-5, fechamento com Voltar e a configuração em Perfil.
+- NOT_RUN: toque físico na notificação real, aparelho físico e Wear OS.
+
+## 2026-11-25 — Preparação da release 1.1.56
+
+- Versionamento atualizado em par: `versionCode 56` e `versionName 1.1.56`; README, changelog e notas da release descrevem a sugestão 5-0-5 e a configuração em Perfil.
+- `bash scripts/check.sh`: `CHECK PASS` (diagnósticos, paridade HTML, testes unitários e builds debug do app e Wear).
+- `:app:assembleRelease :wear:assembleRelease`: compilação assinada aprovada; `apksigner` e `aapt` confirmaram assinatura compatível com a 1.1.55, application ID e versão 1.1.56 nos dois APKs.
+- NOT_RUN: toque real na notificação, aparelho físico, Wear OS físico e TalkBack.

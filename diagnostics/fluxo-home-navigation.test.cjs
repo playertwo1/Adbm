@@ -16,11 +16,13 @@ assert.doesNotMatch(today, /cf-status-dot/, 'Hoje não deve mostrar um indicador
 assert.ok(today.indexOf('id="todayRecommendationContainer"') < today.indexOf('id="todayGreetingBlock"'), 'o programa deve aparecer antes da saudação e dos atalhos');
 const pauses = html.match(/<section id="tab-pausas"[^>]*>([\s\S]*?)<\/section>/)?.[1];
 assert.ok(pauses, 'a tela Pausas deve continuar disponível');
-assert.doesNotMatch(pauses, /🌟|🪑|🧘|💪|💆/, 'os filtros de prática não devem usar emojis como ícones');
-assert.match(html, /#tab-pausas \.cf-work-pause-settings legend[^{}]*\{[^}]*text-transform:\s*none/, 'os controles de pausa devem usar rótulos em caixa de frase');
-assert.ok(/#tab-pausas \.cf-work-pause-settings > label\.cf-work-pause-enable[^{}]*\{/.test(html), 'somente a opção de ativar lembretes deve receber estilo de cartão');
+const stretchFilters = html.match(/<div id="stretch-intent-tags"[^>]*>([\s\S]*?)<\/div>/)?.[1];
+assert.ok(stretchFilters, 'os filtros de prática devem continuar disponíveis');
+assert.doesNotMatch(stretchFilters, /🌟|🪑|🧘|💪|💆/, 'os filtros de prática não devem usar emojis como ícones');
+assert.match(html, /#tab-perfil \.cf-work-pause-settings legend[^{}]*\{[^}]*text-transform:\s*none/, 'os controles de pausa devem usar rótulos em caixa de frase nas configurações');
+assert.ok(/#tab-perfil \.cf-work-pause-settings > label\.cf-work-pause-enable[^{}]*\{/.test(html), 'somente a opção de ativar lembretes deve receber estilo de cartão');
 assert.ok(/<label class="[^"]*cf-work-pause-interval-label[^"]*">Intervalo entre lembretes/.test(html), 'o intervalo deve permanecer um rótulo simples acima do seletor');
-assert.match(html, /#tab-pausas \.cf-work-pause-icon[^{}]*\{[^}]*background:\s*transparent/, 'o ícone de pausa deve ficar sem bloco colorido');
+assert.match(html, /#tab-perfil \.cf-work-pause-icon[^{}]*\{[^}]*background:\s*transparent/, 'o ícone de pausa deve ficar sem bloco colorido');
 assert.match(html, /#tab-pausas \.cf-pause-category[^{}]*\{[^}]*border-radius:\s*16px[^}]*background:/, 'as categorias Corpo e Mente devem usar cartões do novo sistema');
 assert.match(html, /#tab-dashboard \.cf-evolution-comparison[^{}]*\{[^}]*border-radius:\s*0/, 'a comparação de evolução deve ser texto de apoio, não selo em cápsula');
 assert.match(html, /#tab-dashboard \.cf-evolution-icon[^{}]*\{[^}]*background:\s*transparent/, 'o resumo de evolução deve dispensar ícone em círculo colorido');

@@ -7,6 +7,22 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.
 
 ---
 
+## [1.1.56] - 2026-11-25
+
+### Corrigido
+- Ao tocar na notificação de Pausa Consciente, a sugestão de respiração 5-0-5 abre sem iniciar a prática automaticamente; o botão da sugestão inicia o exercício.
+- A configuração de Pausa Consciente aparece em Perfil.
+
+### Preservado
+- Lembretes existentes, IDs de programas, armazenamento local e protocolos de treino.
+
+### Validação
+- `bash scripts/check.sh`, builds assinados do app e Wear e compatibilidade dos certificados com a release anterior.
+- No AVD Pixel 10a, fluxo exercitado via ADB em abertura fria e com o app aberto, início 5-0-5, botão Voltar e configuração em Perfil.
+- Toque real na notificação, aparelho físico, Wear OS físico e TalkBack: `NOT_RUN`.
+
+---
+
 ## [1.1.52] - 2026-11-12
 
 ### Alterado
