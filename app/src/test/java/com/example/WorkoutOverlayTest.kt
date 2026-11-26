@@ -212,36 +212,41 @@ class WorkoutOverlayTest {
   }
 
   @Test
-  fun `compact overlay exposes textual pause resume and cancel controls`() {
+  fun `compact instrument shows timer before phase and exposes pause and expand`() {
     val context = ApplicationProvider.getApplicationContext<Context>()
     val density = context.resources.displayMetrics.density
-    val views = overlayViews(buildOverlayPart(context, "buildCompactView"))
-    val controls = views.filterIsInstance<TextView>()
-    val timer = controls.firstOrNull { it.text == "00:00" }
-    val pause = controls.firstOrNull { it.contentDescription == "Pausar treino" }
-    val cancel = controls.firstOrNull { it.contentDescription == "Cancelar treino" }
+    val root = buildOverlayPart(context, "buildCompactView")
+    val controls = overlayViews(root).filterIsInstance<TextView>()
+    val timer = controls.first { it.text == "00:00" }
+    val phase = controls.first { it.text == "Treino" }
+    val pause = controls.first { it.contentDescription == "Pausar treino" }
+    val expand = controls.first { it.contentDescription == "Expandir controles do treino" }
 
-    assertNotNull("Compacto deve mostrar o timer", timer)
-    assertNotNull("Compacto em andamento deve mostrar Pausar", pause)
-    assertNotNull("Compacto deve oferecer Cancelar textual", cancel)
-    assertEquals("Pausar", pause!!.text.toString())
-    // O contador é informação, não botão: sem caixa nem medida fixa; os dois botões são idênticos.
-    assertEquals("Timer compacto não pode ter caixa de botão", null, timer!!.background)
-    assertEquals(ViewGroup.LayoutParams.WRAP_CONTENT, timer.layoutParams.width)
-    listOf(pause, cancel!!).forEach { button ->
-      assertEquals("${button.contentDescription} deve ter largura 80 dp", (80 * density).toInt(), button.layoutParams.width)
-      assertEquals("${button.contentDescription} deve ter altura 48 dp", (48 * density).toInt(), button.layoutParams.height)
-      val backgroundColor = (button.background as android.graphics.drawable.GradientDrawable).color!!.defaultColor
-      assertTrue(
-        "${button.contentDescription} precisa de contraste mínimo 4.5:1",
-        ColorUtils.calculateContrast(button.currentTextColor, backgroundColor) >= 4.5
-      )
+    assertEquals(null, timer.background)
+    assertTrue(!timer.isClickable)
+    assertTrue(controls.indexOf(timer) < controls.indexOf(phase))
+    assertTrue(timer.textSize > phase.textSize)
+    assertTrue(controls.none { it.contentDescription == "Cancelar treino" })
+    assertTrue(pause.background is android.graphics.drawable.RippleDrawable)
+    assertEquals(Color.parseColor("#B8C4BA"), pause.currentTextColor)
+    listOf(pause, expand).forEach { button ->
+      assertTrue(button.layoutParams.width >= (48 * density).toInt())
+      assertTrue(button.minHeight >= (48 * density).toInt())
+      assertTrue(button.isClickable)
     }
-    assertEquals("Pausar e Cancelar usam o mesmo tamanho de texto", pause.textSize, cancel.textSize, 0.01f)
-    assertTrue("Contador legível, maior que o texto dos botões", timer.textSize > pause.textSize)
-    val gap = (8 * density).toInt()
-    assertEquals(gap, (pause.layoutParams as ViewGroup.MarginLayoutParams).marginEnd)
-    assertEquals(gap + (4 * density).toInt(), (timer.layoutParams as ViewGroup.MarginLayoutParams).marginEnd)
+    val displayColor = Color.parseColor("#111613")
+    assertTrue(ColorUtils.calculateContrast(timer.currentTextColor, displayColor) >= 4.5)
+  }
+
+  @Test
+  fun `expanded instrument groups phase and time in the same display`() {
+    val context = ApplicationProvider.getApplicationContext<Context>()
+    val controls = overlayViews(createExpandedOverlay(context)).filterIsInstance<TextView>()
+    val phase = controls.first { it.text == "RETENÇÃO" }
+    val timer = controls.first { it.text == "00:14" }
+    assertTrue(phase.parent === timer.parent)
+    assertTrue(timer.gravity and android.view.Gravity.HORIZONTAL_GRAVITY_MASK != android.view.Gravity.CENTER_HORIZONTAL)
+    assertTrue(timer.textSize > phase.textSize)
   }
 
   @Test
@@ -256,8 +261,9 @@ class WorkoutOverlayTest {
     assertNotNull("Compacto pausado deve oferecer Continuar", pause)
     assertEquals("Continuar", pause!!.text.toString())
     assertEquals((80 * context.resources.displayMetrics.density).toInt(), pause.layoutParams.width)
-    assertEquals((48 * context.resources.displayMetrics.density).toInt(), pause.layoutParams.height)
-    assertTrue(ColorUtils.calculateContrast(pause.currentTextColor, (pause.background as android.graphics.drawable.GradientDrawable).color!!.defaultColor) >= 4.5)
+    assertEquals((48 * context.resources.displayMetrics.density).toInt(), pause.minHeight)
+    assertEquals(Color.parseColor("#A8E7B1"), pause.currentTextColor)
+    assertTrue(ColorUtils.calculateContrast(pause.currentTextColor, Color.parseColor("#202622")) >= 4.5)
   }
 
   @Test
@@ -804,6 +810,10 @@ class WorkoutOverlayTest {
     val root = buildOverlayPart(context, "buildCompactView")
     val action = overlayViews(root).filterIsInstance<TextView>().first { it.text == "Treino" }
     assertEquals(2, action.maxLines)
+    assertEquals(android.view.Gravity.CENTER_HORIZONTAL, action.gravity and android.view.Gravity.HORIZONTAL_GRAVITY_MASK)
+    val wave = overlayViews(root).filterIsInstance<PhaseWaveView>().single()
+    assertTrue(wave.parent === action.parent)
+    assertEquals((21 * context.resources.displayMetrics.density).toInt(), wave.layoutParams.height)
   }
 
   @Test
@@ -838,13 +848,13 @@ class WorkoutOverlayTest {
 
     val compact = buildOverlayPart(context, "buildCompactView")
     val compactButtons = overlayViews(compact).filterIsInstance<TextView>().filter {
-      it.contentDescription in setOf("Pausar treino", "Cancelar treino")
+      it.contentDescription in setOf("Pausar treino", "Expandir controles do treino")
     }
-    assertEquals("modo compacto deve ter Pausar e Cancelar", 2, compactButtons.size)
+    assertEquals("modo compacto deve ter Pausar e Expandir", 2, compactButtons.size)
     compactButtons.forEach {
       assertTrue(
         "${it.contentDescription} precisa ter alvo real de pelo menos 48 dp",
-        it.layoutParams.height / density >= 48f
+        it.minHeight / density >= 48f
       )
     }
 

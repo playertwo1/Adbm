@@ -1672,3 +1672,25 @@ Próximo passo:
 - `bash scripts/check.sh`: `CHECK PASS` (diagnósticos, paridade HTML, testes unitários e builds debug do app e Wear).
 - `:app:assembleRelease :wear:assembleRelease`: compilação assinada aprovada; `apksigner` e `aapt` confirmaram assinatura compatível com a 1.1.55, application ID e versão 1.1.56 nos dois APKs.
 - NOT_RUN: toque real na notificação, aparelho físico, Wear OS físico e TalkBack.
+
+## 25/11/2026 — Redesign M1, navegação lateral
+
+- Alça de toque de 48 × 48 no cabeçalho da WebView, com abertura da gaveta, feedback ao pressionar e foco de teclado. O gesto de borda fica com o Android.
+- Regressões, paridade HTML, testes unitários e builds debug de app/Wear aprovados em `scripts/check.sh`. Maestro percorreu os cinco destinos e verificou fechamento por toque fora e Voltar. ADB confirmou Voltar gestual com a gaveta aberta e fechada no AVD API 36.
+- Auditoria, capturas e pendências em `docs/redesign/kit/PROGRESS.md`.
+
+## 25/11/2026 — Overlay B1, Micro Instrument
+
+- Overlay nativo compacto com contador prioritário, fase, onda, Pausar/Continuar e expansão explícita. O expandido mantém controles e orientações da sessão com o contador em destaque.
+- Pausar no compacto usa cápsula tonal com alvo de 48 dp e feedback de toque. Continuar aparece com a cor de ação quando a sessão está pausada.
+- `scripts/check.sh` passou. ADB no AVD API 36 verificou compacto, expandido, pausa e retomada do Circuito Ergonômico. Homologação física e publicação pendentes.
+
+## 25/11/2026 — Pausas, Corpo e Mente
+
+- As duas categorias ficam visíveis no topo e abrem uma de cada vez. Corpo reúne alongamentos e circuito; Mente reúne respirações e Pausa de Resposta.
+- Paridade HTML, diagnósticos, testes unitários e builds debug verificados por scripts/check.sh. A abertura e a troca de categoria passaram no Maestro, no AVD API 36.
+
+## 26/11/2026 — Hoje, Minha rotina
+
+- Programa, Pausas e prática do dia ficam reunidos no início da aba. A lista de programas fica recolhida até o toque e cada opção usa o título real como nome acessível.
+- A suíte completa passou. AVD API 36: seleção de Bracing, abertura do player sem iniciar treino e acesso a Corpo e Mente pela tela Hoje.

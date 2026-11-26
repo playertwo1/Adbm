@@ -16,6 +16,13 @@ assert.doesNotMatch(today, /cf-status-dot/, 'Hoje não deve mostrar um indicador
 assert.ok(today.indexOf('id="todayRecommendationContainer"') < today.indexOf('id="todayGreetingBlock"'), 'o programa deve aparecer antes da saudação e dos atalhos');
 const pauses = html.match(/<section id="tab-pausas"[^>]*>([\s\S]*?)<\/section>/)?.[1];
 assert.ok(pauses, 'a tela Pausas deve continuar disponível');
+for (const id of ['todayRecommendationContainer', 'todayPauseRoutine', 'todayMinutesValue', 'todayGreetingBlock']) {
+    assert.ok(today.includes(`id="${id}"`), `Hoje deve oferecer ${id}`);
+}
+assert.ok(today.indexOf('id="todayRecommendationContainer"') < today.indexOf('id="todayPauseRoutine"'));
+assert.ok(today.indexOf('id="todayPauseRoutine"') < today.indexOf('id="todayMinutesValue"'));
+assert.ok(today.indexOf('id="todayMinutesValue"') < today.indexOf('id="todayGreetingBlock"'));
+assert.match(html, /config\.enabled[\s\S]*?Sem rotina de pausas[\s\S]*?Lembretes de pausas ativos/);
 const stretchFilters = html.match(/<div id="stretch-intent-tags"[^>]*>([\s\S]*?)<\/div>/)?.[1];
 assert.ok(stretchFilters, 'os filtros de prática devem continuar disponíveis');
 assert.doesNotMatch(stretchFilters, /🌟|🪑|🧘|💪|💆/, 'os filtros de prática não devem usar emojis como ícones');
@@ -55,13 +62,14 @@ assert.ok(practiceStyles.some(style => /grid-template-columns/.test(style)), 'os
 assert.doesNotMatch(html, /id="coreflow-bottom-nav"/, 'a interface não deve fixar a navegação na parte inferior');
 const header = html.match(/<header\b[^>]*>([\s\S]*?)<\/header>/)?.[1] || '';
 assert.match(header, /id="core-persistence-status"/, 'o salvamento deve aparecer como status discreto no cabeçalho');
-assert.doesNotMatch(header, /id="mainNavigationButton"|>\s*Menu\s*</, 'a navegação não deve aparecer como botão no cabeçalho');
+assert.match(header, /id="mainNavigationButton"[^>]*onclick="openMainNavigation\(\)"/, 'a alça deve abrir a navegação por toque no cabeçalho');
 assert.doesNotMatch(header, /headerMoreBtn|headerMoreMenu|cf-streak-trigger/, 'o cabeçalho não deve manter menu de ações ou navegação');
 const nav = html.match(/<nav[^>]*aria-label="Destinos principais"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
 assert.ok(nav, 'o menu lateral deve manter a navegação principal acessível');
-assert.match(html, /id="mainNavigationButton"[^>]*class="[^"]*cf-nav-accessibility-trigger[^"]*"[^>]*aria-expanded="false"/, 'a navegação deve continuar disponível por teclado e leitor de tela');
+assert.match(html, /id="mainNavigationButton"[^>]*class="[^"]*cf-nav-handle[^"]*"[^>]*aria-label="Abrir navegação"[^>]*aria-expanded="false"/, 'a navegação deve continuar disponível por teclado e leitor de tela');
 assert.match(html, /aria-controls="mainNavigationDrawer"/, 'o botão Menu deve apontar para a gaveta');
-assert.match(html, /\.cf-nav-accessibility-trigger:focus-visible/, 'a alternativa acessível deve aparecer quando recebe foco');
+assert.match(html, /\.cf-nav-handle\s*\{[^}]*min-width:\s*48px[^}]*min-height:\s*48px/, 'a alça deve oferecer alvo de toque de pelo menos 48 × 48');
+assert.match(html, /\.cf-nav-handle:focus-visible/, 'a alça deve indicar foco de teclado');
 const navButtons = [...nav.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/g)];
 const navigation = [
     ['House', 'Hoje', "selectMainNavigation('hoje')"],
@@ -99,8 +107,7 @@ const swipeStart = html.indexOf('function initializeVerticalScreenNavigation() {
 const swipeEnd = html.indexOf('function closeTopmostOverlay()', swipeStart);
 const swipeFunction = swipeStart >= 0 && swipeEnd > swipeStart ? html.slice(swipeStart, swipeEnd) : '';
 assert.match(swipeFunction, /touchstart[\s\S]*touchend/, 'a navegação vertical deve reconhecer um gesto completo');
-assert.match(swipeFunction, /touch\.clientX\s*>=\s*24\s*&&\s*touch\.clientX\s*<=\s*72/, 'a gaveta deve abrir apenas com deslize iniciado na lateral, fora da zona do Voltar do Android');
-assert.match(swipeFunction, /deltaX\s*>=\s*64[\s\S]*openMainNavigation\('gesture'\)/, 'deslizar para dentro a partir da lateral deve abrir a navegação oculta');
+assert.doesNotMatch(swipeFunction, /openMainNavigation/, 'o deslize de borda fica reservado ao Android');
 assert.match(swipeFunction, /scrollY/, 'o gesto deve respeitar a posição da rolagem');
 assert.match(swipeFunction, /programas[\s\S]*hoje/, 'o gesto deve alternar entre Hoje e Programas');
 assert.match(swipeFunction, /80/, 'o gesto deve exigir deslocamento suficiente para evitar trocas acidentais');
@@ -111,7 +118,7 @@ assert.match(html, /--cf-color-canvas:\s*#F5F1E7/i, 'as telas claras devem usar 
 assert.match(html, /--cf-color-action:\s*#2F5B45/i, 'as ações devem usar o verde profundo aprovado');
 assert.match(html, /cf-persistence-ready/, 'salvamento confirmado deve ter estilo discreto');
 assert.match(html, /#core-persistence-status\.cf-persistence-ready/, 'salvamento confirmado deve ter estilo discreto');
-assert.match(html, /#core-persistence-status\.cf-persistence-alert[^{}]*\{[^}]*min-height:\s*44px[^}]*cursor:\s*pointer/, 'falhas de salvamento devem continuar legíveis e acionáveis');
+assert.match(html, /#core-persistence-status\.cf-persistence-alert[^{}]*\{[^}]*min-height:\s*var\(--cf-control-target\)[^}]*cursor:\s*pointer/, 'falhas de salvamento devem continuar legíveis e acionáveis');
 assert.match(html, /#tab-programas\s+\.cf-fluxo-page-heading|#tab-programas\s+#todayWorkoutHeroBanner/, 'Programas deve receber composição visual própria');
 assert.match(html, /\.cf-fluxo-screen button\.cf-btn,\s*\.cf-fluxo-primary-action\s*\{[^}]*border-radius:\s*12px/, 'botões das telas Fluxo devem usar cantos suaves');
 assert.ok(practiceStyles.some(style => /border-radius:\s*16px/.test(style)), 'atalhos de prática devem manter cantos suaves');
@@ -136,3 +143,5 @@ const notices = fs.readFileSync(path.join(root, 'app/src/main/assets/vendor/THIR
 assert.match(notices, /PulsoIcon[\s\S]*LICENSE-PulsoIcon/, 'o aviso de terceiros deve apontar para a licença embarcada');
 
 console.log('fluxo-home-navigation: ok');
+
+assert.match(html, /--cf-control-target:\s*48px/);

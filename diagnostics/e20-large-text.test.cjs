@@ -14,12 +14,21 @@ for (const file of [path.join(root, 'index.html'), path.join(root, 'app', 'src',
     const header = html.match(/<header class="cf-app-shell-header[^>]*">([\s\S]*?)<\/header>/)?.[1] || '';
     assert.match(header, /<h1>CoreFlow<\/h1>/, `${name}: a marca deve continuar legível no cabeçalho compacto`);
     assert.match(header, /<button id="core-persistence-status"[^>]*aria-label="Status de persistência local"/, `${name}: o status de salvamento deve permanecer acessível`);
-    assert.doesNotMatch(header.replace(/<button id="core-persistence-status"[\s\S]*?<\/button>/, ''), /button|headerMore|cf-streak-trigger/, `${name}: o cabeçalho não deve mostrar menu ou ações adicionais`);
+    const extraControls = header.replace(/<button id="(?:mainNavigationButton|core-persistence-status)"[\s\S]*?<\/button>/g, '');
+    assert.doesNotMatch(extraControls, /button|headerMore|cf-streak-trigger/, `${name}: o cabeçalho deve limitar-se à alça e ao status de salvamento`);
 
     assert.match(html, /whitespace-nowrap">\$\{currentTotal\} min<\/span>/, `${name}: "N min" não pode quebrar`);
     assert.doesNotMatch(html.match(/<p id="profileNameValue"[^>]*>/)[0], /truncate/, `${name}: nome do perfil não pode ser cortado`);
-    assert.equal((html.match(/<div class="flex flex-wrap items-center gap-2">\s*<h3 class="text-base font-bold text-white tracking-tight">/g) || []).length, 2,
-        `${name}: título e selo de Corpo/Mente devem quebrar linha`);
+    for (const category of ['corpo', 'mente']) {
+        assert.match(html, new RegExp(`<button id="${category}-section-trigger"[^>]*aria-controls="${category}-content"[^>]*aria-expanded="false"`),
+            `${name}: as duas entradas de Pausas devem ser botões recolhidos e rotulados`);
+        assert.match(html, new RegExp(`<div id="${category}-content"[^>]*class="hidden `),
+            `${name}: a prática só deve aparecer ao abrir sua categoria`);
+    }
+    assert.match(html, /id="mente-content"[\s\S]*?<details class="cf-pause-response-details"[\s\S]*?cf-response-break/,
+        `${name}: a Pausa de Resposta deve ficar dentro de Mente`);
+    assert.match(html, /\.cf-pause-sos\s*\{[^}]*flex-wrap:\s*wrap/, `${name}: cartões SOS devem empilhar conteúdo e ação com fonte ampliada`);
+    assert.equal((html.match(/<div class="cf-pause-sos /g) || []).length, 2);
 
     assert.match(html, /<div class="cf-fluxo-page-heading flex flex-wrap items-center justify-between gap-3">[\s\S]{0,700}<h2 id="evolution-heading">Evolução<\/h2>[\s\S]{0,700}id="evolutionPeriodSelect"/, `${name}: título e seletor de período da Evolução devem quebrar linha`);
 

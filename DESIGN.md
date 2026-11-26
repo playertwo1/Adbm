@@ -112,6 +112,10 @@ A HIG atual define Liquid Glass como camada funcional de controles e navegação
 
 Usamos Roboto/fonte do sistema Android, não SF Pro ou SF Symbols. Mantemos as cinco abas nomeadas, Voltar do Android, áreas de toque Android, WebView local e integração Wear OS. Os pontos tipográficos e tamanhos em pontos da HIG do iOS não são copiados literalmente para dp.
 
+### Aplicação no redesign
+
+Hoje segue a ordem Programa, Pausas e Prática de hoje. Pausas apresenta Corpo e Mente antes dos detalhes. Guias, ajustes e histórico vivem junto da prática a que pertencem. O overlay B1 usa o tempo como leitura principal; o rótulo da fase permanece visível junto da onda. Consulte o [catálogo de controles](docs/redesign/COMPONENT_SYSTEM.md).
+
 ## Paleta
 
 Os valores abaixo traduzem a escolha verbal — verde profundo, sálvia e marfim — em tokens testáveis. O contraste de texto comum foi conferido em claro e AMOLED; cada estado mantém um ícone ou rótulo além da cor.

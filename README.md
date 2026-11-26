@@ -22,7 +22,7 @@ Práticas guiadas para desenvolver força física, postura, respiração e aten�
 
 - [Recursos principais](#recursos-principais)
 - [Versão atual](#versão-atual)
-- [O que mudou na 1.1.56](#o-que-mudou-na-1156)
+- [O que mudou na 1.1.57](#o-que-mudou-na-1157)
 - [O que mudou na 1.1.55](#o-que-mudou-na-1155)
 - [O que mudou na 1.1.54](#o-que-mudou-na-1154)
 - [O que mudou na 1.1.52](#o-que-mudou-na-1152)
@@ -50,13 +50,20 @@ Práticas guiadas para desenvolver força física, postura, respiração e aten�
 
 ## Versão Atual
 
-- **Versão atual:** `1.1.56` (`versionCode 56`)
-- **Release:** o lembrete de Pausa Consciente abre a sugestão de respiração 5-0-5, e a configuração aparece em Perfil. Veja [o que mudou na 1.1.56](docs/releases/v1.1.56.md).
-- **Validação:** `bash scripts/check.sh` e a assinatura dos APKs foram conferidos; no AVD Pixel 10a, a sugestão, o início 5-0-5 e a configuração em Perfil foram exercitados via ADB. Toque real na notificação, aparelho físico, Wear OS físico e TalkBack: `NOT_RUN`.
+- **Versão atual:** `1.1.57` (`versionCode 57`)
+- **Release:** o menu ganhou abertura por toque, Pausas foi organizada em Corpo e Mente, Hoje ganhou Minha rotina e o overlay ganhou o visual B1. Veja [o que mudou na 1.1.57](docs/releases/v1.1.57.md).
+- **Validação:** suíte completa e fluxos de menu, Pausas, Hoje e overlay verificados no AVD API 36. Aparelho físico, Wear OS físico e TalkBack: `NOT_RUN`.
 - **Downloads:** baixe os APKs assinados de celular e Wear OS na aba de [Releases](https://github.com/playertwo1/Adbm/releases/latest).
 - **Histórico de Mudanças:** Consulte o [CHANGELOG.md](CHANGELOG.md) para detalhes de todas as versões.
 
 ---
+
+## O que mudou na 1.1.57
+
+- Menu lateral acessível por toque, com fechamento pelo Voltar do Android.
+- Pausas agrupada em Corpo e Mente, e Hoje organizada em Programa, Pausas e Prática de hoje.
+- Overlay B1 com contador em destaque, onda maior, fase centralizada e controle discreto para pausar ou continuar.
+- Alvos de toque, foco e feedback dos controles refinados.
 
 ## O que mudou na 1.1.56
 
@@ -207,8 +214,8 @@ $env:KEYSTORE_PATH = "caminho/para/coreflow-upload.jks"
 $env:KEYSTORE_PASSWORD = "sua_senha_keystore"
 $env:KEY_ALIAS = "seu_alias"
 $env:KEY_PASSWORD = "sua_senha_chave"
-$env:BUILD_VERSION_CODE = "56"
-$env:BUILD_VERSION_NAME = "1.1.56"
+$env:BUILD_VERSION_CODE = "57"
+$env:BUILD_VERSION_NAME = "1.1.57"
 
 .\gradlew.bat :app:assembleRelease :wear:assembleRelease
 ```

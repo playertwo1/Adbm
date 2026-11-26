@@ -1,0 +1,30 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp
+- assertVisible: "Minha rotina"
+- tapOn: "Abrir navegação"
+- assertVisible: "Fechar menu"
+- tapOn:
+    point: "92%,50%"
+- assertNotVisible: "Fechar menu"
+- tapOn: "Abrir navegação"
+- pressKey: Back
+- assertNotVisible: "Fechar menu"
+- assertVisible: "Minha rotina"
+- tapOn: "Abrir navegação"
+- tapOn: "Pausas"
+- assertVisible: "Corpo.*"
+- tapOn: "Abrir navegação"
+- tapOn: "Evolução"
+- assertVisible: "Tempo Total.*"
+- tapOn: "Abrir navegação"
+- tapOn: "Perfil"
+- assertVisible: "Editar nome e meta"
+- tapOn: "Abrir navegação"
+- tapOn: "Programas"
+- assertVisible: "Escolha uma trilha e acompanhe a fase atual."
+- tapOn: "Abrir navegação"
+- tapOn:
+    text: "Hoje"
+    index: 0
+- assertVisible: "Minha rotina"

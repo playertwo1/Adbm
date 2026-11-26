@@ -1,0 +1,16 @@
+appId: com.aistudio.coreflow.vdfpkw
+---
+- launchApp:
+    stopApp: true
+- tapOn: "Abrir navegação"
+- tapOn: "Pausas"
+- assertVisible: "Corpo.*"
+- assertVisible: "Mente.*"
+- assertNotVisible: "SOS Coluna & Lombar"
+- tapOn: "Corpo.*"
+- assertVisible: "SOS Coluna & Lombar"
+- tapOn: "Mente.*"
+- assertNotVisible: "SOS Coluna & Lombar"
+- assertVisible: "SOS Ansiedade"
+- tapOn: "Pausa de Resposta.*3 min.*"
+- assertVisible: ".*Começar 3 min.*"

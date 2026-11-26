@@ -90,6 +90,9 @@
             --cf-color-focus-ring: rgba(47, 91, 69, 0.28);
             --cf-focus-ring: 0 0 0 3px var(--cf-color-focus-ring);
             --cf-radius-card: 16px;
+            --cf-control-target: 48px;
+            --cf-control-radius: 12px;
+            --cf-control-feedback: .16s;
             --cf-safe-top: env(safe-area-inset-top, 0px);
             --cf-safe-bottom: env(safe-area-inset-bottom, 0px);
         }
@@ -107,8 +110,8 @@
         .cf-notice, .cf-empty, .cf-error { box-sizing: border-box; }
         .cf-btn, .cf-icon, .cf-selector, .cf-toggle,
         button, [role="button"], input[type="checkbox"], input[type="radio"] {
-            min-width: 48px;
-            min-height: 48px;
+            min-width: var(--cf-control-target);
+            min-height: var(--cf-control-target);
         }
         /* The wrapping label is the touch target; growing the box itself renders a giant native checkbox. */
         label input[type="checkbox"], label input[type="radio"] {
@@ -126,8 +129,9 @@
         }
         .cf-btn:focus-visible, .cf-icon:focus-visible, .cf-selector:focus-visible,
         .cf-toggle:focus-visible, button:focus-visible, input:focus-visible,
-        select:focus-visible, textarea:focus-visible { outline: none; box-shadow: var(--cf-focus-ring); }
-        .cf-btn:active, .cf-icon:active, button:active { transform: scale(.98); }
+        select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: none; box-shadow: var(--cf-focus-ring); }
+        button:enabled:active { transform: scale(.98); }
+        button:disabled { opacity: .58; cursor: default; }
         .cf-icon { display: inline-flex; align-items: center; justify-content: center; border-radius: .875rem; }
         .cf-card { background: var(--cf-color-surface-raised); border: 1px solid var(--cf-color-line); border-radius: var(--cf-radius-card); }
         .cf-selector { border: 1px solid var(--cf-color-line); background: var(--cf-color-surface); border-radius: .875rem; }
@@ -423,10 +427,13 @@
         html.cf-theme-amoled body.cf-app { --cf-color-canvas: #000000; --cf-color-surface: #0B100D; --cf-color-surface-raised: #151B17; --cf-color-surface-interactive: #151B17; --cf-color-surface-selected: #10251A; --cf-color-line: #303A32; --cf-color-line-selected: #3B5942; --cf-color-text-primary: #F2F4F2; --cf-color-text-secondary: #B8C4BA; --cf-color-text-muted: #B8C4BA; --cf-color-action: #9FC7A6; --cf-color-action-pressed: #B5D5BA; --cf-color-alert: #E1BC78; --cf-color-danger: #EA969B; --cf-color-focus-ring: rgba(159, 199, 166, .4); background: #000 !important; color: var(--cf-color-text-primary) !important; }
         body.cf-app { padding-bottom: calc(1.5rem + var(--cf-safe-bottom)) !important; font-family: Roboto, system-ui, sans-serif; }
         body.cf-app > header.cf-app-shell-header { min-height: 48px; display: flex !important; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding-top: 8px; padding-bottom: 4px; border: 0 !important; background: var(--cf-color-canvas) !important; color: var(--cf-color-text-primary) !important; box-shadow: none !important; }
-        .cf-header-brand { display: grid; gap: 2px; min-width: 0; }
+        .cf-header-brand { display: grid; gap: 2px; min-width: 0; margin-inline-end: auto; }
         .cf-header-brand h1 { margin: 0; color: var(--cf-color-text-secondary) !important; font-size: .8125rem; font-weight: 600; letter-spacing: .01em; line-height: 1.25; }
-        .cf-nav-accessibility-trigger { position: fixed; z-index: -1; top: 0; left: 0; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-        .cf-nav-accessibility-trigger:focus-visible { z-index: 1001; top: calc(8px + var(--cf-safe-top)); left: 12px; width: auto; height: 48px; margin: 0; padding: 0 16px; overflow: visible; clip: auto; border: 1px solid var(--cf-color-action); border-radius: 12px; background: var(--cf-color-action); color: #fff; box-shadow: var(--cf-focus-ring); }
+        .cf-nav-handle { min-width: 48px; min-height: 48px; margin-inline-start: -16px; display: grid; align-items: center; justify-items: start; padding: 0; color: var(--cf-color-action); }
+        .cf-nav-handle span { display: grid; place-items: center; width: 32px; height: 30px; border-radius: 0 12px 12px 0; background: var(--cf-color-surface); box-shadow: inset 0 0 0 1px var(--cf-color-line); }
+        .cf-nav-handle svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+        .cf-nav-handle:active span { background: var(--cf-color-action); color: var(--cf-color-canvas); }
+        .cf-nav-handle:focus-visible { outline: 2px solid var(--cf-color-action); outline-offset: -2px; border-radius: 0 12px 12px 0; }
         .cf-nav-dialog { color: var(--cf-color-text-primary); }
         .cf-nav-dialog::backdrop { background: rgba(20, 28, 22, .48); }
         .cf-nav-panel { width: min(84vw, 20rem); padding-right: 1.25rem; padding-left: 1.25rem; border-right: 1px solid var(--cf-color-line); background: var(--cf-color-surface); box-shadow: 12px 0 28px rgba(20, 28, 22, .16); }
@@ -503,17 +510,17 @@
         #tab-programas #programsListContainer .cf-program-practice > p { margin: 6px 0 12px; color: var(--cf-color-text-secondary); font-size: .8125rem; line-height: 1.45; }
         #tab-programas #programsListContainer .cf-program-actions { display: grid; gap: 8px; }
         #tab-programas #programsListContainer .cf-program-actions .cf-btn, #tab-programas #programsListContainer .cf-program-secondary-action { min-height: 48px; border: 1px solid var(--cf-color-line); border-radius: 12px; background: var(--cf-color-surface); color: var(--cf-color-text-primary); font-size: .875rem; font-weight: 600; }
-        #tab-programas #programsListContainer .cf-program-expand { min-height: 44px; justify-self: start; border: 0; background: transparent; color: var(--cf-color-action); font-size: .8125rem; font-weight: 600; }
+        #tab-programas #programsListContainer .cf-program-expand { min-height: var(--cf-control-target); justify-self: start; border: 0; background: transparent; color: var(--cf-color-action); font-size: .8125rem; font-weight: 600; }
         #tab-programas #programsListContainer > .cf-program-card:not(.cf-program-mindfulness) > div:first-child { padding: 18px !important; }
         #tab-programas #programsListContainer .cf-program-card:not(.cf-program-mindfulness) .cf-program-details { display: grid; gap: 16px; margin-top: 14px !important; padding-top: 14px !important; border-color: var(--cf-color-line) !important; }
-        #tab-programas #programsListContainer .cf-program-icon-action { display: grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; border: 1px solid var(--cf-color-line); border-radius: 11px; background: var(--cf-color-surface); color: var(--cf-color-text-secondary); }
+        #tab-programas #programsListContainer .cf-program-icon-action { display: grid; width: var(--cf-control-target); height: var(--cf-control-target); flex: 0 0 var(--cf-control-target); place-items: center; border: 1px solid var(--cf-color-line); border-radius: 11px; background: var(--cf-color-surface); color: var(--cf-color-text-secondary); }
         #tab-programas #programsListContainer .cf-program-icon-action:focus-visible, #tab-programas #programsListContainer .cf-program-phase-check:focus-visible { outline: 3px solid var(--cf-color-focus-ring); outline-offset: 2px; }
         #tab-programas #programsListContainer .cf-program-day { min-width: 0; min-height: 46px; padding: 5px 3px; border: 1px solid var(--cf-color-line); border-radius: 9px; background: var(--cf-color-surface); color: var(--cf-color-text-secondary); }
         #tab-programas #programsListContainer .cf-program-day.is-complete { border-color: var(--cf-color-line-selected); background: var(--cf-color-surface-selected); color: var(--cf-color-action); }
         #tab-programas #programsListContainer .cf-program-day.is-current { border-color: var(--cf-color-action); color: var(--cf-color-action); font-weight: 700; }
         #tab-programas #programsListContainer .cf-program-today-sessions { flex-wrap: wrap; gap: 8px; border-color: var(--cf-color-line) !important; }
         #tab-programas #programsListContainer .cf-program-sessions { gap: 0 !important; border-top: 1px solid var(--cf-color-line); }
-        #tab-programas #programsListContainer .cf-program-session { min-height: 40px; padding: 8px 10px !important; border: 0 !important; border-bottom: 1px solid var(--cf-color-line) !important; border-radius: 0 !important; background: transparent !important; color: var(--cf-color-text-secondary) !important; }
+        #tab-programas #programsListContainer .cf-program-session { min-height: var(--cf-control-target); padding: 8px 10px !important; border: 0 !important; border-bottom: 1px solid var(--cf-color-line) !important; border-radius: 0 !important; background: transparent !important; color: var(--cf-color-text-secondary) !important; }
         #tab-programas #programsListContainer .cf-program-phase-list { padding: 14px 18px 18px !important; border-color: var(--cf-color-line) !important; background: transparent !important; box-shadow: none !important; }
         #tab-programas #programsListContainer .cf-program-phase-list > div:first-child { margin-bottom: 4px; color: var(--cf-color-text-secondary); }
         #tab-programas #programsListContainer .cf-program-phase-row { gap: 10px; padding: 10px 0; border-color: var(--cf-color-line) !important; }
@@ -525,9 +532,35 @@
         #tab-programas #programsListContainer .cf-program-phase-title { min-height: 36px; padding: 0; border: 0; background: transparent; color: var(--cf-color-text-primary); font-size: .8125rem; font-weight: 600; text-align: left; }
         #tab-programas #programsListContainer .cf-program-phase-title.is-complete { color: var(--cf-color-text-secondary); text-decoration: line-through; }
         #tab-programas #programsListContainer .cf-program-phase-active-label { color: var(--cf-color-action); font-size: .75rem; font-weight: 600; }
-        #tab-programas #programsListContainer .cf-program-overall { min-height: 44px; }
+        #tab-programas #programsListContainer .cf-program-overall { min-height: var(--cf-control-target); }
         #tab-programas #programsListContainer .cf-program-overall > span { color: var(--cf-color-text-secondary); white-space: nowrap; }
         #tab-pausas .cf-card, #tab-dashboard .cf-card, #tab-perfil .cf-card { padding: 16px; }
+        .cf-today-routine > h3 { margin: 0 0 12px; font-size: 1.25rem; font-weight: 650; }
+        .cf-today-routine-row { border-top: 1px solid var(--cf-color-line); padding: 12px 0 8px; min-width: 0; }
+        .cf-today-routine-row h4 { margin: 0 0 4px; font-size: 1.0625rem; font-weight: 650; }
+        .cf-today-routine-row > p { color: var(--cf-color-text-secondary); font-size: .875rem; line-height: 1.5; }
+        #tab-hoje .cf-today-routine .cf-fluxo-program-highlight { padding: 0 !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
+        #tab-hoje .cf-today-routine .cf-fluxo-program-highlight .cf-fluxo-primary-action { width: auto; }
+        .cf-today-program-options > summary { cursor: pointer; min-height: 48px; padding-block: 12px; color: var(--cf-color-action); font-weight: 600; }
+        .cf-today-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0 16px; }
+        #tab-hoje .cf-today-pause-link { width: auto; min-height: 48px; grid-template-columns: minmax(0, 1fr) 12px; gap: 8px; padding: 0; border: 0; background: transparent; }
+        #tab-hoje .cf-today-pause-link .cf-fluxo-practice-icon { display: none; }
+        #tab-hoje .cf-today-pause-link :is(strong, svg) { color: var(--cf-color-action); }
+        .cf-today-progress { height: 4px; margin-top: 8px; overflow: hidden; border-radius: 4px; background: var(--cf-color-line); }
+        .cf-today-progress > div { height: 100%; border-radius: inherit; background: var(--cf-color-action); }
+        .cf-pause-sos { flex-wrap: wrap; gap: 8px 12px; }
+        .cf-pause-sos > :first-child { flex: 1 1 10rem; min-width: 0; }
+        .cf-pause-sos > button { max-width: 100%; white-space: normal; }
+        .cf-pause-sections { display: grid; gap: 8px; }
+        .cf-pause-section-trigger { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 12px; text-align: start; }
+        .cf-pause-section-trigger strong, .cf-pause-section-trigger small { display: block; }
+        .cf-pause-section-trigger strong { color: var(--cf-color-text-primary); }
+        .cf-pause-section-trigger small { color: var(--cf-color-text-secondary); font-size: .8125rem; }
+        .cf-pause-section-trigger > i { color: var(--cf-color-text-secondary); transition: transform .16s ease; }
+        .cf-pause-section-trigger[aria-expanded="true"] > i { transform: rotate(180deg); }
+        .cf-pause-response-details > summary { min-height: 48px; padding: 12px 8px; cursor: pointer; color: var(--cf-color-text-primary); font-weight: 600; }
+        .cf-pause-response-details > summary span { margin-inline-start: .4rem; font-size: .8125rem; color: var(--cf-color-text-secondary); }
+        @media (prefers-reduced-motion: reduce) { .cf-pause-section-trigger > i { transition: none; } }
         #tab-pausas .cf-response-break { display: grid; gap: 14px; }
         #tab-pausas .cf-response-break-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--cf-color-line); }
         #tab-pausas .cf-response-break-steps span { display: flex; min-width: 0; min-height: 48px; align-items: center; gap: 6px; padding: 6px 4px; color: var(--cf-color-text-secondary); font-size: .75rem; font-weight: 500; }
@@ -549,28 +582,27 @@
         body.cf-app [id$="Modal"]:not(#dailyExecutionModal):not(#responsivePauseModal) > div:first-child { border-color: var(--cf-color-line) !important; border-radius: 18px !important; background: var(--cf-color-surface) !important; box-shadow: 0 10px 28px rgba(33, 40, 33, .14) !important; }
         html.cf-theme-amoled body.cf-app [class*="text-emerald-"], html.cf-theme-amoled body.cf-app [class*="text-cyan-"], html.cf-theme-amoled body.cf-app [class*="text-blue-"], html.cf-theme-amoled body.cf-app [class*="text-sky-"], html.cf-theme-amoled body.cf-app [class*="text-indigo-"], html.cf-theme-amoled body.cf-app [class*="text-violet-"], html.cf-theme-amoled body.cf-app [class*="text-purple-"], html.cf-theme-amoled body.cf-app [class*="text-teal-"] { color: var(--cf-color-action) !important; }
         html.cf-theme-amoled body.cf-app .cf-fluxo-screen [class*="text-white"] { color: var(--cf-color-text-primary) !important; }
-        html.cf-theme-amoled body.cf-app .cf-nav-accessibility-trigger:focus-visible { color: #16271B !important; }
         @media (prefers-reduced-motion: reduce) {
             .cf-nav-dialog[open] .cf-nav-panel, .cf-fluxo-screen.active { animation-duration: .01ms !important; transition-duration: .01ms !important; }
         }
         #core-persistence-status:not(.hidden) { display: block; flex: 0 1 auto; width: auto !important; max-width: 60%; margin: 0 !important; padding: 0 !important; border: 0 !important; border-radius: 0; background: transparent !important; box-shadow: none !important; color: var(--cf-color-text-secondary) !important; font-size: .6875rem; line-height: 1.35; text-align: right; white-space: nowrap; }
         #core-persistence-status.cf-persistence-ready { border-color: transparent !important; background: transparent !important; color: var(--cf-color-text-secondary) !important; cursor: default; }
-        #core-persistence-status.cf-persistence-alert { flex: 1 0 100%; width: 100% !important; max-width: none; min-height: 44px; margin: 4px 0 !important; padding: 10px 12px !important; border: 1px solid var(--cf-color-alert) !important; border-radius: 12px; background: var(--cf-color-surface) !important; color: var(--cf-color-alert) !important; font-size: .8125rem; line-height: 1.4; text-align: left; white-space: normal; cursor: pointer; }
+        #core-persistence-status.cf-persistence-alert { flex: 1 0 100%; width: 100% !important; max-width: none; min-height: var(--cf-control-target); margin: 4px 0 !important; padding: 10px 12px !important; border: 1px solid var(--cf-color-alert) !important; border-radius: 12px; background: var(--cf-color-surface) !important; color: var(--cf-color-alert) !important; font-size: .8125rem; line-height: 1.4; text-align: left; white-space: normal; cursor: pointer; }
         #tab-pausas .uppercase, #tab-dashboard .uppercase, #tab-perfil .uppercase { text-transform: none !important; letter-spacing: 0 !important; }
         #tab-perfil .cf-work-pause-settings { border-color: var(--cf-color-line) !important; border-radius: 16px !important; background: var(--cf-color-surface-raised) !important; box-shadow: none !important; }
         #tab-perfil .cf-work-pause-icon { width: 28px !important; height: 28px !important; flex: 0 0 28px; border: 0 !important; border-radius: 0 !important; background: transparent !important; color: var(--cf-color-action) !important; font-size: 1.125rem; }
         #tab-perfil .cf-work-pause-settings legend { color: var(--cf-color-text-secondary) !important; font-size: .8125rem; font-weight: 600; text-transform: none !important; letter-spacing: 0 !important; }
-        #tab-perfil .cf-work-pause-settings fieldset > div > label { min-height: 42px; border-color: var(--cf-color-line) !important; border-radius: 10px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-text-primary) !important; font-size: .8125rem; }
+        #tab-perfil .cf-work-pause-settings fieldset > div > label { min-height: var(--cf-control-target); border-color: var(--cf-color-line) !important; border-radius: 10px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-text-primary) !important; font-size: .8125rem; }
         #tab-perfil .cf-work-pause-settings > label.cf-work-pause-enable { min-height: 48px; border-color: var(--cf-color-line) !important; border-radius: 12px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-text-primary) !important; }
         #tab-perfil .cf-work-pause-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
         #tab-perfil .cf-work-pause-settings input[type="checkbox"] { width: 18px; height: 18px; }
         #tab-perfil .cf-work-pause-save { min-height: 48px; border: 1px solid var(--cf-color-action) !important; border-radius: 12px !important; background: var(--cf-color-action) !important; color: #fff !important; font-size: .875rem; font-weight: 600 !important; }
         html.cf-theme-amoled #tab-perfil .cf-work-pause-save { color: #16271B !important; }
-        #tab-pausas #btn-sos-stretch { min-height: 44px; border: 1px solid var(--cf-color-action) !important; border-radius: 12px !important; background: var(--cf-color-action) !important; color: #fff !important; font-size: .8125rem; font-weight: 600 !important; }
+        #tab-pausas #btn-sos-stretch { min-height: var(--cf-control-target); border: 1px solid var(--cf-color-action) !important; border-radius: 12px !important; background: var(--cf-color-action) !important; color: #fff !important; font-size: .8125rem; font-weight: 600 !important; }
         html.cf-theme-amoled #tab-pausas #btn-sos-stretch { color: #16271B !important; }
-        #tab-pausas #btn-start-smart-stretch-recom { min-height: 44px; border: 1px solid var(--cf-color-line) !important; border-radius: 10px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-action) !important; font-size: .8125rem; font-weight: 600 !important; }
+        #tab-pausas #btn-start-smart-stretch-recom { min-height: var(--cf-control-target); border: 1px solid var(--cf-color-line) !important; border-radius: 10px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-action) !important; font-size: .8125rem; font-weight: 600 !important; }
         #tab-pausas #corpo-badge-summary { padding: 0 !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; color: var(--cf-color-text-secondary) !important; font-family: inherit; font-size: .75rem !important; font-weight: 500 !important; }
-        #tab-pausas #stretch-intent-tags .tag-stretch-btn { min-height: 40px; padding: 8px 11px !important; border-color: var(--cf-color-line) !important; border-radius: 10px !important; background: transparent !important; color: var(--cf-color-text-secondary) !important; font-size: .75rem; font-weight: 500; }
+        #tab-pausas #stretch-intent-tags .tag-stretch-btn { min-height: var(--cf-control-target); padding: 8px 11px !important; border-color: var(--cf-color-line) !important; border-radius: 10px !important; background: transparent !important; color: var(--cf-color-text-secondary) !important; font-size: .75rem; font-weight: 500; }
         #tab-pausas #stretch-intent-tags .tag-stretch-btn[class*="bg-emerald-500/20"] { border-color: var(--cf-color-line-selected) !important; background: var(--cf-color-surface-selected) !important; color: var(--cf-color-action) !important; }
         #tab-pausas #stretch-recom-icon-container { width: 24px !important; height: 24px !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; color: var(--cf-color-action) !important; }
         #tab-perfil .cf-profile-eyebrow { color: var(--cf-color-action) !important; font-size: .75rem; font-weight: 600; text-transform: none !important; letter-spacing: 0 !important; }
@@ -578,10 +610,10 @@
         #tab-perfil .cf-profile-primary-action { min-height: 48px; border-color: var(--cf-color-action) !important; border-radius: 12px !important; background: var(--cf-color-action) !important; color: #fff !important; font-weight: 600; }
         html.cf-theme-amoled #tab-perfil .cf-profile-primary-action { color: #16271B !important; }
         #tab-perfil #profileReminderPrograms .cf-profile-reminder { border-color: var(--cf-color-line) !important; border-radius: 14px !important; background: var(--cf-color-surface-interactive) !important; box-shadow: none !important; }
-        #tab-perfil #profileReminderPrograms .cf-profile-reminder-action { min-height: 44px; border-color: var(--cf-color-line) !important; border-radius: 10px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-action) !important; font-weight: 600; }
+        #tab-perfil #profileReminderPrograms .cf-profile-reminder-action { min-height: var(--cf-control-target); border-color: var(--cf-color-line) !important; border-radius: 10px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-action) !important; font-weight: 600; }
         #tab-perfil .cf-profile-settings-list { border-color: var(--cf-color-line) !important; }
         #tab-perfil .cf-profile-settings-list > button { min-height: 60px; border-color: var(--cf-color-line) !important; }
-        #tab-perfil .cf-profile-data-section .cf-btn { min-height: 44px; border-color: var(--cf-color-line) !important; border-radius: 10px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-text-primary) !important; font-weight: 600; }
+        #tab-perfil .cf-profile-data-section .cf-btn { min-height: var(--cf-control-target); border-color: var(--cf-color-line) !important; border-radius: 10px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-text-primary) !important; font-weight: 600; }
         #tab-perfil .cf-profile-data-section > button:last-child { border-color: var(--cf-color-danger) !important; background: transparent !important; color: var(--cf-color-danger) !important; }
         #tab-dashboard .cf-evolution-comparison { padding: 0 !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; font-size: .8125rem; font-weight: 500 !important; }
         #tab-dashboard .cf-evolution-icon { width: 22px !important; height: 22px !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; color: var(--cf-color-action) !important; }
@@ -598,7 +630,7 @@
         #tab-vacuo .cf-vacuum-posture-btn[aria-pressed="true"] { border-color: var(--cf-color-action) !important; background: var(--cf-color-surface-selected) !important; color: var(--cf-color-action) !important; }
         #tab-vacuo .cf-vacuum-posture-art { width: 56px; height: 40px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         #tab-vacuo #currentLevelBadge { padding: 0 !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; color: var(--cf-color-text-secondary) !important; }
-        #tab-vacuo .vac-dur-btn { min-width: 44px; min-height: 40px; padding: 6px 10px !important; border: 1px solid var(--cf-color-line) !important; border-radius: 10px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-text-secondary) !important; }
+        #tab-vacuo .vac-dur-btn { min-width: var(--cf-control-target); min-height: var(--cf-control-target); padding: 6px 10px !important; border: 1px solid var(--cf-color-line) !important; border-radius: 10px !important; background: var(--cf-color-surface) !important; color: var(--cf-color-text-secondary) !important; }
         #tab-vacuo .vac-dur-btn[class*="bg-emerald-"] { border-color: var(--cf-color-line-selected) !important; background: var(--cf-color-surface-selected) !important; color: var(--cf-color-action) !important; }
         #tab-vacuo #ringGlowBg, #tab-vacuo #pulseAuraCircle { display: none !important; }
         #tab-vacuo .cf-vacuum-player-card { min-height: 0 !important; padding: 16px !important; }
@@ -707,7 +739,7 @@
         .cf-player-posture { width:100%; max-width:16rem; margin:0 0 .75rem; border-radius:16px; overflow:hidden; background:var(--pl-surface); }
         .cf-player-posture img { display:block; width:100%; height:11rem; object-fit:contain; padding:.5rem; }
         .cf-player-actions { display:flex; gap:.75rem; align-items:stretch; flex-wrap:wrap; }
-        .cf-player-actions button { min-height:56px; border:0; border-radius:20px; font-weight:600; font-size:1rem; display:flex; align-items:center; justify-content:center; gap:.5rem; padding:0 1rem; background:var(--pl-raised); color:var(--pl-text); transition:transform 140ms ease, background-color 140ms ease; }
+        .cf-player-actions button { min-height:56px; border:0; border-radius:var(--cf-control-radius); font-weight:600; font-size:1rem; display:flex; align-items:center; justify-content:center; gap:.5rem; padding:0 1rem; background:var(--pl-raised); color:var(--pl-text); transition:transform 140ms ease, background-color 140ms ease; }
         .cf-player-actions button:active { transform:scale(.97); }
         .cf-player-actions .cf-player-primary { flex:1; background:var(--pl-accent); color:var(--pl-on-accent); font-size:1.0625rem; }
         .cf-player-actions .cf-player-danger { color:var(--pl-danger); }
@@ -820,12 +852,13 @@
         [id$="Modal"]:not(.hidden):is([class*="items-end"], [class*="justify-end"]) > :first-child:not(.hidden) { animation: cf-sheet-up .34s var(--cf-ease) backwards; }
         #dailyExecutionModal:not(.hidden), #responsivePauseModal:not(.hidden) { animation: cf-fade .3s ease-out backwards; }
         .cf-nav-dialog[open]::backdrop { animation: cf-fade .2s ease-out; }
+        @media (prefers-reduced-motion: reduce) { .cf-nav-dialog[open]::backdrop { animation: none; } }
         /* Abas: os primeiros blocos entram em cascata curta (teto 5 itens, 220 ms). */
         .tab-content.active > :nth-child(-n+5):not(.hidden) { animation: cf-rise .4s var(--cf-ease) backwards; }
         .tab-content.active > :nth-child(2) { animation-delay: 40ms; } .tab-content.active > :nth-child(3) { animation-delay: 80ms; }
         .tab-content.active > :nth-child(4) { animation-delay: 120ms; } .tab-content.active > :nth-child(5) { animation-delay: 160ms; }
         /* Toque: resposta de 120 ms em botões, sem mexer em quem já se posiciona por transform. */
-        body.cf-app button:not(:disabled):not([class*="translate"]):not([class*="absolute"]):not([class*="fixed"]):not(.cf-toggle) { transition-property: transform, background-color, border-color, color, opacity, box-shadow; transition-duration: .16s; transition-timing-function: var(--cf-ease); }
+        body.cf-app button:not(:disabled):not([class*="translate"]):not([class*="absolute"]):not([class*="fixed"]):not(.cf-toggle) { transition-property: transform, background-color, border-color, color, opacity, box-shadow; transition-duration: var(--cf-control-feedback); transition-timing-function: var(--cf-ease); }
         body.cf-app button:not(:disabled):not([class*="translate"]):not([class*="absolute"]):not([class*="fixed"]):active { transform: scale(.97); transition-duration: .08s; }
         /* Laços decorativos: respiração lenta no lugar de pulso/pulo; batida só no coração (medição de BPM). */
         .animate-pulse { animation: cf-breathe 3.6s ease-in-out infinite !important; }
@@ -901,15 +934,15 @@
         </div>
     </div>
 
-    <!-- Compact brand header; navigation opens only from the screen edge. -->
     <header class="cf-app-shell-header px-4 no-print">
+        <button id="mainNavigationButton" type="button" class="cf-nav-handle" onclick="openMainNavigation()" aria-label="Abrir navegação" aria-haspopup="dialog" aria-expanded="false" aria-controls="mainNavigationDrawer">
+            <span aria-hidden="true"><svg viewBox="0 0 16 16" focusable="false"><path d="M4 4h8M4 8h8m-8 4h8"/></svg></span>
+        </button>
         <div class="cf-header-brand">
             <h1>CoreFlow</h1>
         </div>
         <button id="core-persistence-status" type="button" onclick="retryProgressPersistence()" class="cf-error hidden" aria-live="polite" aria-label="Status de persistência local"></button>
     </header>
-
-    <button id="mainNavigationButton" type="button" class="cf-nav-accessibility-trigger" onclick="openMainNavigation()" aria-label="Abrir navegação" aria-haspopup="dialog" aria-expanded="false" aria-controls="mainNavigationDrawer">Abrir navegação</button>
 
     <dialog id="mainNavigationDrawer" class="cf-nav-dialog no-print" aria-modal="true" aria-labelledby="mainNavigationTitle">
         <div class="cf-nav-panel">
@@ -935,12 +968,32 @@
 
         <section id="tab-hoje" class="tab-content active space-y-5 cf-fluxo-screen" aria-labelledby="today-heading">
             <div class="cf-fluxo-page-heading">
-                <div class="flex items-center justify-between gap-3">
-                    <div><p class="cf-fluxo-kicker">Hoje</p><h2 id="today-heading">Seu próximo passo</h2></div>
-                </div>
-                <p>Escolha uma prática real e acompanhe o que foi feito.</p>
+                <h2 id="today-heading">Hoje</h2>
             </div>
-            <div id="todayRecommendationContainer"></div>
+            <div class="cf-today-routine" role="group" aria-labelledby="today-routine-heading">
+                <h3 id="today-routine-heading">Minha rotina</h3>
+                <div class="cf-today-routine-row">
+                    <h4>Programa</h4>
+                    <div id="todayRecommendationContainer"></div>
+                </div>
+                <div class="cf-today-routine-row">
+                    <h4>Pausas</h4>
+                    <p id="todayPauseRoutine">Sem rotina de pausas</p>
+                    <div class="cf-today-actions">
+                <button type="button" class="cf-fluxo-practice-row cf-today-pause-link" data-fluxo-shortcut="pausa" data-pulso-icon="PersonStanding" onclick="openTodayShortcut('pausa')" aria-label="Abrir Pausas"><span class="cf-fluxo-practice-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6M6 8l6 2 6-2M12 10v4"/></svg></span><span class="cf-fluxo-practice-copy"><strong>Pausas</strong></span><svg class="cf-fluxo-practice-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></button>
+                        <button onclick="triggerQuickAction('pausa')" class="flex-shrink-0 px-3 py-2 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 hover:border-emerald-500/50 rounded-xl text-xs font-semibold text-slate-200 hover:text-emerald-300 transition shadow-sm flex items-center gap-1.5"><i class="fa-solid fa-person-praying text-teal-400" aria-hidden="true"></i> Pausa 4min</button>
+                    </div>
+                </div>
+                <div class="cf-today-routine-row">
+                    <h4>Prática de hoje</h4>
+                    <p><span id="todayMinutesValue">0</span> min de prática · Meta de <span id="todayGoalValue">30</span> min</p>
+                    <div class="cf-today-progress" aria-hidden="true"><div id="todayGoalProgress" style="width:0%"></div></div>
+                    <div class="cf-today-actions">
+                        <button type="button" class="cf-fluxo-program-link" onclick="switchTab('dashboard')">Ver evolução</button>
+                        <button type="button" class="cf-fluxo-program-link" onclick="openEditGoalModal()">Editar meta diária</button>
+                    </div>
+                </div>
+            </div>
             <!-- The greeting and quick actions follow the program, keeping today's plan at the top. -->
             <div id="todayGreetingBlock" class="cf-fluxo-greeting bg-gradient-to-br from-slate-850 to-slate-900 border border-slate-800/90 rounded-3xl p-4 shadow-lg no-print">
                 <div class="flex items-center justify-between">
@@ -957,19 +1010,16 @@
                         <button onclick="triggerQuickAction('bracing_2min')" class="flex-shrink-0 px-3 py-2 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 hover:border-emerald-500/50 rounded-xl text-xs font-semibold text-slate-200 hover:text-emerald-300 transition shadow-sm flex items-center gap-1.5"><i class="fa-solid fa-bolt text-emerald-400" aria-hidden="true"></i> Bracing 2min</button>
                         <button onclick="triggerQuickAction('vacuo_rapido')" class="flex-shrink-0 px-3 py-2 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 hover:border-emerald-500/50 rounded-xl text-xs font-semibold text-slate-200 hover:text-emerald-300 transition shadow-sm flex items-center gap-1.5"><i class="fa-solid fa-lungs text-cyan-400" aria-hidden="true"></i> Vácuo Rápido</button>
                         <button onclick="triggerQuickAction('kegel_velocidade')" class="flex-shrink-0 px-3 py-2 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 hover:border-emerald-500/50 rounded-xl text-xs font-semibold text-slate-200 hover:text-emerald-300 transition shadow-sm flex items-center gap-1.5"><i class="fa-solid fa-bullseye text-amber-400" aria-hidden="true"></i> Kegel Velocidade</button>
-                        <button onclick="triggerQuickAction('pausa')" class="flex-shrink-0 px-3 py-2 bg-slate-800 hover:bg-slate-750 active:scale-95 border border-slate-700 hover:border-emerald-500/50 rounded-xl text-xs font-semibold text-slate-200 hover:text-emerald-300 transition shadow-sm flex items-center gap-1.5"><i class="fa-solid fa-person-praying text-teal-400" aria-hidden="true"></i> Pausa 4min</button>
                     </div>
                 </div>
             </div>
             <p class="cf-fluxo-section-label">Outras práticas</p>
             <div class="cf-fluxo-practice-list" role="group" aria-label="Atalhos de prática">
                 <button type="button" class="cf-fluxo-practice-row" data-fluxo-shortcut="vacuo" data-pulso-icon="Wind" onclick="openTodayShortcut('vacuo')" aria-label="Abrir Vácuo abdominal"><span class="cf-fluxo-practice-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/></svg></span><span class="cf-fluxo-practice-copy"><strong>Vácuo abdominal</strong><small>Respiração · ciclos · recuperação</small></span><svg class="cf-fluxo-practice-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></button>
-                <button type="button" class="cf-fluxo-practice-row" data-fluxo-shortcut="pausa" data-pulso-icon="PersonStanding" onclick="openTodayShortcut('pausa')" aria-label="Abrir Pausas"><span class="cf-fluxo-practice-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6M6 8l6 2 6-2M12 10v4"/></svg></span><span class="cf-fluxo-practice-copy"><strong>Pausas</strong><small>Movimento e respiração guiada</small></span><svg class="cf-fluxo-practice-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></button>
                 <button type="button" class="cf-fluxo-practice-row" data-fluxo-shortcut="kegel" data-pulso-icon="Activity" onclick="openTodayShortcut('kegel')" aria-label="Abrir Kegel"><span class="cf-fluxo-practice-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg></span><span class="cf-fluxo-practice-copy"><strong>Kegel</strong><small>Resistência e velocidade</small></span><svg class="cf-fluxo-practice-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></button>
                 <button type="button" class="cf-fluxo-practice-row" data-fluxo-shortcut="discreto" data-pulso-icon="Activity" onclick="openTodayShortcut('discreto')" aria-label="Abrir Modo discreto"><span class="cf-fluxo-practice-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg></span><span class="cf-fluxo-practice-copy"><strong>Modo discreto</strong><small>Prática sentada e guiada</small></span><svg class="cf-fluxo-practice-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></button>
                 <button type="button" class="cf-fluxo-practice-row" data-fluxo-shortcut="meditar" data-pulso-icon="Brain" onclick="openTodayShortcut('meditar')" aria-label="Abrir Mindfulness"><span class="cf-fluxo-practice-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 18V5"/><path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"/><path d="M17.707 6.294A3 3 0 1 0 12 5a3 3 0 1 0-5.707 1.294"/><path d="M17.996 5.125a4 4 0 0 1 2.526 5.77M18 18a4 4 0 0 0-2-7.465M19.967 17.482a4 4 0 1 1-7.967.517 4 4 0 1 1-7.967-.517M6 18a4 4 0 0 1-2-7.465M6.004 5.125a4 4 0 0 0-2.526 5.77"/></svg></span><span class="cf-fluxo-practice-copy"><strong>Mindfulness</strong><small>Áudio e respiração</small></span><svg class="cf-fluxo-practice-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></button>
             </div>
-            <div class="cf-card p-4"><div class="flex items-center justify-between gap-3"><div><p class="text-xs font-bold uppercase tracking-wider text-slate-400">Resumo do dia</p><p class="mt-1 text-2xl font-black text-white"><span id="todayMinutesValue">0</span> min <span class="text-sm font-semibold text-slate-400">/ <span id="todayGoalValue">30</span> min</span></p></div><div class="flex items-center gap-2"><button type="button" class="cf-btn border border-slate-700 px-2.5 py-2 text-xs text-slate-200" onclick="openEditGoalModal()" aria-label="Editar meta diária"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button type="button" class="cf-btn border border-slate-700 px-3 py-2 text-xs text-slate-200" onclick="switchTab('dashboard')">Ver evolução</button></div></div><div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-800"><div id="todayGoalProgress" class="h-full rounded-full bg-emerald-400" style="width:0%"></div></div></div>
             <div class="cf-notice rounded-xl p-3 text-xs" role="status" aria-live="polite"><strong class="text-cyan-200">Dados locais protegidos.</strong> Sem conexão, os fluxos essenciais continuam disponíveis.</div>
             <p class="cf-screen-swipe-hint">No fim da tela, deslize para cima para ver Programas.</p>
         </section>
@@ -1421,38 +1471,26 @@
         <!-- ============================================================ -->
         <section id="tab-pausas" class="tab-content space-y-4 cf-fluxo-screen" aria-labelledby="pauses-heading">
             <div class="cf-fluxo-page-heading">
-                <p class="cf-fluxo-kicker">Pausas · prática breve</p>
-                <h2 id="pauses-heading" tabindex="-1">O que você precisa agora?</h2>
-                <p>Escolha um tempo confortável.</p>
+                <h2 id="pauses-heading" tabindex="-1">Pausas</h2>
             </div>
-            <!-- BLOCO COLAPSÁVEL: CORPO -->
-            <div class="cf-pause-category border-b border-slate-700/60 overflow-hidden transition-all duration-300">
-                <!-- Cabeçalho Colapsável -->
-                <div onclick="toggleCorpoBlock()" class="p-4 flex items-center justify-between cursor-pointer active:bg-slate-750/70 select-none transition">
-                    <div class="flex items-center gap-3">
-                        <div class="cf-pause-category-mark w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-lg flex-shrink-0 shadow-sm">
-                            <i class="fa-solid fa-child-reaching"></i>
-                        </div>
-                        <div>
-                            <div class="flex flex-wrap items-center gap-2">
-                                <h3 class="text-base font-bold text-white tracking-tight">Corpo</h3>
-                                <span class="text-[10px] bg-emerald-500/15 text-emerald-400 font-bold px-2 py-0.5 rounded-full border border-emerald-500/25 font-mono" id="corpo-badge-summary">4 técnicas • Circuito Ergonômico</span>
-                            </div>
-                            <p class="text-xs text-slate-400 mt-0.5">Alongamentos e pausas ativas na cadeira para destravar o corpo</p>
-                        </div>
-                    </div>
-                    <div class="w-8 h-8 rounded-full bg-slate-700/60 border border-slate-600/50 flex items-center justify-center text-slate-300 transition-transform duration-300" id="corpo-chevron">
-                        <i class="fa-solid fa-chevron-up text-xs text-emerald-400"></i>
-                    </div>
-                </div>
-
-                <!-- Conteúdo do Bloco (Colapsável) -->
-                <div id="corpo-content" class="px-4 pb-4 space-y-4 border-t border-slate-700/60 pt-4">
+            <div class="cf-pause-sections" role="group" aria-label="Categorias de pausas">
+                <button id="corpo-section-trigger" type="button" aria-controls="corpo-content" aria-expanded="false" class="cf-pause-category cf-pause-section-trigger" onclick="toggleCorpoBlock()">
+                    <span class="cf-pause-category-mark" aria-hidden="true"><i class="fa-solid fa-child-reaching"></i></span>
+                    <span><strong>Corpo</strong><small>Alongamentos e circuito ergonômico</small></span>
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                </button>
+                <button id="mente-section-trigger" type="button" aria-controls="mente-content" aria-expanded="false" class="cf-pause-category cf-pause-section-trigger" onclick="toggleMenteBlock()">
+                    <span class="cf-pause-category-mark" aria-hidden="true"><i class="fa-solid fa-brain"></i></span>
+                    <span><strong>Mente</strong><small>Respiração e Pausa de Resposta</small></span>
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                </button>
+            </div>
+                <div id="corpo-content" class="hidden px-4 pb-4 space-y-4 border-t border-slate-700/60 pt-4">
 
                     <!-- BANNER SOS POSTURA & SUGESTÃO CONTEXTUAL DE HORÁRIO -->
                     <div class="space-y-2.5">
                         <!-- Botão de Ação Imediata: SOS Coluna & Postura (1 Min) -->
-                        <div class="bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-cyan-500/15 border border-emerald-500/30 rounded-2xl p-3 flex items-center justify-between shadow-lg shadow-emerald-950/20">
+                        <div class="cf-pause-sos bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-cyan-500/15 border border-emerald-500/30 rounded-2xl p-3 flex items-center justify-between shadow-lg shadow-emerald-950/20">
                             <div class="flex items-center gap-2.5">
                                 <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-base flex-shrink-0 animate-pulse">
                                     <i class="fa-solid fa-shield-halved"></i>
@@ -1936,69 +1974,47 @@
                     </div>
 
                 </div>
-            </div>
+                <div id="mente-content" class="hidden px-4 pb-4 space-y-4 border-t border-slate-700/60 pt-4">
 
-            <!-- PAUSA DE RESPOSTA: acesso rápido mesmo com o bloco Mente recolhido -->
-            <div class="cf-card cf-response-break p-4">
-                <div class="min-w-0">
-                    <p class="cf-fluxo-kicker">3 minutos · sem áudio</p>
-                    <h3 class="font-heading text-base font-extrabold text-white">Pausa de Resposta</h3>
-                    <p class="mt-1 text-sm leading-relaxed text-slate-300">Para e-mails ríspidos, cobranças e reuniões tensas: reconheça a reação, ancore a atenção e escolha o próximo passo.</p>
-                </div>
-                <div class="cf-response-break-steps" aria-label="Etapas da pausa">
-                    <span><b>1</b> Reconhecer</span>
-                    <span><b>2</b> Ancorar</span>
-                    <span><b>3</b> Escolher</span>
-                </div>
-                <div class="grid grid-cols-2 gap-2 mt-3">
-                    <button onclick="openResponsivePauseGuide()" class="cf-btn min-h-12 border border-slate-600 bg-slate-800/80 text-slate-200 font-bold text-xs active:scale-95 transition">
-                        <i class="fa-solid fa-list-check mr-1.5"></i>Ver roteiro
-                    </button>
-                    <button onclick="startResponsivePause()" class="cf-fluxo-primary-action min-h-12 font-semibold text-sm active:scale-95 transition">
-                        <i class="fa-solid fa-play mr-1.5"></i>Começar 3 min
-                    </button>
-                </div>
-                <div class="mt-3 pt-3 border-t border-white/10">
-                    <div class="flex items-center justify-between gap-3">
-                        <span class="text-[11px] text-slate-400">Histórico local opcional</span>
-                        <button id="responsive-history-toggle" onclick="toggleResponsivePauseHistory()" role="switch" aria-checked="false" class="px-2.5 py-1.5 rounded-lg border border-slate-600 bg-slate-800 text-[10px] font-bold text-slate-300">Desativado</button>
-                    </div>
-                    <div id="responsive-pause-summary" class="mt-2 text-[11px] text-slate-400">O registro está desativado.</div>
-                    <div id="responsive-pause-history" class="hidden mt-2 space-y-1.5"></div>
-                    <button id="responsive-history-clear" onclick="clearResponsivePauseHistory()" class="hidden mt-2 text-[10px] text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash-can mr-1"></i>Apagar histórico</button>
-                </div>
-            </div>
-
-            <!-- BLOCO COLAPSÁVEL: MENTE -->
-            <div class="cf-pause-category border-b border-slate-700/60 overflow-hidden transition-all duration-300">
-                <!-- Cabeçalho Colapsável -->
-                <div onclick="toggleMenteBlock()" class="p-4 flex items-center justify-between cursor-pointer active:bg-slate-750/70 select-none transition">
-                    <div class="flex items-center gap-3">
-                        <div class="cf-pause-category-mark w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg flex-shrink-0 shadow-sm">
-                            <i class="fa-solid fa-brain"></i>
-                        </div>
-                        <div>
-                            <div class="flex flex-wrap items-center gap-2">
-                                <h3 class="text-base font-bold text-white tracking-tight">Mente</h3>
-                                <span class="text-[10px] bg-cyan-500/15 text-cyan-400 font-bold px-2 py-0.5 rounded-full border border-cyan-500/25 font-mono" id="mente-badge-summary">4 técnicas • Respiração Guiada</span>
+                    <details class="cf-pause-response-details">
+                        <summary>Pausa de Resposta <span>3 min</span></summary>
+                        <div class="cf-card cf-response-break p-4">
+                            <div class="min-w-0">
+                                <p class="cf-fluxo-kicker">3 minutos · sem áudio</p>
+                                <h3 class="font-heading text-base font-extrabold text-white">Pausa de Resposta</h3>
+                                <p class="mt-1 text-sm leading-relaxed text-slate-300">Para e-mails ríspidos, cobranças e reuniões tensas: reconheça a reação, ancore a atenção e escolha o próximo passo.</p>
                             </div>
-                            <p class="text-xs text-slate-400 mt-0.5">Exercícios de respiração consciente para foco, relaxamento e sono</p>
+                            <div class="cf-response-break-steps" aria-label="Etapas da pausa">
+                                <span><b>1</b> Reconhecer</span>
+                                <span><b>2</b> Ancorar</span>
+                                <span><b>3</b> Escolher</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 mt-3">
+                                <button onclick="openResponsivePauseGuide()" class="cf-btn min-h-12 border border-slate-600 bg-slate-800/80 text-slate-200 font-bold text-xs active:scale-95 transition">
+                                    <i class="fa-solid fa-list-check mr-1.5"></i>Ver roteiro
+                                </button>
+                                <button onclick="startResponsivePause()" class="cf-fluxo-primary-action min-h-12 font-semibold text-sm active:scale-95 transition">
+                                    <i class="fa-solid fa-play mr-1.5"></i>Começar 3 min
+                                </button>
+                            </div>
+                            <div class="mt-3 pt-3 border-t border-white/10">
+                                <div class="flex items-center justify-between gap-3">
+                                    <span class="text-[11px] text-slate-400">Histórico local opcional</span>
+                                    <button id="responsive-history-toggle" onclick="toggleResponsivePauseHistory()" role="switch" aria-checked="false" class="px-2.5 py-1.5 rounded-lg border border-slate-600 bg-slate-800 text-[10px] font-bold text-slate-300">Desativado</button>
+                                </div>
+                                <div id="responsive-pause-summary" class="mt-2 text-[11px] text-slate-400">O registro está desativado.</div>
+                                <div id="responsive-pause-history" class="hidden mt-2 space-y-1.5"></div>
+                                <button id="responsive-history-clear" onclick="clearResponsivePauseHistory()" class="hidden mt-2 text-[10px] text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash-can mr-1"></i>Apagar histórico</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="w-8 h-8 rounded-full bg-slate-700/60 border border-slate-600/50 flex items-center justify-center text-slate-300 transition-transform duration-300" id="mente-chevron">
-                        <i class="fa-solid fa-chevron-up text-xs text-cyan-400"></i>
-                    </div>
-                </div>
-
-                <!-- Conteúdo do Bloco (Colapsável) -->
-                <div id="mente-content" class="px-4 pb-4 space-y-4 border-t border-slate-700/60 pt-4">
+                    </details>
 
                     <!-- BANNER SOS ANSIEDADE & SUGESTÃO CONTEXTUAL DE HORÁRIO -->
                     <div class="space-y-2.5">
                         <!-- Botão de Ação Imediata: SOS Ansiedade (1 Min) -->
-                        <div class="bg-gradient-to-r from-rose-500/15 via-pink-500/10 to-amber-500/15 border border-rose-500/30 rounded-2xl p-3 flex items-center justify-between shadow-lg shadow-rose-950/20">
+                        <div class="cf-pause-sos bg-gradient-to-r from-rose-500/15 via-pink-500/10 to-amber-500/15 border border-rose-500/30 rounded-2xl p-3 flex items-center justify-between shadow-lg shadow-rose-950/20">
                             <div class="flex items-center gap-2.5">
-                                <div class="w-9 h-9 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center text-base flex-shrink-0 animate-pulse">
+                                <div class="w-9 h-9 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center text-base flex-shrink-0">
                                     <i class="fa-solid fa-shield-heart"></i>
                                 </div>
                                 <div>
@@ -2538,8 +2554,6 @@
                     </div>
 
                 </div>
-            </div>
-
         </section>
 
         <!-- ============================================================ -->
@@ -3898,7 +3912,7 @@
                 pausedTimerId: null,
                 remainingSec: 60,
                 intervalId: null,
-                corpoExpanded: true,
+                corpoExpanded: false,
                 circuitActive: false,
                 circuitStep: 1,
                 circuitCompletedSteps: [],
@@ -3922,7 +3936,7 @@
 
             // Pausas Mente (Respiração Consciente)
             mente: {
-                menteExpanded: true,
+                menteExpanded: false,
                 activePattern: 'caixa',
                 selectedLevel: 'padrao', // 'iniciante', 'padrao', 'avancado'
                 selectedDuration: 300,   // 60, 120, 180, 300, 'infinite'
@@ -5188,10 +5202,16 @@
                 if (options.length === 0) { container.innerHTML = ''; return; }
                 container.innerHTML = `
                     <div id="todayProgramSelection" class="cf-card cf-fluxo-program-highlight p-4 space-y-3">
-                        <div><p class="cf-fluxo-program-label">Seus programas</p><p class="mt-1 text-sm text-slate-300">Nenhum programa selecionado ainda. Escolha um para começar a acompanhar seu progresso.</p></div>
-                        <div class="space-y-2">
-                            ${options.map(p => `<button type="button" class="cf-btn w-full justify-start border border-slate-700 bg-slate-900 px-3 py-3 text-sm text-slate-100" onclick="selectTodayProgram('${p.id}')">${escapeHtmlToday(p.title)}</button>`).join('')}
-                        </div>
+                        <p class="text-sm text-slate-400">Nenhum programa selecionado</p>
+                        <details class="cf-today-program-options">
+                            <summary>Ver programas</summary>
+                            <div class="space-y-2">
+                                ${options.map(p => {
+                                    const title = escapeHtmlToday(p.title);
+                                    return `<button type="button" class="cf-btn w-full justify-start border border-slate-700 bg-slate-900 px-3 py-3 text-sm text-slate-100" aria-label="${title}" onclick="selectTodayProgram('${p.id}')">${title}</button>`;
+                                }).join('')}
+                            </div>
+                        </details>
                     </div>
                 `;
                 return;
@@ -5214,9 +5234,9 @@
 
             container.innerHTML = `
                 <div id="todayRecommendationCard" class="cf-card cf-fluxo-program-highlight p-5 space-y-4">
-                    <div class="flex items-center justify-between gap-3"><p class="cf-fluxo-program-label">Programa de hoje</p><button type="button" class="cf-fluxo-program-link" onclick="switchTab('programas')">Ver programas</button></div>
                     <div><h3 class="text-lg font-black text-white leading-tight">${escapeHtmlToday(program.title)}</h3><p class="mt-1 text-sm text-slate-400">${escapeHtmlToday(activePh.title)}</p><p class="mt-2 text-xs text-slate-400">Fase ${displayedPhaseIndex + 1} de ${program.phases.length} · Sessão ${displayedSessionNumber} de ${targetSessions}</p></div>
                     <button type="button" class="cf-btn cf-fluxo-primary-action" onclick="openTodayRecommendationSession('${program.id}', ${displayedPhaseIndex}, ${displayedSessionNumber})">${actionLabel}</button>
+                    <button type="button" class="cf-fluxo-program-link" onclick="switchTab('programas')">Ver programas</button>
                 </div>
             `;
         }
@@ -5316,12 +5336,9 @@
             window.scrollTo({ top: 0, behavior: isScreenChange || prefersReducedMotion ? 'auto' : 'smooth' });
         }
 
-        let mainNavigationOpenedByGesture = false;
-
-        function openMainNavigation(source = 'accessible') {
+        function openMainNavigation() {
             const drawer = document.getElementById('mainNavigationDrawer');
             if (!drawer || drawer.open) return;
-            mainNavigationOpenedByGesture = source === 'gesture';
             drawer.showModal();
             document.getElementById('mainNavigationButton')?.setAttribute('aria-expanded', 'true');
             requestAnimationFrame(() => document.getElementById('nav-btn-' + AppState.activeTab)?.focus({ preventScroll: true }));
@@ -5347,8 +5364,7 @@
         });
         mainNavigationDrawer?.addEventListener('close', () => {
             document.getElementById('mainNavigationButton')?.setAttribute('aria-expanded', 'false');
-            if (!mainNavigationOpenedByGesture) document.getElementById('mainNavigationButton')?.focus({ preventScroll: true });
-            mainNavigationOpenedByGesture = false;
+            document.getElementById('mainNavigationButton')?.focus({ preventScroll: true });
         });
 
         function initializeVerticalScreenNavigation() {
@@ -5362,12 +5378,8 @@
                     return;
                 }
                 const touch = event.touches[0];
-                if (touch.clientX >= 24 && touch.clientX <= 72) {
-                    start = { kind: 'drawer', x: touch.clientX, y: touch.clientY, tab: AppState.activeTab };
-                    return;
-                }
                 if (!['hoje', 'programas'].includes(AppState.activeTab)) { start = null; return; }
-                start = { kind: 'screen', x: touch.clientX, y: touch.clientY, tab: AppState.activeTab };
+                start = { x: touch.clientX, y: touch.clientY, tab: AppState.activeTab };
             }, { passive: true });
 
             document.addEventListener('touchend', event => {
@@ -5375,12 +5387,6 @@
                 const touch = event.changedTouches[0];
                 const deltaX = touch.clientX - start.x;
                 const deltaY = touch.clientY - start.y;
-                if (start.kind === 'drawer') {
-                    const overlayOpen = document.querySelector('dialog[open], [role="dialog"][aria-modal="true"]:not(.hidden), [id$="Modal"]:not(.hidden)');
-                    if (!overlayOpen && deltaX >= 64 && deltaX > Math.abs(deltaY) * 1.25) openMainNavigation('gesture');
-                    start = null;
-                    return;
-                }
                 const scrollTop = Math.max(window.scrollY, document.scrollingElement?.scrollTop || 0);
                 const scrollRoot = document.scrollingElement || document.documentElement;
                 const atBottom = window.innerHeight + scrollTop >= scrollRoot.scrollHeight - 2;
@@ -6995,20 +7001,21 @@
             }
         ];
 
-        function toggleCorpoBlock() {
-            const content = document.getElementById('corpo-content');
-            const chevron = document.getElementById('corpo-chevron');
+        function togglePauseSection(category) {
+            const content = document.getElementById(category + '-content');
             if (!content) return;
-            const isHidden = content.classList.contains('hidden');
-            if (isHidden) {
-                content.classList.remove('hidden');
-                if (chevron) chevron.innerHTML = '<i class="fa-solid fa-chevron-up text-xs text-emerald-400"></i>';
-                AppState.pausas.corpoExpanded = true;
-            } else {
-                content.classList.add('hidden');
-                if (chevron) chevron.innerHTML = '<i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>';
-                AppState.pausas.corpoExpanded = false;
+            const expand = content.classList.contains('hidden');
+            for (const name of ['corpo', 'mente']) {
+                const opened = expand && name === category;
+                document.getElementById(name + '-content')?.classList.toggle('hidden', !opened);
+                document.getElementById(name + '-section-trigger')?.setAttribute('aria-expanded', String(opened));
+                if (name === 'corpo') AppState.pausas.corpoExpanded = opened;
+                else AppState.mente.menteExpanded = opened;
             }
+        }
+
+        function toggleCorpoBlock() {
+            togglePauseSection('corpo');
         }
 
         function toggleCorpoTips() {
@@ -8301,19 +8308,7 @@
         const BREATH_PATTERNS = BREATH_CONFIGS; // Compatibilidade retroativa
 
         function toggleMenteBlock() {
-            const content = document.getElementById('mente-content');
-            const chevron = document.getElementById('mente-chevron');
-            if (!content) return;
-            const isHidden = content.classList.contains('hidden');
-            if (isHidden) {
-                content.classList.remove('hidden');
-                if (chevron) chevron.innerHTML = '<i class="fa-solid fa-chevron-up text-xs text-cyan-400"></i>';
-                AppState.mente.menteExpanded = true;
-            } else {
-                content.classList.add('hidden');
-                if (chevron) chevron.innerHTML = '<i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>';
-                AppState.mente.menteExpanded = false;
-            }
+            togglePauseSection('mente');
         }
 
         function toggleMenteTips() {
@@ -13622,6 +13617,14 @@
                 input.checked = config.weekdays.includes(Number(input.dataset.workday));
             });
 
+            const todayRoutine = document.getElementById('todayPauseRoutine');
+            if (todayRoutine) {
+                todayRoutine.textContent = !config.enabled
+                    ? 'Sem rotina de pausas'
+                    : hasNativeReminderScheduler() && hasWorkPauseReminderPermission()
+                        ? 'Lembretes de pausas ativos'
+                        : 'Rotina salva · Avisos indisponíveis';
+            }
             const status = document.getElementById('work-pause-reminder-status');
             if (!status) return;
             if (!config.enabled) {

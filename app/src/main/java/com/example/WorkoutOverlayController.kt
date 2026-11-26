@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -14,6 +15,8 @@ import android.graphics.PixelFormat
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.InsetDrawable
+import android.graphics.drawable.RippleDrawable
 import androidx.core.graphics.ColorUtils
 import android.net.Uri
 import android.os.Build
@@ -145,10 +148,8 @@ object WorkoutOverlayController {
 
     // Referências aos elementos dinâmicos do Compacto
     private var compactActionText: TextView? = null
-    private var compactProgramText: TextView? = null
     private var compactTimerText: TextView? = null
     private var compactPauseResumeBtn: TextView? = null
-    private var compactCancelBtn: TextView? = null
 
     // Referências aos elementos dinâmicos do Expandido
     private var expandedProgramTitle: TextView? = null
@@ -628,7 +629,7 @@ object WorkoutOverlayController {
         else -> VisualState.COMPACT
     }
 
-    private fun updatePauseButton(context: Context, button: TextView?, isPaused: Boolean) {
+    private fun updatePauseButton(button: TextView?, isPaused: Boolean) {
         button ?: return
         if (isPaused) {
             button.text = "Continuar"
@@ -637,7 +638,6 @@ object WorkoutOverlayController {
             button.text = "Pausar"
             button.contentDescription = "Pausar treino"
         }
-        button.background = createControlDrawable(context, FluxoOverlayPalette.accent, FluxoOverlayPalette.accent, 0)
     }
 
     private fun toggleWorkoutPause(context: Context) {
@@ -741,80 +741,97 @@ object WorkoutOverlayController {
             val availableWidth = (context.resources.displayMetrics.widthPixels - dpToPx(context, 32))
                 .coerceAtLeast(dpToPx(context, 280))
             layoutParams = FrameLayout.LayoutParams(minOf(dpToPx(context, 360), availableWidth), FrameLayout.LayoutParams.WRAP_CONTENT)
-            setPadding(dpToPx(context, 8), dpToPx(context, 6), dpToPx(context, 8), dpToPx(context, 6))
-            background = createCardDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.line, dpToPx(context, 14).toFloat())
-            contentDescription = "Treino ativo flutuante, modo compacto. Toque para alternar tamanho."
+            setPadding(dpToPx(context, 10), dpToPx(context, 6), dpToPx(context, 4), dpToPx(context, 6))
+            background = createCardDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.lineStrong, dpToPx(context, 12).toFloat())
+            contentDescription = "Treino ativo flutuante, modo compacto"
         }
 
-        val textCol = LinearLayout(context).apply {
+        compactTimerText = TextView(context).apply {
+            text = "00:00"
+            textSize = 24f
+            typeface = Typeface.MONOSPACE
+            setTextColor(FluxoOverlayPalette.accentBright)
+            maxLines = 1
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        }
+
+        val phaseColumn = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                marginStart = dpToPx(context, 6)
+                marginEnd = dpToPx(context, 6)
+            }
         }
-
         compactActionText = TextView(context).apply {
             text = "Treino"
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER_HORIZONTAL
             setTextColor(FluxoOverlayPalette.textPrimary)
             maxLines = 2
             ellipsize = TextUtils.TruncateAt.END
         }
-        compactProgramText = TextView(context).apply {
-            text = "CoreFlow"
-            textSize = 11f
-            setTextColor(FluxoOverlayPalette.textSecondary)
+        compactWave = PhaseWaveView(context).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(context, 21))
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
         }
-        textCol.addView(compactActionText)
-        textCol.addView(compactProgramText)
-
-        compactTimerText = TextView(context).apply {
-            text = "00:00"
-            textSize = 20f
-            typeface = Typeface.MONOSPACE
-            gravity = Gravity.CENTER
-            setTextColor(FluxoOverlayPalette.accentBright)
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                marginStart = dpToPx(context, 4)
-                marginEnd = dpToPx(context, 12)
-            }
-        }
+        phaseColumn.addView(compactActionText)
+        phaseColumn.addView(compactWave)
 
         compactPauseResumeBtn = TextView(context).apply {
             text = "Pausar"
             textSize = 12f
-            typeface = Typeface.DEFAULT_BOLD
-            setTextColor(FluxoOverlayPalette.accentInk)
+            typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+            setTextColor(FluxoOverlayPalette.textSecondary)
             gravity = Gravity.CENTER
-            setPadding(dpToPx(context, 8), 0, dpToPx(context, 8), 0)
-            background = createControlDrawable(context, FluxoOverlayPalette.accent, FluxoOverlayPalette.accent, 0)
+            minHeight = dpToPx(context, 48)
+            setPadding(dpToPx(context, 4), dpToPx(context, 4), dpToPx(context, 4), dpToPx(context, 4))
+            val pill = createCardDrawable(FluxoOverlayPalette.surfaceInteractive, FluxoOverlayPalette.lineStrong, dpToPx(context, 18).toFloat())
+            background = RippleDrawable(
+                ColorStateList.valueOf(ColorUtils.setAlphaComponent(FluxoOverlayPalette.accent, 52)),
+                InsetDrawable(pill, 0, dpToPx(context, 7), 0, dpToPx(context, 7)),
+                null
+            )
             contentDescription = "Pausar treino"
-            layoutParams = LinearLayout.LayoutParams(dpToPx(context, 80), dpToPx(context, 48)).apply {
-                marginEnd = dpToPx(context, 8)
-            }
+            layoutParams = LinearLayout.LayoutParams(dpToPx(context, 80), LinearLayout.LayoutParams.WRAP_CONTENT)
             setOnClickListener { toggleWorkoutPause(context) }
         }
 
-        compactCancelBtn = TextView(context).apply {
-            text = "Cancelar"
-            textSize = 12f
-            typeface = Typeface.DEFAULT_BOLD
-            setTextColor(FluxoOverlayPalette.dangerBright)
+        val expand = TextView(context).apply {
+            text = "+"
+            textSize = 20f
+            setTextColor(FluxoOverlayPalette.accentBright)
             gravity = Gravity.CENTER
-            setPadding(dpToPx(context, 8), 0, dpToPx(context, 8), 0)
-            background = createControlDrawable(context, FluxoOverlayPalette.dangerSurface, FluxoOverlayPalette.danger, 1)
-            contentDescription = "Cancelar treino"
-            layoutParams = LinearLayout.LayoutParams(dpToPx(context, 80), dpToPx(context, 48))
-            setOnClickListener { openCancelConfirmation(context) }
+            minHeight = dpToPx(context, 48)
+            contentDescription = "Expandir controles do treino"
+            layoutParams = LinearLayout.LayoutParams(dpToPx(context, 48), LinearLayout.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                cancelAutoCollapse()
+                setVisualState(context, VisualState.EXPANDED)
+            }
         }
 
-        compactContainer?.addView(textCol)
-        compactWave = PhaseWaveView(context).apply { layoutParams = LinearLayout.LayoutParams(dpToPx(context, 36), dpToPx(context, 20)); importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
-        compactContainer?.addView(compactWave)
-        compactContainer?.addView(compactTimerText)
-        compactContainer?.addView(compactPauseResumeBtn)
-        compactContainer?.addView(compactCancelBtn)
-        root.addView(compactContainer)
+        val compact = checkNotNull(compactContainer)
+        if (context.resources.configuration.fontScale > 1.3f) {
+            compact.orientation = LinearLayout.VERTICAL
+            val readout = LinearLayout(context).apply {
+                gravity = Gravity.CENTER_VERTICAL
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                addView(compactTimerText)
+                addView(phaseColumn)
+            }
+            compact.addView(readout)
+        } else {
+            compact.addView(compactTimerText)
+            compact.addView(phaseColumn)
+        }
+        val controls = LinearLayout(context).apply {
+            gravity = Gravity.END or Gravity.CENTER_VERTICAL
+            addView(compactPauseResumeBtn)
+            addView(expand)
+        }
+        compact.addView(controls)
+        root.addView(compact)
     }
 
     private fun buildExpandedView(context: Context, root: FrameLayout) {
@@ -823,7 +840,7 @@ object WorkoutOverlayController {
             orientation = LinearLayout.VERTICAL
             layoutParams = FrameLayout.LayoutParams(widthPx, FrameLayout.LayoutParams.WRAP_CONTENT)
             setPadding(dpToPx(context, 14), dpToPx(context, 12), dpToPx(context, 14), dpToPx(context, 12))
-            background = createCardDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.line, dpToPx(context, 18).toFloat())
+            background = createCardDrawable(FluxoOverlayPalette.surface, FluxoOverlayPalette.line, dpToPx(context, 12).toFloat())
         }
 
         // Header: Ícone + Título do Programa + Botão recolher
@@ -891,25 +908,29 @@ object WorkoutOverlayController {
         }
         expandedContainer?.addView(breathVisualView)
 
-        // Corpo central: Ação Atual + Cronômetro Grande
+        // A fase e o cronômetro compartilham a mesma coluna de leitura.
+        val display = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+        }
         expandedActionTitle = TextView(context).apply {
             text = "RETENÇÃO"
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(FluxoOverlayPalette.accent)
-            gravity = Gravity.CENTER
+            gravity = Gravity.START
             setPadding(0, dpToPx(context, 2), 0, dpToPx(context, 2))
         }
-        expandedContainer?.addView(expandedActionTitle)
+        display.addView(expandedActionTitle)
 
         expandedTimerText = TextView(context).apply {
             text = "00:14"
-            textSize = 28f
+            textSize = 36f
             typeface = Typeface.MONOSPACE
-            setTextColor(FluxoOverlayPalette.textPrimary)
-            gravity = Gravity.CENTER
+            setTextColor(FluxoOverlayPalette.accentBright)
+            gravity = Gravity.START
         }
-        expandedContainer?.addView(expandedTimerText)
+        display.addView(expandedTimerText)
+        expandedContainer?.addView(display)
         expandedWave = PhaseWaveView(context).apply { layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(context, 28)).apply { topMargin = dpToPx(context, 4); bottomMargin = dpToPx(context, 4) }; importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
         expandedContainer?.addView(expandedWave)
 
@@ -1246,8 +1267,7 @@ object WorkoutOverlayController {
         compactTimerText?.setTextColor(FluxoOverlayPalette.accentBright)
         compactActionText?.text = actionLabel
         val seriesText = if (series > 0) " · Série $series" else ""
-        compactProgramText?.text = "$programTitle$seriesText"
-        compactContainer?.contentDescription = "$programTitle, $actionLabel, restante $timeStr. Toque para alternar tamanho."
+        compactContainer?.contentDescription = "$programTitle, $actionLabel, restante $timeStr."
 
         // 3. Atualizar EXPANDIDO
         expandedProgramTitle?.text = programTitle
@@ -1356,8 +1376,9 @@ object WorkoutOverlayController {
         expandedContainer?.contentDescription = "Card expandido do treino. $programTitle, $actionLabel, restante $timeStr."
 
         // Os três tamanhos recebem o mesmo estado vindo do motor nativo.
-        updatePauseButton(context, compactPauseResumeBtn, isPaused)
-        updatePauseButton(context, expandedPauseResumeBtn, isPaused)
+        updatePauseButton(compactPauseResumeBtn, isPaused)
+        compactPauseResumeBtn?.setTextColor(if (isPaused) FluxoOverlayPalette.accentBright else FluxoOverlayPalette.textSecondary)
+        updatePauseButton(expandedPauseResumeBtn, isPaused)
 
         // Próximo passo
         if (prefs.showNextStep && nextStep != null) {

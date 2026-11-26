@@ -1,5 +1,37 @@
 # CoreFlow — Roadmap ativo
 
+## Plano integrado do redesign — PR #8 e kit ADBM
+
+O [kit de redesign](docs/redesign/kit/00_MAE.md) define as missões. O [registro de progresso](docs/redesign/kit/PROGRESS.md) define o que já foi executado e a missão atual. Este plano conecta as missões às superfícies do app e às verificações de integração. O ZIP de 25/11/2026 coincide com os 12 documentos de referência do kit local; o 13º, `PROGRESS.md`, foi atualizado na M1.
+
+| Etapa | Prioridade e dependência | Entrega e critério de aceite |
+|---|---|---|
+| M1 — Navegação e diagnóstico | P0. Implementada e verificada no AVD | Alça acionável por toque, fechamento por toque fora e Voltar, cinco destinos e gesto nativo. Preservar o flow como regressão transversal. Homologação física entra em M7. |
+| M2 — Direção visual da overlay | P0. Próxima, aguarda pedido | Confirmar em `VISAO.md` a referência visual do redesign. Produzir três direções isoladas, cada uma em compacto e expandido, com fase legível, controles proporcionais e avaliação do ultradiscreto. Comparar lado a lado e registrar a escolha de Rafael antes da M3. |
+| M3 — Overlay e continuidade das sessões | P0. Após escolha da M2 | Implementar a proposta escolhida. Verificar permissão concedida/negada, estados e área de toque, arraste, bordas, rotação, app em segundo plano, bloqueio, pausa, retomada, encerramento e liberação do serviço. Comparar fase e tempo da overlay com os da sessão em três momentos e gravar o fluxo. |
+| M4 — Componentes e telas existentes | P1. Após M3 | Consolidar tokens e controles no sistema atual. Aplicar a Hoje, Programas, Pausas, Evolução, Perfil, onboarding, práticas, players e diálogos. Cobrir tema claro e AMOLED, fonte ampliada, foco, estados de interação e movimento reduzido. Registrar as exceções justificadas de escala no catálogo. |
+| M5 — Pausas, rotina e lembretes | P1. Após M4 | Completar o inventário e comparar duas arquiteturas por contagem de toques para encontrar, iniciar, agendar, editar e consultar histórico. Após escolha de Rafael, implementar e comprovar acesso a todas as atividades existentes. Validar agendamento e desativação com permissão concedida/negada, reinício e mudança de fuso, conforme suporte da plataforma. |
+| M6 — Hoje e integração da rotina | P1. Após M5 | Comparar duas composições com e sem programa, pausas e histórico. Após escolha de Rafael, ligar a tela às fontes reais de sessões, pausas e progresso. Validar continuar programa, iniciar pausa e ausência de horário quando não há agendamento. |
+| M7 — Refinamento e validação integrada | P2/P3. Após M6 | Percorrer o app completo, executar suíte e flows, revisar telas menores, fonte grande, contraste, estados de erro e vazio, e gravar uma sessão flutuante de pelo menos 15 minutos. Fechar achados P0/P1 com evidência. Registrar homologação de S25 Ultra e Galaxy Watch em separado. |
+
+### Cobertura de integração
+
+| Superfície e referência no projeto | Evidência esperada |
+|---|---|
+| WebView, navegação e conteúdo em `index.html` e `app/src/main/assets/index.html` | Paridade byte a byte, recursos locais, regressão antes da mudança de comportamento e navegação ponta a ponta. Corrigir os achados de contraste do Impeccable após confirmar cada caso na interface renderizada. |
+| Sessão, overlay, onda e áudio em `MainActivity.kt`, `WorkoutSessionPlayer.kt`, `WorkoutForegroundService.kt`, `WorkoutOverlayController.kt`, `PhaseWaveView.kt` e `MindfulnessAudioService.kt` | Exercícios e dados de teste reais do catálogo, uma fonte de estado por sessão, fase com rótulo acessível, retomada consistente e limpeza ao encerrar. Incluir Bracing, Vácuo e players de Pausas nas regressões integradas. |
+| Lembretes em `ReminderScheduler.kt` e receivers Android | Criação, edição, cancelamento, notificação, reinício e fuso. Conferir persistência e reabertura com configuração anterior à alteração. |
+| Progresso, Perfil e backup em `index.html` e `SecureBackupBridge.kt` | Persistência após reabrir, importação de snapshot anterior e tratamento de falha de restauração em dados descartáveis. Conservar IDs, formatos e protocolo de treino. |
+| Wear OS em `WearHapticsRelay.kt` e `wear/` | Build Wear e validação no relógio do alcance disponível: início, troca de fase, cancelamento de háptica e reconexão Bluetooth. |
+| Build e entrega em `scripts/check.sh`, `gradle.properties` e workflow Android | Suíte local, APKs debug e evidências. Tratar assinatura e publicação como ação posterior expressamente solicitada. |
+
+### Regras de execução
+
+- Começar cada etapa pelo estado do Git, evidência disponível e trecho afetado. Incluir regressão antes da mudança de comportamento, rodar `bash scripts/check.sh` e executar os flows impactados em AVD. Registrar resultado, evidência e pendências em `PROGRESS.md` e `docs/roadmap/execucao.md`.
+- Usar o Impeccable nas etapas de interface. Usar achados estáticos como pistas e confirmar impactos de contraste, hierarquia, movimento e acessibilidade com a tela renderizada.
+- Atacar primeiro fatos reproduzidos de saída involuntária, perda de dados, dessincronização e falha de agendamento. Revalidar pendências históricas na etapa correspondente antes de classificá-las como defeitos atuais.
+- No S25 Ultra, conferir gestos, One Hand Operation+, TalkBack, fonte ampliada, recorte da câmera, rotação, bloqueio, segundo plano, fluidez e comportamento sob economia de bateria da One UI. No Galaxy Watch, conferir reconexão e háptica. Registrar separadamente o que depende de teste físico.
+
 ## Redesign visual premium solicitado em 03/11/2026
 
 - [x] Pesquisar referências atuais de apps conhecidos no iOS e traduzir os padrões para as telas reais do CoreFlow, sem importar imagens alheias ao produto.
